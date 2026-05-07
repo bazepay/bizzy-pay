@@ -13,8 +13,17 @@ import {
   X,
   ChevronRight,
 } from "lucide-react";
-import { wallets, currencyOrder, type CurrencyCode } from "@/lib/wallets";
+import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
+import { CurrencySwitcher } from "@/components/currency-switcher";
+
+// NGN is the single real wallet. Other currencies are display conversions only.
+const NGN_BASE = 845320.5;
+const rates: Record<CurrencyCode, number> = { NGN: 1, USD: 1 / 1542, EUR: 1 / 1540, GBP: 1 / 1952 };
+const formatAmount = (n: number) => {
+  const [whole, dec = "00"] = n.toFixed(2).split(".");
+  return { whole: Number(whole).toLocaleString("en-US"), decimals: "." + dec };
+};
 
 export const Route = createFileRoute("/_app/wallet")({
   head: () => ({
