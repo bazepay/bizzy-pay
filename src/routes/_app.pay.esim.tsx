@@ -347,36 +347,38 @@ function EsimPage() {
           </div>
         )}
 
-        {/* Email for delivery */}
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-            Email for QR delivery
-          </p>
-          <div className="relative">
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value.slice(0, 60))}
-              type="email"
-              placeholder="you@email.com"
-              className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] pl-4 pr-12 text-base font-semibold tracking-wide outline-none focus:bg-card-foreground/[0.06]"
-            />
-            {email && (
-              <button
-                onClick={() => setEmail("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-card-foreground/10 flex items-center justify-center"
-                aria-label="Clear"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
+        {/* Email for delivery — only for new eSIMs */}
+        {mode === "new" && (
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+              Email for QR delivery
+            </p>
+            <div className="relative">
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value.slice(0, 60))}
+                type="email"
+                placeholder="you@email.com"
+                className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] pl-4 pr-12 text-base font-semibold tracking-wide outline-none focus:bg-card-foreground/[0.06]"
+              />
+              {email && (
+                <button
+                  onClick={() => setEmail("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-card-foreground/10 flex items-center justify-center"
+                  aria-label="Clear"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+            {verified && (
+              <div className="mt-2 px-1 flex items-center gap-1.5 text-[11px] text-success">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span className="font-semibold">QR will be emailed instantly</span>
+              </div>
             )}
           </div>
-          {verified && (
-            <div className="mt-2 px-1 flex items-center gap-1.5 text-[11px] text-success">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span className="font-semibold">QR will be emailed instantly</span>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* Plans */}
         <div>
