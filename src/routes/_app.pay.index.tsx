@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Phone, Wifi, Zap, Tv, Trophy, ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/_app/pay/")({
+export const Route = createFileRoute("/pay/")({
   component: PayHub,
 });
 
@@ -18,7 +18,7 @@ function PayHub() {
     <div>
       <div className="bg-gradient-hero text-white pt-12 pb-8 px-6 rounded-b-[2rem]">
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/_app/home" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+          <Link to="/home" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <h1 className="font-display font-bold text-lg">Pay bills</h1>
@@ -32,7 +32,7 @@ function PayHub() {
           {services.map((s) => (
             <Link
               key={s.id}
-              to="/_app/pay/$service"
+              to="/pay/$service"
               params={{ service: s.id }}
               className="p-4 rounded-2xl bg-card flex flex-col items-start gap-3 active:scale-95 transition"
             >

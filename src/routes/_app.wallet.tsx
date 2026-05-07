@@ -6,7 +6,7 @@ import { ArrowLeft, Plus, ArrowUpRight, ArrowDownLeft, Search, X, CheckCircle2 }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/_app/wallet")({
+export const Route = createFileRoute("/wallet")({
   component: WalletPage,
 });
 
@@ -34,7 +34,7 @@ function WalletPage() {
     <div>
       <div className="bg-gradient-hero text-white pt-12 pb-8 px-6 rounded-b-[2rem]">
         <div className="flex items-center gap-4 mb-6">
-          <Link to="/_app/home" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+          <Link to="/home" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <h1 className="font-display font-bold text-lg">Wallet</h1>

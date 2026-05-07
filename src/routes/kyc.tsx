@@ -153,7 +153,7 @@ function Kyc() {
                   Daily limit: ₦200,000
                 </div>
               </div>
-              <Button onClick={() => nav({ to: "/_app/home" })} className="mb-6 h-12 bg-primary text-primary-foreground rounded-2xl font-semibold">
+              <Button onClick={() => nav({ to: "/home" })} className="mb-6 h-12 bg-primary text-primary-foreground rounded-2xl font-semibold">
                 Enter BazePay
               </Button>
             </motion.div>

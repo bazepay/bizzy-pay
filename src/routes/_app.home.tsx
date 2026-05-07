@@ -4,7 +4,7 @@ import { useState } from "react";
 import { mockUser, mockBalances, mockTransactions, formatMoney, type Currency } from "@/lib/mock";
 import { Eye, EyeOff, Plus, Send, Receipt, CreditCard, Smartphone, Bell, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 
-export const Route = createFileRoute("/_app/home")({
+export const Route = createFileRoute("/home")({
   component: HomePage,
 });
 
@@ -67,10 +67,10 @@ function HomePage() {
       {/* Quick actions */}
       <div className="px-6 -mt-16 relative z-10">
         <div className="bg-card rounded-3xl shadow-card p-4 grid grid-cols-4 gap-2">
-          <QuickAction to="/_app/wallet" icon={Plus} label="Add" />
-          <QuickAction to="/_app/wallet" icon={Send} label="Send" />
-          <QuickAction to="/_app/pay" icon={Receipt} label="Pay" />
-          <QuickAction to="/_app/esim" icon={Smartphone} label="eSIM" />
+          <QuickAction to="/wallet" icon={Plus} label="Add" />
+          <QuickAction to="/wallet" icon={Send} label="Send" />
+          <QuickAction to="/pay" icon={Receipt} label="Pay" />
+          <QuickAction to="/esim" icon={Smartphone} label="eSIM" />
         </div>
       </div>
 
@@ -82,7 +82,7 @@ function HomePage() {
             <p className="font-bold text-sm">Get a virtual Naira card</p>
             <p className="text-xs opacity-80">Issue in seconds. Use anywhere online.</p>
           </div>
-          <Link to="/_app/cards" className="text-xs font-bold underline">Issue</Link>
+          <Link to="/cards" className="text-xs font-bold underline">Issue</Link>
         </div>
       </div>
 
@@ -90,7 +90,7 @@ function HomePage() {
       <div className="px-6 mt-8">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Recent activity</h2>
-          <Link to="/_app/wallet" className="text-xs text-primary font-semibold">See all</Link>
+          <Link to="/wallet" className="text-xs text-primary font-semibold">See all</Link>
         </div>
         <div className="mt-3 space-y-2">
           {mockTransactions.slice(0, 5).map((t) => (
