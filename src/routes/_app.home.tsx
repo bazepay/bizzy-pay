@@ -85,7 +85,7 @@ function HomePage() {
               >
                 <div
                   className="w-full aspect-square rounded-2xl flex items-center justify-center"
-                  style={{ background: `var(--${s.token}) / 0.12`, backgroundColor: `color-mix(in oklab, var(--${s.token}) 14%, transparent)` }}
+                  style={{ backgroundColor: `color-mix(in oklab, var(--${s.token}) 14%, transparent)` }}
                 >
                   <Icon className="w-5 h-5" style={{ color: `var(--${s.token})` }} strokeWidth={2.2} />
                 </div>
