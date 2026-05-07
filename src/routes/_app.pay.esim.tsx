@@ -466,12 +466,18 @@ function EsimPage() {
           onClick={() => setConfirm(true)}
           className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40 active:scale-[0.99] transition flex items-center justify-center gap-2"
         >
-          {plan ? `Buy eSIM · $${plan.price.toFixed(2)}` : "Pick a plan"}
+          {plan
+            ? `${mode === "topup" ? "Top up" : "Buy eSIM"} · $${plan.price.toFixed(2)}`
+            : mode === "topup"
+            ? "Pick a top-up plan"
+            : "Pick a plan"}
         </button>
       </div>
 
       {confirm && !success && plan && (
         <ConfirmSheet
+          mode={mode}
+          esimLabel={activeEsim?.label ?? ""}
           email={email}
           region={region}
           plan={plan}
@@ -483,6 +489,8 @@ function EsimPage() {
 
       {success && plan && (
         <SuccessSheet
+          mode={mode}
+          esimLabel={activeEsim?.label ?? ""}
           email={email}
           region={region}
           plan={plan}
