@@ -8,10 +8,10 @@ export const Route = createFileRoute("/_app/home")({
 
 const services = [
   { label: "eSIM", icon: Wifi, color: "#5B4DFF" },
-  { label: "Airtime", icon: Phone, color: "#D4A24C" },
+  { label: "Airtime", icon: Phone, color: "#E07A6B" },
   { label: "Data", icon: Smartphone, color: "#3DAEA3" },
   { label: "Electricity", icon: Zap, color: "#D4A24C" },
-  { label: "Cable", icon: Tv, color: "#E07A6B" },
+  { label: "Cable", icon: Tv, color: "#8E5BD9" },
 ];
 
 type CurrencyCode = "NGN" | "USD" | "EUR" | "GBP";
