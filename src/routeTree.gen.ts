@@ -21,7 +21,6 @@ import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppPayElectricityRouteImport } from './routes/_app.pay.electricity'
 import { Route as AppPayDataRouteImport } from './routes/_app.pay.data'
-import { Route as AppPayElectricityRouteImport } from './routes/_app.pay.electricity'
 import { Route as AppPayAirtimeRouteImport } from './routes/_app.pay.airtime'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 
@@ -82,6 +81,11 @@ const AppPayElectricityRoute = AppPayElectricityRouteImport.update({
 const AppPayDataRoute = AppPayDataRouteImport.update({
   id: '/data',
   path: '/data',
+  getParentRoute: () => AppPayRoute,
+} as any)
+const AppPayElectricityRoute = AppPayElectricityRouteImport.update({
+  id: '/electricity',
+  path: '/electricity',
   getParentRoute: () => AppPayRoute,
 } as any)
 const AppPayAirtimeRoute = AppPayAirtimeRouteImport.update({
