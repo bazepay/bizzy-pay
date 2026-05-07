@@ -22,6 +22,7 @@ import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
 import { Route as AppPayElectricityRouteImport } from './routes/_app.pay.electricity'
 import { Route as AppPayDataRouteImport } from './routes/_app.pay.data'
+import { Route as AppPayBettingRouteImport } from './routes/_app.pay.betting'
 import { Route as AppPayAirtimeRouteImport } from './routes/_app.pay.airtime'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 
@@ -89,6 +90,11 @@ const AppPayDataRoute = AppPayDataRouteImport.update({
   path: '/data',
   getParentRoute: () => AppPayRoute,
 } as any)
+const AppPayBettingRoute = AppPayBettingRouteImport.update({
+  id: '/betting',
+  path: '/betting',
+  getParentRoute: () => AppPayRoute,
+} as any)
 const AppPayAirtimeRoute = AppPayAirtimeRouteImport.update({
   id: '/airtime',
   path: '/airtime',
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
+  '/pay/betting': typeof AppPayBettingRoute
   '/pay/data': typeof AppPayDataRoute
   '/pay/electricity': typeof AppPayElectricityRoute
   '/pay/tv': typeof AppPayTvRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
+  '/pay/betting': typeof AppPayBettingRoute
   '/pay/data': typeof AppPayDataRoute
   '/pay/electricity': typeof AppPayElectricityRoute
   '/pay/tv': typeof AppPayTvRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/_app/pay/$service': typeof AppPayServiceRoute
   '/_app/pay/airtime': typeof AppPayAirtimeRoute
+  '/_app/pay/betting': typeof AppPayBettingRoute
   '/_app/pay/data': typeof AppPayDataRoute
   '/_app/pay/electricity': typeof AppPayElectricityRoute
   '/_app/pay/tv': typeof AppPayTvRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/pay/$service'
     | '/pay/airtime'
+    | '/pay/betting'
     | '/pay/data'
     | '/pay/electricity'
     | '/pay/tv'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/pay/$service'
     | '/pay/airtime'
+    | '/pay/betting'
     | '/pay/data'
     | '/pay/electricity'
     | '/pay/tv'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/_app/pay/$service'
     | '/_app/pay/airtime'
+    | '/_app/pay/betting'
     | '/_app/pay/data'
     | '/_app/pay/electricity'
     | '/_app/pay/tv'
@@ -302,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPayDataRouteImport
       parentRoute: typeof AppPayRoute
     }
+    '/_app/pay/betting': {
+      id: '/_app/pay/betting'
+      path: '/betting'
+      fullPath: '/pay/betting'
+      preLoaderRoute: typeof AppPayBettingRouteImport
+      parentRoute: typeof AppPayRoute
+    }
     '/_app/pay/airtime': {
       id: '/_app/pay/airtime'
       path: '/airtime'
@@ -322,6 +341,7 @@ declare module '@tanstack/react-router' {
 interface AppPayRouteChildren {
   AppPayServiceRoute: typeof AppPayServiceRoute
   AppPayAirtimeRoute: typeof AppPayAirtimeRoute
+  AppPayBettingRoute: typeof AppPayBettingRoute
   AppPayDataRoute: typeof AppPayDataRoute
   AppPayElectricityRoute: typeof AppPayElectricityRoute
   AppPayTvRoute: typeof AppPayTvRoute
@@ -331,6 +351,7 @@ interface AppPayRouteChildren {
 const AppPayRouteChildren: AppPayRouteChildren = {
   AppPayServiceRoute: AppPayServiceRoute,
   AppPayAirtimeRoute: AppPayAirtimeRoute,
+  AppPayBettingRoute: AppPayBettingRoute,
   AppPayDataRoute: AppPayDataRoute,
   AppPayElectricityRoute: AppPayElectricityRoute,
   AppPayTvRoute: AppPayTvRoute,
@@ -365,3 +386,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
