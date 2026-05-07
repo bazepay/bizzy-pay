@@ -224,7 +224,15 @@ function EsimPage() {
                       <Check className="w-2.5 h-2.5" strokeWidth={3} />
                     </span>
                   )}
-                  <span className="text-xl leading-none">{p.flag}</span>
+                  <span
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black tracking-tight"
+                    style={{
+                      background: sel ? "rgba(255,255,255,0.2)" : `color-mix(in oklab, ${p.color} 16%, transparent)`,
+                      color: sel ? "#fff" : p.color,
+                    }}
+                  >
+                    {p.short}
+                  </span>
                   <span className="text-[10px] font-bold leading-none">{p.name}</span>
                 </button>
               );
