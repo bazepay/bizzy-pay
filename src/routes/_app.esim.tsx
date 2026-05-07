@@ -5,7 +5,7 @@ import { ArrowLeft, QrCode, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { esimCountries, esimPlans } from "@/lib/mock";
 
-export const Route = createFileRoute("/_app/esim")({
+export const Route = createFileRoute("/esim")({
   component: EsimPage,
 });
 
@@ -19,7 +19,7 @@ function EsimPage() {
     <div className="min-h-full bg-background">
       <header className="px-6 pt-12 pb-4 flex items-center gap-4">
         <button
-          onClick={() => (step === "browse" ? nav({ to: "/_app/home" }) : setStep(step === "qr" ? "checkout" : "browse"))}
+          onClick={() => (step === "browse" ? nav({ to: "/home" }) : setStep(step === "qr" ? "checkout" : "browse"))}
           className="w-10 h-10 rounded-full bg-muted flex items-center justify-center"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -122,7 +122,7 @@ function EsimPage() {
             </ol>
           </div>
 
-          <Link to="/_app/home" className="mt-6 mb-6 w-full">
+          <Link to="/home" className="mt-6 mb-6 w-full">
             <Button className="w-full h-12 bg-primary text-primary-foreground rounded-2xl font-semibold">Back to home</Button>
           </Link>
         </div>

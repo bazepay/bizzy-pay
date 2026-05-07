@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { networks, dataPlans, discos, tvPackages, bettingPlatforms } from "@/lib/mock";
 import { BottomSheet, SuccessView } from "./_app.wallet";
 
-export const Route = createFileRoute("/_app/pay/$service")({
+export const Route = createFileRoute("/pay/$service")({
   component: ServicePage,
 });
 
@@ -39,7 +39,7 @@ function ServicePage() {
   return (
     <div className="min-h-full">
       <header className="px-6 pt-12 pb-4 flex items-center gap-4">
-        <Link to="/_app/pay" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+        <Link to="/pay" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="font-display font-bold text-lg">{titles[service] || service}</h1>
@@ -145,8 +145,8 @@ function ServicePage() {
         </Button>
       </div>
 
-      <BottomSheet open={showSuccess} onClose={() => nav({ to: "/_app/pay" })} title="Payment successful">
-        <SuccessView title="Done!" subtitle={`${titles[service]} of ₦${Number(amount).toLocaleString()} completed`} onDone={() => nav({ to: "/_app/home" })} />
+      <BottomSheet open={showSuccess} onClose={() => nav({ to: "/pay" })} title="Payment successful">
+        <SuccessView title="Done!" subtitle={`${titles[service]} of ₦${Number(amount).toLocaleString()} completed`} onDone={() => nav({ to: "/home" })} />
       </BottomSheet>
     </div>
   );

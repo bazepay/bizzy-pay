@@ -15,7 +15,7 @@ function TxnDetail() {
 
   if (!t) return (
     <PhoneFrame>
-      <div className="p-8 text-center">Transaction not found <Link to="/_app/wallet" className="text-primary">Back</Link></div>
+      <div className="p-8 text-center">Transaction not found <Link to="/wallet" className="text-primary">Back</Link></div>
     </PhoneFrame>
   );
 

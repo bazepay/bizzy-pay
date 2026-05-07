@@ -18,7 +18,7 @@ function Login() {
     if (pin.length >= 4) return;
     const next = pin + k;
     setPin(next);
-    if (next.length === 4) setTimeout(() => nav({ to: "/_app/home" }), 250);
+    if (next.length === 4) setTimeout(() => nav({ to: "/home" }), 250);
   };
 
   return (
@@ -53,7 +53,7 @@ function Login() {
               {n}
             </button>
           ))}
-          <button onClick={() => nav({ to: "/_app/home" })} className="h-16 rounded-2xl flex items-center justify-center hover:bg-white/10">
+          <button onClick={() => nav({ to: "/home" })} className="h-16 rounded-2xl flex items-center justify-center hover:bg-white/10">
             <Fingerprint className="w-7 h-7 text-gold" />
           </button>
           <button onClick={() => press("0")} className="h-16 rounded-2xl bg-white/10 text-2xl font-display font-semibold hover:bg-white/15 active:scale-95">
@@ -69,7 +69,7 @@ function Login() {
         </Link>
         <Button
           variant="ghost"
-          onClick={() => nav({ to: "/_app/home" })}
+          onClick={() => nav({ to: "/home" })}
           className="text-white/50 text-xs"
         >
           Demo: skip to app

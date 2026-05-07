@@ -9,7 +9,7 @@ import { mockCards, mockTransactions, formatMoney, type VirtualCard } from "@/li
 import { BottomSheet, SuccessView } from "./_app.wallet";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/_app/cards")({
+export const Route = createFileRoute("/cards")({
   component: CardsPage,
 });
 
@@ -50,7 +50,7 @@ function CardsPage() {
     <div>
       <header className="px-6 pt-12 pb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link to="/_app/home" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+          <Link to="/home" className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <h1 className="font-display font-bold text-lg">Cards</h1>
