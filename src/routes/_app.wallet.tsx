@@ -36,30 +36,43 @@ export const Route = createFileRoute("/_app/wallet")({
   component: WalletPage,
 });
 
-type Filter = "all" | "in" | "out";
+type Direction = "all" | "in" | "out";
+type StatusFilter = "all" | "success" | "pending";
+type DateRange = "all" | "today" | "7d" | "30d";
+
+type Filters = { direction: Direction; status: StatusFilter; date: DateRange };
+const defaultFilters: Filters = { direction: "all", status: "all", date: "all" };
 
 const txns = [
-  { id: "t1", title: "Top up · Visa •• 4421", amount: "+₦250,000.00", isCredit: true, time: "Today · 09:14", status: "Success", group: "Today" },
-  { id: "t2", title: "MTN Airtime", amount: "-₦5,000.00", isCredit: false, time: "Today · 08:02", status: "Success", group: "Today" },
-  { id: "t3", title: "Spotify", amount: "-₦1,900.00", isCredit: false, time: "Yesterday · 19:40", status: "Success", group: "Yesterday" },
-  { id: "t4", title: "Ikeja Electric", amount: "-₦15,000.00", isCredit: false, time: "Yesterday · 11:20", status: "Success", group: "Yesterday" },
-  { id: "t5", title: "eSIM · UK 5GB", amount: "-$18.00", isCredit: false, time: "May 5 · 16:00", status: "Success", group: "Earlier" },
-  { id: "t6", title: "DStv Compact+", amount: "-₦19,800.00", isCredit: false, time: "May 4 · 10:00", status: "Success", group: "Earlier" },
-  { id: "t7", title: "From Tunde A.", amount: "+₦50,000.00", isCredit: true, time: "May 3 · 14:32", status: "Success", group: "Earlier" },
-  { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", group: "Earlier" },
+  { id: "t1", title: "Top up · Visa •• 4421", amount: "+₦250,000.00", isCredit: true, time: "Today · 09:14", status: "Success", daysAgo: 0 },
+  { id: "t2", title: "MTN Airtime", amount: "-₦5,000.00", isCredit: false, time: "Today · 08:02", status: "Success", daysAgo: 0 },
+  { id: "t3", title: "Spotify", amount: "-₦1,900.00", isCredit: false, time: "Yesterday · 19:40", status: "Success", daysAgo: 1 },
+  { id: "t4", title: "Ikeja Electric", amount: "-₦15,000.00", isCredit: false, time: "Yesterday · 11:20", status: "Success", daysAgo: 1 },
+  { id: "t5", title: "eSIM · UK 5GB", amount: "-$18.00", isCredit: false, time: "May 5 · 16:00", status: "Success", daysAgo: 2 },
+  { id: "t6", title: "DStv Compact+", amount: "-₦19,800.00", isCredit: false, time: "May 4 · 10:00", status: "Success", daysAgo: 3 },
+  { id: "t7", title: "From Tunde A.", amount: "+₦50,000.00", isCredit: true, time: "May 3 · 14:32", status: "Success", daysAgo: 4 },
+  { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", daysAgo: 5 },
 ];
-
-const filterLabels: Record<Filter, string> = { all: "All", in: "Money in", out: "Money out" };
 
 function WalletPage() {
   const [active, setActive] = useState<CurrencyCode>("NGN");
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
 
+  const dayLimit = filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
+  const activeCount =
+    (filters.direction !== "all" ? 1 : 0) +
+    (filters.status !== "all" ? 1 : 0) +
+    (filters.date !== "all" ? 1 : 0);
+
   const filtered = txns.filter((t) => {
-    if (filter === "in" && !t.isCredit) return false;
-    if (filter === "out" && t.isCredit) return false;
+    if (filters.direction === "in" && !t.isCredit) return false;
+    if (filters.direction === "out" && t.isCredit) return false;
+    if (filters.status === "success" && t.status !== "Success") return false;
+    if (filters.status === "pending" && t.status !== "Pending") return false;
+    if (filters.date === "today" ? t.daysAgo > 0 : t.daysAgo > dayLimit) return false;
     if (query && !t.title.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
   });
@@ -119,7 +132,7 @@ function WalletPage() {
       <div className="flex-1 mt-7 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transactions</h2>
-          <FilterMenu value={filter} onChange={setFilter} />
+          <FilterTrigger count={activeCount} onClick={() => setFilterOpen(true)} />
         </div>
 
         {/* Search */}
@@ -180,43 +193,154 @@ function WalletPage() {
       </div>
 
       {sheet && <Sheet kind={sheet} currency={active} onClose={() => setSheet(null)} />}
+      {filterOpen && (
+        <FilterSheet
+          value={filters}
+          onChange={setFilters}
+          onClose={() => setFilterOpen(false)}
+        />
+      )}
 
       <BottomNav />
     </div>
   );
 }
 
-function FilterMenu({ value, onChange }: { value: Filter; onChange: (f: Filter) => void }) {
-  const [open, setOpen] = useState(false);
+function FilterTrigger({ count, onClick }: { count: number; onClick: () => void }) {
   return (
-    <div className="relative">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 bg-card-foreground/5 border border-card-foreground/10 rounded-full px-3 py-1.5 text-[11px] font-semibold text-card-foreground/80"
-      >
-        <SlidersHorizontal className="w-3 h-3" />
-        {filterLabels[value]}
-      </button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-2 w-40 bg-card border border-card-foreground/10 rounded-2xl p-1.5 shadow-xl z-20">
-            {(["all", "in", "out"] as Filter[]).map((f) => (
-              <button
-                key={f}
-                onClick={() => {
-                  onChange(f);
-                  setOpen(false);
-                }}
-                className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl hover:bg-card-foreground/5 text-xs font-semibold"
-              >
-                {filterLabels[f]}
-                {value === f && <Check className="w-3.5 h-3.5 text-primary" />}
-              </button>
-            ))}
-          </div>
-        </>
+    <button
+      onClick={onClick}
+      className="flex items-center gap-1.5 bg-card-foreground/5 border border-card-foreground/10 rounded-full px-3 py-1.5 text-[11px] font-semibold text-card-foreground/80"
+    >
+      <SlidersHorizontal className="w-3 h-3" />
+      Filter
+      {count > 0 && (
+        <span className="bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold">
+          {count}
+        </span>
       )}
+    </button>
+  );
+}
+
+function FilterSheet({
+  value,
+  onChange,
+  onClose,
+}: {
+  value: Filters;
+  onChange: (f: Filters) => void;
+  onClose: () => void;
+}) {
+  const [draft, setDraft] = useState<Filters>(value);
+
+  const directionOpts: { id: Direction; label: string }[] = [
+    { id: "all", label: "All" },
+    { id: "in", label: "Money in" },
+    { id: "out", label: "Money out" },
+  ];
+  const statusOpts: { id: StatusFilter; label: string }[] = [
+    { id: "all", label: "Any" },
+    { id: "success", label: "Success" },
+    { id: "pending", label: "Pending" },
+  ];
+  const dateOpts: { id: DateRange; label: string }[] = [
+    { id: "all", label: "All time" },
+    { id: "today", label: "Today" },
+    { id: "7d", label: "Last 7 days" },
+    { id: "30d", label: "Last 30 days" },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-end" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/50" />
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] p-6 pb-8 max-h-[88%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+      >
+        <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+        <div className="flex items-center justify-between mt-3">
+          <h3 className="font-display font-bold text-lg">Filter transactions</h3>
+          <button onClick={onClose} className="text-card-foreground/40">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <FilterGroup
+          label="Type"
+          options={directionOpts}
+          value={draft.direction}
+          onChange={(v) => setDraft({ ...draft, direction: v })}
+        />
+        <FilterGroup
+          label="Status"
+          options={statusOpts}
+          value={draft.status}
+          onChange={(v) => setDraft({ ...draft, status: v })}
+        />
+        <FilterGroup
+          label="Date"
+          options={dateOpts}
+          value={draft.date}
+          onChange={(v) => setDraft({ ...draft, date: v })}
+        />
+
+        <div className="mt-7 flex gap-3">
+          <button
+            onClick={() => setDraft(defaultFilters)}
+            className="flex-1 h-12 rounded-full border border-card-foreground/15 text-sm font-semibold"
+          >
+            Reset
+          </button>
+          <button
+            onClick={() => {
+              onChange(draft);
+              onClose();
+            }}
+            className="flex-[1.5] h-12 rounded-full bg-primary text-primary-foreground text-sm font-semibold"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FilterGroup<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: { id: T; label: string }[];
+  value: T;
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div className="mt-6">
+      <p className="text-[11px] font-semibold text-card-foreground/50 uppercase tracking-wider mb-2.5">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {options.map((o) => {
+          const selected = value === o.id;
+          return (
+            <button
+              key={o.id}
+              onClick={() => onChange(o.id)}
+              className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition ${
+                selected
+                  ? "bg-primary text-primary-foreground border-transparent"
+                  : "bg-transparent text-card-foreground/70 border-card-foreground/15"
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
