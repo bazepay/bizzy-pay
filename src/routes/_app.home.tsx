@@ -47,17 +47,17 @@ function HomePage() {
               Hi there, {mockUser.firstName}
             </p>
             <p className="text-xs text-white/50 flex items-center gap-1 mt-0.5">
-              <span className="text-gold">●</span> Lagos, Nigeria
+              <span className="text-[#00C4B4]">●</span> Lagos, Nigeria
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-            <Target className="w-4 h-4 text-gold" />
+            <Target className="w-4 h-4 text-[#00C4B4]" />
           </button>
           <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 relative">
             <Bell className="w-4 h-4" />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-gold" />
+            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-[#00C4B4]" />
           </button>
         </div>
       </div>
@@ -110,7 +110,7 @@ function HomePage() {
       <div className="px-5 mt-6">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold">Beneficiaries</h2>
-          <button className="text-xs text-gold font-semibold">See All</button>
+          <button className="text-xs text-[#00C4B4] font-semibold">See All</button>
         </div>
         <div className="mt-3 flex gap-4 overflow-x-auto no-scrollbar -mx-1 px-1">
           {beneficiaries.map((b) => (
@@ -131,7 +131,7 @@ function HomePage() {
       <div className="px-5 mt-6">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold">Recent Activity</h2>
-          <Link to="/wallet" className="text-xs text-gold font-semibold">
+          <Link to="/wallet" className="text-xs text-[#00C4B4] font-semibold">
             View All
           </Link>
         </div>
@@ -158,7 +158,7 @@ function HomePage() {
               </div>
               <p
                 className={`text-sm font-bold ${
-                  t.type === "credit" ? "text-gold" : "text-white/80"
+                  t.type === "credit" ? "text-[#00C4B4]" : "text-white/80"
                 }`}
               >
                 {t.type === "credit" ? "+ " : "- "}
