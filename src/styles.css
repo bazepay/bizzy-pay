@@ -46,6 +46,7 @@
   --color-service-data: var(--service-data);
   --color-service-electricity: var(--service-electricity);
   --color-service-cable: var(--service-cable);
+  --color-service-betting: var(--service-betting);
 }
 
 :root {
@@ -99,6 +100,7 @@
   --service-data: oklch(0.7 0.11 195);
   --service-electricity: oklch(0.78 0.13 80);
   --service-cable: oklch(0.62 0.18 305);
+  --service-betting: oklch(0.72 0.2 145);
 
   --gradient-primary: linear-gradient(135deg, oklch(0.5 0.24 280), oklch(0.65 0.22 270));
   --gradient-card: linear-gradient(135deg, oklch(0.13 0.02 280) 0%, oklch(0.25 0.1 280) 60%, oklch(0.45 0.2 275) 130%);

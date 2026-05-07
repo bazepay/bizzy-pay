@@ -26,7 +26,7 @@ const services: Service[] = [
   { slug: "data", label: "Data bundles", desc: "Daily, weekly, monthly", icon: Smartphone, token: "service-data" },
   { slug: "electricity", label: "Electricity", desc: "Prepaid & postpaid meters", icon: Zap, token: "service-electricity" },
   { slug: "tv", label: "TV subscription", desc: "DStv · GOTV · Startimes", icon: Tv, token: "service-cable" },
-  { slug: "betting", label: "Betting", desc: "Bet9ja, SportyBet, BetKing", icon: Dices, token: "service-esim" },
+  { slug: "betting", label: "Betting", desc: "Bet9ja · SportyBet · 1xBet", icon: Dices, token: "service-betting" },
   { slug: "esim", label: "eSIM", desc: "Stay connected abroad", icon: Wifi, token: "service-esim" },
 ];
 
@@ -81,6 +81,8 @@ function PayHub() {
                 ? ({ to: "/pay/electricity" } as const)
                 : s.slug === "tv"
                 ? ({ to: "/pay/tv" } as const)
+                : s.slug === "betting"
+                ? ({ to: "/pay/betting" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
@@ -96,9 +98,9 @@ function PayHub() {
                 >
                   <Icon className="w-5 h-5" style={{ color: `var(--${s.token})` }} strokeWidth={2.2} />
                 </div>
-                <div>
+                <div className="min-w-0 w-full">
                   <p className="font-semibold text-sm">{s.label}</p>
-                  <p className="text-[11px] text-card-foreground/55 mt-0.5 leading-tight">{s.desc}</p>
+                  <p className="text-[11px] text-card-foreground/55 mt-0.5 leading-tight truncate">{s.desc}</p>
                 </div>
               </Link>
             );
@@ -122,6 +124,8 @@ function PayHub() {
                     ? ({ to: "/pay/electricity" } as const)
                     : r.slug === "tv"
                     ? ({ to: "/pay/tv" } as const)
+                    : r.slug === "betting"
+                    ? ({ to: "/pay/betting" } as const)
                     : ({ to: "/pay/$service", params: { service: r.slug } } as const);
                 return (
                   <Link
