@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { networks, dataPlans, discos, tvPackages, bettingPlatforms } from "@/lib/mock";
 import { BottomSheet, SuccessView } from "./_app.wallet";
 
-export const Route = createFileRoute("/pay/$service")({
+export const Route = createFileRoute("/_app/pay/$service")({
   component: ServicePage,
 });
 

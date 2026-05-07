@@ -4,7 +4,7 @@ import { mockUser } from "@/lib/mock";
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_app/profile")({
   component: Profile,
 });
 

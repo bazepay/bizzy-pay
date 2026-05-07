@@ -4,7 +4,7 @@ import { useState } from "react";
 import { mockUser, mockBalances, mockTransactions, formatMoney, type Currency } from "@/lib/mock";
 import { Eye, EyeOff, Plus, Send, Receipt, CreditCard, Smartphone, Bell, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 
-export const Route = createFileRoute("/home")({
+export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
 

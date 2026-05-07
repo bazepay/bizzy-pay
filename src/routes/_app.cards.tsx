@@ -9,7 +9,7 @@ import { mockCards, mockTransactions, formatMoney, type VirtualCard } from "@/li
 import { BottomSheet, SuccessView } from "./_app.wallet";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/cards")({
+export const Route = createFileRoute("/_app/cards")({
   component: CardsPage,
 });
 

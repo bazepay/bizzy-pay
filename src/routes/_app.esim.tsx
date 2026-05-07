@@ -5,7 +5,7 @@ import { ArrowLeft, QrCode, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { esimCountries, esimPlans } from "@/lib/mock";
 
-export const Route = createFileRoute("/esim")({
+export const Route = createFileRoute("/_app/esim")({
   component: EsimPage,
 });
 
