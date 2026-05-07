@@ -78,11 +78,14 @@ function HomePage() {
         <div className="mt-4 grid grid-cols-5 gap-2">
           {services.map((s) => {
             const Icon = s.icon;
+            const linkProps =
+              s.slug === "airtime"
+                ? ({ to: "/pay/airtime" } as const)
+                : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
                 key={s.label}
-                to="/pay/$service"
-                params={{ service: s.slug }}
+                {...linkProps}
                 className="flex flex-col items-center gap-2 active:scale-95 transition"
               >
                 <div
