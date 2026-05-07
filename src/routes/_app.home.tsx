@@ -1,197 +1,182 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { mockUser, mockBalances, mockTransactions, formatMoney } from "@/lib/mock";
-import {
-  Bell,
-  Target,
-  Box,
-  Activity,
-  CreditCard,
-  ArrowLeftRight,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User, Receipt, Smartphone, Tv, Zap, Trophy, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/_app/home")({
-  component: HomePage,
+  component: Home2Page,
 });
 
-const beneficiaries = [
-  { name: "Charlie", color: "oklch(0.7 0.14 25)" },
-  { name: "Lydia", color: "oklch(0.72 0.13 320)" },
-  { name: "Ryan", color: "oklch(0.65 0.14 250)" },
-  { name: "Cristofer", color: "oklch(0.7 0.13 60)" },
-  { name: "Tatiana", color: "oklch(0.72 0.13 200)" },
-  { name: "Gus", color: "oklch(0.7 0.14 140)" },
+const services = [
+  { label: "Airtime", icon: Phone, to: "/pay/$service", params: { service: "airtime" }, color: "#5B4DFF" },
+  { label: "Data", icon: Smartphone, to: "/pay/$service", params: { service: "data" }, color: "#00C4B4" },
+  { label: "Electricity", icon: Zap, to: "/pay/$service", params: { service: "electricity" }, color: "#FFB020" },
+  { label: "TV", icon: Tv, to: "/pay/$service", params: { service: "tv" }, color: "#FF6B6B" },
+  { label: "Betting", icon: Trophy, to: "/pay/$service", params: { service: "betting" }, color: "#C6FF4D" },
+  { label: "Cards", icon: CreditCard, to: "/cards", params: undefined, color: "#9B6BFF" },
+  { label: "eSIM", icon: Receipt, to: "/esim", params: undefined, color: "#4D9FFF" },
 ];
 
-function HomePage() {
-  const [hidden, setHidden] = useState(false);
+const txns = [
+  { id: 1, title: "Paypal Payment", subtitle: "Paid · Today", amount: "120 USD", up: true },
+  { id: 2, title: "Salary Payment", subtitle: "Received · Today", amount: "7350 USD", up: false },
+  { id: 3, title: "Spotify", subtitle: "Paid · Yesterday", amount: "9.99 USD", up: true },
+];
 
+function Home2Page() {
   return (
-    <div className="min-h-full bg-[#0F172A] text-white pb-6">
-      {/* Status bar spacer */}
-      <div className="h-12" />
-      <div className="px-5 -mt-2 mb-1 flex justify-end">
-        <Link to="/home2" className="text-[10px] text-[#00C4B4] underline font-semibold">
-          View Home 2 →
-        </Link>
-      </div>
+    <div className="min-h-full bg-[#0B0B12] text-white flex flex-col">
+      {/* status spacer */}
+      <div className="h-10" />
 
-      {/* Header */}
-      <div className="px-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0066FF] to-[#0052CC] flex items-center justify-center font-display font-bold text-white ring-2 ring-white/10"
-          >
-            {mockUser.firstName[0]}
-          </div>
-          <div>
-            <p className="text-base font-semibold leading-tight">
-              Hi there, {mockUser.firstName}
-            </p>
-            <p className="text-xs text-white/50 flex items-center gap-1 mt-0.5">
-              <span className="text-[#00C4B4]">●</span> Lagos, Nigeria
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-            <Target className="w-4 h-4 text-[#00C4B4]" />
-          </button>
-          <button className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 relative">
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-[#00C4B4]" />
-          </button>
-        </div>
-      </div>
-
-      {/* Balance card */}
-      <div className="px-5 mt-5">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative rounded-3xl p-5 overflow-hidden bg-gradient-to-br from-[#0052CC] via-[#0066FF] to-[#0A2540] border border-white/10"
-        >
-          {/* teal accent strip */}
-          <div className="absolute -right-10 top-0 bottom-0 w-24 bg-gradient-to-b from-[#00C4B4] to-[#00A3FF] rounded-l-3xl opacity-90" />
-          <div className="absolute right-2 top-4 w-10 h-10 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center">
-            <div className="w-5 h-5 rounded bg-[#00C4B4] rotate-45" />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-white/60">BazePay Balance</p>
-            <button onClick={() => setHidden(!hidden)} className="text-white/50 mr-12">
-              {hidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-
-          <h1 className="font-display text-3xl font-bold mt-1 tracking-tight">
-            {hidden ? "₦ • • • • • • • •" : formatMoney(mockBalances.NGN, "NGN")}
+      {/* Top: balance */}
+      <div className="px-6 pt-4 flex items-start justify-between">
+        <div>
+          <h1 className="font-display text-4xl font-bold tracking-tight">
+            $5,560<span className="text-white/40">.32</span>
           </h1>
-
-          <div className="mt-6">
-            <p className="text-[10px] tracking-widest text-white/40">CARD NUMBER</p>
-            <p className="font-display text-base mt-1 tracking-wider">
-              3829 4820 4629 5025
-            </p>
-            <p className="text-xs text-white/50 mt-1">11/29</p>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Quick actions */}
-      <div className="px-5 mt-4">
-        <div className="rounded-3xl bg-white/[0.04] border border-white/5 p-4 grid grid-cols-4 gap-2">
-          <QuickAction to="/wallet" icon={Box} label="Wallet" />
-          <QuickAction to="/wallet" icon={Activity} label="Activity" />
-          <QuickAction to="/cards" icon={CreditCard} label="Cards" />
-          <QuickAction to="/wallet" icon={ArrowLeftRight} label="Cash In/Out" />
+          <p className="text-sm text-white/50 mt-1">Total balance</p>
         </div>
+        <button className="flex items-center gap-1.5 bg-white/8 border border-white/10 rounded-full px-3 py-1.5 text-xs font-semibold">
+          <span className="w-4 h-4 rounded-full bg-gradient-to-br from-red-500 via-white to-blue-600" />
+          USD
+          <ChevronDown className="w-3 h-3" />
+        </button>
       </div>
 
-      {/* Beneficiaries */}
-      <div className="px-5 mt-6">
+      {/* CTAs */}
+      <div className="px-6 mt-5 grid grid-cols-2 gap-3">
+        <button className="h-12 rounded-full bg-[#C6FF4D] text-black font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+          <Plus className="w-4 h-4" /> Top up
+        </button>
+        <button className="h-12 rounded-full bg-[#5B4DFF] text-white font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+          <ArrowLeftRight className="w-4 h-4" /> Transfer
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="px-6 mt-3 grid grid-cols-2 gap-3">
+        <StatCard label="Income" amount="$20,450" change="+12.06%" up positive />
+        <StatCard label="Expense" amount="$22,450" change="+12.06%" up={false} positive={false} />
+      </div>
+
+      {/* Sheet */}
+      <div className="flex-1 mt-5 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-semibold">Beneficiaries</h2>
-          <button className="text-xs text-[#00C4B4] font-semibold">See All</button>
+          <h2 className="font-display font-bold text-lg">Services</h2>
+          <Link to="/pay" className="text-xs font-semibold text-[#5B4DFF]">See All</Link>
         </div>
-        <div className="mt-3 flex gap-4 overflow-x-auto no-scrollbar -mx-1 px-1">
-          {beneficiaries.map((b) => (
-            <div key={b.name} className="flex flex-col items-center gap-1.5 shrink-0">
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center font-display font-semibold text-white ring-2 ring-white/10"
-                style={{ background: b.color }}
+
+        <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar -mx-6 px-6">
+          {services.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Link
+                to={s.to as string}
+                params={s.params as never}
+                key={s.label}
+                className="flex flex-col items-center gap-2 shrink-0 active:scale-95 transition"
               >
-                {b.name[0]}
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md"
+                  style={{ background: s.color }}
+                >
+                  <Icon className="w-6 h-6" />
+                </div>
+                <span className="text-[11px] font-medium text-[#0A0A14]/80">{s.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 flex items-center justify-between">
+          <h2 className="font-display font-bold text-lg">Transactions</h2>
+          <button className="w-8 h-8 rounded-full border border-black/10 flex items-center justify-center">
+            <SlidersHorizontal className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="mt-3 space-y-3">
+          {txns.map((t) => (
+            <div key={t.id} className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center">
+                {t.up ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
               </div>
-              <span className="text-[11px] text-white/70">{b.name}</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-sm">{t.title}</p>
+                <p className="text-xs text-black/50">{t.subtitle}</p>
+              </div>
+              <p className="text-sm font-bold">{t.amount}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Recent activity */}
-      <div className="px-5 mt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-display font-semibold">Recent Activity</h2>
-          <Link to="/wallet" className="text-xs text-[#00C4B4] font-semibold">
-            View All
-          </Link>
+      {/* Floating bottom nav (overrides app nav visually) */}
+      <div className="absolute bottom-0 left-0 right-0 z-50 px-4 pb-5">
+        <div className="bg-white rounded-full shadow-[0_10px_30px_-10px_rgba(0,0,0,0.25)] flex items-center justify-between px-2 py-2">
+          <NavBtn icon={Home} label="Home" active />
+          <NavBtn icon={CreditCard} />
+          <NavBtn icon={BarChart3} />
+          <NavBtn icon={Users} />
+          <NavBtn icon={User} />
         </div>
-        <div className="mt-3 space-y-2">
-          {mockTransactions.slice(0, 3).map((t) => (
-            <Link
-              key={t.id}
-              to="/transaction/$id"
-              params={{ id: t.id }}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.04] border border-white/5 active:scale-[0.99] transition"
-            >
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#0066FF] to-[#00A3FF] flex items-center justify-center font-display text-sm font-bold">
-                {t.title[0]}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate">{t.title}</p>
-                <p className="text-[11px] text-white/50">
-                  {new Date(t.date).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "2-digit",
-                  })}
-                </p>
-              </div>
-              <p
-                className={`text-sm font-bold ${
-                  t.type === "credit" ? "text-[#00C4B4]" : "text-white/80"
-                }`}
-              >
-                {t.type === "credit" ? "+ " : "- "}
-                {formatMoney(t.amount, t.currency)}
-              </p>
-            </Link>
-          ))}
+        <div className="text-center mt-3 flex justify-center gap-3">
+          <Link to="/home" className="text-[10px] text-white/40 underline">← Home 1</Link>
+          <Link to="/home3" className="text-[10px] text-white/40 underline">Home 3 →</Link>
         </div>
       </div>
     </div>
   );
 }
 
-function QuickAction({
-  to,
-  icon: Icon,
+function StatCard({
   label,
+  amount,
+  change,
+  up,
+  positive,
 }: {
-  to: string;
-  icon: typeof Box;
   label: string;
+  amount: string;
+  change: string;
+  up: boolean;
+  positive: boolean;
 }) {
   return (
-    <Link to={to} className="flex flex-col items-center gap-2 py-1 active:scale-95 transition">
-      <div className="w-12 h-12 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-white">
-        <Icon className="w-5 h-5" />
+    <div className="rounded-2xl bg-white/[0.05] border border-white/10 p-4">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-white/60">{label}</span>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${positive ? "bg-[#C6FF4D]/15 text-[#C6FF4D]" : "bg-red-500/15 text-red-400"}`}>
+          {up ? <ArrowDownLeft className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
+        </div>
       </div>
-      <span className="text-[10px] text-white/70 text-center leading-tight">{label}</span>
-    </Link>
+      <p className="font-display text-xl font-bold mt-2">{amount}</p>
+      <p className={`text-[11px] font-semibold mt-1 ${positive ? "text-[#C6FF4D]" : "text-red-400"}`}>
+        {change}
+      </p>
+    </div>
+  );
+}
+
+function NavBtn({
+  icon: Icon,
+  label,
+  active = false,
+}: {
+  icon: typeof Home;
+  label?: string;
+  active?: boolean;
+}) {
+  if (active) {
+    return (
+      <button className="bg-[#5B4DFF] text-white rounded-full px-4 py-2.5 flex items-center gap-2 font-semibold text-sm">
+        <Icon className="w-4 h-4" />
+        {label}
+      </button>
+    );
+  }
+  return (
+    <button className="w-11 h-11 rounded-full flex items-center justify-center text-black/60">
+      <Icon className="w-5 h-5" />
+    </button>
   );
 }
