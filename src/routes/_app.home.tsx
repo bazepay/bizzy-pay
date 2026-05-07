@@ -28,8 +28,7 @@ function HomePage() {
       {/* Top: balance */}
       <div className="px-6 pt-4 flex items-start justify-between">
         <div>
-          <p className="text-xs text-white/50 font-medium">Naira balance</p>
-          <h1 className="font-display text-4xl font-bold tracking-tight mt-1">
+          <h1 className="font-display text-4xl font-bold tracking-tight">
             ₦845,320<span className="text-white/40">.50</span>
           </h1>
           <p className="text-xs text-white/50 mt-1.5">
