@@ -119,10 +119,9 @@ function Home2Page() {
           <NavBtn icon={Users} />
           <NavBtn icon={User} />
         </div>
-        <div className="text-center mt-3">
-          <Link to="/home" className="text-[10px] text-white/40 underline">
-            ← back to Home 1
-          </Link>
+        <div className="text-center mt-3 flex justify-center gap-3">
+          <Link to="/home" className="text-[10px] text-white/40 underline">← Home 1</Link>
+          <Link to="/home3" className="text-[10px] text-white/40 underline">Home 3 →</Link>
         </div>
       </div>
     </div>
