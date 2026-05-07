@@ -71,8 +71,7 @@ function PayHub() {
         {/* eSIM hero — flagship feature */}
         {q === "" && (
           <Link
-            to="/pay/$service"
-            params={{ service: "esim" }}
+            to="/pay/esim"
             className="relative block overflow-hidden rounded-3xl p-5 mb-5 active:scale-[0.99] transition"
             style={{
               background:
