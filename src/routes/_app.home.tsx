@@ -14,6 +14,13 @@ const services = [
   { label: "eSIM", icon: Wifi, color: "#4D9FFF" },
 ];
 
+type CurrencyCode = "NGN" | "USD" | "EUR";
+const wallets: Record<CurrencyCode, { symbol: string; whole: string; decimals: string; equiv: string; flag: string }> = {
+  NGN: { symbol: "₦", whole: "845,320", decimals: ".50", equiv: "≈ $548.20", flag: "🇳🇬" },
+  USD: { symbol: "$", whole: "548", decimals: ".20", equiv: "≈ ₦845,320", flag: "🇺🇸" },
+  EUR: { symbol: "€", whole: "502", decimals: ".15", equiv: "≈ ₦774,316", flag: "🇪🇺" },
+};
+
 const txns = [
   { id: 1, name: "Cody Lee", time: "10:45 PM", amount: "-$220.00", action: "Send", initials: "CL", avatarBg: "#FFE4D6", avatarColor: "#E07A4F", isDebit: true },
   { id: 2, name: "Sam Charm", time: "10:45 PM", amount: "+$220.00", action: "Deposit", initials: "SA", avatarBg: "#E0E7FF", avatarColor: "#5B4DFF", isDebit: false },
