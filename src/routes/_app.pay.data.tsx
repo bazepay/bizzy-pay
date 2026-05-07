@@ -76,13 +76,6 @@ const planMap: Record<string, Plan[]> = {
   ],
 };
 
-const buckets = [
-  { id: "all", label: "All" },
-  { id: "daily", label: "Daily" },
-  { id: "weekly", label: "Weekly" },
-  { id: "monthly", label: "Monthly" },
-  { id: "mega", label: "Mega" },
-] as const;
 
 const recents = [
   { name: "Mum", phone: "0803 555 0142", network: "mtn", initials: "M", bg: "#FFE4D6", color: "#E07A4F", lastPlanId: "mtn-m1" },
