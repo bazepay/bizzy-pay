@@ -6,7 +6,7 @@ import { ArrowLeft, Plus, ArrowUpRight, ArrowDownLeft, Search, X, CheckCircle2 }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/wallet")({
+export const Route = createFileRoute("/_app/wallet")({
   component: WalletPage,
 });
 

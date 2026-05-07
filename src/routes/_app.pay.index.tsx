@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Phone, Wifi, Zap, Tv, Trophy, ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/pay/")({
+export const Route = createFileRoute("/_app/pay/")({
   component: PayHub,
 });
 
