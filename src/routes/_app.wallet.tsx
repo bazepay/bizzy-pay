@@ -38,9 +38,15 @@ export const Route = createFileRoute("/_app/wallet")({
 
 type Direction = "all" | "in" | "out";
 type StatusFilter = "all" | "success" | "pending";
-type DateRange = "all" | "today" | "7d" | "30d";
+type DateRange = "all" | "today" | "7d" | "30d" | "custom";
 
-type Filters = { direction: Direction; status: StatusFilter; date: DateRange };
+type Filters = {
+  direction: Direction;
+  status: StatusFilter;
+  date: DateRange;
+  customFrom?: string;
+  customTo?: string;
+};
 const defaultFilters: Filters = { direction: "all", status: "all", date: "all" };
 
 const txns = [
@@ -61,18 +67,34 @@ function WalletPage() {
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
 
-  const dayLimit = filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
+  const dayLimit =
+    filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
   const activeCount =
     (filters.direction !== "all" ? 1 : 0) +
     (filters.status !== "all" ? 1 : 0) +
     (filters.date !== "all" ? 1 : 0);
+
+  const customRange = (() => {
+    if (filters.date !== "custom" || !filters.customFrom || !filters.customTo) return null;
+    const from = new Date(filters.customFrom);
+    const to = new Date(filters.customTo);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const fromDays = Math.floor((today.getTime() - from.getTime()) / 86400000);
+    const toDays = Math.floor((today.getTime() - to.getTime()) / 86400000);
+    return { min: Math.min(fromDays, toDays), max: Math.max(fromDays, toDays) };
+  })();
 
   const filtered = txns.filter((t) => {
     if (filters.direction === "in" && !t.isCredit) return false;
     if (filters.direction === "out" && t.isCredit) return false;
     if (filters.status === "success" && t.status !== "Success") return false;
     if (filters.status === "pending" && t.status !== "Pending") return false;
-    if (filters.date === "today" ? t.daysAgo > 0 : t.daysAgo > dayLimit) return false;
+    if (filters.date === "today" && t.daysAgo > 0) return false;
+    if ((filters.date === "7d" || filters.date === "30d") && t.daysAgo > dayLimit) return false;
+    if (filters.date === "custom" && customRange) {
+      if (t.daysAgo < customRange.min || t.daysAgo > customRange.max) return false;
+    }
     if (query && !t.title.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
   });
