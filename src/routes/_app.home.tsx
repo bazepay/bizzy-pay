@@ -51,7 +51,7 @@ function HomePage() {
       </div>
 
       {/* Stats */}
-      <div className="px-6 mt-4 grid grid-cols-2 gap-3">
+      <div className="px-6 mt-6 grid grid-cols-2 gap-3">
         <StatCard label="Income" amount="$20,450" change="+12.06%" up positive />
         <StatCard label="Expense" amount="$22,450" change="+12.06%" up={false} positive={false} />
       </div>
