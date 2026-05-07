@@ -234,61 +234,140 @@ function FilterSheet({
 }) {
   const [draft, setDraft] = useState<Filters>(value);
 
-  const directionOpts: { id: Direction; label: string }[] = [
-    { id: "all", label: "All" },
-    { id: "in", label: "Money in" },
-    { id: "out", label: "Money out" },
+  const directionOpts: { id: Direction; label: string; icon: typeof ArrowDownLeft }[] = [
+    { id: "all", label: "All", icon: SlidersHorizontal },
+    { id: "in", label: "Money in", icon: ArrowDownLeft },
+    { id: "out", label: "Money out", icon: ArrowUpRight },
   ];
   const statusOpts: { id: StatusFilter; label: string }[] = [
     { id: "all", label: "Any" },
     { id: "success", label: "Success" },
     { id: "pending", label: "Pending" },
   ];
-  const dateOpts: { id: DateRange; label: string }[] = [
-    { id: "all", label: "All time" },
-    { id: "today", label: "Today" },
-    { id: "7d", label: "Last 7 days" },
-    { id: "30d", label: "Last 30 days" },
+  const dateOpts: { id: DateRange; label: string; sub: string }[] = [
+    { id: "all", label: "All time", sub: "Everything" },
+    { id: "today", label: "Today", sub: "Last 24h" },
+    { id: "7d", label: "Last 7 days", sub: "This week" },
+    { id: "30d", label: "Last 30 days", sub: "This month" },
   ];
+
+  const activeCount =
+    (draft.direction !== "all" ? 1 : 0) +
+    (draft.status !== "all" ? 1 : 0) +
+    (draft.date !== "all" ? 1 : 0);
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] p-6 pb-8 max-h-[88%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[90%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
-        <div className="flex items-center justify-between mt-3">
-          <h3 className="font-display font-bold text-lg">Filter transactions</h3>
-          <button onClick={onClose} className="text-card-foreground/40">
-            <X className="w-5 h-5" />
+
+        <div className="px-6 mt-4 flex items-start justify-between">
+          <div>
+            <h3 className="font-display font-bold text-xl tracking-tight">Filters</h3>
+            <p className="text-[12px] text-card-foreground/50 mt-0.5">
+              {activeCount === 0 ? "Showing all transactions" : `${activeCount} filter${activeCount > 1 ? "s" : ""} applied`}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-card-foreground/5 flex items-center justify-center text-card-foreground/60"
+          >
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <FilterGroup
-          label="Type"
-          options={directionOpts}
-          value={draft.direction}
-          onChange={(v) => setDraft({ ...draft, direction: v })}
-        />
-        <FilterGroup
-          label="Status"
-          options={statusOpts}
-          value={draft.status}
-          onChange={(v) => setDraft({ ...draft, status: v })}
-        />
-        <FilterGroup
-          label="Date"
-          options={dateOpts}
-          value={draft.date}
-          onChange={(v) => setDraft({ ...draft, date: v })}
-        />
+        {/* Type — segmented icon control */}
+        <div className="px-6 mt-6">
+          <p className="text-[11px] font-semibold text-card-foreground/45 uppercase tracking-[0.14em] mb-3">
+            Type
+          </p>
+          <div className="grid grid-cols-3 gap-2 p-1 bg-card-foreground/[0.04] rounded-2xl">
+            {directionOpts.map((o) => {
+              const Icon = o.icon;
+              const selected = draft.direction === o.id;
+              return (
+                <button
+                  key={o.id}
+                  onClick={() => setDraft({ ...draft, direction: o.id })}
+                  className={`relative h-16 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${
+                    selected
+                      ? "bg-card shadow-sm text-card-foreground"
+                      : "text-card-foreground/55"
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${selected && o.id === "in" ? "text-success" : selected && o.id === "out" ? "text-primary" : ""}`} />
+                  <span className="text-[11px] font-semibold">{o.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-        <div className="mt-7 flex gap-3">
+        {/* Status — minimal pills */}
+        <div className="px-6 mt-6">
+          <p className="text-[11px] font-semibold text-card-foreground/45 uppercase tracking-[0.14em] mb-3">
+            Status
+          </p>
+          <div className="flex gap-2">
+            {statusOpts.map((o) => {
+              const selected = draft.status === o.id;
+              return (
+                <button
+                  key={o.id}
+                  onClick={() => setDraft({ ...draft, status: o.id })}
+                  className={`flex-1 h-11 rounded-full text-xs font-semibold transition ${
+                    selected
+                      ? "bg-foreground text-background"
+                      : "bg-card-foreground/[0.04] text-card-foreground/70"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Date — list rows with radio */}
+        <div className="px-6 mt-6">
+          <p className="text-[11px] font-semibold text-card-foreground/45 uppercase tracking-[0.14em] mb-3">
+            Date range
+          </p>
+          <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06]">
+            {dateOpts.map((o) => {
+              const selected = draft.date === o.id;
+              return (
+                <button
+                  key={o.id}
+                  onClick={() => setDraft({ ...draft, date: o.id })}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                >
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold">{o.label}</p>
+                    <p className="text-[11px] text-card-foreground/45 mt-0.5">{o.sub}</p>
+                  </div>
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${
+                      selected ? "border-primary bg-primary" : "border-card-foreground/20"
+                    }`}
+                  >
+                    {selected && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 mt-7 flex gap-3">
           <button
             onClick={() => setDraft(defaultFilters)}
-            className="flex-1 h-12 rounded-full border border-card-foreground/15 text-sm font-semibold"
+            className="px-5 h-12 rounded-full bg-card-foreground/[0.06] text-sm font-semibold text-card-foreground/70"
           >
             Reset
           </button>
@@ -297,49 +376,11 @@ function FilterSheet({
               onChange(draft);
               onClose();
             }}
-            className="flex-[1.5] h-12 rounded-full bg-primary text-primary-foreground text-sm font-semibold"
+            className="flex-1 h-12 rounded-full bg-primary text-primary-foreground text-sm font-bold"
           >
-            Apply
+            Show results
           </button>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function FilterGroup<T extends string>({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string;
-  options: { id: T; label: string }[];
-  value: T;
-  onChange: (v: T) => void;
-}) {
-  return (
-    <div className="mt-6">
-      <p className="text-[11px] font-semibold text-card-foreground/50 uppercase tracking-wider mb-2.5">
-        {label}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {options.map((o) => {
-          const selected = value === o.id;
-          return (
-            <button
-              key={o.id}
-              onClick={() => onChange(o.id)}
-              className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition ${
-                selected
-                  ? "bg-primary text-primary-foreground border-transparent"
-                  : "bg-transparent text-card-foreground/70 border-card-foreground/15"
-              }`}
-            >
-              {o.label}
-            </button>
-          );
-        })}
       </div>
     </div>
   );
