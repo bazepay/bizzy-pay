@@ -49,7 +49,7 @@ const txns = [
   { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", group: "Earlier" },
 ];
 
-const groups: Array<"Today" | "Yesterday" | "Earlier"> = ["Today", "Yesterday", "Earlier"];
+const filterLabels: Record<Filter, string> = { all: "All", in: "Money in", out: "Money out" };
 
 function WalletPage() {
   const [active, setActive] = useState<CurrencyCode>("NGN");
