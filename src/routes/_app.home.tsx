@@ -85,6 +85,8 @@ function HomePage() {
                 ? ({ to: "/pay/data" } as const)
                 : s.slug === "electricity"
                 ? ({ to: "/pay/electricity" } as const)
+                : s.slug === "tv"
+                ? ({ to: "/pay/tv" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
