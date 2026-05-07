@@ -14,11 +14,13 @@ const services = [
   { label: "eSIM", icon: Wifi, color: "#4D9FFF" },
 ];
 
-type CurrencyCode = "NGN" | "USD" | "EUR";
-const wallets: Record<CurrencyCode, { symbol: string; whole: string; decimals: string; equiv: string; flag: string }> = {
-  NGN: { symbol: "₦", whole: "845,320", decimals: ".50", equiv: "≈ $548.20", flag: "🇳🇬" },
-  USD: { symbol: "$", whole: "548", decimals: ".20", equiv: "≈ ₦845,320", flag: "🇺🇸" },
-  EUR: { symbol: "€", whole: "502", decimals: ".15", equiv: "≈ ₦774,316", flag: "🇪🇺" },
+type CurrencyCode = "NGN" | "USD" | "EUR" | "GBP" | "CAD";
+const wallets: Record<CurrencyCode, { symbol: string; whole: string; decimals: string; equiv: string; gradient: string }> = {
+  NGN: { symbol: "₦", whole: "845,320", decimals: ".50", equiv: "≈ $548.20", gradient: "linear-gradient(135deg, #008751, #ffffff, #008751)" },
+  USD: { symbol: "$", whole: "548", decimals: ".20", equiv: "≈ ₦845,320", gradient: "linear-gradient(135deg, #B22234, #ffffff, #3C3B6E)" },
+  EUR: { symbol: "€", whole: "502", decimals: ".15", equiv: "≈ ₦774,316", gradient: "linear-gradient(135deg, #003399, #FFCC00)" },
+  GBP: { symbol: "£", whole: "432", decimals: ".80", equiv: "≈ ₦845,320", gradient: "linear-gradient(135deg, #012169, #ffffff, #C8102E)" },
+  CAD: { symbol: "C$", whole: "748", decimals: ".10", equiv: "≈ ₦845,320", gradient: "linear-gradient(135deg, #FF0000, #ffffff, #FF0000)" },
 };
 
 const txns = [
@@ -50,7 +52,7 @@ function HomePage() {
             onClick={() => setOpen((v) => !v)}
             className="flex items-center gap-1.5 bg-white/8 border border-white/10 rounded-full px-3 py-1.5 text-xs font-semibold"
           >
-            <span className="text-sm leading-none">{w.flag}</span>
+            <span className="w-4 h-4 rounded-full" style={{ background: w.gradient }} />
             {currency}
             <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
           </button>
@@ -62,7 +64,7 @@ function HomePage() {
                   onClick={() => { setCurrency(code); setOpen(false); }}
                   className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/5 text-xs font-semibold"
                 >
-                  <span className="text-sm leading-none">{wallets[code].flag}</span>
+                  <span className="w-4 h-4 rounded-full shrink-0" style={{ background: wallets[code].gradient }} />
                   <span className="flex-1 text-left">{code}</span>
                   {currency === code && <Check className="w-3.5 h-3.5 text-[#C6FF4D]" />}
                 </button>
