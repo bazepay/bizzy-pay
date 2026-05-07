@@ -99,10 +99,18 @@ const plans: Record<string, Plan[]> = {
   ],
 };
 
-const recents = [
-  { region: "europe", label: "Lisbon trip · 5 GB" },
-  { region: "uae", label: "Dubai stopover · 3 GB" },
-  { region: "global", label: "World tour · 10 GB" },
+type Installed = {
+  id: string;
+  region: string;
+  label: string;
+  remaining: string;
+  expiresIn: string;
+};
+
+const installed: Installed[] = [
+  { id: "esim-eu-01", region: "europe", label: "Lisbon trip", remaining: "1.2 GB left", expiresIn: "12 days left" },
+  { id: "esim-ae-01", region: "uae", label: "Dubai stopover", remaining: "Expired", expiresIn: "Renew to reuse" },
+  { id: "esim-gl-01", region: "global", label: "World tour", remaining: "4.8 GB left", expiresIn: "21 days left" },
 ];
 
 const FX = 1550;
