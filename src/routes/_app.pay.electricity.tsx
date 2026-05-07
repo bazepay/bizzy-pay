@@ -286,112 +286,108 @@ function ElectricityPage() {
           </div>
         </div>
 
-        {verified && (
-          <div className="flex p-1 rounded-full bg-card-foreground/[0.06]">
-            {(["Prepaid", "Postpaid"] as const).map((t) => {
-              const sel = type === t;
-              return (
+        <div className={`flex p-1 rounded-full bg-card-foreground/[0.06] transition-opacity ${verified ? "" : "opacity-50 pointer-events-none"}`}>
+          {(["Prepaid", "Postpaid"] as const).map((t) => {
+            const sel = type === t;
+            return (
+              <button
+                key={t}
+                onClick={() => setType(t)}
+                className={`flex-1 h-9 rounded-full text-[12px] font-bold transition ${
+                  sel ? "bg-primary text-primary-foreground shadow-sm" : "text-card-foreground/60"
+                }`}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className={`transition-opacity ${verified ? "" : "opacity-50 pointer-events-none"}`}>
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+            {type === "Postpaid" ? "Outstanding bill" : "Amount"}
+          </label>
+
+          {type === "Postpaid" && verified ? (
+            <div className="rounded-2xl bg-card-foreground/[0.04] p-4 space-y-3">
+              <div className="flex items-baseline justify-between">
+                <span className="text-[12px] text-card-foreground/55">Balance due</span>
+                <span className="font-display text-2xl font-bold">₦12,430</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
                 <button
-                  key={t}
-                  onClick={() => setType(t)}
-                  className={`flex-1 h-9 rounded-full text-[12px] font-bold transition ${
-                    sel ? "bg-primary text-primary-foreground shadow-sm" : "text-card-foreground/60"
+                  onClick={() => {
+                    setAmount(12430);
+                    setCustom("");
+                  }}
+                  className={`h-10 rounded-full text-[12px] font-bold transition ${
+                    amount === 12430
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card-foreground/[0.06] text-card-foreground/85"
                   }`}
                 >
-                  {t}
+                  Pay full
                 </button>
-              );
-            })}
-          </div>
-        )}
-
-        {verified && (
-          <div>
-            <label className="block text-[10px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-              {type === "Postpaid" ? "Outstanding bill" : "Amount"}
-            </label>
-
-            {type === "Postpaid" ? (
-              <div className="rounded-2xl bg-card-foreground/[0.04] p-4 space-y-3">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-[12px] text-card-foreground/55">Balance due</span>
-                  <span className="font-display text-2xl font-bold">₦12,430</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => {
-                      setAmount(12430);
-                      setCustom("");
-                    }}
-                    className={`h-10 rounded-full text-[12px] font-bold transition ${
-                      amount === 12430
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-card-foreground/[0.06] text-card-foreground/85"
-                    }`}
-                  >
-                    Pay full
-                  </button>
+                <input
+                  value={custom}
+                  onChange={(e) => {
+                    setCustom(e.target.value.replace(/\D/g, ""));
+                    setAmount(null);
+                  }}
+                  placeholder="Other amount"
+                  inputMode="numeric"
+                  className="h-10 rounded-full bg-card-foreground/[0.06] px-4 text-[12px] font-semibold outline-none placeholder:text-card-foreground/40"
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="rounded-2xl bg-card-foreground/[0.04] px-5 py-5">
+                <div className="flex items-end gap-2">
+                  <span className="font-display text-3xl font-bold text-card-foreground/55">
+                    ₦
+                  </span>
                   <input
-                    value={custom}
+                    value={custom || (amount ? String(amount) : "")}
                     onChange={(e) => {
                       setCustom(e.target.value.replace(/\D/g, ""));
                       setAmount(null);
                     }}
-                    placeholder="Other amount"
+                    placeholder="0"
                     inputMode="numeric"
-                    className="h-10 rounded-full bg-card-foreground/[0.06] px-4 text-[12px] font-semibold outline-none placeholder:text-card-foreground/40"
+                    className="flex-1 min-w-0 bg-transparent font-display text-3xl font-bold tracking-tight outline-none placeholder:text-card-foreground/25"
                   />
                 </div>
+                {finalAmount > 0 && verified && (
+                  <p className="text-[11px] text-card-foreground/55 mt-1">
+                    ≈ {tokenUnits} kWh · est. at ₦{rate}/kWh
+                  </p>
+                )}
               </div>
-            ) : (
-              <>
-                <div className="rounded-2xl bg-card-foreground/[0.04] px-5 py-5">
-                  <div className="flex items-end gap-2">
-                    <span className="font-display text-3xl font-bold text-card-foreground/55">
-                      ₦
-                    </span>
-                    <input
-                      value={custom || (amount ? String(amount) : "")}
-                      onChange={(e) => {
-                        setCustom(e.target.value.replace(/\D/g, ""));
-                        setAmount(null);
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {presets.map((a) => {
+                  const sel = amount === a;
+                  return (
+                    <button
+                      key={a}
+                      onClick={() => {
+                        setAmount(a);
+                        setCustom("");
                       }}
-                      placeholder="0"
-                      inputMode="numeric"
-                      className="flex-1 min-w-0 bg-transparent font-display text-3xl font-bold tracking-tight outline-none placeholder:text-card-foreground/25"
-                    />
-                  </div>
-                  {finalAmount > 0 && (
-                    <p className="text-[11px] text-card-foreground/55 mt-1">
-                      ≈ {tokenUnits} kWh · est. at ₦{rate}/kWh
-                    </p>
-                  )}
-                </div>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {presets.map((a) => {
-                    const sel = amount === a;
-                    return (
-                      <button
-                        key={a}
-                        onClick={() => {
-                          setAmount(a);
-                          setCustom("");
-                        }}
-                        className={`h-8 px-3 rounded-full text-[12px] font-semibold transition ${
-                          sel
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-card-foreground/[0.06] text-card-foreground/75"
-                        }`}
-                      >
-                        ₦{a >= 1000 ? `${a / 1000}k` : a}
-                      </button>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-          </div>
-        )}
+                      className={`h-8 px-3 rounded-full text-[12px] font-semibold transition ${
+                        sel
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-card-foreground/[0.06] text-card-foreground/75"
+                      }`}
+                    >
+                      ₦{a >= 1000 ? `${a / 1000}k` : a}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 px-4 pb-5 pt-3 bg-gradient-to-t from-card via-card to-transparent">
