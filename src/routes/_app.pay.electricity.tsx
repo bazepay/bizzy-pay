@@ -95,11 +95,14 @@ function ElectricityPage() {
       {/* Hero summary */}
       <div className="px-6 mt-5">
         <div
-          className="rounded-3xl p-5 transition-colors"
+          className="rounded-3xl p-5 transition-colors border"
           style={{
-            backgroundColor: verified
-              ? disco.color
-              : "color-mix(in oklab, var(--card) 88%, transparent)",
+            background: verified
+              ? `linear-gradient(135deg, ${disco.color}, color-mix(in oklab, ${disco.color} 70%, #000))`
+              : "color-mix(in oklab, var(--foreground) 6%, transparent)",
+            borderColor: verified
+              ? "transparent"
+              : "color-mix(in oklab, var(--foreground) 10%, transparent)",
             color: verified ? "#FFFFFF" : "var(--foreground)",
           }}
         >
