@@ -272,7 +272,10 @@ function FilterSheet({
     { id: "today", label: "Today", sub: "Last 24h" },
     { id: "7d", label: "Last 7 days", sub: "This week" },
     { id: "30d", label: "Last 30 days", sub: "This month" },
+    { id: "custom", label: "Custom range", sub: "Pick start & end dates" },
   ];
+
+  const todayISO = new Date().toISOString().slice(0, 10);
 
   const activeCount =
     (draft.direction !== "all" ? 1 : 0) +
