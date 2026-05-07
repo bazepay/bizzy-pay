@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User, Receipt, Smartphone, Tv, Zap, Trophy, Phone } from "lucide-react";
 
-export const Route = createFileRoute("/_app/home")({
-  component: Home2Page,
+export const Route = createFileRoute("/home")({
+  component: HomePage,
 });
 
 const services = [
