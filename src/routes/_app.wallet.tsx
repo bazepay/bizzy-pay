@@ -186,6 +186,41 @@ function WalletPage() {
   );
 }
 
+function FilterMenu({ value, onChange }: { value: Filter; onChange: (f: Filter) => void }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 bg-card-foreground/5 border border-card-foreground/10 rounded-full px-3 py-1.5 text-[11px] font-semibold text-card-foreground/80"
+      >
+        <SlidersHorizontal className="w-3 h-3" />
+        {filterLabels[value]}
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-2 w-40 bg-card border border-card-foreground/10 rounded-2xl p-1.5 shadow-xl z-20">
+            {(["all", "in", "out"] as Filter[]).map((f) => (
+              <button
+                key={f}
+                onClick={() => {
+                  onChange(f);
+                  setOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl hover:bg-card-foreground/5 text-xs font-semibold"
+              >
+                {filterLabels[f]}
+                {value === f && <Check className="w-3.5 h-3.5 text-primary" />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ActionBtn({
   icon: Icon,
   label,
