@@ -1,14 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Check,
   ChevronRight,
+  ChevronDown,
   Copy,
   Sparkles,
   X,
   Zap,
   ShieldCheck,
+  AlertCircle,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/pay/electricity")({
