@@ -95,7 +95,7 @@
   --surface-foreground: oklch(0.98 0.005 260);
 
   /* Quick Pay service tints */
-  --service-esim: oklch(0.55 0.24 280);
+  --service-esim: oklch(0.72 0.16 220);
   --service-airtime: oklch(0.7 0.15 30);
   --service-data: oklch(0.7 0.11 195);
   --service-electricity: oklch(0.78 0.13 80);
