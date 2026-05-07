@@ -8,8 +8,7 @@ import {
   Smartphone,
   Sparkles,
   X,
-  Repeat,
-  ChevronDown,
+  Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/pay/data")({
@@ -76,25 +75,19 @@ const planMap: Record<string, Plan[]> = {
   ],
 };
 
+const buckets = [
+  { id: "all", label: "All" },
+  { id: "daily", label: "Daily" },
+  { id: "weekly", label: "Weekly" },
+  { id: "monthly", label: "Monthly" },
+  { id: "mega", label: "Mega" },
+] as const;
 
 const recents = [
-  { name: "Mum", phone: "0803 555 0142", network: "mtn", initials: "M", bg: "#FFE4D6", color: "#E07A4F", lastPlanId: "mtn-m1" },
-  { name: "Self", phone: "0805 117 3344", network: "glo", initials: "Y", bg: "#E0E7FF", color: "#5B4DFF", lastPlanId: "glo-w1" },
-  { name: "Tunde", phone: "0809 221 9087", network: "9mobile", initials: "T", bg: "#D6F5E3", color: "#0F8C5A", lastPlanId: "9m-w1" },
+  { name: "Mum", phone: "0803 555 0142", network: "mtn", initials: "M", bg: "#FFE4D6", color: "#E07A4F" },
+  { name: "Self", phone: "0805 117 3344", network: "glo", initials: "Y", bg: "#E0E7FF", color: "#5B4DFF" },
+  { name: "Tunde", phone: "0809 221 9087", network: "9mobile", initials: "T", bg: "#D6F5E3", color: "#0F8C5A" },
 ];
-
-function parseGB(size: string): number {
-  const m = size.match(/([\d.]+)\s*(GB|MB)/i);
-  if (!m) return 0;
-  const v = parseFloat(m[1]);
-  return m[2].toUpperCase() === "MB" ? v / 1024 : v;
-}
-
-function pricePerGB(price: number, size: string): string {
-  const gb = parseGB(size);
-  if (gb < 0.05) return "—";
-  return `₦${Math.round(price / gb).toLocaleString()}/GB`;
-}
 
 function detectNetwork(phone: string): string | null {
   const digits = phone.replace(/\D/g, "");
@@ -115,13 +108,9 @@ function DataPage() {
   const [phone, setPhone] = useState("");
   const [network, setNetwork] = useState<string>("mtn");
   const [autoNet, setAutoNet] = useState(true);
+  const [bucket, setBucket] = useState<(typeof buckets)[number]["id"]>("all");
   const [planId, setPlanId] = useState<string | null>(null);
-  const [collapsedBucket, setCollapsedBucket] = useState<Record<string, boolean>>({
-    daily: false,
-    weekly: false,
-    monthly: false,
-    mega: true,
-  });
+  const [query, setQuery] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -129,19 +118,12 @@ function DataPage() {
   const activeNet = autoNet && detected ? detected : network;
   const net = networks.find((n) => n.id === activeNet)!;
   const allPlans = planMap[activeNet] ?? [];
-  const grouped = useMemo(() => {
-    const out: Record<string, Plan[]> = { daily: [], weekly: [], monthly: [], mega: [] };
-    allPlans.forEach((p) => out[p.bucket].push(p));
-    return out;
-  }, [allPlans]);
-  const matchedRecent = recents.find(
-    (r) => r.phone.replace(/\s/g, "") === phone.replace(/\D/g, ""),
-  );
-  const lastPlan = matchedRecent
-    ? planMap[matchedRecent.network]?.find((p) => p.id === matchedRecent.lastPlanId)
-    : null;
-
-  const selectedPlan = allPlans.find((p) => p.id === planId) ?? null;
+  const plans = allPlans.filter((p) => {
+    if (bucket !== "all" && p.bucket !== bucket) return false;
+    if (query && !p.size.toLowerCase().includes(query.toLowerCase())) return false;
+    return true;
+  });
+  const selectedPlan = plans.find((p) => p.id === planId) ?? allPlans.find((p) => p.id === planId) ?? null;
   const total = selectedPlan?.price ?? 0;
   const cashback = Math.floor(total * 0.015);
   const valid = phone.replace(/\D/g, "").length >= 10 && !!selectedPlan;
@@ -165,43 +147,29 @@ function DataPage() {
         </div>
       </div>
 
-      {/* Compact summary */}
+      {/* Hero preview */}
       <div className="px-6 mt-5">
-        <div className="rounded-3xl bg-card text-card-foreground p-4 flex items-center gap-3">
-          <span
-            className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ backgroundColor: net.color, color: net.textColor }}
-          >
-            <span className="text-[10px] font-extrabold leading-none tracking-tight">
-              {net.name === "9mobile" ? "9m" : net.name.slice(0, 3).toUpperCase()}
+        <div
+          className="rounded-3xl p-5 transition-colors"
+          style={{ backgroundColor: net.color, color: net.textColor }}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-80">
+              {net.name} data
             </span>
-          </span>
-          <div className="flex-1 min-w-0">
-            {selectedPlan ? (
-              <>
-                <p className="font-display text-base font-bold leading-tight truncate">
-                  {selectedPlan.size} · {selectedPlan.validity}
-                </p>
-                <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">
-                  {phone ? formatPhone(phone) : "Add a phone number"} · {pricePerGB(selectedPlan.price, selectedPlan.size)}
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="font-display text-base font-bold leading-tight">
-                  {net.name} · pick a plan
-                </p>
-                <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">
-                  {phone ? formatPhone(phone) : "Enter a phone number to start"}
-                </p>
-              </>
+            <span className="text-[11px] font-bold opacity-80">NGN</span>
+          </div>
+          <p className="font-display text-4xl font-bold tracking-tight mt-3">
+            {selectedPlan ? selectedPlan.size : "Pick a plan"}
+          </p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-[12px] opacity-80">
+              {selectedPlan ? selectedPlan.validity : phone ? formatPhone(phone) : "Enter phone number"}
+            </p>
+            {selectedPlan && (
+              <p className="text-[14px] font-bold">₦{selectedPlan.price.toLocaleString()}</p>
             )}
           </div>
-          {selectedPlan && (
-            <p className="font-display text-lg font-bold shrink-0">
-              ₦{selectedPlan.price.toLocaleString()}
-            </p>
-          )}
         </div>
       </div>
 
@@ -281,106 +249,75 @@ function DataPage() {
           </div>
         )}
 
-        {/* Buy again */}
-        {lastPlan && lastPlan.id !== planId && (
-          <button
-            onClick={() => {
-              setPlanId(lastPlan.id);
-              setCollapsedBucket((c) => ({ ...c, [lastPlan.bucket]: false }));
-            }}
-            className="w-full rounded-2xl bg-primary/10 border border-primary/25 px-4 py-3 flex items-center gap-3 text-left active:bg-primary/15 transition"
-          >
-            <span className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center">
-              <Repeat className="w-4 h-4" />
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
-                Buy again
-              </p>
-              <p className="text-sm font-semibold truncate">
-                {lastPlan.size} · {lastPlan.validity} · ₦{lastPlan.price.toLocaleString()}
-              </p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-primary" />
-          </button>
-        )}
-
-        {/* Plans grouped by bucket */}
+        {/* Plan filters */}
         <div>
-          <div className="flex items-center justify-between mb-3 px-1">
+          <div className="flex items-center justify-between mb-2 px-1">
             <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
               Plans · {net.name}
             </p>
-            <span className="text-[11px] text-card-foreground/45">{allPlans.length} available</span>
+            <span className="text-[11px] text-card-foreground/45">{plans.length} found</span>
+          </div>
+          <div className="h-11 rounded-full bg-card-foreground/[0.04] flex items-center gap-2 px-4 mb-3">
+            <Search className="w-3.5 h-3.5 text-card-foreground/45" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search size, e.g. 2GB"
+              className="flex-1 bg-transparent outline-none text-sm placeholder:text-card-foreground/40"
+            />
+          </div>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1">
+            {buckets.map((b) => {
+              const sel = b.id === bucket;
+              return (
+                <button
+                  key={b.id}
+                  onClick={() => setBucket(b.id)}
+                  className={`shrink-0 h-9 px-4 rounded-full text-[12px] font-semibold transition ${
+                    sel
+                      ? "bg-card-foreground text-card"
+                      : "bg-card-foreground/[0.04] text-card-foreground/75"
+                  }`}
+                >
+                  {b.label}
+                </button>
+              );
+            })}
           </div>
 
-          <div className="space-y-4">
-            {(["daily", "weekly", "monthly", "mega"] as const).map((b) => {
-              const items = grouped[b];
-              if (!items?.length) return null;
-              const collapsed = collapsedBucket[b];
-              const labelMap = {
-                daily: "Daily",
-                weekly: "Weekly",
-                monthly: "Monthly",
-                mega: "Mega · 60+ days",
-              } as const;
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {plans.length === 0 && (
+              <p className="col-span-2 text-center text-[12px] text-card-foreground/55 py-6">
+                No plans match your filter.
+              </p>
+            )}
+            {plans.map((p) => {
+              const sel = p.id === planId;
               return (
-                <div key={b}>
-                  <button
-                    onClick={() => setCollapsedBucket((c) => ({ ...c, [b]: !c[b] }))}
-                    className="w-full flex items-center justify-between px-1 py-1 mb-2"
-                  >
-                    <p className="text-[12px] font-bold text-card-foreground/85">
-                      {labelMap[b]}{" "}
-                      <span className="text-card-foreground/40 font-medium">· {items.length}</span>
-                    </p>
-                    <ChevronDown
-                      className={`w-4 h-4 text-card-foreground/45 transition-transform ${
-                        collapsed ? "-rotate-90" : ""
-                      }`}
-                    />
-                  </button>
-                  {!collapsed && (
-                    <div className="grid grid-cols-2 gap-2">
-                      {items.map((p) => {
-                        const sel = p.id === planId;
-                        return (
-                          <button
-                            key={p.id}
-                            onClick={() => setPlanId(p.id)}
-                            className={`relative rounded-2xl p-3.5 text-left transition border ${
-                              sel
-                                ? "bg-card-foreground text-card border-card-foreground"
-                                : "bg-card-foreground/[0.04] border-transparent text-card-foreground"
-                            }`}
-                          >
-                            {p.hot && !sel && (
-                              <span className="absolute top-2 right-2 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-service-airtime/20 text-service-airtime">
-                                Hot
-                              </span>
-                            )}
-                            <p className="font-display font-bold text-lg leading-tight">{p.size}</p>
-                            <p className={`text-[11px] mt-0.5 ${sel ? "text-card/65" : "text-card-foreground/55"}`}>
-                              {p.validity}
-                            </p>
-                            <div className="mt-2 flex items-baseline justify-between gap-1">
-                              <p className="text-[13px] font-bold">₦{p.price.toLocaleString()}</p>
-                              <p className={`text-[10px] font-semibold ${sel ? "text-card/60" : "text-card-foreground/45"}`}>
-                                {pricePerGB(p.price, p.size)}
-                              </p>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
+                <button
+                  key={p.id}
+                  onClick={() => setPlanId(p.id)}
+                  className={`relative rounded-2xl p-3.5 text-left transition border ${
+                    sel
+                      ? "bg-card-foreground text-card border-card-foreground"
+                      : "bg-card-foreground/[0.04] border-transparent text-card-foreground"
+                  }`}
+                >
+                  {p.hot && !sel && (
+                    <span className="absolute top-2 right-2 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-service-airtime/20 text-service-airtime">
+                      Hot
+                    </span>
                   )}
-                </div>
+                  <p className="font-display font-bold text-lg leading-tight">{p.size}</p>
+                  <p className={`text-[11px] mt-0.5 ${sel ? "text-card/65" : "text-card-foreground/55"}`}>
+                    {p.validity}
+                  </p>
+                  <p className="text-[13px] font-bold mt-2">₦{p.price.toLocaleString()}</p>
+                </button>
               );
             })}
           </div>
         </div>
-
 
         {/* Recents */}
         <div>
@@ -438,15 +375,6 @@ function DataPage() {
             ? `Buy ${selectedPlan.size} · ₦${total.toLocaleString()}`
             : "Pick a plan"}
         </button>
-        <p className="text-center text-[10.5px] text-card-foreground/55 mt-2 h-3">
-          {selectedPlan && cashback > 0 ? (
-            <span className="inline-flex items-center gap-1 text-success font-semibold">
-              <Sparkles className="w-3 h-3" /> +₦{cashback} cashback when you pay
-            </span>
-          ) : (
-            "1.5% cashback applied at checkout"
-          )}
-        </p>
       </div>
 
       {confirm && !success && selectedPlan && (
