@@ -387,11 +387,7 @@ function DataPage() {
             })}
           </div>
         </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+
 
         {/* Recents */}
         <div>
