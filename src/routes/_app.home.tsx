@@ -1,18 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User, Receipt, Smartphone, Tv, Zap, Trophy, Phone } from "lucide-react";
+import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User, Smartphone, Tv, Zap, Phone, Wifi } from "lucide-react";
 
 export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
 
 const services = [
-  { label: "Airtime", icon: Phone, to: "/pay/$service", params: { service: "airtime" }, color: "#5B4DFF" },
-  { label: "Data", icon: Smartphone, to: "/pay/$service", params: { service: "data" }, color: "#00C4B4" },
-  { label: "Electricity", icon: Zap, to: "/pay/$service", params: { service: "electricity" }, color: "#FFB020" },
-  { label: "TV", icon: Tv, to: "/pay/$service", params: { service: "tv" }, color: "#FF6B6B" },
-  { label: "Betting", icon: Trophy, to: "/pay/$service", params: { service: "betting" }, color: "#C6FF4D" },
-  { label: "Cards", icon: CreditCard, to: "/cards", params: undefined, color: "#9B6BFF" },
-  { label: "eSIM", icon: Receipt, to: "/esim", params: undefined, color: "#4D9FFF" },
+  { label: "Airtime", icon: Phone, color: "#5B4DFF" },
+  { label: "Data", icon: Smartphone, color: "#00C4B4" },
+  { label: "Electricity", icon: Zap, color: "#FFB020" },
+  { label: "Cable", icon: Tv, color: "#FF6B6B" },
+  { label: "eSIM", icon: Wifi, color: "#4D9FFF" },
 ];
 
 const txns = [
