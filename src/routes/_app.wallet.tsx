@@ -725,6 +725,37 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
           </span>
         </div>
 
+        {/* Token (electricity) */}
+        {isElectricity && (
+          <div className="mx-6 mt-6">
+            <div className="flex items-center justify-between mb-2 px-1">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+                Prepaid token
+              </p>
+              {txn.token && (
+                <button
+                  onClick={copyToken}
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary"
+                >
+                  {tokenCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                  {tokenCopied ? "Copied" : "Copy"}
+                </button>
+              )}
+            </div>
+            <div className="rounded-2xl bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/20 px-4 py-4">
+              {txn.token ? (
+                <p className="font-mono text-lg font-bold tracking-[0.18em] text-card-foreground text-center select-all">
+                  {txn.token}
+                </p>
+              ) : (
+                <p className="font-mono text-sm text-card-foreground/50 text-center">
+                  Token will appear here once available
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Details card */}
         <div className="mx-6 mt-6 rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
           {rows.map((r) => (
