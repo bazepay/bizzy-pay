@@ -445,6 +445,15 @@ function DataPage() {
             ? `Buy ${selectedPlan.size} · ₦${total.toLocaleString()}`
             : "Pick a plan"}
         </button>
+        <p className="text-center text-[10.5px] text-card-foreground/55 mt-2 h-3">
+          {selectedPlan && cashback > 0 ? (
+            <span className="inline-flex items-center gap-1 text-success font-semibold">
+              <Sparkles className="w-3 h-3" /> +₦{cashback} cashback when you pay
+            </span>
+          ) : (
+            "1.5% cashback applied at checkout"
+          )}
+        </p>
       </div>
 
       {confirm && !success && selectedPlan && (
