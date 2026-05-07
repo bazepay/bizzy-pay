@@ -13,6 +13,7 @@ import {
   X,
   ChevronRight,
   SlidersHorizontal,
+  Calendar as CalendarIcon,
 } from "lucide-react";
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
@@ -38,9 +39,15 @@ export const Route = createFileRoute("/_app/wallet")({
 
 type Direction = "all" | "in" | "out";
 type StatusFilter = "all" | "success" | "pending";
-type DateRange = "all" | "today" | "7d" | "30d";
+type DateRange = "all" | "today" | "7d" | "30d" | "custom";
 
-type Filters = { direction: Direction; status: StatusFilter; date: DateRange };
+type Filters = {
+  direction: Direction;
+  status: StatusFilter;
+  date: DateRange;
+  customFrom?: string;
+  customTo?: string;
+};
 const defaultFilters: Filters = { direction: "all", status: "all", date: "all" };
 
 const txns = [
@@ -61,18 +68,34 @@ function WalletPage() {
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
 
-  const dayLimit = filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
+  const dayLimit =
+    filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
   const activeCount =
     (filters.direction !== "all" ? 1 : 0) +
     (filters.status !== "all" ? 1 : 0) +
     (filters.date !== "all" ? 1 : 0);
+
+  const customRange = (() => {
+    if (filters.date !== "custom" || !filters.customFrom || !filters.customTo) return null;
+    const from = new Date(filters.customFrom);
+    const to = new Date(filters.customTo);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const fromDays = Math.floor((today.getTime() - from.getTime()) / 86400000);
+    const toDays = Math.floor((today.getTime() - to.getTime()) / 86400000);
+    return { min: Math.min(fromDays, toDays), max: Math.max(fromDays, toDays) };
+  })();
 
   const filtered = txns.filter((t) => {
     if (filters.direction === "in" && !t.isCredit) return false;
     if (filters.direction === "out" && t.isCredit) return false;
     if (filters.status === "success" && t.status !== "Success") return false;
     if (filters.status === "pending" && t.status !== "Pending") return false;
-    if (filters.date === "today" ? t.daysAgo > 0 : t.daysAgo > dayLimit) return false;
+    if (filters.date === "today" && t.daysAgo > 0) return false;
+    if ((filters.date === "7d" || filters.date === "30d") && t.daysAgo > dayLimit) return false;
+    if (filters.date === "custom" && customRange) {
+      if (t.daysAgo < customRange.min || t.daysAgo > customRange.max) return false;
+    }
     if (query && !t.title.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
   });
@@ -249,7 +272,10 @@ function FilterSheet({
     { id: "today", label: "Today", sub: "Last 24h" },
     { id: "7d", label: "Last 7 days", sub: "This week" },
     { id: "30d", label: "Last 30 days", sub: "This month" },
+    { id: "custom", label: "Custom range", sub: "Pick start & end dates" },
   ];
+
+  const todayISO = new Date().toISOString().slice(0, 10);
 
   const activeCount =
     (draft.direction !== "all" ? 1 : 0) +
@@ -337,27 +363,57 @@ function FilterSheet({
           <p className="text-[11px] font-semibold text-card-foreground/45 uppercase tracking-[0.14em] mb-3">
             Date range
           </p>
-          <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06]">
+          <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
             {dateOpts.map((o) => {
               const selected = draft.date === o.id;
+              const isCustom = o.id === "custom";
               return (
-                <button
-                  key={o.id}
-                  onClick={() => setDraft({ ...draft, date: o.id })}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
-                >
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold">{o.label}</p>
-                    <p className="text-[11px] text-card-foreground/45 mt-0.5">{o.sub}</p>
-                  </div>
-                  <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${
-                      selected ? "border-primary bg-primary" : "border-card-foreground/20"
-                    }`}
+                <div key={o.id}>
+                  <button
+                    onClick={() => setDraft({ ...draft, date: o.id })}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
                   >
-                    {selected && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
-                  </div>
-                </button>
+                    {isCustom && (
+                      <CalendarIcon className="w-4 h-4 text-card-foreground/50" />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">{o.label}</p>
+                      <p className="text-[11px] text-card-foreground/45 mt-0.5">{o.sub}</p>
+                    </div>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${
+                        selected ? "border-primary bg-primary" : "border-card-foreground/20"
+                      }`}
+                    >
+                      {selected && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                    </div>
+                  </button>
+                  {isCustom && selected && (
+                    <div className="px-4 pb-4 pt-1 grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <label className="block">
+                        <span className="text-[10px] font-semibold text-card-foreground/45 uppercase tracking-wider">From</span>
+                        <input
+                          type="date"
+                          max={draft.customTo || todayISO}
+                          value={draft.customFrom || ""}
+                          onChange={(e) => setDraft({ ...draft, customFrom: e.target.value })}
+                          className="mt-1 w-full bg-card border border-card-foreground/10 rounded-xl px-3 h-11 text-sm font-semibold outline-none focus:border-primary"
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="text-[10px] font-semibold text-card-foreground/45 uppercase tracking-wider">To</span>
+                        <input
+                          type="date"
+                          min={draft.customFrom}
+                          max={todayISO}
+                          value={draft.customTo || ""}
+                          onChange={(e) => setDraft({ ...draft, customTo: e.target.value })}
+                          className="mt-1 w-full bg-card border border-card-foreground/10 rounded-xl px-3 h-11 text-sm font-semibold outline-none focus:border-primary"
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
