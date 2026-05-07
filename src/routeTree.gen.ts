@@ -13,18 +13,9 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TransactionIdRouteImport } from './routes/transaction.$id'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
-import { Route as AppWalletRouteImport } from './routes/_app.wallet'
-import { Route as AppProfileRouteImport } from './routes/_app.profile'
-import { Route as AppHome3RouteImport } from './routes/_app.home3'
-import { Route as AppHome2RouteImport } from './routes/_app.home2'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
-import { Route as AppEsimRouteImport } from './routes/_app.esim'
-import { Route as AppCardsRouteImport } from './routes/_app.cards'
-import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
-import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -45,11 +36,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TransactionIdRoute = TransactionIdRouteImport.update({
-  id: '/transaction/$id',
-  path: '/transaction/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/auth/signup',
   path: '/auth/signup',
@@ -60,49 +46,9 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppWalletRoute = AppWalletRouteImport.update({
-  id: '/wallet',
-  path: '/wallet',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppHome3Route = AppHome3RouteImport.update({
-  id: '/home3',
-  path: '/home3',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppHome2Route = AppHome2RouteImport.update({
-  id: '/home2',
-  path: '/home2',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppHomeRoute = AppHomeRouteImport.update({
   id: '/home',
   path: '/home',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppEsimRoute = AppEsimRouteImport.update({
-  id: '/esim',
-  path: '/esim',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCardsRoute = AppCardsRouteImport.update({
-  id: '/cards',
-  path: '/cards',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPayIndexRoute = AppPayIndexRouteImport.update({
-  id: '/pay/',
-  path: '/pay/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPayServiceRoute = AppPayServiceRouteImport.update({
-  id: '/pay/$service',
-  path: '/pay/$service',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -110,35 +56,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
-  '/cards': typeof AppCardsRoute
-  '/esim': typeof AppEsimRoute
   '/home': typeof AppHomeRoute
-  '/home2': typeof AppHome2Route
-  '/home3': typeof AppHome3Route
-  '/profile': typeof AppProfileRoute
-  '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/transaction/$id': typeof TransactionIdRoute
-  '/pay/$service': typeof AppPayServiceRoute
-  '/pay/': typeof AppPayIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
-  '/cards': typeof AppCardsRoute
-  '/esim': typeof AppEsimRoute
   '/home': typeof AppHomeRoute
-  '/home2': typeof AppHome2Route
-  '/home3': typeof AppHome3Route
-  '/profile': typeof AppProfileRoute
-  '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/transaction/$id': typeof TransactionIdRoute
-  '/pay/$service': typeof AppPayServiceRoute
-  '/pay': typeof AppPayIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -146,18 +74,9 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
-  '/_app/cards': typeof AppCardsRoute
-  '/_app/esim': typeof AppEsimRoute
   '/_app/home': typeof AppHomeRoute
-  '/_app/home2': typeof AppHome2Route
-  '/_app/home3': typeof AppHome3Route
-  '/_app/profile': typeof AppProfileRoute
-  '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/transaction/$id': typeof TransactionIdRoute
-  '/_app/pay/$service': typeof AppPayServiceRoute
-  '/_app/pay/': typeof AppPayIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -165,53 +84,20 @@ export interface FileRouteTypes {
     | '/'
     | '/kyc'
     | '/onboarding'
-    | '/cards'
-    | '/esim'
     | '/home'
-    | '/home2'
-    | '/home3'
-    | '/profile'
-    | '/wallet'
     | '/auth/login'
     | '/auth/signup'
-    | '/transaction/$id'
-    | '/pay/$service'
-    | '/pay/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/kyc'
-    | '/onboarding'
-    | '/cards'
-    | '/esim'
-    | '/home'
-    | '/home2'
-    | '/home3'
-    | '/profile'
-    | '/wallet'
-    | '/auth/login'
-    | '/auth/signup'
-    | '/transaction/$id'
-    | '/pay/$service'
-    | '/pay'
+  to: '/' | '/kyc' | '/onboarding' | '/home' | '/auth/login' | '/auth/signup'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/kyc'
     | '/onboarding'
-    | '/_app/cards'
-    | '/_app/esim'
     | '/_app/home'
-    | '/_app/home2'
-    | '/_app/home3'
-    | '/_app/profile'
-    | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
-    | '/transaction/$id'
-    | '/_app/pay/$service'
-    | '/_app/pay/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -221,7 +107,6 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
-  TransactionIdRoute: typeof TransactionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -254,13 +139,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/transaction/$id': {
-      id: '/transaction/$id'
-      path: '/transaction/$id'
-      fullPath: '/transaction/$id'
-      preLoaderRoute: typeof TransactionIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth/signup': {
       id: '/auth/signup'
       path: '/auth/signup'
@@ -275,34 +153,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/wallet': {
-      id: '/_app/wallet'
-      path: '/wallet'
-      fullPath: '/wallet'
-      preLoaderRoute: typeof AppWalletRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/profile': {
-      id: '/_app/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/home3': {
-      id: '/_app/home3'
-      path: '/home3'
-      fullPath: '/home3'
-      preLoaderRoute: typeof AppHome3RouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/home2': {
-      id: '/_app/home2'
-      path: '/home2'
-      fullPath: '/home2'
-      preLoaderRoute: typeof AppHome2RouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/home': {
       id: '/_app/home'
       path: '/home'
@@ -310,59 +160,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/esim': {
-      id: '/_app/esim'
-      path: '/esim'
-      fullPath: '/esim'
-      preLoaderRoute: typeof AppEsimRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/cards': {
-      id: '/_app/cards'
-      path: '/cards'
-      fullPath: '/cards'
-      preLoaderRoute: typeof AppCardsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/pay/': {
-      id: '/_app/pay/'
-      path: '/pay'
-      fullPath: '/pay/'
-      preLoaderRoute: typeof AppPayIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/pay/$service': {
-      id: '/_app/pay/$service'
-      path: '/pay/$service'
-      fullPath: '/pay/$service'
-      preLoaderRoute: typeof AppPayServiceRouteImport
-      parentRoute: typeof AppRoute
-    }
   }
 }
 
 interface AppRouteChildren {
-  AppCardsRoute: typeof AppCardsRoute
-  AppEsimRoute: typeof AppEsimRoute
   AppHomeRoute: typeof AppHomeRoute
-  AppHome2Route: typeof AppHome2Route
-  AppHome3Route: typeof AppHome3Route
-  AppProfileRoute: typeof AppProfileRoute
-  AppWalletRoute: typeof AppWalletRoute
-  AppPayServiceRoute: typeof AppPayServiceRoute
-  AppPayIndexRoute: typeof AppPayIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppCardsRoute: AppCardsRoute,
-  AppEsimRoute: AppEsimRoute,
   AppHomeRoute: AppHomeRoute,
-  AppHome2Route: AppHome2Route,
-  AppHome3Route: AppHome3Route,
-  AppProfileRoute: AppProfileRoute,
-  AppWalletRoute: AppWalletRoute,
-  AppPayServiceRoute: AppPayServiceRoute,
-  AppPayIndexRoute: AppPayIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -374,7 +180,6 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
-  TransactionIdRoute: TransactionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
