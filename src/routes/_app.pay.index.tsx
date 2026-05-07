@@ -67,6 +67,56 @@ function PayHub() {
 
       {/* services */}
       <div className="flex-1 mt-6 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
+        {/* eSIM hero — flagship feature */}
+        {q === "" && (
+          <Link
+            to="/pay/$service"
+            params={{ service: "esim" }}
+            className="relative block overflow-hidden rounded-3xl p-5 mb-5 active:scale-[0.99] transition"
+            style={{
+              background:
+                "linear-gradient(135deg, oklch(0.32 0.14 220) 0%, oklch(0.22 0.12 260) 60%, oklch(0.18 0.08 290) 100%)",
+              color: "#fff",
+            }}
+          >
+            <div
+              className="absolute -top-10 -right-10 w-44 h-44 rounded-full opacity-40 blur-2xl"
+              style={{ background: "oklch(0.72 0.16 220)" }}
+            />
+            <div
+              className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full opacity-25 blur-2xl"
+              style={{ background: "oklch(0.7 0.2 320)" }}
+            />
+            <div className="relative">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 backdrop-blur-sm text-[9px] font-bold uppercase tracking-[0.18em]">
+                  <Sparkles className="w-2.5 h-2.5" /> New
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] opacity-75">
+                  Travel · 190+ countries
+                </span>
+              </div>
+              <div className="mt-3 flex items-end justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="font-display text-2xl font-bold tracking-tight leading-tight">
+                    Travel eSIM
+                  </h3>
+                  <p className="text-[12px] opacity-80 mt-1 leading-snug">
+                    Instant data abroad. No roaming fees. Works on any unlocked phone.
+                  </p>
+                  <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold">
+                    <span>From $4.50 / GB</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+                <div className="shrink-0 w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/15">
+                  <Globe2 className="w-8 h-8" strokeWidth={1.8} />
+                </div>
+              </div>
+            </div>
+          </Link>
+        )}
+
         <h2 className="font-display font-bold text-base">All services</h2>
 
         <div className="mt-4 grid grid-cols-2 gap-3">
