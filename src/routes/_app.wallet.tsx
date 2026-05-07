@@ -641,6 +641,7 @@ function Sheet({
 
 function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
   const [copied, setCopied] = useState(false);
+  const [tokenCopied, setTokenCopied] = useState(false);
   const statusTone =
     txn.status === "Success"
       ? "bg-success/15 text-success"
@@ -654,10 +655,20 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const copyToken = () => {
+    if (!txn.token) return;
+    navigator.clipboard?.writeText(txn.token.replace(/\s/g, "")).catch(() => {});
+    setTokenCopied(true);
+    setTimeout(() => setTokenCopied(false), 1500);
+  };
+
+  const isElectricity = txn.category === "Electricity";
+
   const rows: { label: string; value: React.ReactNode; copy?: boolean }[] = [
     { label: "Reference", value: txn.reference, copy: true },
     { label: "Category", value: txn.category },
     { label: "Method", value: txn.method },
+    ...(txn.units ? [{ label: "Units", value: txn.units }] : []),
     { label: "Date", value: txn.time },
     { label: "Fee", value: txn.fee },
     ...(txn.note ? [{ label: "Note", value: txn.note }] : []),
