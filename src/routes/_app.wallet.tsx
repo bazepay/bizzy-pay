@@ -78,34 +78,33 @@ function WalletPage() {
         </button>
       </div>
 
-      {/* Currency cards horizontal scroll */}
-      <div className="mt-5 flex gap-3 px-6 overflow-x-auto no-scrollbar pb-1">
-        {currencyOrder.map((code) => {
-          const w = wallets[code];
-          const isActive = active === code;
+      {/* Single NGN wallet — switcher only changes display currency */}
+      <div className="mx-6 mt-5 rounded-3xl p-5 bg-gradient-primary shadow-glow">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span
+              className="w-5 h-5 rounded-full"
+              style={{ background: wallets.NGN.gradient }}
+            />
+            <span className="text-xs font-semibold opacity-90">Main wallet · NGN</span>
+          </div>
+          <CurrencySwitcher value={active} onChange={setActive} />
+        </div>
+        {(() => {
+          const display = formatAmount(NGN_BASE * rates[active]);
           return (
-            <button
-              key={code}
-              onClick={() => setActive(code)}
-              className={`shrink-0 w-44 text-left rounded-2xl p-4 border transition ${
-                isActive
-                  ? "bg-gradient-primary border-transparent shadow-glow"
-                  : "bg-white/[0.05] border-white/10"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full" style={{ background: w.gradient }} />
-                <span className="text-xs font-semibold opacity-80">{code}</span>
-              </div>
-              <p className="font-display text-2xl font-bold mt-3">
-                {w.symbol}
-                {w.whole}
-                <span className="opacity-50">{w.decimals}</span>
-              </p>
-              <p className="text-[10px] opacity-60 mt-1">{w.rate}</p>
-            </button>
+            <p className="font-display text-3xl font-bold mt-4">
+              {wallets[active].symbol}
+              {display.whole}
+              <span className="opacity-50">{display.decimals}</span>
+            </p>
           );
-        })}
+        })()}
+        <p className="text-[11px] opacity-70 mt-1">
+          {active === "NGN"
+            ? "Available balance"
+            : `≈ ${wallets.NGN.symbol}${formatAmount(NGN_BASE).whole}${formatAmount(NGN_BASE).decimals} · ${wallets[active].rate}`}
+        </p>
       </div>
 
       {/* Actions */}
