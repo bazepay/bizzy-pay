@@ -44,51 +44,58 @@
 :root {
   --radius: 1rem;
 
-  --background: oklch(0.985 0.005 80);
-  --foreground: oklch(0.18 0.03 280);
+  /* Off-white #F8F9FC */
+  --background: oklch(0.98 0.005 260);
+  /* Dark navy #0A2540 */
+  --foreground: oklch(0.22 0.07 255);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.03 280);
+  --card-foreground: oklch(0.22 0.07 255);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.03 280);
+  --popover-foreground: oklch(0.22 0.07 255);
 
-  --primary: oklch(0.32 0.12 270);
-  --primary-foreground: oklch(0.98 0.005 80);
+  /* Deep trust blue #0066FF */
+  --primary: oklch(0.55 0.24 265);
+  --primary-foreground: oklch(0.99 0.005 260);
 
-  --secondary: oklch(0.95 0.015 270);
-  --secondary-foreground: oklch(0.25 0.08 270);
+  --secondary: oklch(0.95 0.02 260);
+  --secondary-foreground: oklch(0.22 0.07 255);
 
-  --muted: oklch(0.95 0.01 270);
-  --muted-foreground: oklch(0.5 0.03 270);
+  --muted: oklch(0.95 0.015 260);
+  --muted-foreground: oklch(0.5 0.03 255);
 
-  --accent: oklch(0.93 0.04 280);
-  --accent-foreground: oklch(0.25 0.1 270);
+  /* Soft blue #4D9FFF */
+  --accent: oklch(0.72 0.15 255);
+  --accent-foreground: oklch(0.15 0.05 260);
 
-  --gold: oklch(0.82 0.16 85);
-  --gold-foreground: oklch(0.2 0.05 80);
+  /* Vibrant teal #00C4B4 (renamed from gold, kept token name for compat) */
+  --gold: oklch(0.74 0.13 195);
+  --gold-foreground: oklch(0.15 0.04 200);
 
-  --success: oklch(0.65 0.12 230);
-  --success-foreground: oklch(0.98 0.005 80);
+  /* Soft green #00C853 — limited use, success only */
+  --success: oklch(0.72 0.2 145);
+  --success-foreground: oklch(0.99 0.005 260);
 
   --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(0.98 0.005 80);
 
-  --border: oklch(0.9 0.015 270);
-  --input: oklch(0.92 0.015 270);
-  --ring: oklch(0.55 0.15 270);
+  --border: oklch(0.9 0.015 260);
+  --input: oklch(0.92 0.015 260);
+  --ring: oklch(0.55 0.24 265);
 
-  --surface: oklch(0.16 0.03 280);
-  --surface-foreground: oklch(0.98 0.005 80);
+  /* Dark surface #0F172A */
+  --surface: oklch(0.18 0.04 265);
+  --surface-foreground: oklch(0.98 0.005 260);
 
-  --gradient-primary: linear-gradient(135deg, oklch(0.32 0.12 270), oklch(0.45 0.18 295));
-  --gradient-card: linear-gradient(135deg, oklch(0.2 0.05 280) 0%, oklch(0.32 0.12 275) 60%, oklch(0.55 0.13 75) 130%);
-  --gradient-gold: linear-gradient(135deg, oklch(0.82 0.16 85), oklch(0.7 0.14 65));
-  --gradient-hero: linear-gradient(160deg, oklch(0.18 0.04 285) 0%, oklch(0.28 0.12 275) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.45 0.22 265), oklch(0.6 0.22 255));
+  --gradient-card: linear-gradient(135deg, oklch(0.22 0.07 255) 0%, oklch(0.32 0.14 260) 60%, oklch(0.5 0.2 250) 130%);
+  --gradient-gold: linear-gradient(135deg, oklch(0.74 0.13 195), oklch(0.62 0.13 210));
+  --gradient-hero: linear-gradient(160deg, oklch(0.18 0.04 265) 0%, oklch(0.28 0.12 260) 100%);
 
-  --shadow-soft: 0 8px 24px -8px oklch(0.32 0.12 270 / 0.15);
-  --shadow-card: 0 20px 40px -20px oklch(0.18 0.04 285 / 0.45);
-  --shadow-glow: 0 0 40px oklch(0.55 0.18 285 / 0.35);
+  --shadow-soft: 0 8px 24px -8px oklch(0.55 0.24 265 / 0.18);
+  --shadow-card: 0 20px 40px -20px oklch(0.18 0.04 265 / 0.5);
+  --shadow-glow: 0 0 40px oklch(0.6 0.2 260 / 0.4);
 }
 
 .dark {
