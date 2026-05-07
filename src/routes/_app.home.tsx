@@ -28,6 +28,10 @@ const txns = [
 ];
 
 function HomePage() {
+  const [currency, setCurrency] = useState<CurrencyCode>("NGN");
+  const [open, setOpen] = useState(false);
+  const w = wallets[currency];
+
   return (
     <div className="min-h-full bg-[#0B0B12] text-white flex flex-col">
       {/* status spacer */}
@@ -37,15 +41,35 @@ function HomePage() {
       <div className="px-6 pt-4 flex items-start justify-between">
         <div>
           <h1 className="font-display text-4xl font-bold tracking-tight">
-            ₦845,320<span className="text-white/40">.50</span>
+            {w.symbol}{w.whole}<span className="text-white/40">{w.decimals}</span>
           </h1>
-          <p className="text-xs text-white/50 mt-1.5">≈ $548.20</p>
+          <p className="text-xs text-white/50 mt-1.5">{w.equiv}</p>
         </div>
-        <button className="flex items-center gap-1.5 bg-white/8 border border-white/10 rounded-full px-3 py-1.5 text-xs font-semibold">
-          <span className="w-4 h-4 rounded-full bg-gradient-to-br from-green-600 via-white to-green-600" />
-          NGN
-          <ChevronDown className="w-3 h-3" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="flex items-center gap-1.5 bg-white/8 border border-white/10 rounded-full px-3 py-1.5 text-xs font-semibold"
+          >
+            <span className="text-sm leading-none">{w.flag}</span>
+            {currency}
+            <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+          </button>
+          {open && (
+            <div className="absolute right-0 mt-2 w-36 bg-[#16161F] border border-white/10 rounded-2xl p-1.5 shadow-xl z-20">
+              {(Object.keys(wallets) as CurrencyCode[]).map((code) => (
+                <button
+                  key={code}
+                  onClick={() => { setCurrency(code); setOpen(false); }}
+                  className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/5 text-xs font-semibold"
+                >
+                  <span className="text-sm leading-none">{wallets[code].flag}</span>
+                  <span className="flex-1 text-left">{code}</span>
+                  {currency === code && <Check className="w-3.5 h-3.5 text-[#C6FF4D]" />}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* CTAs */}
