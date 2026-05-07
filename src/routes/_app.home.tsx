@@ -41,7 +41,7 @@ function HomePage() {
       </div>
 
       {/* CTAs */}
-      <div className="px-6 mt-5 grid grid-cols-2 gap-3">
+      <div className="px-6 mt-7 grid grid-cols-2 gap-3">
         <button className="h-12 rounded-full bg-[#C6FF4D] text-black font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition">
           <Plus className="w-4 h-4" /> Top up
         </button>
@@ -51,13 +51,13 @@ function HomePage() {
       </div>
 
       {/* Stats */}
-      <div className="px-6 mt-3 grid grid-cols-2 gap-3">
+      <div className="px-6 mt-4 grid grid-cols-2 gap-3">
         <StatCard label="Income" amount="$20,450" change="+12.06%" up positive />
         <StatCard label="Expense" amount="$22,450" change="+12.06%" up={false} positive={false} />
       </div>
 
       {/* Sheet */}
-      <div className="flex-1 mt-5 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
+      <div className="flex-1 mt-7 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Quick pay</h2>
           <button className="text-xs font-semibold text-[#5B4DFF]">See All</button>
