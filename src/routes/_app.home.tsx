@@ -14,11 +14,13 @@ const services = [
   { label: "eSIM", icon: Wifi, color: "#4D9FFF" },
 ];
 
-type CurrencyCode = "NGN" | "USD" | "EUR";
-const wallets: Record<CurrencyCode, { symbol: string; whole: string; decimals: string; equiv: string; flag: string }> = {
-  NGN: { symbol: "₦", whole: "845,320", decimals: ".50", equiv: "≈ $548.20", flag: "🇳🇬" },
-  USD: { symbol: "$", whole: "548", decimals: ".20", equiv: "≈ ₦845,320", flag: "🇺🇸" },
-  EUR: { symbol: "€", whole: "502", decimals: ".15", equiv: "≈ ₦774,316", flag: "🇪🇺" },
+type CurrencyCode = "NGN" | "USD" | "EUR" | "GBP" | "CAD";
+const wallets: Record<CurrencyCode, { symbol: string; whole: string; decimals: string; equiv: string; gradient: string }> = {
+  NGN: { symbol: "₦", whole: "845,320", decimals: ".50", equiv: "≈ $548.20", gradient: "linear-gradient(135deg, #008751, #ffffff, #008751)" },
+  USD: { symbol: "$", whole: "548", decimals: ".20", equiv: "≈ ₦845,320", gradient: "linear-gradient(135deg, #B22234, #ffffff, #3C3B6E)" },
+  EUR: { symbol: "€", whole: "502", decimals: ".15", equiv: "≈ ₦774,316", gradient: "linear-gradient(135deg, #003399, #FFCC00)" },
+  GBP: { symbol: "£", whole: "432", decimals: ".80", equiv: "≈ ₦845,320", gradient: "linear-gradient(135deg, #012169, #ffffff, #C8102E)" },
+  CAD: { symbol: "C$", whole: "748", decimals: ".10", equiv: "≈ ₦845,320", gradient: "linear-gradient(135deg, #FF0000, #ffffff, #FF0000)" },
 };
 
 const txns = [
