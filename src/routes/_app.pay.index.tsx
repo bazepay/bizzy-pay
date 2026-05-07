@@ -77,6 +77,8 @@ function PayHub() {
                 ? ({ to: "/pay/airtime" } as const)
                 : s.slug === "data"
                 ? ({ to: "/pay/data" } as const)
+                : s.slug === "electricity"
+                ? ({ to: "/pay/electricity" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
@@ -114,6 +116,8 @@ function PayHub() {
                     ? ({ to: "/pay/airtime" } as const)
                     : r.slug === "data"
                     ? ({ to: "/pay/data" } as const)
+                    : r.slug === "electricity"
+                    ? ({ to: "/pay/electricity" } as const)
                     : ({ to: "/pay/$service", params: { service: r.slug } } as const);
                 return (
                   <Link
