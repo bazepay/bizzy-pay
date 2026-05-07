@@ -594,12 +594,16 @@ function ConfirmSheet({
 }
 
 function SuccessSheet({
+  mode,
+  esimLabel,
   email,
   region,
   plan,
   cashback,
   onDone,
 }: {
+  mode: "new" | "topup";
+  esimLabel: string;
   email: string;
   region: Region;
   plan: Plan;
@@ -607,6 +611,7 @@ function SuccessSheet({
   onDone: () => void;
 }) {
   const ref = `BZP-ESIM-${Math.floor(Math.random() * 90000 + 10000)}`;
+  const isTopup = mode === "topup";
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
@@ -617,8 +622,11 @@ function SuccessSheet({
           <div className="w-16 h-16 rounded-full bg-success/15 text-success flex items-center justify-center">
             <Check className="w-7 h-7" strokeWidth={3} />
           </div>
-          <h3 className="font-display font-bold text-xl mt-4">eSIM ready</h3>
+          <h3 className="font-display font-bold text-xl mt-4">
+            {isTopup ? "Top up successful" : "eSIM ready"}
+          </h3>
           <p className="text-[12px] text-card-foreground/55 mt-1">
+            {isTopup ? `${esimLabel} · ` : ""}
             {region.name} · {plan.data} · {plan.duration}
           </p>
           {cashback > 0 && (
@@ -628,40 +636,67 @@ function SuccessSheet({
           )}
         </div>
 
-        {/* QR placeholder */}
-        <div
-          className="mx-6 mt-5 rounded-2xl px-4 py-5 flex items-center gap-4"
-          style={{
-            background: `color-mix(in oklab, ${region.color} 10%, transparent)`,
-            border: `1px solid color-mix(in oklab, ${region.color} 22%, transparent)`,
-          }}
-        >
+        {isTopup ? (
           <div
-            className="w-20 h-20 rounded-xl bg-white p-1.5 grid grid-cols-6 grid-rows-6 gap-px shrink-0"
-            aria-label="eSIM QR"
+            className="mx-6 mt-5 rounded-2xl px-4 py-4 flex items-center gap-3"
+            style={{
+              background: `color-mix(in oklab, ${region.color} 10%, transparent)`,
+              border: `1px solid color-mix(in oklab, ${region.color} 22%, transparent)`,
+            }}
           >
-            {Array.from({ length: 36 }).map((_, i) => (
-              <span
-                key={i}
-                className="rounded-[1px]"
-                style={{
-                  background:
-                    [0, 1, 5, 6, 10, 11, 25, 26, 30, 31, 35].includes(i % 36) ||
-                    (i * 7) % 11 < 5
-                      ? "#000"
-                      : "#fff",
-                }}
-              />
-            ))}
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: region.color, color: "#fff" }}
+            >
+              <Wifi className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-card-foreground/55">
+                Active on your phone
+              </p>
+              <p className="font-display text-base font-bold mt-0.5">No reinstall needed</p>
+              <p className="text-[10px] text-card-foreground/55 mt-1">
+                Data refilled in under 30 seconds
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-card-foreground/55">
-              Install QR
-            </p>
-            <p className="font-display text-base font-bold mt-0.5 truncate">{email}</p>
-            <p className="text-[10px] text-card-foreground/55 mt-1">Sent to inbox · valid 30 days</p>
+        ) : (
+          <div
+            className="mx-6 mt-5 rounded-2xl px-4 py-5 flex items-center gap-4"
+            style={{
+              background: `color-mix(in oklab, ${region.color} 10%, transparent)`,
+              border: `1px solid color-mix(in oklab, ${region.color} 22%, transparent)`,
+            }}
+          >
+            <div
+              className="w-20 h-20 rounded-xl bg-white p-1.5 grid grid-cols-6 grid-rows-6 gap-px shrink-0"
+              aria-label="eSIM QR"
+            >
+              {Array.from({ length: 36 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="rounded-[1px]"
+                  style={{
+                    background:
+                      [0, 1, 5, 6, 10, 11, 25, 26, 30, 31, 35].includes(i % 36) ||
+                      (i * 7) % 11 < 5
+                        ? "#000"
+                        : "#fff",
+                  }}
+                />
+              ))}
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-card-foreground/55">
+                Install QR
+              </p>
+              <p className="font-display text-base font-bold mt-0.5 truncate">{email}</p>
+              <p className="text-[10px] text-card-foreground/55 mt-1">
+                Install once — future top ups apply automatically
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="mx-6 mt-3 rounded-2xl bg-card-foreground/[0.04] px-4 py-3 flex items-center justify-between">
           <p className="text-[12px] text-card-foreground/55">Reference</p>
@@ -677,7 +712,7 @@ function SuccessSheet({
             }}
             className="h-12 rounded-full bg-card-foreground/[0.06] flex items-center justify-center font-bold text-sm"
           >
-            Buy another
+            {isTopup ? "Top up another" : "Buy another"}
           </Link>
           <button
             onClick={onDone}
