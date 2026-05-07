@@ -131,30 +131,43 @@ function ElectricityPage() {
           <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
             Distributor
           </p>
-          <div className="flex gap-2 overflow-x-auto -mx-6 px-6 pb-1 scrollbar-none">
+          <div className="grid grid-cols-2 gap-2">
             {discos.map((d) => {
               const sel = d.id === discoId;
               return (
                 <button
                   key={d.id}
                   onClick={() => setDiscoId(d.id)}
-                  className={`shrink-0 h-16 px-4 rounded-2xl flex items-center gap-2.5 transition ${
-                    sel ? "bg-card-foreground text-card" : "bg-card-foreground/[0.04] text-card-foreground/85"
+                  className={`relative h-16 rounded-2xl px-3 flex items-center gap-3 transition overflow-hidden ${
+                    sel
+                      ? "bg-card-foreground/[0.06] ring-1 ring-inset"
+                      : "bg-card-foreground/[0.03] hover:bg-card-foreground/[0.05]"
                   }`}
+                  style={sel ? { boxShadow: `inset 0 0 0 1.5px ${d.color}` } : undefined}
                 >
                   <span
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold"
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold shrink-0"
                     style={{
-                      background: sel ? "rgba(255,255,255,0.18)" : `color-mix(in oklab, ${d.color} 18%, transparent)`,
-                      color: sel ? "currentColor" : d.color,
+                      background: `color-mix(in oklab, ${d.color} 22%, transparent)`,
+                      color: d.color,
                     }}
                   >
                     {d.short.slice(0, 2)}
                   </span>
-                  <div className="text-left">
-                    <p className="text-[12px] font-bold leading-tight">{d.short}</p>
-                    <p className="text-[10px] opacity-60 leading-tight">{d.region}</p>
+                  <div className="text-left min-w-0">
+                    <p className="text-[12px] font-bold leading-tight truncate">{d.short}</p>
+                    <p className="text-[10px] text-card-foreground/55 leading-tight truncate">
+                      {d.region}
+                    </p>
                   </div>
+                  {sel && (
+                    <span
+                      className="absolute top-2 right-2 w-4 h-4 rounded-full flex items-center justify-center"
+                      style={{ background: d.color }}
+                    >
+                      <Check className="w-2.5 h-2.5 text-white" strokeWidth={3.5} />
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -174,7 +187,7 @@ function ElectricityPage() {
                   key={t}
                   onClick={() => setType(t)}
                   className={`h-12 rounded-2xl text-sm font-bold transition ${
-                    sel ? "bg-card-foreground text-card" : "bg-card-foreground/[0.04] text-card-foreground/85"
+                    sel ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.04] text-card-foreground/85"
                   }`}
                 >
                   {t}
@@ -232,7 +245,7 @@ function ElectricityPage() {
                     setCustom("");
                   }}
                   className={`h-12 rounded-2xl text-sm font-bold transition ${
-                    sel ? "bg-card-foreground text-card" : "bg-card-foreground/[0.04] text-card-foreground/85"
+                    sel ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.04] text-card-foreground/85"
                   }`}
                 >
                   ₦{a.toLocaleString()}
