@@ -20,6 +20,7 @@ import { Route as AppPayRouteImport } from './routes/_app.pay'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
+import { Route as AppPayInternetRouteImport } from './routes/_app.pay.internet'
 import { Route as AppPayElectricityRouteImport } from './routes/_app.pay.electricity'
 import { Route as AppPayDataRouteImport } from './routes/_app.pay.data'
 import { Route as AppPayBettingRouteImport } from './routes/_app.pay.betting'
@@ -80,6 +81,11 @@ const AppPayTvRoute = AppPayTvRouteImport.update({
   path: '/tv',
   getParentRoute: () => AppPayRoute,
 } as any)
+const AppPayInternetRoute = AppPayInternetRouteImport.update({
+  id: '/internet',
+  path: '/internet',
+  getParentRoute: () => AppPayRoute,
+} as any)
 const AppPayElectricityRoute = AppPayElectricityRouteImport.update({
   id: '/electricity',
   path: '/electricity',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/pay/betting': typeof AppPayBettingRoute
   '/pay/data': typeof AppPayDataRoute
   '/pay/electricity': typeof AppPayElectricityRoute
+  '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
   '/pay/': typeof AppPayIndexRoute
 }
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/pay/betting': typeof AppPayBettingRoute
   '/pay/data': typeof AppPayDataRoute
   '/pay/electricity': typeof AppPayElectricityRoute
+  '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
   '/pay': typeof AppPayIndexRoute
 }
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/_app/pay/betting': typeof AppPayBettingRoute
   '/_app/pay/data': typeof AppPayDataRoute
   '/_app/pay/electricity': typeof AppPayElectricityRoute
+  '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
   '/_app/pay/': typeof AppPayIndexRoute
 }
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/pay/betting'
     | '/pay/data'
     | '/pay/electricity'
+    | '/pay/internet'
     | '/pay/tv'
     | '/pay/'
   fileRoutesByTo: FileRoutesByTo
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/pay/betting'
     | '/pay/data'
     | '/pay/electricity'
+    | '/pay/internet'
     | '/pay/tv'
     | '/pay'
   id:
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/_app/pay/betting'
     | '/_app/pay/data'
     | '/_app/pay/electricity'
+    | '/_app/pay/internet'
     | '/_app/pay/tv'
     | '/_app/pay/'
   fileRoutesById: FileRoutesById
@@ -300,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPayTvRouteImport
       parentRoute: typeof AppPayRoute
     }
+    '/_app/pay/internet': {
+      id: '/_app/pay/internet'
+      path: '/internet'
+      fullPath: '/pay/internet'
+      preLoaderRoute: typeof AppPayInternetRouteImport
+      parentRoute: typeof AppPayRoute
+    }
     '/_app/pay/electricity': {
       id: '/_app/pay/electricity'
       path: '/electricity'
@@ -344,6 +363,7 @@ interface AppPayRouteChildren {
   AppPayBettingRoute: typeof AppPayBettingRoute
   AppPayDataRoute: typeof AppPayDataRoute
   AppPayElectricityRoute: typeof AppPayElectricityRoute
+  AppPayInternetRoute: typeof AppPayInternetRoute
   AppPayTvRoute: typeof AppPayTvRoute
   AppPayIndexRoute: typeof AppPayIndexRoute
 }
@@ -354,6 +374,7 @@ const AppPayRouteChildren: AppPayRouteChildren = {
   AppPayBettingRoute: AppPayBettingRoute,
   AppPayDataRoute: AppPayDataRoute,
   AppPayElectricityRoute: AppPayElectricityRoute,
+  AppPayInternetRoute: AppPayInternetRoute,
   AppPayTvRoute: AppPayTvRoute,
   AppPayIndexRoute: AppPayIndexRoute,
 }

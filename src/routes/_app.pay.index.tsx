@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Phone, Smartphone, Zap, Tv, Dices, Wifi, ChevronRight, Search, Globe2, Sparkles } from "lucide-react";
+import { Phone, Smartphone, Zap, Tv, Dices, Wifi, ChevronRight, Search, Globe2, Sparkles, Router } from "lucide-react";
 import { useState } from "react";
 import { BottomNav } from "@/components/bottom-nav";
 
@@ -27,6 +27,7 @@ const services: Service[] = [
   { slug: "electricity", label: "Electricity", desc: "Prepaid & postpaid meters", icon: Zap, token: "service-electricity" },
   { slug: "tv", label: "TV subscription", desc: "DStv · GOTV · Startimes", icon: Tv, token: "service-cable" },
   { slug: "betting", label: "Betting", desc: "Bet9ja · SportyBet · 1xBet", icon: Dices, token: "service-betting" },
+  { slug: "internet", label: "Internet", desc: "ipNX · Smile · Spectranet", icon: Router, token: "service-internet" },
   
 ];
 
@@ -133,6 +134,8 @@ function PayHub() {
                 ? ({ to: "/pay/tv" } as const)
                 : s.slug === "betting"
                 ? ({ to: "/pay/betting" } as const)
+                : s.slug === "internet"
+                ? ({ to: "/pay/internet" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
@@ -176,6 +179,8 @@ function PayHub() {
                     ? ({ to: "/pay/tv" } as const)
                     : r.slug === "betting"
                     ? ({ to: "/pay/betting" } as const)
+                    : r.slug === "internet"
+                    ? ({ to: "/pay/internet" } as const)
                     : ({ to: "/pay/$service", params: { service: r.slug } } as const);
                 return (
                   <Link
