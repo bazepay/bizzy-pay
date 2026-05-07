@@ -97,27 +97,20 @@ function ElectricityPage() {
         <div
           className="rounded-3xl p-5 transition-colors"
           style={{
-            backgroundColor: verified
-              ? disco.color
-              : "color-mix(in oklab, var(--card) 88%, transparent)",
-            color: verified ? "#FFFFFF" : "var(--foreground)",
+            backgroundColor: disco.color,
+            color: "#FFFFFF",
           }}
         >
           <div className="flex items-center justify-between">
-            <span
-              className="text-[11px] font-bold uppercase tracking-[0.18em]"
-              style={{ opacity: verified ? 0.85 : 0.5 }}
-            >
+            <span className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-85">
               {disco.short} · {type}
             </span>
-            <span className="text-[11px] font-bold" style={{ opacity: verified ? 0.85 : 0.5 }}>
-              NGN
-            </span>
+            <span className="text-[11px] font-bold opacity-85">NGN</span>
           </div>
           <p className="font-display text-4xl font-bold tracking-tight mt-3">
             ₦{finalAmount ? finalAmount.toLocaleString() : "0"}
           </p>
-          <p className="text-[12px] mt-1" style={{ opacity: verified ? 0.85 : 0.55 }}>
+          <p className="text-[12px] mt-1 opacity-85">
             {verified
               ? `${customer} · ${type === "Prepaid" ? `≈ ${tokenUnits} units` : "Pay outstanding bill"}`
               : "Enter meter number to continue"}
