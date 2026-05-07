@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User, Receipt, Smartphone, Tv, Zap, Trophy, Phone } from "lucide-react";
 
-export const Route = createFileRoute("/home")({
+export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
 
@@ -21,7 +21,7 @@ const txns = [
   { id: 3, title: "Spotify", subtitle: "Paid · Yesterday", amount: "9.99 USD", up: true },
 ];
 
-function Home2Page() {
+function HomePage() {
   return (
     <div className="min-h-full bg-[#0B0B12] text-white flex flex-col">
       {/* status spacer */}
