@@ -247,6 +247,7 @@ function WalletPage() {
           onClose={() => setFilterOpen(false)}
         />
       )}
+      {detail && <TxnDetailSheet txn={detail} onClose={() => setDetail(null)} />}
 
       <BottomNav />
     </div>
