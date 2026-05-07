@@ -13,7 +13,7 @@ import {
   EyeOff,
 } from "lucide-react";
 
-export const Route = createFileRoute("/home")({
+export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
 
