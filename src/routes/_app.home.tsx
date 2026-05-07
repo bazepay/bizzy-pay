@@ -85,8 +85,8 @@ function HomePage() {
 
       {/* Stats */}
       <div className="px-6 mt-6 grid grid-cols-2 gap-3">
-        <StatCard label="Topped up" amount="₦1.2M" change="This month" up positive />
-        <StatCard label="Spent" amount="₦654K" change="This month" up={false} positive={false} />
+        <StatCard label="Topped up" amount="₦1.2M" delta="+18%" positive data={[3, 5, 4, 7, 6, 9, 8, 11, 10, 13]} />
+        <StatCard label="Spent" amount="₦654K" delta="-8%" positive={false} data={[8, 6, 9, 5, 7, 4, 6, 3, 5, 4]} />
       </div>
 
       {/* Sheet */}
@@ -164,28 +164,43 @@ function HomePage() {
 function StatCard({
   label,
   amount,
-  change,
-  up,
+  delta,
   positive,
+  data,
 }: {
   label: string;
   amount: string;
-  change: string;
-  up: boolean;
+  delta: string;
   positive: boolean;
+  data: number[];
 }) {
+  const color = positive ? "#C6FF4D" : "#FF6B6B";
+  const max = Math.max(...data);
   return (
     <div className="rounded-2xl bg-white/[0.05] border border-white/10 p-4">
       <div className="flex items-center justify-between">
         <span className="text-xs text-white/60">{label}</span>
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${positive ? "bg-[#C6FF4D]/15 text-[#C6FF4D]" : "bg-red-500/15 text-red-400"}`}>
-          {up ? <ArrowDownLeft className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
-        </div>
+        <span
+          className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
+          style={{ background: `${color}1F`, color }}
+        >
+          {delta}
+        </span>
       </div>
       <p className="font-display text-xl font-bold mt-2">{amount}</p>
-      <p className={`text-[11px] font-semibold mt-1 ${positive ? "text-[#C6FF4D]" : "text-red-400"}`}>
-        {change}
-      </p>
+      <div className="mt-2 flex items-end gap-[3px] h-7">
+        {data.map((v, i) => (
+          <div
+            key={i}
+            className="flex-1 rounded-sm"
+            style={{
+              height: `${(v / max) * 100}%`,
+              background: color,
+              opacity: 0.35 + (i / data.length) * 0.65,
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }
