@@ -117,6 +117,8 @@ const FX = 1550;
 
 function EsimPage() {
   const navigate = useNavigate();
+  const [mode, setMode] = useState<"new" | "topup">("new");
+  const [topupId, setTopupId] = useState<string | null>(null);
   const [regionId, setRegionId] = useState<string>("global");
   const [email, setEmail] = useState("");
   const [planId, setPlanId] = useState<string | null>(null);
@@ -124,10 +126,12 @@ function EsimPage() {
   const [success, setSuccess] = useState(false);
   const [search, setSearch] = useState("");
 
-  const region = regions.find((p) => p.id === regionId)!;
-  const regionPlans = plans[regionId] ?? [];
+  const activeEsim = installed.find((i) => i.id === topupId) ?? null;
+  const effectiveRegionId = mode === "topup" && activeEsim ? activeEsim.region : regionId;
+  const region = regions.find((p) => p.id === effectiveRegionId)!;
+  const regionPlans = plans[effectiveRegionId] ?? [];
   const plan = regionPlans.find((p) => p.id === planId) ?? null;
-  const verified = /\S+@\S+\.\S+/.test(email);
+  const verified = mode === "topup" ? activeEsim !== null : /\S+@\S+\.\S+/.test(email);
   const valid = verified && plan !== null;
   const cashback = plan ? +(plan.price * 0.005).toFixed(2) : 0;
 
