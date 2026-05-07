@@ -70,10 +70,8 @@ function Home2Page() {
             const Icon = s.icon;
             return (
               <Link
-                // @ts-expect-error - dynamic route params
-                to={s.to}
-                // @ts-expect-error
-                params={s.params}
+                to={s.to as string}
+                params={s.params as never}
                 key={s.label}
                 className="flex flex-col items-center gap-2 shrink-0 active:scale-95 transition"
               >
