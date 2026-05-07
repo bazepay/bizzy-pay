@@ -197,7 +197,11 @@ function WalletPage() {
         {/* Flat list */}
         <div className="mt-5 space-y-3">
           {filtered.map((t) => (
-            <div key={t.id} className="flex items-center gap-3">
+            <button
+              key={t.id}
+              onClick={() => setDetail(t)}
+              className="w-full flex items-center gap-3 text-left -mx-2 px-2 py-1 rounded-xl active:bg-card-foreground/[0.04] transition"
+            >
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center ${
                   t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
@@ -225,7 +229,7 @@ function WalletPage() {
                   {t.status}
                 </p>
               </div>
-            </div>
+            </button>
           ))}
           {filtered.length === 0 && (
             <p className="text-center text-sm text-card-foreground/40 py-10">
