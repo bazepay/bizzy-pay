@@ -170,7 +170,7 @@ function WalletPage() {
       <div className="px-6 mt-5 grid grid-cols-3 gap-3">
         <ActionBtn icon={Plus} label="Top up" onClick={() => setSheet("fund")} primary />
         <ActionBtn icon={ArrowUpRight} label="Send" />
-        <ActionBtn icon={ArrowDownLeft} label="Payout" onClick={() => setSheet("payout")} />
+        <ActionBtn icon={CreditCard} label="Cards" />
       </div>
 
       {/* Sheet */}
