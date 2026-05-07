@@ -85,6 +85,22 @@ function HomePage() {
           })}
         </div>
 
+        {/* Ad banner */}
+        <div className="mt-6 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#5B4DFF] via-[#6B5BFF] to-[#8B7DFF] p-4 text-white">
+          <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10" />
+          <div className="absolute right-6 bottom-2 w-16 h-16 rounded-full bg-[#C6FF4D]/20" />
+          <div className="relative flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#C6FF4D]">Limited offer</p>
+              <h3 className="font-display font-bold text-base mt-1 leading-tight">Refer & earn $20 cashback</h3>
+              <p className="text-[11px] text-white/70 mt-1">Invite friends and get rewarded instantly.</p>
+            </div>
+            <button className="shrink-0 bg-white text-[#5B4DFF] text-xs font-bold rounded-full px-3.5 py-2">
+              Invite
+            </button>
+          </div>
+        </div>
+
         <div className="mt-6 flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transaction History</h2>
           <button className="text-xs font-semibold text-[#5B4DFF]">View All</button>
