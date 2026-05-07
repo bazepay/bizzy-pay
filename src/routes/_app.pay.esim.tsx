@@ -435,51 +435,21 @@ function EsimPage() {
           </div>
         </div>
 
-        {/* Recents */}
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-            Recent eSIMs
-          </p>
-          <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
-            {recents.map((r) => {
-              const p = regions.find((x) => x.id === r.region)!;
-              return (
-                <button
-                  key={r.label}
-                  onClick={() => {
-                    setRegionId(r.region);
-                    setPlanId(null);
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-card-foreground/[0.06]"
-                >
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-base"
-                    style={{
-                      background: `color-mix(in oklab, ${p.color} 18%, transparent)`,
-                    }}
-                  >
-                    <span style={{ color: p.color }}>{p.short}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold">{r.label}</p>
-                    <p className="text-[11px] text-card-foreground/55 truncate">
-                      {p.name} · {p.tagline}
-                    </p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-card-foreground/40" />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Compatibility note */}
         <div className="rounded-2xl bg-card-foreground/[0.04] p-4 flex gap-3">
           <div className="w-8 h-8 rounded-full bg-service-esim/15 text-service-esim flex items-center justify-center shrink-0">
             <ShieldCheck className="w-4 h-4" />
           </div>
           <div className="text-[11px] text-card-foreground/65 leading-relaxed">
-            <span className="font-semibold text-card-foreground/85">Works on any unlocked eSIM phone.</span> iPhone XS and newer, Pixel 3+, Galaxy S20+. Install before you fly — activates on arrival.
+            {mode === "new" ? (
+              <>
+                <span className="font-semibold text-card-foreground/85">Install once.</span> Future top ups apply automatically — no new QR. Works on iPhone XS+, Pixel 3+, Galaxy S20+.
+              </>
+            ) : (
+              <>
+                <span className="font-semibold text-card-foreground/85">Top up — no reinstall.</span> Data refills the existing eSIM profile within 30 seconds. Keep the same number, no QR needed.
+              </>
+            )}
           </div>
         </div>
       </div>
