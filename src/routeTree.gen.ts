@@ -83,11 +83,6 @@ const AppPayDataRoute = AppPayDataRouteImport.update({
   path: '/data',
   getParentRoute: () => AppPayRoute,
 } as any)
-const AppPayElectricityRoute = AppPayElectricityRouteImport.update({
-  id: '/electricity',
-  path: '/electricity',
-  getParentRoute: () => AppPayRoute,
-} as any)
 const AppPayAirtimeRoute = AppPayAirtimeRouteImport.update({
   id: '/airtime',
   path: '/airtime',
