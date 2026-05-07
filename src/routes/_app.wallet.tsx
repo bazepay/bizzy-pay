@@ -12,6 +12,7 @@ import {
   Check,
   X,
   ChevronRight,
+  SlidersHorizontal,
 } from "lucide-react";
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
