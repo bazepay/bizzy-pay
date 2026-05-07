@@ -72,11 +72,14 @@ function PayHub() {
         <div className="mt-4 grid grid-cols-2 gap-3">
           {filtered.map((s) => {
             const Icon = s.icon;
+            const linkProps =
+              s.slug === "airtime"
+                ? ({ to: "/pay/airtime" } as const)
+                : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
                 key={s.slug}
-                to="/pay/$service"
-                params={{ service: s.slug }}
+                {...linkProps}
                 className="rounded-2xl bg-card-foreground/[0.04] p-4 active:scale-[0.98] transition flex flex-col gap-3"
               >
                 <div
@@ -104,11 +107,14 @@ function PayHub() {
               {recents.map((r) => {
                 const svc = services.find((s) => s.slug === r.slug)!;
                 const Icon = svc.icon;
+                const linkProps =
+                  r.slug === "airtime"
+                    ? ({ to: "/pay/airtime" } as const)
+                    : ({ to: "/pay/$service", params: { service: r.slug } } as const);
                 return (
                   <Link
                     key={r.label}
-                    to="/pay/$service"
-                    params={{ service: r.slug }}
+                    {...linkProps}
                     className="flex items-center gap-3 px-4 py-3.5 active:bg-card-foreground/[0.06]"
                   >
                     <div
