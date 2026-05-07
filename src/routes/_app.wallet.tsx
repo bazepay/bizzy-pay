@@ -114,95 +114,80 @@ function WalletPage() {
         <ActionBtn icon={ArrowDownLeft} label="Payout" onClick={() => setSheet("payout")} />
       </div>
 
-      {/* Sheet */}
-      <div className="flex-1 mt-7 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
+      {/* Transactions — floating cards on dark */}
+      <div className="flex-1 mt-8 px-6 pb-28">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-bold text-lg">Transactions</h2>
-          <span className="text-[11px] text-card-foreground/50">{filtered.length} entries</span>
+          <h2 className="font-display font-bold text-lg">Activity</h2>
+          <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-full p-1">
+            {(["all", "in", "out"] as Filter[]).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`text-[11px] font-semibold px-3 py-1 rounded-full transition ${
+                  filter === f ? "bg-lime text-lime-foreground" : "text-foreground/60"
+                }`}
+              >
+                {f === "all" ? "All" : f === "in" ? "In" : "Out"}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Search */}
-        <div className="mt-4 flex items-center gap-2 bg-accent rounded-full px-4 h-11">
-          <Search className="w-4 h-4 text-card-foreground/40" />
+        {/* Compact search */}
+        <div className="mt-4 flex items-center gap-2 bg-white/[0.04] border border-white/10 rounded-2xl px-4 h-11">
+          <Search className="w-4 h-4 text-foreground/40" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search transactions"
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-card-foreground/40"
+            placeholder="Search activity"
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-foreground/35"
           />
           {query && (
-            <button onClick={() => setQuery("")} className="text-card-foreground/40">
+            <button onClick={() => setQuery("")} className="text-foreground/40">
               <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Filter chips */}
-        <div className="mt-3 flex gap-2">
-          {(["all", "in", "out"] as Filter[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition ${
-                filter === f
-                  ? "bg-primary text-primary-foreground border-transparent"
-                  : "bg-transparent text-card-foreground/70 border-card-foreground/15"
-              }`}
+        {/* Floating cards */}
+        <div className="mt-4 space-y-2.5">
+          {filtered.map((t) => (
+            <div
+              key={t.id}
+              className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.06] transition"
             >
-              {f === "all" ? "All" : f === "in" ? "Money in" : "Money out"}
-            </button>
-          ))}
-        </div>
-
-        {/* Grouped list */}
-        <div className="mt-5 space-y-5">
-          {groups.map((g) => {
-            const items = filtered.filter((t) => t.group === g);
-            if (items.length === 0) return null;
-            return (
-              <div key={g}>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/40 mb-2">
-                  {g}
-                </p>
-                <div className="space-y-3">
-                  {items.map((t) => (
-                    <div key={t.id} className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
-                        }`}
-                      >
-                        {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{t.title}</p>
-                        <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time}</p>
-                      </div>
-                      <div className="text-right">
-                        <p
-                          className={`text-sm font-bold ${
-                            t.isCredit ? "text-primary" : "text-card-foreground"
-                          }`}
-                        >
-                          {t.amount}
-                        </p>
-                        <p
-                          className={`text-[10px] mt-0.5 font-semibold ${
-                            t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
-                          }`}
-                        >
-                          {t.status}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+              <div
+                className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
+                  t.isCredit
+                    ? "bg-lime/15 text-lime"
+                    : "bg-white/[0.06] text-foreground/70"
+                }`}
+              >
+                {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-sm truncate">{t.title}</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <p className="text-[11px] text-foreground/45">{t.time}</p>
+                  {t.status === "Pending" && (
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-500/15 text-orange-400">
+                      Pending
+                    </span>
+                  )}
                 </div>
               </div>
-            );
-          })}
+              <p
+                className={`text-sm font-bold tabular-nums ${
+                  t.isCredit ? "text-lime" : "text-foreground"
+                }`}
+              >
+                {t.amount}
+              </p>
+            </div>
+          ))}
           {filtered.length === 0 && (
-            <p className="text-center text-sm text-card-foreground/40 py-10">
-              No transactions match your filters.
+            <p className="text-center text-sm text-foreground/40 py-10">
+              No activity matches your filters.
             </p>
           )}
         </div>
