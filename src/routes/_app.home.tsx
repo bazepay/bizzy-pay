@@ -14,9 +14,9 @@ const services = [
 ];
 
 const txns = [
-  { id: 1, title: "Paypal Payment", subtitle: "Paid · Today", amount: "120 USD", up: true },
-  { id: 2, title: "Salary Payment", subtitle: "Received · Today", amount: "7350 USD", up: false },
-  { id: 3, title: "Spotify", subtitle: "Paid · Yesterday", amount: "9.99 USD", up: true },
+  { id: 1, name: "Cody Lee", time: "10:45 PM", amount: "-$220.00", action: "Send", initials: "CL", avatarBg: "#FFE4D6", avatarColor: "#E07A4F", isDebit: true },
+  { id: 2, name: "Sam Charm", time: "10:45 PM", amount: "+$220.00", action: "Deposit", initials: "SA", avatarBg: "#E0E7FF", avatarColor: "#5B4DFF", isDebit: false },
+  { id: 3, name: "Spotify", time: "Yesterday", amount: "-$9.99", action: "Send", initials: "SP", avatarBg: "#D6F5E3", avatarColor: "#1DB954", isDebit: true },
 ];
 
 function HomePage() {
