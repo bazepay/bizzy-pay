@@ -15,6 +15,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
+import { Route as AppWalletRouteImport } from './routes/_app.wallet'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -46,6 +47,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppWalletRoute = AppWalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppHomeRoute = AppHomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
+  '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
 }
@@ -65,6 +72,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
+  '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
 }
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/_app/home': typeof AppHomeRoute
+  '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
 }
@@ -85,10 +94,18 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/home'
+    | '/wallet'
     | '/auth/login'
     | '/auth/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kyc' | '/onboarding' | '/home' | '/auth/login' | '/auth/signup'
+  to:
+    | '/'
+    | '/kyc'
+    | '/onboarding'
+    | '/home'
+    | '/wallet'
+    | '/auth/login'
+    | '/auth/signup'
   id:
     | '__root__'
     | '/'
@@ -96,6 +113,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/_app/home'
+    | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
   fileRoutesById: FileRoutesById
@@ -153,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/wallet': {
+      id: '/_app/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof AppWalletRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/home': {
       id: '/_app/home'
       path: '/home'
@@ -165,10 +190,12 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
+  AppWalletRoute: typeof AppWalletRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
+  AppWalletRoute: AppWalletRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
