@@ -7,11 +7,11 @@ export const Route = createFileRoute("/_app")({
 });
 
 const tabs = [
-  { to: "/_app/home", label: "Home", icon: Home },
-  { to: "/_app/wallet", label: "Wallet", icon: Wallet },
-  { to: "/_app/pay", label: "Pay", icon: Receipt },
-  { to: "/_app/cards", label: "Cards", icon: CreditCard },
-  { to: "/_app/profile", label: "Profile", icon: User },
+  { to: "/home", label: "Home", icon: Home },
+  { to: "/wallet", label: "Wallet", icon: Wallet },
+  { to: "/pay", label: "Pay", icon: Receipt },
+  { to: "/cards", label: "Cards", icon: CreditCard },
+  { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
 function AppLayout() {
