@@ -30,7 +30,7 @@ function HomePage() {
   const [hidden, setHidden] = useState(false);
 
   return (
-    <div className="min-h-full bg-[oklch(0.13_0.025_285)] text-white pb-6">
+    <div className="min-h-full bg-[#0F172A] text-white pb-6">
       {/* Status bar spacer */}
       <div className="h-12" />
 
@@ -38,7 +38,7 @@ function HomePage() {
       <div className="px-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-[oklch(0.55_0.18_295)] to-[oklch(0.32_0.12_270)] flex items-center justify-center font-display font-bold text-white ring-2 ring-white/10"
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0066FF] to-[#0052CC] flex items-center justify-center font-display font-bold text-white ring-2 ring-white/10"
           >
             {mockUser.firstName[0]}
           </div>
@@ -67,12 +67,12 @@ function HomePage() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative rounded-3xl p-5 overflow-hidden bg-gradient-to-br from-[oklch(0.22_0.06_285)] to-[oklch(0.16_0.04_280)] border border-white/5"
+          className="relative rounded-3xl p-5 overflow-hidden bg-gradient-to-br from-[#0052CC] via-[#0066FF] to-[#0A2540] border border-white/10"
         >
-          {/* gold accent strip */}
-          <div className="absolute -right-10 top-0 bottom-0 w-24 bg-gradient-to-b from-[oklch(0.82_0.16_85)] to-[oklch(0.6_0.14_55)] rounded-l-3xl opacity-90" />
-          <div className="absolute right-2 top-4 w-10 h-10 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center">
-            <div className="w-5 h-5 rounded bg-gold rotate-45" />
+          {/* teal accent strip */}
+          <div className="absolute -right-10 top-0 bottom-0 w-24 bg-gradient-to-b from-[#00C4B4] to-[#00A3FF] rounded-l-3xl opacity-90" />
+          <div className="absolute right-2 top-4 w-10 h-10 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center">
+            <div className="w-5 h-5 rounded bg-[#00C4B4] rotate-45" />
           </div>
 
           <div className="flex items-center justify-between">
@@ -143,7 +143,7 @@ function HomePage() {
               params={{ id: t.id }}
               className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.04] border border-white/5 active:scale-[0.99] transition"
             >
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[oklch(0.4_0.12_280)] to-[oklch(0.25_0.08_275)] flex items-center justify-center font-display text-sm font-bold">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#0066FF] to-[#00A3FF] flex items-center justify-center font-display text-sm font-bold">
                 {t.title[0]}
               </div>
               <div className="flex-1 min-w-0">
