@@ -85,10 +85,23 @@ const buckets = [
 ] as const;
 
 const recents = [
-  { name: "Mum", phone: "0803 555 0142", network: "mtn", initials: "M", bg: "#FFE4D6", color: "#E07A4F" },
-  { name: "Self", phone: "0805 117 3344", network: "glo", initials: "Y", bg: "#E0E7FF", color: "#5B4DFF" },
-  { name: "Tunde", phone: "0809 221 9087", network: "9mobile", initials: "T", bg: "#D6F5E3", color: "#0F8C5A" },
+  { name: "Mum", phone: "0803 555 0142", network: "mtn", initials: "M", bg: "#FFE4D6", color: "#E07A4F", lastPlanId: "mtn-m1" },
+  { name: "Self", phone: "0805 117 3344", network: "glo", initials: "Y", bg: "#E0E7FF", color: "#5B4DFF", lastPlanId: "glo-w1" },
+  { name: "Tunde", phone: "0809 221 9087", network: "9mobile", initials: "T", bg: "#D6F5E3", color: "#0F8C5A", lastPlanId: "9m-w1" },
 ];
+
+function parseGB(size: string): number {
+  const m = size.match(/([\d.]+)\s*(GB|MB)/i);
+  if (!m) return 0;
+  const v = parseFloat(m[1]);
+  return m[2].toUpperCase() === "MB" ? v / 1024 : v;
+}
+
+function pricePerGB(price: number, size: string): string {
+  const gb = parseGB(size);
+  if (gb < 0.05) return "—";
+  return `₦${Math.round(price / gb).toLocaleString()}/GB`;
+}
 
 function detectNetwork(phone: string): string | null {
   const digits = phone.replace(/\D/g, "");
@@ -109,9 +122,13 @@ function DataPage() {
   const [phone, setPhone] = useState("");
   const [network, setNetwork] = useState<string>("mtn");
   const [autoNet, setAutoNet] = useState(true);
-  const [bucket, setBucket] = useState<(typeof buckets)[number]["id"]>("all");
   const [planId, setPlanId] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
+  const [collapsedBucket, setCollapsedBucket] = useState<Record<string, boolean>>({
+    daily: false,
+    weekly: false,
+    monthly: false,
+    mega: true,
+  });
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -119,12 +136,19 @@ function DataPage() {
   const activeNet = autoNet && detected ? detected : network;
   const net = networks.find((n) => n.id === activeNet)!;
   const allPlans = planMap[activeNet] ?? [];
-  const plans = allPlans.filter((p) => {
-    if (bucket !== "all" && p.bucket !== bucket) return false;
-    if (query && !p.size.toLowerCase().includes(query.toLowerCase())) return false;
-    return true;
-  });
-  const selectedPlan = plans.find((p) => p.id === planId) ?? allPlans.find((p) => p.id === planId) ?? null;
+  const grouped = useMemo(() => {
+    const out: Record<string, Plan[]> = { daily: [], weekly: [], monthly: [], mega: [] };
+    allPlans.forEach((p) => out[p.bucket].push(p));
+    return out;
+  }, [allPlans]);
+  const matchedRecent = recents.find(
+    (r) => r.phone.replace(/\s/g, "") === phone.replace(/\D/g, ""),
+  );
+  const lastPlan = matchedRecent
+    ? planMap[matchedRecent.network]?.find((p) => p.id === matchedRecent.lastPlanId)
+    : null;
+
+  const selectedPlan = allPlans.find((p) => p.id === planId) ?? null;
   const total = selectedPlan?.price ?? 0;
   const cashback = Math.floor(total * 0.015);
   const valid = phone.replace(/\D/g, "").length >= 10 && !!selectedPlan;
