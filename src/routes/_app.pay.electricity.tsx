@@ -128,37 +128,52 @@ function ElectricityPage() {
       <div className="flex-1 mt-6 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-32 space-y-6">
         {/* DisCo picker */}
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-            Distributor
-          </p>
-          <div className="flex gap-2 overflow-x-auto -mx-6 px-6 pb-1 scrollbar-none">
+          <div className="flex items-center justify-between mb-2 px-1">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+              Distributor
+            </p>
+            <span className="text-[10px] font-semibold text-card-foreground/45">
+              {discos.length} available
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
             {discos.map((d) => {
               const sel = d.id === discoId;
               return (
                 <button
                   key={d.id}
                   onClick={() => setDiscoId(d.id)}
-                  className={`shrink-0 h-16 px-4 rounded-2xl flex items-center gap-2.5 transition ${
-                    sel ? "bg-card-foreground text-card" : "bg-card-foreground/[0.04] text-card-foreground/85"
-                  }`}
+                  className="relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 transition active:scale-95"
+                  style={{
+                    background: sel
+                      ? d.color
+                      : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
+                    color: sel ? "#fff" : "var(--card-foreground)",
+                    boxShadow: sel ? `0 8px 20px -8px ${d.color}` : "none",
+                  }}
                 >
+                  {sel && (
+                    <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-white/25 flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5" strokeWidth={3} />
+                    </span>
+                  )}
                   <span
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold"
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black tracking-tight"
                     style={{
-                      background: sel ? "rgba(255,255,255,0.18)" : `color-mix(in oklab, ${d.color} 18%, transparent)`,
-                      color: sel ? "currentColor" : d.color,
+                      background: sel ? "rgba(255,255,255,0.2)" : `color-mix(in oklab, ${d.color} 16%, transparent)`,
+                      color: sel ? "#fff" : d.color,
                     }}
                   >
                     {d.short.slice(0, 2)}
                   </span>
-                  <div className="text-left">
-                    <p className="text-[12px] font-bold leading-tight">{d.short}</p>
-                    <p className="text-[10px] opacity-60 leading-tight">{d.region}</p>
-                  </div>
+                  <span className="text-[10px] font-bold leading-none">{d.short}</span>
                 </button>
               );
             })}
           </div>
+          <p className="mt-2 px-1 text-[10px] text-card-foreground/55">
+            <span className="font-semibold text-card-foreground/75">{disco.name}</span> · {disco.region}
+          </p>
         </div>
 
         {/* Meter type */}
