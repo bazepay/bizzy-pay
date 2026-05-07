@@ -86,20 +86,16 @@ function HomePage() {
         </div>
 
         {/* Ad banner */}
-        <div className="mt-6 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#5B4DFF] via-[#6B5BFF] to-[#8B7DFF] p-4 text-white">
-          <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10" />
-          <div className="absolute right-6 bottom-2 w-16 h-16 rounded-full bg-[#C6FF4D]/20" />
-          <div className="relative flex items-center justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#C6FF4D]">Limited offer</p>
-              <h3 className="font-display font-bold text-base mt-1 leading-tight">Refer & earn $20 cashback</h3>
-              <p className="text-[11px] text-white/70 mt-1">Invite friends and get rewarded instantly.</p>
-            </div>
-            <button className="shrink-0 bg-white text-[#5B4DFF] text-xs font-bold rounded-full px-3.5 py-2">
-              Invite
-            </button>
+        <button className="mt-6 w-full flex items-center gap-3 rounded-2xl bg-[#F4F4EE] border border-black/[0.04] p-3.5 text-left active:scale-[0.99] transition">
+          <div className="w-10 h-10 rounded-xl bg-[#C6FF4D] flex items-center justify-center shrink-0">
+            <ArrowUpRight className="w-5 h-5 text-[#0A0A14]" strokeWidth={2.4} />
           </div>
-        </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-sm text-[#0A0A14] leading-tight">Refer & earn $20</p>
+            <p className="text-[11px] text-black/50 mt-0.5">Invite friends, get rewarded</p>
+          </div>
+          <ChevronDown className="w-4 h-4 text-black/40 -rotate-90 shrink-0" />
+        </button>
 
         <div className="mt-6 flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transaction History</h2>
