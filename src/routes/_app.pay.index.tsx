@@ -27,6 +27,7 @@ const services: Service[] = [
   { slug: "electricity", label: "Electricity", desc: "Prepaid & postpaid meters", icon: Zap, token: "service-electricity" },
   { slug: "tv", label: "TV subscription", desc: "DStv · GOTV · Startimes", icon: Tv, token: "service-cable" },
   { slug: "betting", label: "Betting", desc: "Bet9ja · SportyBet · 1xBet", icon: Dices, token: "service-betting" },
+  { slug: "internet", label: "Internet", desc: "ipNX · Smile · Spectranet", icon: Router, token: "service-internet" },
   
 ];
 
