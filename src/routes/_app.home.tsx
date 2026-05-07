@@ -59,7 +59,7 @@ function HomePage() {
       {/* Sheet */}
       <div className="flex-1 mt-5 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-bold text-lg">Services</h2>
+          <h2 className="font-display font-bold text-lg">Quick pay</h2>
           <button className="text-xs font-semibold text-[#5B4DFF]">See All</button>
         </div>
 
