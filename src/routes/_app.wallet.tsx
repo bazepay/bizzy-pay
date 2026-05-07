@@ -36,30 +36,43 @@ export const Route = createFileRoute("/_app/wallet")({
   component: WalletPage,
 });
 
-type Filter = "all" | "in" | "out";
+type Direction = "all" | "in" | "out";
+type StatusFilter = "all" | "success" | "pending";
+type DateRange = "all" | "today" | "7d" | "30d";
+
+type Filters = { direction: Direction; status: StatusFilter; date: DateRange };
+const defaultFilters: Filters = { direction: "all", status: "all", date: "all" };
 
 const txns = [
-  { id: "t1", title: "Top up · Visa •• 4421", amount: "+₦250,000.00", isCredit: true, time: "Today · 09:14", status: "Success", group: "Today" },
-  { id: "t2", title: "MTN Airtime", amount: "-₦5,000.00", isCredit: false, time: "Today · 08:02", status: "Success", group: "Today" },
-  { id: "t3", title: "Spotify", amount: "-₦1,900.00", isCredit: false, time: "Yesterday · 19:40", status: "Success", group: "Yesterday" },
-  { id: "t4", title: "Ikeja Electric", amount: "-₦15,000.00", isCredit: false, time: "Yesterday · 11:20", status: "Success", group: "Yesterday" },
-  { id: "t5", title: "eSIM · UK 5GB", amount: "-$18.00", isCredit: false, time: "May 5 · 16:00", status: "Success", group: "Earlier" },
-  { id: "t6", title: "DStv Compact+", amount: "-₦19,800.00", isCredit: false, time: "May 4 · 10:00", status: "Success", group: "Earlier" },
-  { id: "t7", title: "From Tunde A.", amount: "+₦50,000.00", isCredit: true, time: "May 3 · 14:32", status: "Success", group: "Earlier" },
-  { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", group: "Earlier" },
+  { id: "t1", title: "Top up · Visa •• 4421", amount: "+₦250,000.00", isCredit: true, time: "Today · 09:14", status: "Success", daysAgo: 0 },
+  { id: "t2", title: "MTN Airtime", amount: "-₦5,000.00", isCredit: false, time: "Today · 08:02", status: "Success", daysAgo: 0 },
+  { id: "t3", title: "Spotify", amount: "-₦1,900.00", isCredit: false, time: "Yesterday · 19:40", status: "Success", daysAgo: 1 },
+  { id: "t4", title: "Ikeja Electric", amount: "-₦15,000.00", isCredit: false, time: "Yesterday · 11:20", status: "Success", daysAgo: 1 },
+  { id: "t5", title: "eSIM · UK 5GB", amount: "-$18.00", isCredit: false, time: "May 5 · 16:00", status: "Success", daysAgo: 2 },
+  { id: "t6", title: "DStv Compact+", amount: "-₦19,800.00", isCredit: false, time: "May 4 · 10:00", status: "Success", daysAgo: 3 },
+  { id: "t7", title: "From Tunde A.", amount: "+₦50,000.00", isCredit: true, time: "May 3 · 14:32", status: "Success", daysAgo: 4 },
+  { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", daysAgo: 5 },
 ];
-
-const filterLabels: Record<Filter, string> = { all: "All", in: "Money in", out: "Money out" };
 
 function WalletPage() {
   const [active, setActive] = useState<CurrencyCode>("NGN");
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
 
+  const dayLimit = filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
+  const activeCount =
+    (filters.direction !== "all" ? 1 : 0) +
+    (filters.status !== "all" ? 1 : 0) +
+    (filters.date !== "all" ? 1 : 0);
+
   const filtered = txns.filter((t) => {
-    if (filter === "in" && !t.isCredit) return false;
-    if (filter === "out" && t.isCredit) return false;
+    if (filters.direction === "in" && !t.isCredit) return false;
+    if (filters.direction === "out" && t.isCredit) return false;
+    if (filters.status === "success" && t.status !== "Success") return false;
+    if (filters.status === "pending" && t.status !== "Pending") return false;
+    if (filters.date === "today" ? t.daysAgo > 0 : t.daysAgo > dayLimit) return false;
     if (query && !t.title.toLowerCase().includes(query.toLowerCase())) return false;
     return true;
   });
