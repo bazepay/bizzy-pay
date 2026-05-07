@@ -193,67 +193,159 @@ function EsimPage() {
       </div>
 
       <div className="flex-1 mt-6 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-32 space-y-6">
-        {/* Region picker */}
-        <div>
-          <div className="flex items-center justify-between mb-2 px-1">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
-              Destination
-            </p>
-            <span className="text-[10px] font-semibold text-card-foreground/45">
-              {regions.length} regions
-            </span>
-          </div>
-          <div className="relative mb-3">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-card-foreground/40" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search country or region"
-              className="w-full h-10 rounded-xl bg-card-foreground/[0.04] pl-9 pr-3 text-sm outline-none focus:bg-card-foreground/[0.06]"
-            />
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            {visibleRegions.map((p) => {
-              const sel = p.id === regionId;
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    setRegionId(p.id);
-                    setPlanId(null);
-                  }}
-                  className="relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 transition active:scale-95"
-                  style={{
-                    background: sel
-                      ? p.color
-                      : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
-                    color: sel ? "#fff" : "var(--card-foreground)",
-                    boxShadow: sel ? `0 8px 20px -8px ${p.color}` : "none",
-                  }}
-                >
-                  {sel && (
-                    <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-white/25 flex items-center justify-center">
-                      <Check className="w-2.5 h-2.5" strokeWidth={3} />
-                    </span>
-                  )}
-                  <span
-                    className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black tracking-tight"
+        {/* Mode toggle */}
+        <div className="rounded-full bg-card-foreground/[0.06] p-1 grid grid-cols-2 gap-1">
+          {(["new", "topup"] as const).map((m) => {
+            const sel = mode === m;
+            return (
+              <button
+                key={m}
+                onClick={() => {
+                  setMode(m);
+                  setPlanId(null);
+                  if (m === "new") setTopupId(null);
+                  else if (installed.length) {
+                    const first = installed[0];
+                    setTopupId(first.id);
+                    setRegionId(first.region);
+                  }
+                }}
+                className={`h-9 rounded-full text-[12px] font-bold transition ${
+                  sel ? "bg-primary text-primary-foreground shadow" : "text-card-foreground/60"
+                }`}
+              >
+                {m === "new" ? "Buy new eSIM" : "Top up existing"}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Mode-specific picker */}
+        {mode === "new" ? (
+          <div>
+            <div className="flex items-center justify-between mb-2 px-1">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+                Destination
+              </p>
+              <span className="text-[10px] font-semibold text-card-foreground/45">
+                {regions.length} regions
+              </span>
+            </div>
+            <div className="relative mb-3">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-card-foreground/40" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search country or region"
+                className="w-full h-10 rounded-xl bg-card-foreground/[0.04] pl-9 pr-3 text-sm outline-none focus:bg-card-foreground/[0.06]"
+              />
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {visibleRegions.map((p) => {
+                const sel = p.id === regionId;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      setRegionId(p.id);
+                      setPlanId(null);
+                    }}
+                    className="relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 transition active:scale-95"
                     style={{
-                      background: sel ? "rgba(255,255,255,0.2)" : `color-mix(in oklab, ${p.color} 16%, transparent)`,
-                      color: sel ? "#fff" : p.color,
+                      background: sel
+                        ? p.color
+                        : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
+                      color: sel ? "#fff" : "var(--card-foreground)",
+                      boxShadow: sel ? `0 8px 20px -8px ${p.color}` : "none",
                     }}
                   >
-                    {p.short}
-                  </span>
-                  <span className="text-[10px] font-bold leading-none">{p.name}</span>
-                </button>
-              );
-            })}
+                    {sel && (
+                      <span className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-white/25 flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5" strokeWidth={3} />
+                      </span>
+                    )}
+                    <span
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black tracking-tight"
+                      style={{
+                        background: sel ? "rgba(255,255,255,0.2)" : `color-mix(in oklab, ${p.color} 16%, transparent)`,
+                        color: sel ? "#fff" : p.color,
+                      }}
+                    >
+                      {p.short}
+                    </span>
+                    <span className="text-[10px] font-bold leading-none">{p.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 px-1 text-[10px] text-card-foreground/55">
+              <span className="font-semibold text-card-foreground/75">{region.name}</span> · {region.tagline}
+            </p>
           </div>
-          <p className="mt-2 px-1 text-[10px] text-card-foreground/55">
-            <span className="font-semibold text-card-foreground/75">{region.name}</span> · {region.tagline}
-          </p>
-        </div>
+        ) : (
+          <div>
+            <div className="flex items-center justify-between mb-2 px-1">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+                Your installed eSIMs
+              </p>
+              <span className="text-[10px] font-semibold text-card-foreground/45">
+                {installed.length} active
+              </span>
+            </div>
+            <div className="space-y-2">
+              {installed.map((i) => {
+                const p = regions.find((x) => x.id === i.region)!;
+                const sel = topupId === i.id;
+                return (
+                  <button
+                    key={i.id}
+                    onClick={() => {
+                      setTopupId(i.id);
+                      setRegionId(i.region);
+                      setPlanId(null);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition active:scale-[0.99]"
+                    style={{
+                      background: sel
+                        ? `color-mix(in oklab, ${p.color} 14%, transparent)`
+                        : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
+                      border: sel
+                        ? `1px solid color-mix(in oklab, ${p.color} 40%, transparent)`
+                        : "1px solid transparent",
+                    }}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-[10px] font-black"
+                      style={{
+                        background: `color-mix(in oklab, ${p.color} 18%, transparent)`,
+                        color: p.color,
+                      }}
+                    >
+                      {p.short}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold">{i.label}</p>
+                      <p className="text-[11px] text-card-foreground/55 truncate">
+                        {p.name} · {i.remaining} · {i.expiresIn}
+                      </p>
+                    </div>
+                    {sel && (
+                      <span
+                        className="w-5 h-5 rounded-full flex items-center justify-center"
+                        style={{ background: p.color, color: "#fff" }}
+                      >
+                        <Check className="w-3 h-3" strokeWidth={3} />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 px-1 text-[10px] text-card-foreground/55">
+              No reinstall needed — top ups apply to the existing eSIM profile automatically.
+            </p>
+          </div>
+        )}
 
         {/* Email for delivery */}
         <div>
