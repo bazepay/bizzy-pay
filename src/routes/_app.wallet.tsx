@@ -132,7 +132,7 @@ function WalletPage() {
       <div className="flex-1 mt-7 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transactions</h2>
-          <FilterMenu value={filter} onChange={setFilter} />
+          <FilterTrigger count={activeCount} onClick={() => setFilterOpen(true)} />
         </div>
 
         {/* Search */}
