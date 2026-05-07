@@ -7,11 +7,11 @@ export const Route = createFileRoute("/_app/home")({
 });
 
 const services = [
+  { label: "eSIM", icon: Wifi, color: "#4D9FFF" },
   { label: "Airtime", icon: Phone, color: "#5B4DFF" },
   { label: "Data", icon: Smartphone, color: "#00C4B4" },
   { label: "Electricity", icon: Zap, color: "#FFB020" },
   { label: "Cable", icon: Tv, color: "#FF6B6B" },
-  { label: "eSIM", icon: Wifi, color: "#4D9FFF" },
 ];
 
 type CurrencyCode = "NGN" | "USD" | "EUR" | "GBP";
