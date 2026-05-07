@@ -86,23 +86,29 @@ function HomePage() {
         </div>
 
         <div className="mt-6 flex items-center justify-between">
-          <h2 className="font-display font-bold text-lg">Transactions</h2>
-          <button className="w-8 h-8 rounded-full border border-black/10 flex items-center justify-center">
-            <SlidersHorizontal className="w-4 h-4" />
-          </button>
+          <h2 className="font-display font-bold text-lg">Transaction History</h2>
+          <button className="text-xs font-semibold text-[#5B4DFF]">View All</button>
         </div>
 
-        <div className="mt-3 space-y-3">
+        <div className="mt-4 space-y-4">
           {txns.map((t) => (
             <div key={t.id} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full border border-black/10 flex items-center justify-center">
-                {t.up ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
+              <div
+                className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+                style={{ background: t.avatarBg, color: t.avatarColor }}
+              >
+                {t.initials}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm">{t.title}</p>
-                <p className="text-xs text-black/50">{t.subtitle}</p>
+                <p className="font-semibold text-sm">{t.name}</p>
+                <p className="text-xs text-black/45 mt-0.5">{t.time}</p>
               </div>
-              <p className="text-sm font-bold">{t.amount}</p>
+              <div className="text-right">
+                <p className={`text-sm font-bold ${t.isDebit ? "text-[#0A0A14]" : "text-[#5B4DFF]"}`}>
+                  {t.amount}
+                </p>
+                <p className="text-xs text-black/45 mt-0.5">{t.action}</p>
+              </div>
             </div>
           ))}
         </div>
