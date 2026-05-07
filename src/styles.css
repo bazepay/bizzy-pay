@@ -47,6 +47,7 @@
   --color-service-electricity: var(--service-electricity);
   --color-service-cable: var(--service-cable);
   --color-service-betting: var(--service-betting);
+  --color-service-internet: var(--service-internet);
 }
 
 :root {
