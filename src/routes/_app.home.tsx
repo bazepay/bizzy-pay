@@ -85,8 +85,8 @@ function HomePage() {
 
       {/* Stats */}
       <div className="px-6 mt-6 grid grid-cols-2 gap-3">
-        <StatCard label="Topped up" amount="₦1.2M" delta="+18%" positive data={[3, 5, 4, 7, 6, 9, 8, 11, 10, 13]} />
-        <StatCard label="Spent" amount="₦654K" delta="-8%" positive={false} data={[8, 6, 9, 5, 7, 4, 6, 3, 5, 4]} />
+        <StatCard label="Topped up" amount="₦1.2M" delta="+18%" sub="vs last month" positive />
+        <StatCard label="Spent" amount="₦654K" delta="-8%" sub="vs last month" positive={false} />
       </div>
 
       {/* Sheet */}
