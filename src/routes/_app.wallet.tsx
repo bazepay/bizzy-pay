@@ -86,6 +86,7 @@ function WalletPage() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
+  const [detail, setDetail] = useState<Txn | null>(null);
 
   const dayLimit =
     filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
