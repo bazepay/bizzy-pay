@@ -352,7 +352,7 @@ function EsimPage() {
                       background: `color-mix(in oklab, ${p.color} 18%, transparent)`,
                     }}
                   >
-                    {p.flag}
+                    <span style={{ color: p.color }}>{p.short}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold">{r.label}</p>
