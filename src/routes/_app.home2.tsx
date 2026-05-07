@@ -1,16 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User } from "lucide-react";
+import { ChevronDown, Plus, ArrowLeftRight, ArrowDownLeft, ArrowUpRight, SlidersHorizontal, Home, CreditCard, BarChart3, Users, User, Receipt, Smartphone, Tv, Zap, Trophy, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/_app/home2")({
   component: Home2Page,
 });
 
-const quickTransfer = [
-  { name: "Jone", color: "#FFD166" },
-  { name: "Mojo", color: "#F4A6CD" },
-  { name: "Emie", color: "#E0B084" },
-  { name: "Smith", color: "#F2D99B" },
-  { name: "Emy", color: "#F4A6CD" },
+const services = [
+  { label: "Airtime", icon: Phone, to: "/pay/$service", params: { service: "airtime" }, color: "#5B4DFF" },
+  { label: "Data", icon: Smartphone, to: "/pay/$service", params: { service: "data" }, color: "#00C4B4" },
+  { label: "Electricity", icon: Zap, to: "/pay/$service", params: { service: "electricity" }, color: "#FFB020" },
+  { label: "TV", icon: Tv, to: "/pay/$service", params: { service: "tv" }, color: "#FF6B6B" },
+  { label: "Betting", icon: Trophy, to: "/pay/$service", params: { service: "betting" }, color: "#C6FF4D" },
+  { label: "Cards", icon: CreditCard, to: "/cards", params: undefined, color: "#9B6BFF" },
+  { label: "eSIM", icon: Receipt, to: "/esim", params: undefined, color: "#4D9FFF" },
 ];
 
 const txns = [
@@ -59,24 +61,30 @@ function Home2Page() {
       {/* Sheet */}
       <div className="flex-1 mt-5 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-bold text-lg">Quick Transfer</h2>
-          <button className="w-7 h-7 rounded-full bg-[#5B4DFF]/10 flex items-center justify-center text-[#5B4DFF]">
-            <ArrowUpRight className="w-4 h-4" />
-          </button>
+          <h2 className="font-display font-bold text-lg">Services</h2>
+          <Link to="/pay" className="text-xs font-semibold text-[#5B4DFF]">See All</Link>
         </div>
 
-        <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar">
-          {quickTransfer.map((q) => (
-            <div key={q.name} className="flex flex-col items-center gap-1.5 shrink-0">
-              <div
-                className="w-14 h-14 rounded-full ring-2 ring-[#5B4DFF]/20 flex items-center justify-center font-display font-bold text-white"
-                style={{ background: q.color }}
+        <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar -mx-6 px-6">
+          {services.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Link
+                to={s.to as string}
+                params={s.params as never}
+                key={s.label}
+                className="flex flex-col items-center gap-2 shrink-0 active:scale-95 transition"
               >
-                {q.name[0]}
-              </div>
-              <span className="text-[11px] text-[#0A0A14]/70">{q.name}</span>
-            </div>
-          ))}
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md"
+                  style={{ background: s.color }}
+                >
+                  <Icon className="w-6 h-6" />
+                </div>
+                <span className="text-[11px] font-medium text-[#0A0A14]/80">{s.label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="mt-6 flex items-center justify-between">
