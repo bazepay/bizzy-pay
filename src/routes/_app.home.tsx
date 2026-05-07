@@ -85,18 +85,6 @@ function HomePage() {
           })}
         </div>
 
-        {/* Ad banner */}
-        <button className="mt-6 w-full flex items-center gap-3 rounded-2xl bg-[#F4F4EE] border border-black/[0.04] p-3.5 text-left active:scale-[0.99] transition">
-          <div className="w-10 h-10 rounded-xl bg-[#C6FF4D] flex items-center justify-center shrink-0">
-            <ArrowUpRight className="w-5 h-5 text-[#0A0A14]" strokeWidth={2.4} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-sm text-[#0A0A14] leading-tight">Refer & earn $20</p>
-            <p className="text-[11px] text-black/50 mt-0.5">Invite friends, get rewarded</p>
-          </div>
-          <ChevronDown className="w-4 h-4 text-black/40 -rotate-90 shrink-0" />
-        </button>
-
         <div className="mt-6 flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transaction History</h2>
           <button className="text-xs font-semibold text-[#5B4DFF]">View All</button>
