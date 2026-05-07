@@ -172,29 +172,43 @@ function DataPage() {
         </div>
       </div>
 
-      {/* Hero preview */}
+      {/* Compact summary */}
       <div className="px-6 mt-5">
-        <div
-          className="rounded-3xl p-5 transition-colors"
-          style={{ backgroundColor: net.color, color: net.textColor }}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-80">
-              {net.name} data
+        <div className="rounded-3xl bg-card text-card-foreground p-4 flex items-center gap-3">
+          <span
+            className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ backgroundColor: net.color, color: net.textColor }}
+          >
+            <span className="text-[10px] font-extrabold leading-none tracking-tight">
+              {net.name === "9mobile" ? "9m" : net.name.slice(0, 3).toUpperCase()}
             </span>
-            <span className="text-[11px] font-bold opacity-80">NGN</span>
-          </div>
-          <p className="font-display text-4xl font-bold tracking-tight mt-3">
-            {selectedPlan ? selectedPlan.size : "Pick a plan"}
-          </p>
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-[12px] opacity-80">
-              {selectedPlan ? selectedPlan.validity : phone ? formatPhone(phone) : "Enter phone number"}
-            </p>
-            {selectedPlan && (
-              <p className="text-[14px] font-bold">₦{selectedPlan.price.toLocaleString()}</p>
+          </span>
+          <div className="flex-1 min-w-0">
+            {selectedPlan ? (
+              <>
+                <p className="font-display text-base font-bold leading-tight truncate">
+                  {selectedPlan.size} · {selectedPlan.validity}
+                </p>
+                <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">
+                  {phone ? formatPhone(phone) : "Add a phone number"} · {pricePerGB(selectedPlan.price, selectedPlan.size)}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-display text-base font-bold leading-tight">
+                  {net.name} · pick a plan
+                </p>
+                <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">
+                  {phone ? formatPhone(phone) : "Enter a phone number to start"}
+                </p>
+              </>
             )}
           </div>
+          {selectedPlan && (
+            <p className="font-display text-lg font-bold shrink-0">
+              ₦{selectedPlan.price.toLocaleString()}
+            </p>
+          )}
         </div>
       </div>
 
@@ -274,70 +288,105 @@ function DataPage() {
           </div>
         )}
 
-        {/* Plan filters */}
+        {/* Buy again */}
+        {lastPlan && lastPlan.id !== planId && (
+          <button
+            onClick={() => {
+              setPlanId(lastPlan.id);
+              setCollapsedBucket((c) => ({ ...c, [lastPlan.bucket]: false }));
+            }}
+            className="w-full rounded-2xl bg-primary/10 border border-primary/25 px-4 py-3 flex items-center gap-3 text-left active:bg-primary/15 transition"
+          >
+            <span className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center">
+              <Repeat className="w-4 h-4" />
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                Buy again
+              </p>
+              <p className="text-sm font-semibold truncate">
+                {lastPlan.size} · {lastPlan.validity} · ₦{lastPlan.price.toLocaleString()}
+              </p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-primary" />
+          </button>
+        )}
+
+        {/* Plans grouped by bucket */}
         <div>
-          <div className="flex items-center justify-between mb-2 px-1">
+          <div className="flex items-center justify-between mb-3 px-1">
             <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
               Plans · {net.name}
             </p>
-            <span className="text-[11px] text-card-foreground/45">{plans.length} found</span>
+            <span className="text-[11px] text-card-foreground/45">{allPlans.length} available</span>
           </div>
-          <div className="h-11 rounded-full bg-card-foreground/[0.04] flex items-center gap-2 px-4 mb-3">
-            <Search className="w-3.5 h-3.5 text-card-foreground/45" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search size, e.g. 2GB"
-              className="flex-1 bg-transparent outline-none text-sm placeholder:text-card-foreground/40"
-            />
-          </div>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1">
-            {buckets.map((b) => {
-              const sel = b.id === bucket;
+
+          <div className="space-y-4">
+            {(["daily", "weekly", "monthly", "mega"] as const).map((b) => {
+              const items = grouped[b];
+              if (!items?.length) return null;
+              const collapsed = collapsedBucket[b];
+              const labelMap = {
+                daily: "Daily",
+                weekly: "Weekly",
+                monthly: "Monthly",
+                mega: "Mega · 60+ days",
+              } as const;
               return (
-                <button
-                  key={b.id}
-                  onClick={() => setBucket(b.id)}
-                  className={`shrink-0 h-9 px-4 rounded-full text-[12px] font-semibold transition ${
-                    sel
-                      ? "bg-card-foreground text-card"
-                      : "bg-card-foreground/[0.04] text-card-foreground/75"
-                  }`}
-                >
-                  {b.label}
-                </button>
+                <div key={b}>
+                  <button
+                    onClick={() => setCollapsedBucket((c) => ({ ...c, [b]: !c[b] }))}
+                    className="w-full flex items-center justify-between px-1 py-1 mb-2"
+                  >
+                    <p className="text-[12px] font-bold text-card-foreground/85">
+                      {labelMap[b]}{" "}
+                      <span className="text-card-foreground/40 font-medium">· {items.length}</span>
+                    </p>
+                    <ChevronDown
+                      className={`w-4 h-4 text-card-foreground/45 transition-transform ${
+                        collapsed ? "-rotate-90" : ""
+                      }`}
+                    />
+                  </button>
+                  {!collapsed && (
+                    <div className="grid grid-cols-2 gap-2">
+                      {items.map((p) => {
+                        const sel = p.id === planId;
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => setPlanId(p.id)}
+                            className={`relative rounded-2xl p-3.5 text-left transition border ${
+                              sel
+                                ? "bg-card-foreground text-card border-card-foreground"
+                                : "bg-card-foreground/[0.04] border-transparent text-card-foreground"
+                            }`}
+                          >
+                            {p.hot && !sel && (
+                              <span className="absolute top-2 right-2 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-service-airtime/20 text-service-airtime">
+                                Hot
+                              </span>
+                            )}
+                            <p className="font-display font-bold text-lg leading-tight">{p.size}</p>
+                            <p className={`text-[11px] mt-0.5 ${sel ? "text-card/65" : "text-card-foreground/55"}`}>
+                              {p.validity}
+                            </p>
+                            <div className="mt-2 flex items-baseline justify-between gap-1">
+                              <p className="text-[13px] font-bold">₦{p.price.toLocaleString()}</p>
+                              <p className={`text-[10px] font-semibold ${sel ? "text-card/60" : "text-card-foreground/45"}`}>
+                                {pricePerGB(p.price, p.size)}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
-
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {plans.length === 0 && (
-              <p className="col-span-2 text-center text-[12px] text-card-foreground/55 py-6">
-                No plans match your filter.
-              </p>
-            )}
-            {plans.map((p) => {
-              const sel = p.id === planId;
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => setPlanId(p.id)}
-                  className={`relative rounded-2xl p-3.5 text-left transition border ${
-                    sel
-                      ? "bg-card-foreground text-card border-card-foreground"
-                      : "bg-card-foreground/[0.04] border-transparent text-card-foreground"
-                  }`}
-                >
-                  {p.hot && !sel && (
-                    <span className="absolute top-2 right-2 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-service-airtime/20 text-service-airtime">
-                      Hot
-                    </span>
-                  )}
-                  <p className="font-display font-bold text-lg leading-tight">{p.size}</p>
-                  <p className={`text-[11px] mt-0.5 ${sel ? "text-card/65" : "text-card-foreground/55"}`}>
-                    {p.validity}
-                  </p>
-                  <p className="text-[13px] font-bold mt-2">₦{p.price.toLocaleString()}</p>
+        </div>
                 </button>
               );
             })}
