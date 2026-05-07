@@ -503,6 +503,8 @@ function EsimPage() {
 }
 
 function ConfirmSheet({
+  mode,
+  esimLabel,
   email,
   region,
   plan,
@@ -510,6 +512,8 @@ function ConfirmSheet({
   onClose,
   onConfirm,
 }: {
+  mode: "new" | "topup";
+  esimLabel: string;
   email: string;
   region: Region;
   plan: Plan;
@@ -517,6 +521,7 @@ function ConfirmSheet({
   onClose: () => void;
   onConfirm: () => void;
 }) {
+  const isTopup = mode === "topup";
   return (
     <div className="fixed inset-0 z-[70] flex items-end" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
@@ -526,8 +531,14 @@ function ConfirmSheet({
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
         <div className="px-6 mt-4">
-          <h3 className="font-display font-bold text-base">Confirm purchase</h3>
-          <p className="text-[11px] text-card-foreground/55 mt-0.5">QR delivered instantly to email</p>
+          <h3 className="font-display font-bold text-base">
+            {isTopup ? "Confirm top up" : "Confirm purchase"}
+          </h3>
+          <p className="text-[11px] text-card-foreground/55 mt-0.5">
+            {isTopup
+              ? "Data refills the existing eSIM — no new install"
+              : "QR delivered instantly to email"}
+          </p>
         </div>
 
         <div className="px-6 mt-5 flex flex-col items-center">
@@ -542,7 +553,11 @@ function ConfirmSheet({
         </div>
 
         <div className="mx-6 mt-5 rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
-          <Row label="Email" value={email} />
+          {isTopup ? (
+            <Row label="eSIM" value={esimLabel} />
+          ) : (
+            <Row label="Email" value={email} />
+          )}
           <Row
             label="Destination"
             value={
@@ -570,7 +585,7 @@ function ConfirmSheet({
             onClick={onConfirm}
             className="h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-2"
           >
-            Buy now <ChevronRight className="w-4 h-4" />
+            {isTopup ? "Top up now" : "Buy now"} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
