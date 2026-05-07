@@ -12,6 +12,7 @@ import {
   Check,
   X,
   ChevronRight,
+  SlidersHorizontal,
 } from "lucide-react";
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
@@ -48,7 +49,7 @@ const txns = [
   { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", group: "Earlier" },
 ];
 
-const groups: Array<"Today" | "Yesterday" | "Earlier"> = ["Today", "Yesterday", "Earlier"];
+const filterLabels: Record<Filter, string> = { all: "All", in: "Money in", out: "Money out" };
 
 function WalletPage() {
   const [active, setActive] = useState<CurrencyCode>("NGN");
@@ -118,7 +119,7 @@ function WalletPage() {
       <div className="flex-1 mt-7 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transactions</h2>
-          <span className="text-[11px] text-card-foreground/50">{filtered.length} entries</span>
+          <FilterMenu value={filter} onChange={setFilter} />
         </div>
 
         {/* Search */}
@@ -137,69 +138,39 @@ function WalletPage() {
           )}
         </div>
 
-        {/* Filter chips */}
-        <div className="mt-3 flex gap-2">
-          {(["all", "in", "out"] as Filter[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition ${
-                filter === f
-                  ? "bg-primary text-primary-foreground border-transparent"
-                  : "bg-transparent text-card-foreground/70 border-card-foreground/15"
-              }`}
-            >
-              {f === "all" ? "All" : f === "in" ? "Money in" : "Money out"}
-            </button>
-          ))}
-        </div>
-
-        {/* Grouped list */}
-        <div className="mt-5 space-y-5">
-          {groups.map((g) => {
-            const items = filtered.filter((t) => t.group === g);
-            if (items.length === 0) return null;
-            return (
-              <div key={g}>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/40 mb-2">
-                  {g}
-                </p>
-                <div className="space-y-3">
-                  {items.map((t) => (
-                    <div key={t.id} className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
-                        }`}
-                      >
-                        {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{t.title}</p>
-                        <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time}</p>
-                      </div>
-                      <div className="text-right">
-                        <p
-                          className={`text-sm font-bold ${
-                            t.isCredit ? "text-primary" : "text-card-foreground"
-                          }`}
-                        >
-                          {t.amount}
-                        </p>
-                        <p
-                          className={`text-[10px] mt-0.5 font-semibold ${
-                            t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
-                          }`}
-                        >
-                          {t.status}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        {/* Flat list */}
+        <div className="mt-5 space-y-3">
+          {filtered.map((t) => (
+            <div key={t.id} className="flex items-center gap-3">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
+                }`}
+              >
+                {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
               </div>
-            );
-          })}
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-sm truncate">{t.title}</p>
+                <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time}</p>
+              </div>
+              <div className="text-right">
+                <p
+                  className={`text-sm font-bold ${
+                    t.isCredit ? "text-primary" : "text-card-foreground"
+                  }`}
+                >
+                  {t.amount}
+                </p>
+                <p
+                  className={`text-[10px] mt-0.5 font-semibold ${
+                    t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
+                  }`}
+                >
+                  {t.status}
+                </p>
+              </div>
+            </div>
+          ))}
           {filtered.length === 0 && (
             <p className="text-center text-sm text-card-foreground/40 py-10">
               No transactions match your filters.
@@ -211,6 +182,41 @@ function WalletPage() {
       {sheet && <Sheet kind={sheet} currency={active} onClose={() => setSheet(null)} />}
 
       <BottomNav />
+    </div>
+  );
+}
+
+function FilterMenu({ value, onChange }: { value: Filter; onChange: (f: Filter) => void }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 bg-card-foreground/5 border border-card-foreground/10 rounded-full px-3 py-1.5 text-[11px] font-semibold text-card-foreground/80"
+      >
+        <SlidersHorizontal className="w-3 h-3" />
+        {filterLabels[value]}
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-2 w-40 bg-card border border-card-foreground/10 rounded-2xl p-1.5 shadow-xl z-20">
+            {(["all", "in", "out"] as Filter[]).map((f) => (
+              <button
+                key={f}
+                onClick={() => {
+                  onChange(f);
+                  setOpen(false);
+                }}
+                className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl hover:bg-card-foreground/5 text-xs font-semibold"
+              >
+                {filterLabels[f]}
+                {value === f && <Check className="w-3.5 h-3.5 text-primary" />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
