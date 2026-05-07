@@ -224,7 +224,15 @@ function EsimPage() {
                       <Check className="w-2.5 h-2.5" strokeWidth={3} />
                     </span>
                   )}
-                  <span className="text-xl leading-none">{p.flag}</span>
+                  <span
+                    className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-black tracking-tight"
+                    style={{
+                      background: sel ? "rgba(255,255,255,0.2)" : `color-mix(in oklab, ${p.color} 16%, transparent)`,
+                      color: sel ? "#fff" : p.color,
+                    }}
+                  >
+                    {p.short}
+                  </span>
                   <span className="text-[10px] font-bold leading-none">{p.name}</span>
                 </button>
               );
@@ -344,7 +352,7 @@ function EsimPage() {
                       background: `color-mix(in oklab, ${p.color} 18%, transparent)`,
                     }}
                   >
-                    {p.flag}
+                    <span style={{ color: p.color }}>{p.short}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold">{r.label}</p>
@@ -455,7 +463,7 @@ function ConfirmSheet({
             label="Destination"
             value={
               <span className="inline-flex items-center gap-1.5">
-                <span>{region.flag}</span>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: region.color }} />
                 {region.name}
               </span>
             }
