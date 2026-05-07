@@ -193,6 +193,13 @@ function WalletPage() {
       </div>
 
       {sheet && <Sheet kind={sheet} currency={active} onClose={() => setSheet(null)} />}
+      {filterOpen && (
+        <FilterSheet
+          value={filters}
+          onChange={setFilters}
+          onClose={() => setFilterOpen(false)}
+        />
+      )}
 
       <BottomNav />
     </div>
