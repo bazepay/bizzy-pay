@@ -14,6 +14,10 @@ import {
   ChevronRight,
   SlidersHorizontal,
   Calendar as CalendarIcon,
+  Copy,
+  Share2,
+  Download,
+  HelpCircle,
 } from "lucide-react";
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
