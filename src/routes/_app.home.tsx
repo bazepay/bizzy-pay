@@ -28,14 +28,17 @@ function HomePage() {
       {/* Top: balance */}
       <div className="px-6 pt-4 flex items-start justify-between">
         <div>
-          <h1 className="font-display text-4xl font-bold tracking-tight">
-            $5,560<span className="text-white/40">.32</span>
+          <p className="text-xs text-white/50 font-medium">Naira balance</p>
+          <h1 className="font-display text-4xl font-bold tracking-tight mt-1">
+            ₦845,320<span className="text-white/40">.50</span>
           </h1>
-          <p className="text-sm text-white/50 mt-1">Total balance</p>
+          <p className="text-xs text-white/50 mt-1.5">
+            ≈ $548.20 <span className="text-white/30">· 1 USD = ₦1,542</span>
+          </p>
         </div>
         <button className="flex items-center gap-1.5 bg-white/8 border border-white/10 rounded-full px-3 py-1.5 text-xs font-semibold">
-          <span className="w-4 h-4 rounded-full bg-gradient-to-br from-red-500 via-white to-blue-600" />
-          USD
+          <span className="w-4 h-4 rounded-full bg-gradient-to-br from-green-600 via-white to-green-600" />
+          NGN
           <ChevronDown className="w-3 h-3" />
         </button>
       </div>
@@ -52,8 +55,8 @@ function HomePage() {
 
       {/* Stats */}
       <div className="px-6 mt-6 grid grid-cols-2 gap-3">
-        <StatCard label="Income" amount="$20,450" change="+12.06%" up positive />
-        <StatCard label="Expense" amount="$22,450" change="+12.06%" up={false} positive={false} />
+        <StatCard label="Topped up" amount="₦1.2M" change="This month" up positive />
+        <StatCard label="Spent" amount="₦654K" change="This month" up={false} positive={false} />
       </div>
 
       {/* Sheet */}
