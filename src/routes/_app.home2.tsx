@@ -61,24 +61,32 @@ function Home2Page() {
       {/* Sheet */}
       <div className="flex-1 mt-5 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-bold text-lg">Quick Transfer</h2>
-          <button className="w-7 h-7 rounded-full bg-[#5B4DFF]/10 flex items-center justify-center text-[#5B4DFF]">
-            <ArrowUpRight className="w-4 h-4" />
-          </button>
+          <h2 className="font-display font-bold text-lg">Services</h2>
+          <Link to="/pay" className="text-xs font-semibold text-[#5B4DFF]">See All</Link>
         </div>
 
-        <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar">
-          {quickTransfer.map((q) => (
-            <div key={q.name} className="flex flex-col items-center gap-1.5 shrink-0">
-              <div
-                className="w-14 h-14 rounded-full ring-2 ring-[#5B4DFF]/20 flex items-center justify-center font-display font-bold text-white"
-                style={{ background: q.color }}
+        <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar -mx-6 px-6">
+          {services.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Link
+                // @ts-expect-error - dynamic route params
+                to={s.to}
+                // @ts-expect-error
+                params={s.params}
+                key={s.label}
+                className="flex flex-col items-center gap-2 shrink-0 active:scale-95 transition"
               >
-                {q.name[0]}
-              </div>
-              <span className="text-[11px] text-[#0A0A14]/70">{q.name}</span>
-            </div>
-          ))}
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md"
+                  style={{ background: s.color }}
+                >
+                  <Icon className="w-6 h-6" />
+                </div>
+                <span className="text-[11px] font-medium text-[#0A0A14]/80">{s.label}</span>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="mt-6 flex items-center justify-between">
