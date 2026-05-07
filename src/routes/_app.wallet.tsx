@@ -363,27 +363,57 @@ function FilterSheet({
           <p className="text-[11px] font-semibold text-card-foreground/45 uppercase tracking-[0.14em] mb-3">
             Date range
           </p>
-          <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06]">
+          <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
             {dateOpts.map((o) => {
               const selected = draft.date === o.id;
+              const isCustom = o.id === "custom";
               return (
-                <button
-                  key={o.id}
-                  onClick={() => setDraft({ ...draft, date: o.id })}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
-                >
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold">{o.label}</p>
-                    <p className="text-[11px] text-card-foreground/45 mt-0.5">{o.sub}</p>
-                  </div>
-                  <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${
-                      selected ? "border-primary bg-primary" : "border-card-foreground/20"
-                    }`}
+                <div key={o.id}>
+                  <button
+                    onClick={() => setDraft({ ...draft, date: o.id })}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
                   >
-                    {selected && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
-                  </div>
-                </button>
+                    {isCustom && (
+                      <CalendarIcon className="w-4 h-4 text-card-foreground/50" />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">{o.label}</p>
+                      <p className="text-[11px] text-card-foreground/45 mt-0.5">{o.sub}</p>
+                    </div>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition ${
+                        selected ? "border-primary bg-primary" : "border-card-foreground/20"
+                      }`}
+                    >
+                      {selected && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                    </div>
+                  </button>
+                  {isCustom && selected && (
+                    <div className="px-4 pb-4 pt-1 grid grid-cols-2 gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <label className="block">
+                        <span className="text-[10px] font-semibold text-card-foreground/45 uppercase tracking-wider">From</span>
+                        <input
+                          type="date"
+                          max={draft.customTo || todayISO}
+                          value={draft.customFrom || ""}
+                          onChange={(e) => setDraft({ ...draft, customFrom: e.target.value })}
+                          className="mt-1 w-full bg-card border border-card-foreground/10 rounded-xl px-3 h-11 text-sm font-semibold outline-none focus:border-primary"
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="text-[10px] font-semibold text-card-foreground/45 uppercase tracking-wider">To</span>
+                        <input
+                          type="date"
+                          min={draft.customFrom}
+                          max={todayISO}
+                          value={draft.customTo || ""}
+                          onChange={(e) => setDraft({ ...draft, customTo: e.target.value })}
+                          className="mt-1 w-full bg-card border border-card-foreground/10 rounded-xl px-3 h-11 text-sm font-semibold outline-none focus:border-primary"
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
