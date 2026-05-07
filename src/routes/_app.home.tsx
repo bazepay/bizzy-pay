@@ -104,8 +104,11 @@ function HomePage() {
                 key={s.label}
                 className="flex flex-col items-center gap-2 active:scale-95 transition"
               >
-                <div className="w-full aspect-square rounded-2xl flex items-center justify-center bg-[#5B4DFF]/10">
-                  <Icon className="w-5 h-5" style={{ color: "#5B4DFF" }} strokeWidth={2.2} />
+                <div
+                  className="w-full aspect-square rounded-2xl flex items-center justify-center"
+                  style={{ background: `${s.color}1F` }}
+                >
+                  <Icon className="w-5 h-5" style={{ color: s.color }} strokeWidth={2.2} />
                 </div>
                 <span className="text-[10px] font-medium text-[#0A0A14]/80 leading-tight text-center">
                   {s.label}
