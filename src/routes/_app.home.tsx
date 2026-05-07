@@ -63,21 +63,23 @@ function HomePage() {
           <button className="text-xs font-semibold text-[#5B4DFF]">See All</button>
         </div>
 
-        <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar -mx-6 px-6">
+        <div className="mt-4 grid grid-cols-5 gap-2">
           {services.map((s) => {
             const Icon = s.icon;
             return (
               <button
                 key={s.label}
-                className="flex flex-col items-center gap-2 shrink-0 active:scale-95 transition"
+                className="flex flex-col items-center gap-2 active:scale-95 transition"
               >
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md"
-                  style={{ background: s.color }}
+                  className="w-full aspect-square rounded-2xl flex items-center justify-center"
+                  style={{ background: `${s.color}1A` }}
                 >
-                  <Icon className="w-6 h-6" />
+                  <Icon className="w-5 h-5" style={{ color: s.color }} strokeWidth={2.2} />
                 </div>
-                <span className="text-[11px] font-medium text-[#0A0A14]/80">{s.label}</span>
+                <span className="text-[10px] font-medium text-[#0A0A14]/80 leading-tight text-center">
+                  {s.label}
+                </span>
               </button>
             );
           })}
