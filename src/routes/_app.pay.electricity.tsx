@@ -187,7 +187,7 @@ function ElectricityPage() {
                   key={t}
                   onClick={() => setType(t)}
                   className={`h-12 rounded-2xl text-sm font-bold transition ${
-                    sel ? "bg-card-foreground text-card" : "bg-card-foreground/[0.04] text-card-foreground/85"
+                    sel ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.04] text-card-foreground/85"
                   }`}
                 >
                   {t}
@@ -245,7 +245,7 @@ function ElectricityPage() {
                     setCustom("");
                   }}
                   className={`h-12 rounded-2xl text-sm font-bold transition ${
-                    sel ? "bg-card-foreground text-card" : "bg-card-foreground/[0.04] text-card-foreground/85"
+                    sel ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.04] text-card-foreground/85"
                   }`}
                 >
                   ₦{a.toLocaleString()}
