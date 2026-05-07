@@ -636,3 +636,127 @@ function Sheet({
     </div>
   );
 }
+
+function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+  const statusTone =
+    txn.status === "Success"
+      ? "bg-success/15 text-success"
+      : txn.status === "Pending"
+      ? "bg-orange-500/15 text-orange-500"
+      : "bg-destructive/15 text-destructive";
+
+  const copyRef = () => {
+    navigator.clipboard?.writeText(txn.reference).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const rows: { label: string; value: React.ReactNode; copy?: boolean }[] = [
+    { label: "Reference", value: txn.reference, copy: true },
+    { label: "Category", value: txn.category },
+    { label: "Method", value: txn.method },
+    { label: "Date", value: txn.time },
+    { label: "Fee", value: txn.fee },
+    ...(txn.note ? [{ label: "Note", value: txn.note }] : []),
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-end" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[92%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+      >
+        <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+
+        <div className="px-6 mt-4 flex items-start justify-between">
+          <div>
+            <h3 className="font-display font-bold text-base tracking-tight">Transaction details</h3>
+            <p className="text-[11px] text-card-foreground/50 mt-0.5">{txn.reference}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-card-foreground/5 flex items-center justify-center text-card-foreground/60"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Hero */}
+        <div className="px-6 mt-5 flex flex-col items-center text-center">
+          <div
+            className={`w-16 h-16 rounded-full flex items-center justify-center ${
+              txn.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
+            }`}
+          >
+            {txn.isCredit ? (
+              <ArrowDownLeft className="w-7 h-7" />
+            ) : (
+              <ArrowUpRight className="w-7 h-7" />
+            )}
+          </div>
+          <p className="mt-3 text-[12px] font-semibold text-card-foreground/55">{txn.title}</p>
+          <p
+            className={`mt-1 font-display text-3xl font-bold ${
+              txn.isCredit ? "text-primary" : "text-card-foreground"
+            }`}
+          >
+            {txn.amount}
+          </p>
+          <span
+            className={`mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusTone}`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-current" />
+            {txn.status}
+          </span>
+        </div>
+
+        {/* Details card */}
+        <div className="mx-6 mt-6 rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
+          {rows.map((r) => (
+            <div key={r.label} className="flex items-center gap-3 px-4 py-3.5">
+              <p className="text-[12px] text-card-foreground/55 flex-1">{r.label}</p>
+              <p className="text-[13px] font-semibold text-right max-w-[60%] truncate">{r.value}</p>
+              {r.copy && (
+                <button
+                  onClick={copyRef}
+                  className="ml-1 w-7 h-7 rounded-full bg-card-foreground/5 flex items-center justify-center text-card-foreground/60"
+                  aria-label="Copy reference"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Quick actions */}
+        <div className="px-6 mt-5 grid grid-cols-3 gap-2">
+          <DetailAction icon={Download} label="Receipt" />
+          <DetailAction icon={Share2} label="Share" />
+          <DetailAction icon={HelpCircle} label="Get help" />
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 mt-6">
+          <button
+            onClick={onClose}
+            className="w-full h-12 rounded-full bg-primary text-primary-foreground text-sm font-bold"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailAction({ icon: Icon, label }: { icon: typeof Download; label: string }) {
+  return (
+    <button className="h-16 rounded-2xl bg-card-foreground/[0.04] flex flex-col items-center justify-center gap-1 text-card-foreground/80 active:scale-[0.98] transition">
+      <Icon className="w-4 h-4" />
+      <span className="text-[11px] font-semibold">{label}</span>
+    </button>
+  );
+}
