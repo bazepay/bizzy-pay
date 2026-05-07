@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Phone, Smartphone, Zap, Tv, Dices, Wifi, ChevronRight, Search } from "lucide-react";
+import { Phone, Smartphone, Zap, Tv, Dices, Wifi, ChevronRight, Search, Globe2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { BottomNav } from "@/components/bottom-nav";
 
