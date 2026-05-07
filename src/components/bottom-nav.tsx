@@ -1,11 +1,12 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Wallet as WalletIcon, CreditCard, User, type LucideIcon } from "lucide-react";
+import { Home, Wallet as WalletIcon, Receipt, CreditCard, User, type LucideIcon } from "lucide-react";
 
 type Item = { to: string; icon: LucideIcon; label: string };
 
 const items: Item[] = [
   { to: "/home", icon: Home, label: "Home" },
   { to: "/wallet", icon: WalletIcon, label: "Wallet" },
+  { to: "/pay", icon: Receipt, label: "Pay" },
   { to: "/cards", icon: CreditCard, label: "Cards" },
   { to: "/profile", icon: User, label: "Profile" },
 ];
