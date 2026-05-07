@@ -286,24 +286,22 @@ function ElectricityPage() {
           </div>
         </div>
 
-        {verified && (
-          <div className="flex p-1 rounded-full bg-card-foreground/[0.06]">
-            {(["Prepaid", "Postpaid"] as const).map((t) => {
-              const sel = type === t;
-              return (
-                <button
-                  key={t}
-                  onClick={() => setType(t)}
-                  className={`flex-1 h-9 rounded-full text-[12px] font-bold transition ${
-                    sel ? "bg-primary text-primary-foreground shadow-sm" : "text-card-foreground/60"
-                  }`}
-                >
-                  {t}
-                </button>
-              );
-            })}
-          </div>
-        )}
+        <div className={`flex p-1 rounded-full bg-card-foreground/[0.06] transition-opacity ${verified ? "" : "opacity-50 pointer-events-none"}`}>
+          {(["Prepaid", "Postpaid"] as const).map((t) => {
+            const sel = type === t;
+            return (
+              <button
+                key={t}
+                onClick={() => setType(t)}
+                className={`flex-1 h-9 rounded-full text-[12px] font-bold transition ${
+                  sel ? "bg-primary text-primary-foreground shadow-sm" : "text-card-foreground/60"
+                }`}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
 
         {verified && (
           <div>
