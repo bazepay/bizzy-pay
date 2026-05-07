@@ -177,20 +177,20 @@ function ElectricityPage() {
           </div>
         </div>
 
-        {/* Meter type */}
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-            Meter type
-          </p>
-          <div className="grid grid-cols-2 gap-2">
+        {/* Meter + amount card */}
+        <div className="rounded-3xl bg-card-foreground/[0.04] p-4 space-y-4">
+          {/* Segmented type */}
+          <div className="flex p-1 rounded-full bg-card-foreground/[0.06]">
             {(["Prepaid", "Postpaid"] as const).map((t) => {
               const sel = type === t;
               return (
                 <button
                   key={t}
                   onClick={() => setType(t)}
-                  className={`h-12 rounded-2xl text-sm font-bold transition ${
-                    sel ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.04] text-card-foreground/85"
+                  className={`flex-1 h-9 rounded-full text-[12px] font-bold transition ${
+                    sel
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-card-foreground/60"
                   }`}
                 >
                   {t}
@@ -198,74 +198,83 @@ function ElectricityPage() {
               );
             })}
           </div>
-        </div>
 
-        {/* Meter number */}
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-            Meter number
-          </p>
-          <div className="relative">
-            <input
-              value={meter}
-              onChange={(e) => setMeter(e.target.value.replace(/\D/g, "").slice(0, 13))}
-              placeholder="e.g. 0123456789"
-              inputMode="numeric"
-              className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] pl-4 pr-12 text-base font-semibold tracking-wide outline-none focus:bg-card-foreground/[0.06]"
-            />
-            {meter && (
-              <button
-                onClick={() => setMeter("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-card-foreground/10 flex items-center justify-center"
-                aria-label="Clear"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
+          {/* Meter number */}
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-card-foreground/45 mb-1.5">
+              Meter number
+            </label>
+            <div className="relative">
+              <input
+                value={meter}
+                onChange={(e) => setMeter(e.target.value.replace(/\D/g, "").slice(0, 13))}
+                placeholder="0123456789"
+                inputMode="numeric"
+                className="w-full h-12 bg-transparent border-b border-card-foreground/10 pl-0 pr-10 text-lg font-semibold tracking-wide outline-none focus:border-card-foreground/30 transition"
+              />
+              {meter && (
+                <button
+                  onClick={() => setMeter("")}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-card-foreground/10 flex items-center justify-center"
+                  aria-label="Clear"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+            {verified && customer && (
+              <div className="mt-2 flex items-center gap-1.5 text-[11px] text-success">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span className="font-semibold">{customer}</span>
+                <span className="text-card-foreground/45">· verified</span>
+              </div>
             )}
           </div>
-          {verified && customer && (
-            <div className="mt-2 px-1 flex items-center gap-1.5 text-[11px] text-success">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span className="font-semibold">{customer}</span>
-              <span className="text-card-foreground/55">verified · {disco.short}</span>
-            </div>
-          )}
-        </div>
 
-        {/* Amount presets */}
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-            Amount
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            {presets.map((a) => {
-              const sel = amount === a;
-              return (
-                <button
-                  key={a}
-                  onClick={() => {
-                    setAmount(a);
-                    setCustom("");
-                  }}
-                  className={`h-12 rounded-2xl text-sm font-bold transition ${
-                    sel ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.04] text-card-foreground/85"
-                  }`}
-                >
-                  ₦{a.toLocaleString()}
-                </button>
-              );
-            })}
+          <div className="h-px bg-card-foreground/[0.06]" />
+
+          {/* Amount */}
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-wider text-card-foreground/45 mb-1.5">
+              Amount
+            </label>
+            <div className="relative">
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 text-lg font-semibold text-card-foreground/45">
+                ₦
+              </span>
+              <input
+                value={custom || (amount ? String(amount) : "")}
+                onChange={(e) => {
+                  setCustom(e.target.value.replace(/\D/g, ""));
+                  setAmount(null);
+                }}
+                placeholder="0"
+                inputMode="numeric"
+                className="w-full h-12 bg-transparent border-b border-card-foreground/10 pl-5 pr-0 text-lg font-semibold tracking-wide outline-none focus:border-card-foreground/30 transition"
+              />
+            </div>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {presets.map((a) => {
+                const sel = amount === a;
+                return (
+                  <button
+                    key={a}
+                    onClick={() => {
+                      setAmount(a);
+                      setCustom("");
+                    }}
+                    className={`h-8 px-3 rounded-full text-[12px] font-semibold transition ${
+                      sel
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card-foreground/[0.06] text-card-foreground/75"
+                    }`}
+                  >
+                    ₦{a >= 1000 ? `${a / 1000}k` : a}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <input
-            value={custom}
-            onChange={(e) => {
-              setCustom(e.target.value.replace(/\D/g, ""));
-              setAmount(null);
-            }}
-            placeholder="Custom (₦500 – ₦200,000)"
-            inputMode="numeric"
-            className="mt-2 w-full h-12 rounded-2xl bg-card-foreground/[0.04] px-4 text-sm font-semibold outline-none focus:bg-card-foreground/[0.06]"
-          />
         </div>
 
         {/* Recents */}
