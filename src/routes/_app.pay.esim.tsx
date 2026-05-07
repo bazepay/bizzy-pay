@@ -463,7 +463,7 @@ function ConfirmSheet({
             label="Destination"
             value={
               <span className="inline-flex items-center gap-1.5">
-                <span>{region.flag}</span>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: region.color }} />
                 {region.name}
               </span>
             }
