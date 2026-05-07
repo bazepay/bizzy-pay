@@ -52,7 +52,7 @@ function HomePage() {
             onClick={() => setOpen((v) => !v)}
             className="flex items-center gap-1.5 bg-white/8 border border-white/10 rounded-full px-3 py-1.5 text-xs font-semibold"
           >
-            <span className="text-sm leading-none">{w.flag}</span>
+            <span className="w-4 h-4 rounded-full" style={{ background: w.gradient }} />
             {currency}
             <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
           </button>
@@ -64,7 +64,7 @@ function HomePage() {
                   onClick={() => { setCurrency(code); setOpen(false); }}
                   className="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl hover:bg-white/5 text-xs font-semibold"
                 >
-                  <span className="text-sm leading-none">{wallets[code].flag}</span>
+                  <span className="w-4 h-4 rounded-full shrink-0" style={{ background: wallets[code].gradient }} />
                   <span className="flex-1 text-left">{code}</span>
                   {currency === code && <Check className="w-3.5 h-3.5 text-[#C6FF4D]" />}
                 </button>
