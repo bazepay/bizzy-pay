@@ -96,9 +96,9 @@ function PayHub() {
                 >
                   <Icon className="w-5 h-5" style={{ color: `var(--${s.token})` }} strokeWidth={2.2} />
                 </div>
-                <div>
+                <div className="min-w-0 w-full">
                   <p className="font-semibold text-sm">{s.label}</p>
-                  <p className="text-[11px] text-card-foreground/55 mt-0.5 leading-tight">{s.desc}</p>
+                  <p className="text-[11px] text-card-foreground/55 mt-0.5 leading-tight truncate">{s.desc}</p>
                 </div>
               </Link>
             );
