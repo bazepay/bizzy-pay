@@ -17,6 +17,7 @@ import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppWalletRouteImport } from './routes/_app.wallet'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
+import { Route as AppEsimRouteImport } from './routes/_app.esim'
 import { Route as AppCardsRouteImport } from './routes/_app.cards'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
@@ -60,6 +61,11 @@ const AppHomeRoute = AppHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEsimRoute = AppEsimRouteImport.update({
+  id: '/esim',
+  path: '/esim',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCardsRoute = AppCardsRouteImport.update({
   id: '/cards',
   path: '/cards',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/cards': typeof AppCardsRoute
+  '/esim': typeof AppEsimRoute
   '/home': typeof AppHomeRoute
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/cards': typeof AppCardsRoute
+  '/esim': typeof AppEsimRoute
   '/home': typeof AppHomeRoute
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/_app/cards': typeof AppCardsRoute
+  '/_app/esim': typeof AppEsimRoute
   '/_app/home': typeof AppHomeRoute
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/cards'
+    | '/esim'
     | '/home'
     | '/wallet'
     | '/auth/login'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/cards'
+    | '/esim'
     | '/home'
     | '/wallet'
     | '/auth/login'
@@ -146,6 +157,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/_app/cards'
+    | '/_app/esim'
     | '/_app/home'
     | '/_app/wallet'
     | '/auth/login'
@@ -221,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/esim': {
+      id: '/_app/esim'
+      path: '/esim'
+      fullPath: '/esim'
+      preLoaderRoute: typeof AppEsimRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/cards': {
       id: '/_app/cards'
       path: '/cards'
@@ -247,6 +266,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppCardsRoute: typeof AppCardsRoute
+  AppEsimRoute: typeof AppEsimRoute
   AppHomeRoute: typeof AppHomeRoute
   AppWalletRoute: typeof AppWalletRoute
   AppPayServiceRoute: typeof AppPayServiceRoute
@@ -255,6 +275,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppCardsRoute: AppCardsRoute,
+  AppEsimRoute: AppEsimRoute,
   AppHomeRoute: AppHomeRoute,
   AppWalletRoute: AppWalletRoute,
   AppPayServiceRoute: AppPayServiceRoute,
