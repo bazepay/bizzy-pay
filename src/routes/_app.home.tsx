@@ -62,16 +62,14 @@ function Home2Page() {
       <div className="flex-1 mt-5 bg-white text-[#0A0A14] rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Services</h2>
-          <Link to="/pay" className="text-xs font-semibold text-[#5B4DFF]">See All</Link>
+          <button className="text-xs font-semibold text-[#5B4DFF]">See All</button>
         </div>
 
         <div className="mt-4 flex gap-4 overflow-x-auto no-scrollbar -mx-6 px-6">
           {services.map((s) => {
             const Icon = s.icon;
             return (
-              <Link
-                to={s.to as string}
-                params={s.params as never}
+              <button
                 key={s.label}
                 className="flex flex-col items-center gap-2 shrink-0 active:scale-95 transition"
               >
@@ -82,7 +80,7 @@ function Home2Page() {
                   <Icon className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-medium text-[#0A0A14]/80">{s.label}</span>
-              </Link>
+              </button>
             );
           })}
         </div>
@@ -110,7 +108,7 @@ function Home2Page() {
         </div>
       </div>
 
-      {/* Floating bottom nav (overrides app nav visually) */}
+      {/* Floating bottom nav */}
       <div className="absolute bottom-0 left-0 right-0 z-50 px-4 pb-5">
         <div className="bg-white rounded-full shadow-[0_10px_30px_-10px_rgba(0,0,0,0.25)] flex items-center justify-between px-2 py-2">
           <NavBtn icon={Home} label="Home" active />
@@ -118,10 +116,6 @@ function Home2Page() {
           <NavBtn icon={BarChart3} />
           <NavBtn icon={Users} />
           <NavBtn icon={User} />
-        </div>
-        <div className="text-center mt-3 flex justify-center gap-3">
-          <Link to="/home" className="text-[10px] text-white/40 underline">← Home 1</Link>
-          <Link to="/home3" className="text-[10px] text-white/40 underline">Home 3 →</Link>
         </div>
       </div>
     </div>
