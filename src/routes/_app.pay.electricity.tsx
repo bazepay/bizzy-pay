@@ -42,6 +42,12 @@ const discos: Disco[] = [
   { id: "bedc", name: "Benin Electric", short: "BEDC", region: "Edo · Benin", color: "#42A5F5" },
 ];
 
+// per-DisCo prepaid tariff (₦ per kWh, Band A approx. 2024)
+const tariffs: Record<string, number> = {
+  ikedc: 209, ekedc: 206, aedc: 225, phed: 213,
+  ibedc: 209, kedco: 218, eedc: 211, bedc: 216,
+};
+
 const presets = [1000, 2000, 5000, 10000, 20000, 50000];
 
 const recents = [
