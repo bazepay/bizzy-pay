@@ -33,6 +33,11 @@ function HomePage() {
     <div className="min-h-full bg-[#0F172A] text-white pb-6">
       {/* Status bar spacer */}
       <div className="h-12" />
+      <div className="px-5 -mt-2 mb-1 flex justify-end">
+        <Link to="/home2" className="text-[10px] text-[#00C4B4] underline font-semibold">
+          View Home 2 →
+        </Link>
+      </div>
 
       {/* Header */}
       <div className="px-5 flex items-center justify-between">
