@@ -19,6 +19,7 @@ import { Route as AppWalletRouteImport } from './routes/_app.wallet'
 import { Route as AppPayRouteImport } from './routes/_app.pay'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
+import { Route as AppPayDataRouteImport } from './routes/_app.pay.data'
 import { Route as AppPayAirtimeRouteImport } from './routes/_app.pay.airtime'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 
@@ -71,6 +72,11 @@ const AppPayIndexRoute = AppPayIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppPayRoute,
 } as any)
+const AppPayDataRoute = AppPayDataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => AppPayRoute,
+} as any)
 const AppPayAirtimeRoute = AppPayAirtimeRouteImport.update({
   id: '/airtime',
   path: '/airtime',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
+  '/pay/data': typeof AppPayDataRoute
   '/pay/': typeof AppPayIndexRoute
 }
 export interface FileRoutesByTo {
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
+  '/pay/data': typeof AppPayDataRoute
   '/pay': typeof AppPayIndexRoute
 }
 export interface FileRoutesById {
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/_app/pay/$service': typeof AppPayServiceRoute
   '/_app/pay/airtime': typeof AppPayAirtimeRoute
+  '/_app/pay/data': typeof AppPayDataRoute
   '/_app/pay/': typeof AppPayIndexRoute
 }
 export interface FileRouteTypes {
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/pay/$service'
     | '/pay/airtime'
+    | '/pay/data'
     | '/pay/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/pay/$service'
     | '/pay/airtime'
+    | '/pay/data'
     | '/pay'
   id:
     | '__root__'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/_app/pay/$service'
     | '/_app/pay/airtime'
+    | '/_app/pay/data'
     | '/_app/pay/'
   fileRoutesById: FileRoutesById
 }
@@ -245,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPayIndexRouteImport
       parentRoute: typeof AppPayRoute
     }
+    '/_app/pay/data': {
+      id: '/_app/pay/data'
+      path: '/data'
+      fullPath: '/pay/data'
+      preLoaderRoute: typeof AppPayDataRouteImport
+      parentRoute: typeof AppPayRoute
+    }
     '/_app/pay/airtime': {
       id: '/_app/pay/airtime'
       path: '/airtime'
@@ -265,12 +284,14 @@ declare module '@tanstack/react-router' {
 interface AppPayRouteChildren {
   AppPayServiceRoute: typeof AppPayServiceRoute
   AppPayAirtimeRoute: typeof AppPayAirtimeRoute
+  AppPayDataRoute: typeof AppPayDataRoute
   AppPayIndexRoute: typeof AppPayIndexRoute
 }
 
 const AppPayRouteChildren: AppPayRouteChildren = {
   AppPayServiceRoute: AppPayServiceRoute,
   AppPayAirtimeRoute: AppPayAirtimeRoute,
+  AppPayDataRoute: AppPayDataRoute,
   AppPayIndexRoute: AppPayIndexRoute,
 }
 
