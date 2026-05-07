@@ -165,41 +165,31 @@ function StatCard({
   label,
   amount,
   delta,
+  sub,
   positive,
-  data,
 }: {
   label: string;
   amount: string;
   delta: string;
+  sub: string;
   positive: boolean;
-  data: number[];
 }) {
   const color = positive ? "#C6FF4D" : "#FF6B6B";
-  const max = Math.max(...data);
   return (
     <div className="rounded-2xl bg-white/[0.05] border border-white/10 p-4">
       <div className="flex items-center justify-between">
         <span className="text-xs text-white/60">{label}</span>
-        <span
-          className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
-          style={{ background: `${color}1F`, color }}
+        <div
+          className="w-6 h-6 rounded-full flex items-center justify-center"
+          style={{ background: `${color}26`, color }}
         >
-          {delta}
-        </span>
+          {positive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownLeft className="w-3 h-3" />}
+        </div>
       </div>
       <p className="font-display text-xl font-bold mt-2">{amount}</p>
-      <div className="mt-2 flex items-end gap-[3px] h-7">
-        {data.map((v, i) => (
-          <div
-            key={i}
-            className="flex-1 rounded-sm"
-            style={{
-              height: `${(v / max) * 100}%`,
-              background: color,
-              opacity: 0.35 + (i / data.length) * 0.65,
-            }}
-          />
-        ))}
+      <div className="mt-1 flex items-center gap-1.5">
+        <span className="text-[11px] font-bold" style={{ color }}>{delta}</span>
+        <span className="text-[10px] text-white/40">{sub}</span>
       </div>
     </div>
   );
