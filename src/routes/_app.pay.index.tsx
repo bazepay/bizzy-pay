@@ -3,7 +3,7 @@ import { Phone, Smartphone, Zap, Tv, Dices, Wifi, ChevronRight, Search } from "l
 import { useState } from "react";
 import { BottomNav } from "@/components/bottom-nav";
 
-export const Route = createFileRoute("/_app/pay")({
+export const Route = createFileRoute("/_app/pay/")({
   head: () => ({
     meta: [
       { title: "Pay bills · BazePay" },

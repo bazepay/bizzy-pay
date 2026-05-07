@@ -16,8 +16,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppWalletRouteImport } from './routes/_app.wallet'
-import { Route as AppPayRouteImport } from './routes/_app.pay'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
+import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppPayAirtimeRouteImport } from './routes/_app.pay.airtime'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 
@@ -55,25 +55,25 @@ const AppWalletRoute = AppWalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPayRoute = AppPayRouteImport.update({
-  id: '/pay',
-  path: '/pay',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppHomeRoute = AppHomeRouteImport.update({
   id: '/home',
   path: '/home',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPayIndexRoute = AppPayIndexRouteImport.update({
+  id: '/pay/',
+  path: '/pay/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPayAirtimeRoute = AppPayAirtimeRouteImport.update({
-  id: '/airtime',
-  path: '/airtime',
-  getParentRoute: () => AppPayRoute,
+  id: '/pay/airtime',
+  path: '/pay/airtime',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppPayServiceRoute = AppPayServiceRouteImport.update({
-  id: '/$service',
-  path: '/$service',
-  getParentRoute: () => AppPayRoute,
+  id: '/pay/$service',
+  path: '/pay/$service',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -81,24 +81,24 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
-  '/pay': typeof AppPayRouteWithChildren
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
+  '/pay/': typeof AppPayIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
-  '/pay': typeof AppPayRouteWithChildren
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
+  '/pay': typeof AppPayIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,12 +107,12 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/_app/home': typeof AppHomeRoute
-  '/_app/pay': typeof AppPayRouteWithChildren
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/_app/pay/$service': typeof AppPayServiceRoute
   '/_app/pay/airtime': typeof AppPayAirtimeRoute
+  '/_app/pay/': typeof AppPayIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,24 +121,24 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/home'
-    | '/pay'
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
     | '/pay/$service'
     | '/pay/airtime'
+    | '/pay/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/kyc'
     | '/onboarding'
     | '/home'
-    | '/pay'
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
     | '/pay/$service'
     | '/pay/airtime'
+    | '/pay'
   id:
     | '__root__'
     | '/'
@@ -146,12 +146,12 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/_app/home'
-    | '/_app/pay'
     | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
     | '/_app/pay/$service'
     | '/_app/pay/airtime'
+    | '/_app/pay/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -214,13 +214,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/pay': {
-      id: '/_app/pay'
-      path: '/pay'
-      fullPath: '/pay'
-      preLoaderRoute: typeof AppPayRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/home': {
       id: '/_app/home'
       path: '/home'
@@ -228,46 +221,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pay/': {
+      id: '/_app/pay/'
+      path: '/pay'
+      fullPath: '/pay/'
+      preLoaderRoute: typeof AppPayIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/pay/airtime': {
       id: '/_app/pay/airtime'
-      path: '/airtime'
+      path: '/pay/airtime'
       fullPath: '/pay/airtime'
       preLoaderRoute: typeof AppPayAirtimeRouteImport
-      parentRoute: typeof AppPayRoute
+      parentRoute: typeof AppRoute
     }
     '/_app/pay/$service': {
       id: '/_app/pay/$service'
-      path: '/$service'
+      path: '/pay/$service'
       fullPath: '/pay/$service'
       preLoaderRoute: typeof AppPayServiceRouteImport
-      parentRoute: typeof AppPayRoute
+      parentRoute: typeof AppRoute
     }
   }
 }
 
-interface AppPayRouteChildren {
-  AppPayServiceRoute: typeof AppPayServiceRoute
-  AppPayAirtimeRoute: typeof AppPayAirtimeRoute
-}
-
-const AppPayRouteChildren: AppPayRouteChildren = {
-  AppPayServiceRoute: AppPayServiceRoute,
-  AppPayAirtimeRoute: AppPayAirtimeRoute,
-}
-
-const AppPayRouteWithChildren =
-  AppPayRoute._addFileChildren(AppPayRouteChildren)
-
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
-  AppPayRoute: typeof AppPayRouteWithChildren
   AppWalletRoute: typeof AppWalletRoute
+  AppPayServiceRoute: typeof AppPayServiceRoute
+  AppPayAirtimeRoute: typeof AppPayAirtimeRoute
+  AppPayIndexRoute: typeof AppPayIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
-  AppPayRoute: AppPayRouteWithChildren,
   AppWalletRoute: AppWalletRoute,
+  AppPayServiceRoute: AppPayServiceRoute,
+  AppPayAirtimeRoute: AppPayAirtimeRoute,
+  AppPayIndexRoute: AppPayIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -283,3 +274,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
