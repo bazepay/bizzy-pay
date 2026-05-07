@@ -16,7 +16,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppWalletRouteImport } from './routes/_app.wallet'
+import { Route as AppPayRouteImport } from './routes/_app.pay'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
+import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -52,10 +54,20 @@ const AppWalletRoute = AppWalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPayRoute = AppPayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppHomeRoute = AppHomeRouteImport.update({
   id: '/home',
   path: '/home',
   getParentRoute: () => AppRoute,
+} as any)
+const AppPayServiceRoute = AppPayServiceRouteImport.update({
+  id: '/$service',
+  path: '/$service',
+  getParentRoute: () => AppPayRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -63,18 +75,22 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
+  '/pay': typeof AppPayRouteWithChildren
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/pay/$service': typeof AppPayServiceRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
+  '/pay': typeof AppPayRouteWithChildren
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/pay/$service': typeof AppPayServiceRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,9 +99,11 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/_app/home': typeof AppHomeRoute
+  '/_app/pay': typeof AppPayRouteWithChildren
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/_app/pay/$service': typeof AppPayServiceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -94,18 +112,22 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/home'
+    | '/pay'
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/pay/$service'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/kyc'
     | '/onboarding'
     | '/home'
+    | '/pay'
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/pay/$service'
   id:
     | '__root__'
     | '/'
@@ -113,9 +135,11 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/onboarding'
     | '/_app/home'
+    | '/_app/pay'
     | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/_app/pay/$service'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -178,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pay': {
+      id: '/_app/pay'
+      path: '/pay'
+      fullPath: '/pay'
+      preLoaderRoute: typeof AppPayRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/home': {
       id: '/_app/home'
       path: '/home'
@@ -185,16 +216,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/pay/$service': {
+      id: '/_app/pay/$service'
+      path: '/$service'
+      fullPath: '/pay/$service'
+      preLoaderRoute: typeof AppPayServiceRouteImport
+      parentRoute: typeof AppPayRoute
+    }
   }
 }
 
+interface AppPayRouteChildren {
+  AppPayServiceRoute: typeof AppPayServiceRoute
+}
+
+const AppPayRouteChildren: AppPayRouteChildren = {
+  AppPayServiceRoute: AppPayServiceRoute,
+}
+
+const AppPayRouteWithChildren =
+  AppPayRoute._addFileChildren(AppPayRouteChildren)
+
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
+  AppPayRoute: typeof AppPayRouteWithChildren
   AppWalletRoute: typeof AppWalletRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
+  AppPayRoute: AppPayRouteWithChildren,
   AppWalletRoute: AppWalletRoute,
 }
 

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Plus,
@@ -20,11 +20,11 @@ export const Route = createFileRoute("/_app/home")({
 });
 
 const services = [
-  { label: "eSIM", icon: Wifi, token: "service-esim" },
-  { label: "Airtime", icon: Phone, token: "service-airtime" },
-  { label: "Data", icon: Smartphone, token: "service-data" },
-  { label: "Electricity", icon: Zap, token: "service-electricity" },
-  { label: "Cable", icon: Tv, token: "service-cable" },
+  { label: "eSIM", icon: Wifi, token: "service-esim", slug: "esim" },
+  { label: "Airtime", icon: Phone, token: "service-airtime", slug: "airtime" },
+  { label: "Data", icon: Smartphone, token: "service-data", slug: "data" },
+  { label: "Electricity", icon: Zap, token: "service-electricity", slug: "electricity" },
+  { label: "Cable", icon: Tv, token: "service-cable", slug: "tv" },
 ] as const;
 
 const txns = [
@@ -72,15 +72,17 @@ function HomePage() {
       <div className="flex-1 mt-7 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Quick pay</h2>
-          <button className="text-xs font-semibold text-primary">See All</button>
+          <Link to="/pay" className="text-xs font-semibold text-primary">See All</Link>
         </div>
 
         <div className="mt-4 grid grid-cols-5 gap-2">
           {services.map((s) => {
             const Icon = s.icon;
             return (
-              <button
+              <Link
                 key={s.label}
+                to="/pay/$service"
+                params={{ service: s.slug }}
                 className="flex flex-col items-center gap-2 active:scale-95 transition"
               >
                 <div
@@ -92,7 +94,7 @@ function HomePage() {
                 <span className="text-[10px] font-medium text-card-foreground/80 leading-tight text-center">
                   {s.label}
                 </span>
-              </button>
+              </Link>
             );
           })}
         </div>
