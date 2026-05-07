@@ -73,8 +73,10 @@ function PayHub() {
           {filtered.map((s) => {
             const Icon = s.icon;
             const linkProps =
-              ["airtime","data"].includes(s.slug)
+              s.slug === "airtime"
                 ? ({ to: "/pay/airtime" } as const)
+                : s.slug === "data"
+                ? ({ to: "/pay/data" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
@@ -108,8 +110,10 @@ function PayHub() {
                 const svc = services.find((s) => s.slug === r.slug)!;
                 const Icon = svc.icon;
                 const linkProps =
-                  ["airtime","data"].includes(r.slug)
+                  r.slug === "airtime"
                     ? ({ to: "/pay/airtime" } as const)
+                    : r.slug === "data"
+                    ? ({ to: "/pay/data" } as const)
                     : ({ to: "/pay/$service", params: { service: r.slug } } as const);
                 return (
                   <Link

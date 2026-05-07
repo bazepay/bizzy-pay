@@ -79,8 +79,10 @@ function HomePage() {
           {services.map((s) => {
             const Icon = s.icon;
             const linkProps =
-              ["airtime","data"].includes(s.slug)
+              s.slug === "airtime"
                 ? ({ to: "/pay/airtime" } as const)
+                : s.slug === "data"
+                ? ({ to: "/pay/data" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
