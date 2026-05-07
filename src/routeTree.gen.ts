@@ -18,6 +18,7 @@ import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppWalletRouteImport } from './routes/_app.wallet'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppHome2RouteImport } from './routes/_app.home2'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppEsimRouteImport } from './routes/_app.esim'
 import { Route as AppCardsRouteImport } from './routes/_app.cards'
@@ -68,6 +69,11 @@ const AppProfileRoute = AppProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AppHome2Route = AppHome2RouteImport.update({
+  id: '/home2',
+  path: '/home2',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppHomeRoute = AppHomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/cards': typeof AppCardsRoute
   '/esim': typeof AppEsimRoute
   '/home': typeof AppHomeRoute
+  '/home2': typeof AppHome2Route
   '/profile': typeof AppProfileRoute
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/cards': typeof AppCardsRoute
   '/esim': typeof AppEsimRoute
   '/home': typeof AppHomeRoute
+  '/home2': typeof AppHome2Route
   '/profile': typeof AppProfileRoute
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_app/cards': typeof AppCardsRoute
   '/_app/esim': typeof AppEsimRoute
   '/_app/home': typeof AppHomeRoute
+  '/_app/home2': typeof AppHome2Route
   '/_app/profile': typeof AppProfileRoute
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/cards'
     | '/esim'
     | '/home'
+    | '/home2'
     | '/profile'
     | '/wallet'
     | '/auth/login'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/cards'
     | '/esim'
     | '/home'
+    | '/home2'
     | '/profile'
     | '/wallet'
     | '/auth/login'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_app/cards'
     | '/_app/esim'
     | '/_app/home'
+    | '/_app/home2'
     | '/_app/profile'
     | '/_app/wallet'
     | '/auth/login'
@@ -265,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/home2': {
+      id: '/_app/home2'
+      path: '/home2'
+      fullPath: '/home2'
+      preLoaderRoute: typeof AppHome2RouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/home': {
       id: '/_app/home'
       path: '/home'
@@ -307,6 +326,7 @@ interface AppRouteChildren {
   AppCardsRoute: typeof AppCardsRoute
   AppEsimRoute: typeof AppEsimRoute
   AppHomeRoute: typeof AppHomeRoute
+  AppHome2Route: typeof AppHome2Route
   AppProfileRoute: typeof AppProfileRoute
   AppWalletRoute: typeof AppWalletRoute
   AppPayServiceRoute: typeof AppPayServiceRoute
@@ -317,6 +337,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCardsRoute: AppCardsRoute,
   AppEsimRoute: AppEsimRoute,
   AppHomeRoute: AppHomeRoute,
+  AppHome2Route: AppHome2Route,
   AppProfileRoute: AppProfileRoute,
   AppWalletRoute: AppWalletRoute,
   AppPayServiceRoute: AppPayServiceRoute,
@@ -337,3 +358,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
