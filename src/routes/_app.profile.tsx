@@ -78,9 +78,9 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-full bg-background text-foreground flex flex-col pb-24">
+    <div className="min-h-full bg-card text-card-foreground flex flex-col">
       {/* Dark hero */}
-      <div className="relative px-6 pt-12 pb-20">
+      <div className="relative bg-background text-foreground px-6 pt-12 pb-20">
         <div className="flex items-center justify-between">
           <h1 className="font-display text-2xl font-bold tracking-tight">Profile</h1>
           <button
@@ -112,7 +112,7 @@ function ProfilePage() {
       </div>
 
       {/* White surface */}
-      <div className="flex-1 -mt-8 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-6">
+      <div className="-mt-8 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
         {/* KYC verified card */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white p-5 shadow-xl">
           <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
