@@ -111,8 +111,8 @@ function ReferralsPage() {
       {/* Stats */}
       <div className="px-6 mt-5 grid grid-cols-3 gap-2.5">
         <Stat label="Invited" value={String(REFERRAL.invited)} />
-        <Stat label="Earned" value={REFERRAL.earned} />
-        <Stat label="Pending" value={REFERRAL.pending} />
+        <Stat label="Earned" value={REFERRAL.earned} accent />
+        <Stat label="Pending" value={REFERRAL.pending} muted />
       </div>
 
       {/* How it works */}
