@@ -37,11 +37,11 @@ function LegalPage() {
   const sections = tab === "terms" ? TERMS : PRIVACY;
 
   return (
-    <div className="min-h-full bg-background text-foreground flex flex-col">
+    <div className="min-h-full bg-card text-card-foreground flex flex-col">
       <header className="px-6 pt-12 pb-4 flex items-center gap-3">
         <button
           onClick={() => navigate({ to: "/profile" })}
-          className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center"
+          className="w-10 h-10 rounded-full bg-card-foreground/10 flex items-center justify-center"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -50,7 +50,7 @@ function LegalPage() {
       </header>
 
       <div className="px-6">
-        <div className="relative grid grid-cols-2 p-1 rounded-full bg-foreground/[0.06]">
+        <div className="relative grid grid-cols-2 p-1 rounded-full bg-card-foreground/[0.06]">
           <motion.div
             className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-card shadow-sm"
             animate={{ x: tab === "terms" ? 0 : "calc(100% + 8px)" }}
@@ -61,7 +61,7 @@ function LegalPage() {
               key={t}
               onClick={() => setTab(t)}
               className={`relative z-10 h-10 text-sm font-semibold transition-colors ${
-                tab === t ? "text-foreground" : "text-foreground/55"
+                tab === t ? "text-foreground" : "text-card-foreground/55"
               }`}
             >
               {t === "terms" ? "Terms" : "Privacy"}
@@ -69,7 +69,7 @@ function LegalPage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2 mt-5 text-[11px] text-foreground/50">
+        <div className="flex items-center gap-2 mt-5 text-[11px] text-card-foreground/50">
           <FileText className="w-3.5 h-3.5" />
           <span>Last updated · 1 May 2026 · v1.0</span>
         </div>
@@ -83,18 +83,18 @@ function LegalPage() {
             transition={{ duration: 0.18 }}
             className="mt-5 space-y-4 pb-10"
           >
-            <p className="text-sm text-foreground/70 leading-relaxed">
+            <p className="text-sm text-card-foreground/70 leading-relaxed">
               {tab === "terms"
                 ? "These terms govern your use of BazePay. Please read them carefully — they create binding obligations between you and BazePay Limited."
                 : "Your privacy matters. This policy explains what we collect, how we use it, and the controls you have over your data."}
             </p>
             {sections.map((s, i) => (
-              <div key={i} className="rounded-2xl bg-foreground/[0.04] p-4">
+              <div key={i} className="rounded-2xl bg-card-foreground/[0.04] p-4">
                 <p className="font-display font-bold text-sm">{s.h}</p>
-                <p className="text-sm text-foreground/70 leading-relaxed mt-1.5">{s.p}</p>
+                <p className="text-sm text-card-foreground/70 leading-relaxed mt-1.5">{s.p}</p>
               </div>
             ))}
-            <p className="text-xs text-foreground/45 text-center pt-2">
+            <p className="text-xs text-card-foreground/45 text-center pt-2">
               BazePay Limited · RC 1234567 · Lagos, Nigeria
             </p>
           </motion.div>

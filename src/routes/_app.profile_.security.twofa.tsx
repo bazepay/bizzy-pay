@@ -54,7 +54,7 @@ function TwoFAPage() {
 
   if (step === "done") {
     return (
-      <div className="min-h-full bg-background text-foreground flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-full bg-card text-card-foreground flex flex-col items-center justify-center px-6 text-center">
         <motion.div
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -64,7 +64,7 @@ function TwoFAPage() {
           <Check className="w-10 h-10" />
         </motion.div>
         <h1 className="font-display text-2xl font-bold mt-6">2FA enabled</h1>
-        <p className="text-sm text-foreground/60 mt-2">Your account now requires a code at sign-in.</p>
+        <p className="text-sm text-card-foreground/60 mt-2">Your account now requires a code at sign-in.</p>
         <button
           onClick={() => navigate({ to: "/profile" })}
           className="mt-10 w-full max-w-[280px] h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm active:scale-[0.98] transition"
@@ -76,11 +76,11 @@ function TwoFAPage() {
   }
 
   return (
-    <div className="min-h-full bg-background text-foreground flex flex-col">
+    <div className="min-h-full bg-card text-card-foreground flex flex-col">
       <header className="px-6 pt-12 pb-4 flex items-center gap-3">
         <button
           onClick={() => (step === "verify" ? setStep("choose") : navigate({ to: "/profile" }))}
-          className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center"
+          className="w-10 h-10 rounded-full bg-card-foreground/10 flex items-center justify-center"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -96,7 +96,7 @@ function TwoFAPage() {
             transition={{ duration: 0.18 }}
             className="px-6 pb-10"
           >
-            <p className="text-sm text-foreground/65 leading-relaxed">
+            <p className="text-sm text-card-foreground/65 leading-relaxed">
               Add a second step at sign-in. Even if your password leaks, your account stays safe.
             </p>
 
@@ -109,20 +109,20 @@ function TwoFAPage() {
                     key={m.id}
                     onClick={() => setMethod(m.id)}
                     className={`w-full flex items-center gap-3 p-4 rounded-2xl text-left transition ${
-                      active ? "bg-primary/10 ring-2 ring-primary" : "bg-foreground/[0.05]"
+                      active ? "bg-primary/10 ring-2 ring-primary" : "bg-card-foreground/[0.05]"
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      active ? "bg-primary text-primary-foreground" : "bg-background text-foreground/70"
+                      active ? "bg-primary text-primary-foreground" : "bg-card text-card-foreground/70"
                     }`}>
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold">{m.label}</p>
-                      <p className="text-[11px] text-foreground/55 truncate">{m.desc}</p>
+                      <p className="text-[11px] text-card-foreground/55 truncate">{m.desc}</p>
                     </div>
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      active ? "border-primary bg-primary" : "border-foreground/25"
+                      active ? "border-primary bg-primary" : "border-card-foreground/25"
                     }`}>
                       {active && <Check className="w-3 h-3 text-primary-foreground" />}
                     </div>
@@ -149,14 +149,14 @@ function TwoFAPage() {
           >
             {method === "app" && (
               <>
-                <p className="text-sm text-foreground/65 leading-relaxed">
+                <p className="text-sm text-card-foreground/65 leading-relaxed">
                   Scan this code in your authenticator app, or copy the secret manually.
                 </p>
-                <div className="mt-5 rounded-3xl bg-foreground/[0.04] p-6 flex flex-col items-center">
-                  <div className="w-40 h-40 rounded-2xl bg-foreground p-3">
+                <div className="mt-5 rounded-3xl bg-card-foreground/[0.04] p-6 flex flex-col items-center">
+                  <div className="w-40 h-40 rounded-2xl bg-card-foreground p-3">
                     <div className="w-full h-full rounded-lg bg-background grid grid-cols-8 grid-rows-8 gap-0.5 p-2">
                       {Array.from({ length: 64 }).map((_, i) => (
-                        <div key={i} className={(i * 7 + 3) % 3 === 0 ? "bg-foreground" : ""} />
+                        <div key={i} className={(i * 7 + 3) % 3 === 0 ? "bg-card-foreground" : ""} />
                       ))}
                     </div>
                   </div>
@@ -171,12 +171,12 @@ function TwoFAPage() {
             )}
 
             {method !== "app" && (
-              <p className="text-sm text-foreground/65 leading-relaxed">
+              <p className="text-sm text-card-foreground/65 leading-relaxed">
                 We sent a 6-digit code to {method === "sms" ? "•••• 5678" : "adaeze@bazepay.com"}. Enter it below.
               </p>
             )}
 
-            <p className="text-[11px] uppercase tracking-widest text-foreground/45 font-semibold mt-6 mb-3">
+            <p className="text-[11px] uppercase tracking-widest text-card-foreground/45 font-semibold mt-6 mb-3">
               Enter 6-digit code
             </p>
             <motion.div
@@ -190,12 +190,12 @@ function TwoFAPage() {
                 value={code}
                 onChange={(e) => verify(e.target.value.replace(/\D/g, ""))}
                 placeholder="••••••"
-                className="w-full h-14 rounded-2xl bg-foreground/[0.06] text-center font-display text-2xl tracking-[0.5em] outline-none focus:ring-2 ring-primary/40"
+                className="w-full h-14 rounded-2xl bg-card-foreground/[0.06] text-center font-display text-2xl tracking-[0.5em] outline-none focus:ring-2 ring-primary/40"
                 autoFocus
               />
             </motion.div>
 
-            <p className="text-[11px] text-foreground/45 mt-3 text-center">
+            <p className="text-[11px] text-card-foreground/45 mt-3 text-center">
               Hint for prototype: enter <span className="font-mono">123456</span>
             </p>
           </motion.div>
