@@ -184,14 +184,14 @@ function UserActions({ userId, status }: { userId: string; status: string }) {
   return (
     <>
       <div className="flex items-center gap-2 justify-end flex-wrap">
-        <Button size="sm" variant="outline" onClick={() => setMessageOpen(true)}>
+        <Button size="sm" variant="secondary" onClick={() => setMessageOpen(true)}>
           <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
           Message
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="secondary">
               <MoreHorizontal className="h-3.5 w-3.5 mr-1.5" />
               Actions
             </Button>
