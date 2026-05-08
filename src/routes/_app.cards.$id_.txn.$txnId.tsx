@@ -208,7 +208,10 @@ function TxnDetail() {
 
         {/* Actions */}
         <div className="grid grid-cols-2 gap-3">
-          <button className="h-12 rounded-2xl bg-card-foreground/[0.06] text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+          <button
+            onClick={() => toast.success("Report submitted", { description: "Our team will follow up within 24 hours." })}
+            className="h-12 rounded-2xl bg-card-foreground/[0.06] text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition"
+          >
             <Flag className="w-4 h-4" /> Report problem
           </button>
           <Link
