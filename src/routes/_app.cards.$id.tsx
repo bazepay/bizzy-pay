@@ -202,9 +202,11 @@ function CardDetail() {
               {txns.map((t) => {
                 const isCredit = t.amountNgn > 0;
                 return (
-                  <div
+                  <Link
                     key={t.id}
-                    className="flex items-center gap-3 px-4 py-3.5"
+                    to="/cards/$id/txn/$txnId"
+                    params={{ id: card.id, txnId: t.id }}
+                    className="flex items-center gap-3 px-4 py-3.5 active:bg-card-foreground/[0.06] transition"
                   >
                     <div
                       className={`w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold ${
@@ -232,7 +234,8 @@ function CardDetail() {
                       {isCredit ? "+" : "−"}
                       {formatNgn(Math.abs(t.amountNgn))}
                     </p>
-                  </div>
+                    <ChevronRight className="w-4 h-4 text-card-foreground/30 shrink-0" />
+                  </Link>
                 );
               })}
             </div>

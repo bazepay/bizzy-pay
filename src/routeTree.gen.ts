@@ -34,6 +34,7 @@ import { Route as AppNumbersIdRouteImport } from './routes/_app.numbers.$id'
 import { Route as AppEsimsIdRouteImport } from './routes/_app.esims.$id'
 import { Route as AppCardsNewRouteImport } from './routes/_app.cards.new'
 import { Route as AppCardsIdRouteImport } from './routes/_app.cards.$id'
+import { Route as AppCardsIdTxnTxnIdRouteImport } from './routes/_app.cards.$id.txn.$txnId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -159,6 +160,11 @@ const AppCardsIdRoute = AppCardsIdRouteImport.update({
   path: '/cards/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCardsIdTxnTxnIdRoute = AppCardsIdTxnTxnIdRouteImport.update({
+  id: '/txn/$txnId',
+  path: '/txn/$txnId',
+  getParentRoute: () => AppCardsIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -169,7 +175,7 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/cards/$id': typeof AppCardsIdRoute
+  '/cards/$id': typeof AppCardsIdRouteWithChildren
   '/cards/new': typeof AppCardsNewRoute
   '/esims/$id': typeof AppEsimsIdRoute
   '/numbers/$id': typeof AppNumbersIdRoute
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
   '/pay/': typeof AppPayIndexRoute
+  '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -194,7 +201,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/cards/$id': typeof AppCardsIdRoute
+  '/cards/$id': typeof AppCardsIdRouteWithChildren
   '/cards/new': typeof AppCardsNewRoute
   '/esims/$id': typeof AppEsimsIdRoute
   '/numbers/$id': typeof AppNumbersIdRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
   '/pay': typeof AppPayIndexRoute
+  '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -222,7 +230,7 @@ export interface FileRoutesById {
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/_app/cards/$id': typeof AppCardsIdRoute
+  '/_app/cards/$id': typeof AppCardsIdRouteWithChildren
   '/_app/cards/new': typeof AppCardsNewRoute
   '/_app/esims/$id': typeof AppEsimsIdRoute
   '/_app/numbers/$id': typeof AppNumbersIdRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
+  '/_app/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/esims/'
     | '/numbers/'
     | '/pay/'
+    | '/cards/$id/txn/$txnId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/esims'
     | '/numbers'
     | '/pay'
+    | '/cards/$id/txn/$txnId'
   id:
     | '__root__'
     | '/'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/_app/esims/'
     | '/_app/numbers/'
     | '/_app/pay/'
+    | '/_app/cards/$id/txn/$txnId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -506,6 +518,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCardsIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/cards/$id/txn/$txnId': {
+      id: '/_app/cards/$id/txn/$txnId'
+      path: '/txn/$txnId'
+      fullPath: '/cards/$id/txn/$txnId'
+      preLoaderRoute: typeof AppCardsIdTxnTxnIdRouteImport
+      parentRoute: typeof AppCardsIdRoute
+    }
   }
 }
 
@@ -536,11 +555,23 @@ const AppPayRouteChildren: AppPayRouteChildren = {
 const AppPayRouteWithChildren =
   AppPayRoute._addFileChildren(AppPayRouteChildren)
 
+interface AppCardsIdRouteChildren {
+  AppCardsIdTxnTxnIdRoute: typeof AppCardsIdTxnTxnIdRoute
+}
+
+const AppCardsIdRouteChildren: AppCardsIdRouteChildren = {
+  AppCardsIdTxnTxnIdRoute: AppCardsIdTxnTxnIdRoute,
+}
+
+const AppCardsIdRouteWithChildren = AppCardsIdRoute._addFileChildren(
+  AppCardsIdRouteChildren,
+)
+
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppPayRoute: typeof AppPayRouteWithChildren
   AppWalletRoute: typeof AppWalletRoute
-  AppCardsIdRoute: typeof AppCardsIdRoute
+  AppCardsIdRoute: typeof AppCardsIdRouteWithChildren
   AppCardsNewRoute: typeof AppCardsNewRoute
   AppEsimsIdRoute: typeof AppEsimsIdRoute
   AppNumbersIdRoute: typeof AppNumbersIdRoute
@@ -553,7 +584,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
   AppPayRoute: AppPayRouteWithChildren,
   AppWalletRoute: AppWalletRoute,
-  AppCardsIdRoute: AppCardsIdRoute,
+  AppCardsIdRoute: AppCardsIdRouteWithChildren,
   AppCardsNewRoute: AppCardsNewRoute,
   AppEsimsIdRoute: AppEsimsIdRoute,
   AppNumbersIdRoute: AppNumbersIdRoute,
