@@ -146,7 +146,7 @@ function ProfilePage() {
             icon={<KeyRound className="w-4 h-4" />}
             label="Change PIN"
             desc="Last changed 2 weeks ago"
-            onClick={() => toast.info("PIN change flow — coming soon")}
+            onClick={() => navigate({ to: "/profile/security/pin" })}
           />
           <ToggleRow
             icon={<Lock className="w-4 h-4" />}
