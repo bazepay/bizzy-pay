@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Check,
@@ -238,10 +239,20 @@ function ManageSheet({
         </button>
 
         <div className="px-6 mt-4 space-y-2">
-          <button className="w-full h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm">
+          <button
+            onClick={() => toast.info("Plan switching coming soon", { description: "We'll notify you when more plans are available." })}
+            className="w-full h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm"
+          >
             Switch plan
           </button>
-          <button className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2">
+          <button
+            onClick={() => {
+              if (confirm("Cancel this number? It will be released and cannot be recovered.")) {
+                toast.success("Number released");
+              }
+            }}
+            className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2"
+          >
             <Trash2 className="w-4 h-4" />
             Cancel & release number
           </button>

@@ -137,12 +137,13 @@ function SupportChat() {
             <span className="w-1.5 h-1.5 rounded-full bg-success" /> Online · usually replies in 1 min
           </p>
         </div>
-        <button
+        <a
+          href="tel:+2348000000000"
           className="w-10 h-10 rounded-full bg-card-foreground/[0.06] flex items-center justify-center"
           aria-label="Call support"
         >
           <Phone className="w-4 h-4" />
-        </button>
+        </a>
       </header>
 
       <div ref={scroller} className="flex-1 overflow-y-auto no-scrollbar px-5 py-4 space-y-3">

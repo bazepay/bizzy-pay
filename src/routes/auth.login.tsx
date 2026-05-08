@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
 import { ArrowRight, Eye, EyeOff, Fingerprint, Mail, Phone, ChevronDown } from "lucide-react";
@@ -156,7 +157,11 @@ function Login() {
           </div>
 
           <div className="mt-3 flex justify-end">
-            <button className="text-[12px] font-semibold text-card-foreground/55 hover:text-primary transition">
+            <button
+              type="button"
+              onClick={() => toast.info("Reset link sent", { description: "Check your email or SMS for instructions." })}
+              className="text-[12px] font-semibold text-card-foreground/55 hover:text-primary transition"
+            >
               Forgot password?
             </button>
           </div>
