@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ReactElement } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
 import { ArrowRight, Wifi, Eye, Shield, Sparkles } from "lucide-react";
@@ -19,7 +19,7 @@ type Slide = {
   title: string;
   highlight: string;
   body: string;
-  visual: () => JSX.Element;
+  visual: () => ReactElement;
 };
 
 const slides: Slide[] = [
