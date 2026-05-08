@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Check,
@@ -115,7 +116,11 @@ function AirtimePage() {
             <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
               Phone number
             </p>
-            <button className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
+            <button
+              type="button"
+              onClick={() => toast.info("Contacts access not available in demo")}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary"
+            >
               <Contact className="w-3 h-3" /> Contacts
             </button>
           </div>

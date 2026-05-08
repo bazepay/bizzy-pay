@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
 import { ArrowLeft, ArrowRight, Mail, Shield, Search, Check, ChevronDown, X } from "lucide-react";
@@ -250,7 +251,11 @@ function Signup() {
                   </p>
                 </div>
 
-                <button className="mt-5 text-center text-[12.5px] text-card-foreground/55">
+                <button
+                  type="button"
+                  onClick={() => toast.success("Code resent", { description: "Use 123456 in this demo." })}
+                  className="mt-5 text-center text-[12.5px] text-card-foreground/55"
+                >
                   Didn't receive it? <span className="text-primary font-semibold">Resend in 0:30</span>
                 </button>
 

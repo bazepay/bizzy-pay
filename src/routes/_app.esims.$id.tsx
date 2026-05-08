@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Check,
@@ -404,7 +405,14 @@ function ManageSheet({
           >
             <Plus className="w-4 h-4" /> Top up data
           </Link>
-          <button className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2">
+          <button
+            onClick={() => {
+              if (confirm("Remove this eSIM? You'll need to re-purchase to use it again.")) {
+                toast.success("eSIM removed");
+              }
+            }}
+            className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2"
+          >
             <Trash2 className="w-4 h-4" />
             Remove eSIM
           </button>
