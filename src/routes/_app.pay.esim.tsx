@@ -714,6 +714,11 @@ function EsimPage() {
             setVnConfirm(false);
             navigate({ to: "/wallet" });
           }}
+          onOpenInbox={() => {
+            setVnSuccess(false);
+            setVnConfirm(false);
+            navigate({ to: "/numbers" });
+          }}
         />
       )}
     </div>
