@@ -158,7 +158,7 @@ function Kyc() {
               </div>
 
               {/* White surface */}
-              <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+              <div className="relative bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
                 <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mb-3 px-1">
                   How it works
                 </p>
@@ -458,7 +458,7 @@ function Shell({
       </div>
 
       {/* White surface */}
-      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+      <div className="relative bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
         <div className="flex-1">{children}</div>
         <div className="pt-6">{footer}</div>
       </div>
@@ -542,7 +542,7 @@ function CountryStep({
       </div>
 
       {/* White surface */}
-      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-8 -mt-6 flex-1 flex flex-col min-h-0">
+      <div className="relative bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-8 -mt-6 flex-1 flex flex-col min-h-0">
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-card-foreground/45" />
           <input
