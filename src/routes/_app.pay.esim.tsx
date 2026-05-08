@@ -613,48 +613,52 @@ function EsimPage() {
               <div className="w-8 h-8 rounded-full bg-service-esim/15 text-service-esim flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <div className="text-[11px] text-card-foreground/65 leading-relaxed">
-                {mode === "new" ? (
-                  <>
-                    <span className="font-semibold text-card-foreground/85">
-                      Activate in 2 minutes.
-                    </span>{" "}
-                    No SIM swap, keep your number. Auto-roams to the strongest of 36 carriers. Works on iPhone XR/XS+, Pixel 3+, Galaxy S20+.
-                  </>
-                ) : (
-                  <>
-                    <span className="font-semibold text-card-foreground/85">Top up — no reinstall.</span>{" "}
-                    Data refills the existing eSIM profile in under 30 seconds.
-                  </>
-                )}
               </div>
             </div>
           </>
         )}
+      </div>
 
       {/* Footer CTA */}
       <div className="absolute bottom-0 left-0 right-0 px-4 pb-5 pt-3 bg-gradient-to-t from-card via-card to-transparent">
-        {valid && cashback > 0 && (
-          <p className="text-center text-[11px] font-semibold text-success mb-2">
-            +${cashback.toFixed(2)} cashback
-          </p>
+        {mode === "vnumber" ? (
+          <>
+            <p className="text-center text-[11px] font-semibold text-success mb-2">
+              +${(vnPlans.find((p) => p.key === vnPlanKey)!.price * 0.005).toFixed(2)} cashback
+            </p>
+            <button
+              onClick={() => setVnConfirm(true)}
+              className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.99] transition flex items-center justify-center gap-2"
+            >
+              Get {vnCountries.find((c) => c.id === vnCountryId)!.flag} number · ${vnPlans.find((p) => p.key === vnPlanKey)!.price.toFixed(2)}
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </>
+        ) : (
+          <>
+            {valid && cashback > 0 && (
+              <p className="text-center text-[11px] font-semibold text-success mb-2">
+                +${cashback.toFixed(2)} cashback
+              </p>
+            )}
+            <button
+              disabled={!valid}
+              onClick={() => setConfirm(true)}
+              className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40 active:scale-[0.99] transition flex items-center justify-center gap-2"
+            >
+              {plan
+                ? `${mode === "topup" ? "Top up" : "Buy eSIM"} · $${plan.price.toFixed(2)}`
+                : mode === "topup"
+                ? "Pick a top-up plan"
+                : "Pick a plan"}
+            </button>
+          </>
         )}
-        <button
-          disabled={!valid}
-          onClick={() => setConfirm(true)}
-          className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40 active:scale-[0.99] transition flex items-center justify-center gap-2"
-        >
-          {plan
-            ? `${mode === "topup" ? "Top up" : "Buy eSIM"} · $${plan.price.toFixed(2)}`
-            : mode === "topup"
-            ? "Pick a top-up plan"
-            : "Pick a plan"}
-        </button>
       </div>
 
-      {confirm && !success && plan && (
+      {confirm && !success && plan && mode !== "vnumber" && (
         <ConfirmSheet
-          mode={mode}
+          mode={mode === "vnumber" ? "new" : mode}
           esimLabel={activeEsim?.label ?? ""}
           email={email}
           meta={meta}
@@ -665,15 +669,39 @@ function EsimPage() {
         />
       )}
 
-      {success && plan && (
+      {success && plan && mode !== "vnumber" && (
         <SuccessSheet
-          mode={mode}
+          mode={mode === "vnumber" ? "new" : mode}
           esimLabel={activeEsim?.label ?? ""}
           email={email}
           meta={meta}
           plan={plan}
           cashback={cashback}
           onDone={() => navigate({ to: "/wallet" })}
+        />
+      )}
+
+      {vnConfirm && !vnSuccess && (
+        <VnConfirmSheet
+          country={vnCountries.find((c) => c.id === vnCountryId)!}
+          plan={vnPlans.find((p) => p.key === vnPlanKey)!}
+          autoRenew={vnAutoRenew}
+          onClose={() => setVnConfirm(false)}
+          onPay={() => setVnSuccess(true)}
+        />
+      )}
+
+      {vnSuccess && (
+        <VnSuccessSheet
+          country={vnCountries.find((c) => c.id === vnCountryId)!}
+          plan={vnPlans.find((p) => p.key === vnPlanKey)!}
+          number={vnNumbers[vnCountryId]}
+          autoRenew={vnAutoRenew}
+          onDone={() => {
+            setVnSuccess(false);
+            setVnConfirm(false);
+            navigate({ to: "/wallet" });
+          }}
         />
       )}
     </div>
