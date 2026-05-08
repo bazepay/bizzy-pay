@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Check,
@@ -13,17 +14,21 @@ import {
   ShieldCheck,
   Receipt,
   ChevronRight,
-  ChevronLeft,
 } from "lucide-react";
 import { VirtualCardArt, RevealToggle } from "@/components/virtual-card";
 import {
-  cards,
-  cardTxns,
   formatNgn,
   relativeDay,
   merchantCategories,
-  type VirtualCard,
 } from "@/lib/cards";
+import {
+  useCardsStore,
+  toggleFreeze,
+  topUpCard,
+  cancelCard,
+  setLimit as setLimitStore,
+  setBlocked as setBlockedStore,
+} from "@/lib/cards-store";
 
 export const Route = createFileRoute("/_app/cards/$id")({
   head: ({ params }) => ({
@@ -32,11 +37,7 @@ export const Route = createFileRoute("/_app/cards/$id")({
       { name: "description", content: "Manage card limits, freeze, and review transactions." },
     ],
   }),
-  loader: ({ params }) => {
-    const card = cards.find((c) => c.id === params.id);
-    if (!card) throw notFound();
-    return { card };
-  },
+  loader: ({ params }) => ({ id: params.id }),
   notFoundComponent: () => (
     <div className="min-h-full flex flex-col items-center justify-center p-6 text-center">
       <p className="text-sm text-foreground/60">Card not found.</p>
@@ -49,23 +50,37 @@ export const Route = createFileRoute("/_app/cards/$id")({
 });
 
 function CardDetail() {
-  const { card } = Route.useLoaderData();
+  const { id } = Route.useLoaderData();
   const navigate = useNavigate();
+  const { cards, txns: allTxns } = useCardsStore();
+  const card = cards.find((c) => c.id === id);
+
   const [revealed, setRevealed] = useState(false);
-  const [frozen, setFrozen] = useState(card.status === "frozen");
   const [showLimits, setShowLimits] = useState(false);
   const [showFund, setShowFund] = useState(false);
-  const [limit, setLimit] = useState(card.monthlyLimitNgn);
-  const [blocked, setBlocked] = useState<string[]>(card.blockedCategories);
+  const [showCancel, setShowCancel] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
   const txns = useMemo(
     () =>
-      cardTxns
-        .filter((t) => t.cardId === card.id)
+      allTxns
+        .filter((t) => t.cardId === id)
         .sort((a, b) => +new Date(b.at) - +new Date(a.at)),
-    [card.id],
+    [allTxns, id],
   );
+
+  useEffect(() => {
+    if (!card && cards.length === 0) {
+      navigate({ to: "/cards" });
+    }
+  }, [card, cards.length, navigate]);
+
+  if (!card) {
+    if (cards.length > 0) throw notFound();
+    return null;
+  }
+
+  const frozen = card.status === "frozen";
 
   const copy = (text: string, key: string) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -76,8 +91,7 @@ function CardDetail() {
     }
   };
 
-  const display: VirtualCard = { ...card, status: frozen ? "frozen" : "active" };
-  const pct = Math.min(100, Math.round((card.monthlySpentNgn / limit) * 100));
+  const pct = Math.min(100, Math.round((card.monthlySpentNgn / card.monthlyLimitNgn) * 100));
 
   return (
     <div className="min-h-full bg-background text-foreground flex flex-col">
