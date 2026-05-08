@@ -149,9 +149,8 @@ function Signup() {
                   onClick={() => setPickerOpen(true)}
                   className="mt-2 w-full h-14 px-4 rounded-2xl bg-muted text-left flex items-center gap-3 border border-transparent hover:border-primary/30 transition"
                 >
-                  <span className="text-2xl leading-none">{country.flag}</span>
+                  <Flag code={country.code} />
                   <span className="flex-1 text-[15px] font-medium">{country.name}</span>
-                  <span className="text-[13px] text-card-foreground/50">+{dial}</span>
                   <ChevronDown className="w-4 h-4 text-card-foreground/40" />
                 </button>
 
