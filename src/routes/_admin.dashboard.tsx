@@ -1,18 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   Users,
   ShieldCheck,
   TrendingUp,
-  Wallet,
-  CreditCard,
-  Smartphone,
-  Phone,
-  AlertTriangle,
-  Headphones,
+  Activity,
   ArrowUpRight,
   ArrowDownRight,
-  Activity,
+  ArrowRight,
+  Wallet,
+  AlertTriangle,
+  CheckCircle2,
+  CircleDot,
+  XCircle,
+  Download,
 } from "lucide-react";
 import {
   Area,
@@ -20,6 +21,8 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -28,14 +31,18 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   fmtNgn,
   fmtNum,
   fmtPct,
   kpis,
+  opsQueues,
   recentActivity,
   recentAlerts,
   serviceBreakdown,
+  spark,
+  systemHealth,
   volumeSeries,
 } from "@/lib/mock-data";
 
@@ -51,63 +58,97 @@ export const Route = createFileRoute("/_admin/dashboard")({
 
 type Tone = "primary" | "gold" | "success" | "warning" | "destructive";
 
-const toneClasses: Record<Tone, string> = {
-  primary: "bg-primary/10 text-primary",
-  gold: "bg-gold/15 text-gold-foreground",
-  success: "bg-success/15 text-success",
-  warning: "bg-warning/20 text-warning-foreground",
-  destructive: "bg-destructive/10 text-destructive",
+const toneText: Record<Tone, string> = {
+  primary: "text-primary",
+  gold: "text-gold-foreground",
+  success: "text-success",
+  warning: "text-warning-foreground",
+  destructive: "text-destructive",
+};
+const toneBg: Record<Tone, string> = {
+  primary: "bg-primary/10",
+  gold: "bg-gold/15",
+  success: "bg-success/15",
+  warning: "bg-warning/20",
+  destructive: "bg-destructive/10",
+};
+const toneStroke: Record<Tone, string> = {
+  primary: "oklch(0.32 0.14 280)",
+  gold: "oklch(0.78 0.15 85)",
+  success: "oklch(0.62 0.17 150)",
+  warning: "oklch(0.78 0.15 70)",
+  destructive: "oklch(0.58 0.20 25)",
 };
 
-function Kpi({
+function HeroKpi({
   label,
   value,
   delta,
-  icon: Icon,
-  tone = "primary",
+  series,
+  tone,
   format = "num",
 }: {
   label: string;
   value: number;
   delta: number;
-  icon: typeof Users;
-  tone?: Tone;
+  series: number[];
+  tone: Tone;
   format?: "num" | "ngn" | "pct";
 }) {
   const positive = delta >= 0;
   const display =
     format === "ngn" ? fmtNgn(value) : format === "pct" ? `${value.toFixed(1)}%` : fmtNum(value);
+  const data = series.map((v, i) => ({ i, v }));
 
   return (
-    <Card className="shadow-card">
+    <Card className="shadow-card overflow-hidden">
       <CardContent className="p-5">
-        <div className="flex items-start justify-between">
-          <div className={`h-9 w-9 rounded-md flex items-center justify-center ${toneClasses[tone]}`}>
-            <Icon className="h-4 w-4" />
+        <div className="flex items-center justify-between">
+          <span className={`text-xs font-medium uppercase tracking-wider ${toneText[tone]}`}>
+            {label}
+          </span>
+          <div
+            className={`flex items-center gap-0.5 text-xs font-semibold ${
+              positive ? "text-success" : "text-destructive"
+            }`}
+          >
+            {positive ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+            {fmtPct(delta)}
           </div>
-          {delta !== 0 && (
-            <div
-              className={`flex items-center gap-0.5 text-xs font-medium ${
-                positive ? "text-success" : "text-destructive"
-              }`}
-            >
-              {positive ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-              {fmtPct(delta)}
-            </div>
-          )}
         </div>
-        <div className="mt-4">
-          <div className="font-display text-2xl font-bold tracking-tight">{display}</div>
-          <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
+        <div className="mt-2 font-display text-3xl font-bold tracking-tight">{display}</div>
+        <div className="h-12 -mx-2 mt-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 4, bottom: 0, left: 0, right: 0 }}>
+              <Line
+                type="monotone"
+                dataKey="v"
+                stroke={toneStroke[tone]}
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </CardContent>
     </Card>
   );
 }
 
+function StatusDot({ status }: { status: "ok" | "degraded" | "down" }) {
+  if (status === "ok")
+    return <CheckCircle2 className="h-3.5 w-3.5 text-success" />;
+  if (status === "degraded")
+    return <CircleDot className="h-3.5 w-3.5 text-warning-foreground" />;
+  return <XCircle className="h-3.5 w-3.5 text-destructive" />;
+}
+
 function DashboardPage() {
+  const totalQueue = opsQueues.reduce((s, q) => s + q.count, 0);
+
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6">
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -116,117 +157,171 @@ function DashboardPage() {
         <div>
           <h1 className="font-display text-2xl font-bold">Operations dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Live snapshot of platform activity. Last updated just now.
+            {totalQueue} items awaiting action across {opsQueues.length} queues · live snapshot
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">Last 7 days</Button>
-          <Button size="sm" className="bg-primary text-primary-foreground">Export</Button>
+          <Button size="sm" variant="outline">
+            <Download className="h-3.5 w-3.5 mr-1.5" />
+            Export
+          </Button>
         </div>
       </motion.div>
 
-      {/* KPI grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <Kpi label="Active users" value={kpis.activeUsers.value} delta={kpis.activeUsers.delta} icon={Users} />
-        <Kpi label="New signups (7d)" value={kpis.newSignups.value} delta={kpis.newSignups.delta} icon={TrendingUp} tone="gold" />
-        <Kpi label="KYC conversion" value={kpis.kycConversion.value} delta={kpis.kycConversion.delta} icon={ShieldCheck} tone="success" format="pct" />
-        <Kpi label="Open compliance alerts" value={kpis.openCompliance.value} delta={kpis.openCompliance.delta} icon={AlertTriangle} tone="destructive" />
-
-        <Kpi label="Volume processed (7d)" value={kpis.processedVolumeNgn.value} delta={kpis.processedVolumeNgn.delta} icon={Activity} format="ngn" />
-        <Kpi label="Gross fees" value={kpis.grossFeesNgn.value} delta={kpis.grossFeesNgn.delta} icon={Wallet} tone="gold" format="ngn" />
-        <Kpi label="Net revenue" value={kpis.netRevenueNgn.value} delta={kpis.netRevenueNgn.delta} icon={TrendingUp} tone="success" format="ngn" />
-        <Kpi label="Live chat queue" value={kpis.liveChatQueue.value} delta={0} icon={Headphones} tone="warning" />
-
-        <Kpi label="Cards issued" value={kpis.cardsIssued.value} delta={kpis.cardsIssued.delta} icon={CreditCard} />
-        <Kpi label="eSIMs activated" value={kpis.esimsActivated.value} delta={kpis.esimsActivated.delta} icon={Smartphone} tone="gold" />
-        <Kpi label="Numbers leased" value={kpis.numbersLeased.value} delta={kpis.numbersLeased.delta} icon={Phone} />
-        <Kpi label="KYC backlog" value={kpis.kycBacklog.value} delta={kpis.kycBacklog.delta} icon={ShieldCheck} tone="warning" />
+      {/* Hero KPIs — 4 only */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <HeroKpi
+          label="Volume processed (7d)"
+          value={kpis.processedVolumeNgn.value}
+          delta={kpis.processedVolumeNgn.delta}
+          series={spark.volume}
+          tone="primary"
+          format="ngn"
+        />
+        <HeroKpi
+          label="Net revenue (7d)"
+          value={kpis.netRevenueNgn.value}
+          delta={kpis.netRevenueNgn.delta}
+          series={spark.revenue}
+          tone="gold"
+          format="ngn"
+        />
+        <HeroKpi
+          label="Active users"
+          value={kpis.activeUsers.value}
+          delta={kpis.activeUsers.delta}
+          series={spark.users}
+          tone="success"
+        />
+        <HeroKpi
+          label="KYC conversion"
+          value={kpis.kycConversion.value}
+          delta={kpis.kycConversion.delta}
+          series={spark.kyc}
+          tone="primary"
+          format="pct"
+        />
       </div>
 
-      {/* Charts */}
+      {/* Main grid: chart 2/3 + Action center 1/3 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 shadow-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="text-base">Volume processed</CardTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">NGN-equivalent across all channels</p>
+          <CardHeader className="pb-3">
+            <div className="flex items-start justify-between flex-wrap gap-3">
+              <div>
+                <CardTitle className="text-base">Performance</CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Trend across volume, fees, and service mix
+                </p>
+              </div>
+              <Tabs defaultValue="volume" className="w-auto">
+                <TabsList className="h-8">
+                  <TabsTrigger value="volume" className="text-xs h-6 px-3">Volume</TabsTrigger>
+                  <TabsTrigger value="fees" className="text-xs h-6 px-3">Fees</TabsTrigger>
+                  <TabsTrigger value="mix" className="text-xs h-6 px-3">Service mix</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="volume" className="mt-4">
+                  <ChartArea dataKey="volume" stroke="oklch(0.32 0.14 280)" formatter={(v) => fmtNgn(v)} yFmt={(v) => `₦${(v / 1_000_000).toFixed(0)}M`} />
+                </TabsContent>
+                <TabsContent value="fees" className="mt-4">
+                  <ChartArea dataKey="fees" stroke="oklch(0.78 0.15 85)" formatter={(v) => fmtNgn(v)} yFmt={(v) => `₦${(v / 1_000).toFixed(0)}k`} />
+                </TabsContent>
+                <TabsContent value="mix" className="mt-4">
+                  <div className="h-[280px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={serviceBreakdown} layout="vertical" margin={{ left: 8, right: 16 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 280)" horizontal={false} />
+                        <XAxis type="number" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" tickFormatter={(v) => `${v}%`} />
+                        <YAxis dataKey="name" type="category" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" width={80} />
+                        <Tooltip
+                          contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.91 0.01 280)", fontSize: 12 }}
+                          formatter={(v: number) => `${v}%`}
+                        />
+                        <Bar dataKey="value" fill="oklch(0.82 0.16 85)" radius={[0, 6, 6, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
-            <Badge variant="secondary" className="bg-success/15 text-success border-0">
-              +18.3%
-            </Badge>
           </CardHeader>
-          <CardContent>
-            <div className="h-[260px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={volumeSeries} margin={{ left: 8, right: 8, top: 8, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="volume" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="oklch(0.32 0.14 280)" stopOpacity={0.35} />
-                      <stop offset="100%" stopColor="oklch(0.32 0.14 280)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 280)" vertical={false} />
-                  <XAxis dataKey="day" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" />
-                  <YAxis
-                    tick={{ fontSize: 11 }}
-                    stroke="oklch(0.5 0.02 280)"
-                    tickFormatter={(v) => `₦${(v / 1_000_000).toFixed(0)}M`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: 8,
-                      border: "1px solid oklch(0.91 0.01 280)",
-                      fontSize: 12,
-                    }}
-                    formatter={(v: number) => fmtNgn(v)}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="volume"
-                    stroke="oklch(0.32 0.14 280)"
-                    strokeWidth={2}
-                    fill="url(#volume)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
         </Card>
 
+        {/* Action center */}
         <Card className="shadow-card">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Volume by service</CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5">Share of last 7 days</p>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[260px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={serviceBreakdown} layout="vertical" margin={{ left: 8, right: 16 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 280)" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" tickFormatter={(v) => `${v}%`} />
-                  <YAxis dataKey="name" type="category" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" width={70} />
-                  <Tooltip
-                    contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.91 0.01 280)", fontSize: 12 }}
-                    formatter={(v: number) => `${v}%`}
-                  />
-                  <Bar dataKey="value" fill="oklch(0.82 0.16 85)" radius={[0, 6, 6, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <div>
+              <CardTitle className="text-base">Action center</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5">Queues that need a human</p>
             </div>
+            <Badge variant="secondary" className="bg-primary/10 text-primary border-0">
+              {totalQueue}
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-1.5">
+            {opsQueues.map((q) => (
+              <Link
+                key={q.key}
+                to={"/dashboard"}
+                className="group flex items-center gap-3 p-2.5 rounded-md hover:bg-muted/60 transition"
+              >
+                <div className={`h-9 w-9 rounded-md flex items-center justify-center ${toneBg[q.tone]} ${toneText[q.tone]}`}>
+                  <span className="font-display text-sm font-bold">{q.count}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium truncate">{q.label}</div>
+                  <div className="text-xs text-muted-foreground">
+                    SLA {q.sla}
+                    {q.breaching > 0 && (
+                      <span className="text-destructive font-medium"> · {q.breaching} breaching</span>
+                    )}
+                  </div>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition" />
+              </Link>
+            ))}
           </CardContent>
         </Card>
       </div>
 
-      {/* Alerts + activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Bottom row: System health · Alerts · Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="shadow-card">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-base">Alerts</CardTitle>
+            <CardTitle className="text-base">System health</CardTitle>
+            <Badge variant="secondary" className="bg-warning/20 text-warning-foreground border-0">
+              1 degraded
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            {systemHealth.map((s) => (
+              <div key={s.name} className="flex items-center justify-between py-2 border-b last:border-0">
+                <div className="flex items-center gap-2.5">
+                  <StatusDot status={s.status} />
+                  <span className="text-sm font-medium">{s.name}</span>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-muted-foreground tabular-nums">{s.latency}</div>
+                  <div className="text-[10px] text-muted-foreground tabular-nums">{s.uptime}</div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-card">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-warning-foreground" />
+              Alerts
+            </CardTitle>
             <Button variant="ghost" size="sm" className="text-xs h-7">View all</Button>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-1">
             {recentAlerts.map((a) => (
-              <div key={a.id} className="flex items-start gap-3 p-3 rounded-md hover:bg-muted/50 transition">
+              <div key={a.id} className="flex items-start gap-3 p-2.5 rounded-md hover:bg-muted/50 transition">
                 <div
                   className={`h-2 w-2 rounded-full mt-1.5 shrink-0 ${
                     a.level === "high" ? "bg-destructive" : a.level === "med" ? "bg-warning" : "bg-success"
@@ -237,7 +332,7 @@ function DashboardPage() {
                     <div className="font-medium text-sm truncate">{a.title}</div>
                     <div className="text-xs text-muted-foreground shrink-0">{a.at}</div>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">{a.body}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5 truncate">{a.body}</div>
                 </div>
               </div>
             ))}
@@ -246,19 +341,22 @@ function DashboardPage() {
 
         <Card className="shadow-card">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-base">Recent activity</CardTitle>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Activity className="h-4 w-4 text-primary" />
+              Recent activity
+            </CardTitle>
             <Button variant="ghost" size="sm" className="text-xs h-7">Audit log</Button>
           </CardHeader>
-          <CardContent className="space-y-2">
-            {recentActivity.map((a) => (
-              <div key={a.id} className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition">
+          <CardContent className="space-y-1">
+            {recentActivity.slice(0, 5).map((a) => (
+              <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-md hover:bg-muted/50 transition">
                 <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-[11px] font-semibold text-primary shrink-0">
                   {a.actor === "system" ? "S" : a.actor[0]}
                 </div>
                 <div className="flex-1 min-w-0 text-sm">
                   <span className="font-medium">{a.actor}</span>{" "}
                   <span className="text-muted-foreground">{a.action}</span>{" "}
-                  <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded">{a.target}</span>
+                  <span className="font-mono text-[11px] bg-muted px-1.5 py-0.5 rounded">{a.target}</span>
                 </div>
                 <div className="text-xs text-muted-foreground shrink-0">{a.at}</div>
               </div>
@@ -266,6 +364,71 @@ function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Compact secondary KPIs */}
+      <Card className="shadow-card">
+        <CardContent className="p-0">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 divide-x divide-y md:divide-y-0">
+            {[
+              { label: "New signups (7d)", value: fmtNum(kpis.newSignups.value), delta: kpis.newSignups.delta, icon: TrendingUp },
+              { label: "Gross fees", value: fmtNgn(kpis.grossFeesNgn.value), delta: kpis.grossFeesNgn.delta, icon: Wallet },
+              { label: "Cards issued", value: fmtNum(kpis.cardsIssued.value), delta: kpis.cardsIssued.delta, icon: Users },
+              { label: "eSIMs activated", value: fmtNum(kpis.esimsActivated.value), delta: kpis.esimsActivated.delta, icon: Users },
+              { label: "Numbers leased", value: fmtNum(kpis.numbersLeased.value), delta: kpis.numbersLeased.delta, icon: Users },
+              { label: "Open compliance", value: fmtNum(kpis.openCompliance.value), delta: kpis.openCompliance.delta, icon: ShieldCheck },
+            ].map((s) => {
+              const positive = s.delta >= 0;
+              return (
+                <div key={s.label} className="p-4">
+                  <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{s.label}</div>
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="font-display font-bold text-lg">{s.value}</span>
+                    <span className={`text-xs font-medium ${positive ? "text-success" : "text-destructive"}`}>
+                      {fmtPct(s.delta)}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function ChartArea({
+  dataKey,
+  stroke,
+  formatter,
+  yFmt,
+}: {
+  dataKey: "volume" | "fees";
+  stroke: string;
+  formatter: (v: number) => string;
+  yFmt: (v: number) => string;
+}) {
+  const id = `grad-${dataKey}`;
+  return (
+    <div className="h-[280px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={volumeSeries} margin={{ left: 8, right: 8, top: 8, bottom: 0 }}>
+          <defs>
+            <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={stroke} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={stroke} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 280)" vertical={false} />
+          <XAxis dataKey="day" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" />
+          <YAxis tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" tickFormatter={yFmt} width={56} />
+          <Tooltip
+            contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.91 0.01 280)", fontSize: 12 }}
+            formatter={(v: number) => formatter(v)}
+          />
+          <Area type="monotone" dataKey={dataKey} stroke={stroke} strokeWidth={2} fill={`url(#${id})`} />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }
