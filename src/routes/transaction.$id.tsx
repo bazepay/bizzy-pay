@@ -205,7 +205,7 @@ function TxnReceipt() {
             <Download className="w-4 h-4" /> Download
           </button>
           <button
-            onClick={() => toast.success("Help request sent", { description: "We'll follow up within 24 hours." })}
+            onClick={() => navigate({ to: "/profile/help/chat" })}
             className="h-12 rounded-2xl bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition"
           >
             <HelpCircle className="w-4 h-4" /> Get help

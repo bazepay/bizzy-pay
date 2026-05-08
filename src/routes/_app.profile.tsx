@@ -174,7 +174,7 @@ function ProfilePage() {
             icon={<MessageCircle className="w-4 h-4" />}
             label="Live chat"
             desc="Avg. reply in 3 min"
-            onClick={() => setSupportOpen(true)}
+            onClick={() => navigate({ to: "/profile/help/chat" })}
           />
           <RowButton
             icon={<HelpCircle className="w-4 h-4" />}
