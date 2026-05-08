@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, AlertTriangle, FileText, Camera } from "lucide-react";
+import { toast } from "sonner";
 import { getUser, kycLabel, kycTone } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/$id/kyc")({
@@ -76,9 +77,9 @@ function KycDossier() {
               <div className="text-xs mt-1 text-right font-mono">{user.riskScore}/100</div>
             </div>
             <div className="grid grid-cols-1 gap-1.5 pt-2">
-              <Button size="sm">Approve KYC</Button>
-              <Button size="sm" variant="outline">Request more info</Button>
-              <Button size="sm" variant="outline" className="text-destructive">Reject</Button>
+              <Button size="sm" onClick={() => toast.success("KYC approved.")}>Approve KYC</Button>
+              <Button size="sm" variant="outline" onClick={() => toast.success("Request for additional info sent to user.")}>Request more info</Button>
+              <Button size="sm" variant="outline" className="text-destructive" onClick={() => toast.success("KYC rejected.")}>Reject</Button>
             </div>
           </CardContent>
         </Card>

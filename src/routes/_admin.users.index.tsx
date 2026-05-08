@@ -264,3 +264,43 @@ function FilterSelect({
     </Select>
   );
 }
+
+function InviteUserDialog() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" className="bg-primary text-primary-foreground">
+          <Plus className="h-3.5 w-3.5 mr-1.5" />
+          Invite user
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Invite a new user</DialogTitle>
+          <DialogDescription>An onboarding link will be sent via email and SMS.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-2"><Label>Full name</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ada Okafor" /></div>
+          <div className="space-y-2"><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ada@mail.com" /></div>
+          <div className="space-y-2"><Label>Phone</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+234 801 234 5678" /></div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button
+            disabled={!name || !email}
+            onClick={() => {
+              toast.success(`Invite sent to ${email}.`);
+              setOpen(false); setName(""); setEmail(""); setPhone("");
+            }}
+          >
+            Send invite
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
