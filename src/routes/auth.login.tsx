@@ -46,7 +46,7 @@ function Login() {
             <h1 className="font-display text-4xl font-bold tracking-tight">
               Welcome back
             </h1>
-            <p className="text-sm text-card-foreground/55 mt-2">
+            <p className="text-sm text-foreground/55 mt-2">
               Sign in to your BazePay account.
             </p>
           </motion.div>
