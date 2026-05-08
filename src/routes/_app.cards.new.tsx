@@ -135,6 +135,7 @@ function NewCardPage() {
       {(step === "issuing" || step === "success") && (
         <IssuingScreen done={step === "success"} newId={newIdRef.current} />
       )}
+      {pinGate}
     </div>
   );
 }
