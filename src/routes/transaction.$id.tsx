@@ -217,6 +217,7 @@ function TxnReceipt() {
         </p>
       </div>
     </div>
+    </PhoneFrame>
   );
 }
 
