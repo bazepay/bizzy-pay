@@ -55,7 +55,7 @@ function CardsPage() {
       <Header count={cards.length} total={totalNgn} />
 
       {/* Stacked wallet */}
-      <div className="px-6 mt-3">
+      <div className="px-6 mt-8">
         <div
           className="relative mx-auto"
           style={{
