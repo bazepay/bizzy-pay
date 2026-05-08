@@ -112,9 +112,34 @@ type Sort = "cheap" | "expensive" | "data" | "longest";
 
 const FX = 1550;
 
+type VnCountry = { id: string; name: string; flag: string; code: string; iso: string };
+const vnCountries: VnCountry[] = [
+  { id: "us", name: "USA", flag: "🇺🇸", code: "+1", iso: "US" },
+  { id: "gb", name: "United Kingdom", flag: "🇬🇧", code: "+44", iso: "GB" },
+  { id: "ca", name: "Canada", flag: "🇨🇦", code: "+1", iso: "CA" },
+  { id: "nl", name: "Netherlands", flag: "🇳🇱", code: "+31", iso: "NL" },
+];
+type VnPlanKey = "day" | "week" | "month" | "year";
+type VnPlan = { key: VnPlanKey; label: string; price: number; perMonth: number; badge?: string; sub: string };
+const vnPlans: VnPlan[] = [
+  { key: "day", label: "1 Day", price: 1.5, perMonth: 45, sub: "One-off SMS verify" },
+  { key: "week", label: "1 Week", price: 5.0, perMonth: 21.5, sub: "Short-term verification" },
+  { key: "month", label: "1 Month", price: 12.5, perMonth: 12.5, sub: "Cancel anytime" },
+  { key: "year", label: "1 Year", price: 56.0, perMonth: 4.67, sub: "Billed yearly · best value", badge: "63% off" },
+];
+const vnApps = ["WhatsApp", "Telegram", "Google", "Facebook", "Instagram", "TikTok", "X", "OpenAI", "Uber", "PayPal", "Amazon", "Airbnb"];
+const vnNumbers: Record<string, string> = {
+  us: "+1 (415) 555-0142",
+  gb: "+44 20 7946 0184",
+  ca: "+1 (416) 555-0119",
+  nl: "+31 20 491 2876",
+};
+
+type Mode = "new" | "topup" | "vnumber";
+
 function EsimPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"new" | "topup">("new");
+  const [mode, setMode] = useState<Mode>("new");
   const [topupId, setTopupId] = useState<string | null>(null);
   const [scope, setScope] = useState<Scope>("local");
   const [email, setEmail] = useState("");
@@ -125,6 +150,12 @@ function EsimPage() {
   const [valF, setValF] = useState<ValidityFilter>("all");
   const [sort, setSort] = useState<Sort>("cheap");
   const [showFilters, setShowFilters] = useState(false);
+  // virtual number
+  const [vnCountryId, setVnCountryId] = useState<string>("us");
+  const [vnPlanKey, setVnPlanKey] = useState<VnPlanKey>("month");
+  const [vnAutoRenew, setVnAutoRenew] = useState(true);
+  const [vnSuccess, setVnSuccess] = useState(false);
+  const [vnConfirm, setVnConfirm] = useState(false);
 
   const activeEsim = installed.find((i) => i.id === topupId) ?? null;
   const effectiveScope: Scope = mode === "topup" && activeEsim ? activeEsim.scope : scope;
