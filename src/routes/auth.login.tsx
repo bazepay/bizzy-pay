@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
-import { ArrowRight, Eye, EyeOff, Fingerprint, Mail, Phone } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Fingerprint, Mail, Phone, ChevronDown } from "lucide-react";
+import { DIAL_CODES } from "@/lib/countries";
+import { Flag, CountrySheet } from "@/components/country-picker";
 
 export const Route = createFileRoute("/auth/login")({
   head: () => ({
@@ -19,13 +21,16 @@ function Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const [countryCode, setCountryCode] = useState("NG");
+  const [pickerOpen, setPickerOpen] = useState(false);
   const nav = useNavigate();
 
+  const dial = DIAL_CODES[countryCode] ?? "";
   const canSubmit = identifier.trim().length > 4 && password.length >= 6;
 
   return (
     <PhoneFrame>
-      <div className="h-full min-h-screen md:min-h-0 bg-background text-foreground flex flex-col">
+      <div className="h-full min-h-screen md:min-h-0 bg-background text-foreground flex flex-col relative overflow-hidden">
         <div className="h-10" />
 
         {/* Brand */}
@@ -83,17 +88,54 @@ function Login() {
           </div>
 
           {/* Identifier */}
-          <div className="mt-5 relative">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-card-foreground/40">
-              {mode === "phone" ? "+234" : "@"}
-            </span>
-            <input
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-              className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
-            />
-          </div>
+          <AnimatePresence mode="wait">
+            {mode === "phone" ? (
+              <motion.div
+                key="phone"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="mt-5 flex gap-2"
+              >
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(true)}
+                  className="h-14 px-3 rounded-2xl bg-muted flex items-center gap-2 hover:border-primary/30 border border-transparent transition shrink-0"
+                >
+                  <Flag code={countryCode} className="w-6 h-[18px]" />
+                  <span className="text-[14px] font-semibold text-card-foreground/80">+{dial}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-card-foreground/40" />
+                </button>
+                <input
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value.replace(/[^\d\s]/g, ""))}
+                  inputMode="tel"
+                  placeholder="803 555 0142"
+                  className="flex-1 min-w-0 h-14 px-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="email"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="mt-5 relative"
+              >
+                <Mail className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-card-foreground/40" />
+                <input
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  type="email"
+                  inputMode="email"
+                  placeholder="you@example.com"
+                  className="w-full h-14 pl-11 pr-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Password */}
           <div className="mt-3 relative">
@@ -154,6 +196,13 @@ function Login() {
             </button>
           </div>
         </div>
+
+        <CountrySheet
+          open={pickerOpen}
+          onClose={() => setPickerOpen(false)}
+          value={countryCode}
+          onChange={setCountryCode}
+        />
       </div>
     </PhoneFrame>
   );
