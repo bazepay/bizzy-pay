@@ -199,13 +199,16 @@ function Kyc() {
               onBack={goBack}
               title="Choose ID document"
               subtitle={
-                <>
+                <span className="inline-flex items-center gap-1.5">
                   Accepted IDs in{" "}
-                  <span className="font-semibold text-foreground">
-                    {country.flag} {country.name}
-                  </span>
-                  .
-                </>
+                  <img
+                    src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                    srcSet={`https://flagcdn.com/w80/${country.code.toLowerCase()}.png 2x`}
+                    alt=""
+                    className="w-4 h-3 rounded-[2px] object-cover ring-1 ring-foreground/10 inline-block align-middle"
+                  />
+                  <span className="font-semibold text-foreground">{country.name}</span>.
+                </span>
               }
               footer={
                 <PrimaryButton
