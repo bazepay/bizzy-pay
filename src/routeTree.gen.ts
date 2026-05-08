@@ -93,11 +93,6 @@ const AppPayInternetRoute = AppPayInternetRouteImport.update({
   path: '/internet',
   getParentRoute: () => AppPayRoute,
 } as any)
-const AppPayVirtualNumberRoute = AppPayVirtualNumberRouteImport.update({
-  id: '/virtual-number',
-  path: '/virtual-number',
-  getParentRoute: () => AppPayRoute,
-} as any)
 const AppPayEsimRoute = AppPayEsimRouteImport.update({
   id: '/esim',
   path: '/esim',
