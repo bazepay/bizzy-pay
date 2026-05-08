@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { fmtNgn } from "@/lib/mock-data";
 import {
-  getUser, tierLabel, statusTone, riskTone, fmtRelative,
+  getUser, kycLabel, kycTone, statusTone, riskTone, fmtRelative,
 } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/$id")({
@@ -81,25 +81,25 @@ function User360Layout() {
 
         {/* Header card */}
         <Card className="shadow-card overflow-hidden">
-          <div className="bg-gradient-hero p-5 flex items-start gap-4 flex-wrap">
+          <div className="bg-gradient-hero p-5 flex items-start gap-4 flex-wrap text-primary-foreground">
             <div
-              className="h-16 w-16 rounded-full flex items-center justify-center text-lg font-display font-bold text-primary-foreground shrink-0"
-              style={{ backgroundColor: `oklch(0.45 0.15 ${user.avatarHue})` }}
+              className="h-16 w-16 rounded-full flex items-center justify-center text-lg font-display font-bold text-white shrink-0 ring-2 ring-white/20"
+              style={{ backgroundColor: `oklch(0.55 0.18 ${user.avatarHue})` }}
             >
               {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
             </div>
 
             <div className="flex-1 min-w-[260px]">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="font-display text-2xl font-bold">{user.name}</h1>
+                <h1 className="font-display text-2xl font-bold text-primary-foreground">{user.name}</h1>
                 <Badge variant="outline" className={`text-xs capitalize ${statusTone[user.status]}`}>{user.status}</Badge>
-                <Badge variant="outline" className="text-xs">{tierLabel(user.kycTier)}</Badge>
+                <Badge variant="outline" className={`text-xs ${kycTone(user.kyc)}`}>{kycLabel(user.kyc)}</Badge>
               </div>
-              <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
+              <div className="mt-2 flex items-center gap-4 text-sm text-primary-foreground/75 flex-wrap">
                 <span className="inline-flex items-center gap-1.5">
                   <Phone className="h-3.5 w-3.5" />
                   {showPhone ? user.phone : masked(user.phone)}
-                  <button onClick={() => setShowPhone((s) => !s)} className="text-primary text-xs ml-1">
+                  <button onClick={() => setShowPhone((s) => !s)} className="text-primary-foreground/90 text-xs ml-1">
                     {showPhone ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                   </button>
                 </span>
@@ -117,16 +117,16 @@ function User360Layout() {
 
             <div className="grid grid-cols-3 gap-4 text-right">
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Risk</div>
+                <div className="text-[11px] uppercase tracking-wider text-primary-foreground/60">Risk</div>
                 <div className={`font-display text-lg font-bold ${riskTone(user.riskScore)}`}>{user.riskScore}</div>
               </div>
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">LTV</div>
-                <div className="font-display text-lg font-bold">{fmtNgn(user.ltvNgn)}</div>
+                <div className="text-[11px] uppercase tracking-wider text-primary-foreground/60">LTV</div>
+                <div className="font-display text-lg font-bold text-primary-foreground">{fmtNgn(user.ltvNgn)}</div>
               </div>
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Last seen</div>
-                <div className="font-display text-lg font-bold">{fmtRelative(user.lastActiveAt)}</div>
+                <div className="text-[11px] uppercase tracking-wider text-primary-foreground/60">Last seen</div>
+                <div className="font-display text-lg font-bold text-primary-foreground">{fmtRelative(user.lastActiveAt)}</div>
               </div>
             </div>
 

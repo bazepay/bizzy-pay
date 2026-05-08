@@ -1,6 +1,6 @@
 // Mock users dataset for the Users module. Will be replaced by Lovable Cloud.
 
-export type KycTier = 0 | 1 | 2 | 3;
+export type KycStatus = "verified" | "unverified";
 export type AccountStatus = "active" | "frozen" | "closed" | "pending";
 export type Country = "NG" | "GH" | "KE" | "ZA" | "UK" | "US";
 
@@ -10,7 +10,7 @@ export type User = {
   email: string;
   phone: string;
   country: Country;
-  kycTier: KycTier;
+  kyc: KycStatus;
   status: AccountStatus;
   riskScore: number; // 0–100
   ltvNgn: number;
@@ -37,11 +37,11 @@ function makeUser(i: number): User {
   const last = LAST[(i * 3) % LAST.length];
   const r = seeded(i);
   const r2 = seeded(i + 100);
-  const tier = (i % 7 === 0 ? 0 : i % 5 === 0 ? 3 : i % 2 === 0 ? 2 : 1) as KycTier;
+  const kyc: KycStatus = i % 6 === 0 ? "unverified" : "verified";
   const status: AccountStatus =
-    i % 31 === 0 ? "frozen" : i % 47 === 0 ? "closed" : tier === 0 ? "pending" : "active";
+    i % 31 === 0 ? "frozen" : i % 47 === 0 ? "closed" : kyc === "unverified" ? "pending" : "active";
   const id = `u_${(8000 + i).toString().padStart(4, "0")}`;
-  const ltv = Math.round((50_000 + r * 4_500_000) * (tier + 1));
+  const ltv = Math.round((50_000 + r * 4_500_000) * (kyc === "verified" ? 3 : 1));
   const signupDays = Math.floor(2 + r2 * 700);
   const signupDate = new Date(Date.now() - signupDays * 86_400_000);
   const lastActive = new Date(Date.now() - Math.floor(r * 14) * 3_600_000);
@@ -51,17 +51,17 @@ function makeUser(i: number): User {
     email: `${first}.${last}`.toLowerCase() + "@mail.com",
     phone: `+234 80${Math.floor(10000000 + r * 89999999)}`,
     country: COUNTRIES[i % COUNTRIES.length],
-    kycTier: tier,
+    kyc,
     status,
     riskScore: Math.round(r * 95) + 5,
     ltvNgn: ltv,
     signupAt: signupDate.toISOString(),
     lastActiveAt: lastActive.toISOString(),
-    bvnLast4: tier >= 2 ? String(1000 + Math.floor(r * 8999)).slice(-4) : undefined,
-    ninLast4: tier >= 1 ? String(1000 + Math.floor(r2 * 8999)).slice(-4) : undefined,
+    bvnLast4: kyc === "verified" ? String(1000 + Math.floor(r * 8999)).slice(-4) : undefined,
+    ninLast4: kyc === "verified" ? String(1000 + Math.floor(r2 * 8999)).slice(-4) : undefined,
     avatarHue: Math.floor(r * 360),
     twoFa: i % 3 !== 0,
-    pinSet: tier >= 1,
+    pinSet: kyc === "verified",
   };
 }
 
@@ -174,7 +174,9 @@ export function getNotes(userId: string): Note[] {
 
 // ---------- Helpers ----------
 
-export const tierLabel = (t: KycTier) => (t === 0 ? "Unverified" : `Tier ${t}`);
+export const kycLabel = (k: KycStatus) => (k === "verified" ? "Verified" : "Unverified");
+export const kycTone = (k: KycStatus) =>
+  k === "verified" ? "bg-success/15 text-success border-success/30" : "bg-muted text-muted-foreground border-border";
 export const statusTone: Record<AccountStatus, string> = {
   active: "bg-success/15 text-success border-success/30",
   frozen: "bg-warning/20 text-warning-foreground border-warning/40",
