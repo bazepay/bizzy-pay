@@ -19,6 +19,7 @@ import {
   Hash,
   Clock,
   Lock,
+  Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/pay/esim")({
