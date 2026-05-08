@@ -2,18 +2,32 @@ import { Eye, EyeOff, Snowflake } from "lucide-react";
 import type { VirtualCard } from "@/lib/cards";
 import { maskPan } from "@/lib/cards";
 
+type CardLike = Partial<VirtualCard> & {
+  label: string;
+  holder?: string;
+  brand?: VirtualCard["brand"];
+  status?: VirtualCard["status"];
+  gradient: VirtualCard["gradient"];
+  pan?: string;
+  expiry?: string;
+};
+
 export function VirtualCardArt({
   card,
   revealed = false,
   size = "md",
+  blank = false,
 }: {
-  card: VirtualCard;
+  card: CardLike;
   revealed?: boolean;
   size?: "sm" | "md" | "lg";
+  blank?: boolean;
 }) {
   const padding = size === "sm" ? "p-4" : size === "lg" ? "p-6" : "p-5";
   const titleSize = size === "lg" ? "text-base" : "text-[12px]";
   const panSize = size === "lg" ? "text-xl" : "text-base";
+  const pan = card.pan ?? "•••• •••• •••• ••••";
+  const expiry = card.expiry ?? "••/••";
 
   return (
     <div
@@ -45,28 +59,30 @@ export function VirtualCardArt({
             <p className={`font-bold uppercase tracking-[0.18em] opacity-75 ${titleSize}`}>
               {card.label}
             </p>
-            <p className="text-[10px] opacity-60 mt-0.5">{card.currency} · Virtual</p>
+            <p className="text-[10px] opacity-60 mt-0.5">NGN · Virtual</p>
           </div>
           <div className="w-10 h-7 rounded-md bg-gradient-to-br from-amber-200 to-amber-500 opacity-90" />
         </div>
 
         <div>
           <p className={`font-mono font-semibold tabular-nums tracking-wider ${panSize}`}>
-            {revealed ? card.pan : maskPan(card.pan)}
+            {blank ? "•••• •••• •••• ••••" : revealed ? pan : maskPan(pan)}
           </p>
           <div className="mt-3 flex items-end justify-between">
             <div>
               <p className="text-[8px] opacity-55 uppercase tracking-wider">Cardholder</p>
-              <p className="text-[11px] font-bold tracking-wide">{card.holder}</p>
+              <p className="text-[11px] font-bold tracking-wide">
+                {blank ? "—" : card.holder ?? "—"}
+              </p>
             </div>
             <div>
               <p className="text-[8px] opacity-55 uppercase tracking-wider">Expires</p>
               <p className="text-[11px] font-bold tabular-nums">
-                {revealed ? card.expiry : "••/••"}
+                {blank ? "••/••" : revealed ? expiry : "••/••"}
               </p>
             </div>
             <p className="font-display text-base italic font-bold tracking-tight">
-              {card.brand}
+              {card.brand ?? "Visa"}
             </p>
           </div>
         </div>
