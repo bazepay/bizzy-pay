@@ -325,7 +325,7 @@ function Signup() {
                           selected ? "bg-primary/10" : "hover:bg-muted"
                         }`}
                       >
-                        <span className="text-2xl leading-none">{c.flag}</span>
+                        <Flag code={c.code} />
                         <span className="flex-1 text-[14.5px] font-medium">{c.name}</span>
                         <span className="text-[12.5px] text-card-foreground/50">
                           +{DIAL_CODES[c.code] ?? ""}
