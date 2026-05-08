@@ -196,7 +196,7 @@ function Kyc() {
                     setIdValue(v);
                   }}
                   placeholder={idType === "PASSPORT" ? "A12345678" : "12345678901"}
-                  className="mt-2 w-full h-12 px-4 rounded-2xl bg-muted text-base outline-none focus:ring-2 ring-primary/40 tracking-wider"
+                  className="mt-2 w-full h-12 px-4 rounded-2xl bg-card text-card-foreground border border-border text-base outline-none focus:ring-2 ring-primary/40 tracking-wider"
                 />
               </label>
               <p className="text-[11px] text-muted-foreground mt-2 px-1">
