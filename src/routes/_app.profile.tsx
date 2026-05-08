@@ -80,7 +80,7 @@ function ProfilePage() {
   return (
     <div className="min-h-full bg-card text-card-foreground flex flex-col">
       {/* Dark hero */}
-      <div className="relative bg-background text-foreground px-6 pt-12 pb-20">
+      <div className="relative bg-background text-foreground px-6 pt-12 pb-12">
         <div className="flex items-center justify-between">
           <h1 className="font-display text-2xl font-bold tracking-tight">Profile</h1>
           <button
