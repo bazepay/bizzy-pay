@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { wallets } from "@/lib/wallets";
+import { verifyPin } from "@/lib/pin-store";
 
 export const Route = createFileRoute("/transfer")({
   head: () => ({
@@ -192,12 +193,18 @@ function TransferFlow() {
   // auto-submit pin
   useEffect(() => {
     if (step === "pin" && pin.length === 4) {
-      const t = setTimeout(() => {
-        setReference("BZP" + Date.now().toString().slice(-8));
-        setStep("success");
-        setPin("");
-      }, 600);
-      return () => clearTimeout(t);
+      if (verifyPin(pin)) {
+        const t = setTimeout(() => {
+          setReference("BZP" + Date.now().toString().slice(-8));
+          setStep("success");
+          setPin("");
+        }, 400);
+        return () => clearTimeout(t);
+      } else {
+        toast.error("Incorrect PIN");
+        const t = setTimeout(() => setPin(""), 350);
+        return () => clearTimeout(t);
+      }
     }
   }, [pin, step]);
 
