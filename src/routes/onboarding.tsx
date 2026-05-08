@@ -23,21 +23,21 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    eyebrow: "Wallet",
-    title: "One wallet, every currency.",
-    body: "Hold Naira, Dollars, Euros and Pounds. Convert at fair rates with no branch visits.",
+    eyebrow: "For Nigerians abroad",
+    title: "Take care of home, from anywhere.",
+    body: "Send money to family in Naira, settle bills back home, and keep your dollars working — all from one app.",
     visual: WalletVisual,
   },
   {
-    eyebrow: "Cards",
-    title: "Virtual cards, issued instantly.",
-    body: "Spin up a Naira or USD card in seconds. Subscribe, shop and travel — fully in control.",
+    eyebrow: "Spend like a local",
+    title: "One card. Every checkout, every country.",
+    body: "Subscribe to Netflix, book flights, shop online — without your bank declining the transaction at 2am.",
     visual: CardVisual,
   },
   {
-    eyebrow: "Anywhere",
-    title: "Land ready. Stay connected.",
-    body: "Pay bills home, top up airtime and grab an eSIM before you board. No SIM swaps.",
+    eyebrow: "Land connected",
+    title: "Online the moment you touch down in Lagos.",
+    body: "Get an eSIM before you board. No SIM swaps, no airport queues — just data the second you land.",
     visual: ESimVisual,
   },
 ];
