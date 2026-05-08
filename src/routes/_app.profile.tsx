@@ -112,7 +112,7 @@ function ProfilePage() {
       </div>
 
       {/* White surface */}
-      <div className="-mt-8 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
+      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-28 -mt-6 relative">
         {/* KYC verified card */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white p-5 shadow-xl">
           <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
