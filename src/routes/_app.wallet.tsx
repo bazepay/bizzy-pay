@@ -298,11 +298,11 @@ function FilterSheet({
     (draft.date !== "all" ? 1 : 0);
 
   return (
-    <div className="absolute inset-0 z-[60] flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[90%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full max-w-[420px] bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[90%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
 
@@ -512,11 +512,11 @@ function Sheet({
   const title = kind === "fund" ? "Top up wallet" : "Withdraw funds";
 
   return (
-    <div className="absolute inset-0 z-[60] flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/50" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] p-6 pb-8 max-h-[88%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full max-w-[420px] bg-card text-card-foreground rounded-t-[2rem] p-6 pb-8 max-h-[88%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
 
@@ -555,12 +555,11 @@ function Sheet({
               <div className="flex items-baseline gap-2 mt-1.5">
                 <span className="font-display text-3xl font-bold">{w.symbol}</span>
                 <input
-                  autoFocus
                   inputMode="decimal"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="bg-transparent outline-none flex-1 font-display text-3xl font-bold placeholder:text-card-foreground/25"
+                  className="bg-transparent outline-none flex-1 min-w-0 font-display text-3xl font-bold placeholder:text-card-foreground/25"
                 />
               </div>
               <div className="mt-3 flex gap-2">
@@ -663,11 +662,11 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
   ];
 
   return (
-    <div className="absolute inset-0 z-[70] flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[70] flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[92%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full max-w-[420px] bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[92%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
 
