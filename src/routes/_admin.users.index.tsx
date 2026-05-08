@@ -134,8 +134,8 @@ function UsersDirectory() {
             ]}
           />
 
-          {(q || tier !== "any" || status !== "any" || country !== "any") && (
-            <Button variant="ghost" size="sm" onClick={() => { setQ(""); setTier("any"); setStatus("any"); setCountry("any"); setPage(0); }}>
+          {(q || kyc !== "any" || status !== "any" || country !== "any") && (
+            <Button variant="ghost" size="sm" onClick={() => { setQ(""); setKyc("any"); setStatus("any"); setCountry("any"); setPage(0); }}>
               <Filter className="h-3.5 w-3.5 mr-1.5" />
               Clear
             </Button>
@@ -176,7 +176,7 @@ function UsersDirectory() {
                   </Link>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="text-xs">{tierLabel(u.kycTier)}</Badge>
+                  <Badge variant="outline" className={`text-xs ${kycTone(u.kyc)}`}>{kycLabel(u.kyc)}</Badge>
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline" className={`text-xs capitalize ${statusTone[u.status]}`}>{u.status}</Badge>
