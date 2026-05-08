@@ -415,3 +415,140 @@ function SupportSheet({ open, onClose }: { open: boolean; onClose: () => void })
     </AnimatePresence>
   );
 }
+
+function EditProfileSheet({
+  open, onClose, user, onSave,
+}: {
+  open: boolean;
+  onClose: () => void;
+  user: { name: string; email: string; phone: string };
+  onSave: (name: string, email: string, phone: string) => void;
+}) {
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [phone, setPhone] = useState(user.phone);
+
+  // sync when reopened
+  useEffect(() => {
+    if (open) {
+      setName(user.name);
+      setEmail(user.email);
+      setPhone(user.phone);
+    }
+  }, [open, user]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/50 z-[60]"
+          />
+          <motion.div
+            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 280 }}
+            className="absolute inset-x-0 bottom-0 z-[61] bg-card text-card-foreground rounded-t-3xl px-5 pt-4 pb-6"
+          >
+            <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+            <div className="flex items-center justify-between mt-3">
+              <p className="font-display text-lg font-bold">Edit profile</p>
+              <button onClick={onClose} className="w-8 h-8 rounded-full bg-card-foreground/[0.06] flex items-center justify-center">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              <Field label="Full name" value={name} onChange={setName} />
+              <Field label="Email" value={email} onChange={setEmail} type="email" />
+              <Field label="Phone" value={phone} onChange={setPhone} type="tel" />
+            </div>
+
+            <button
+              onClick={() => onSave(name.trim(), email.trim(), phone.trim())}
+              disabled={!name.trim() || !email.trim() || !phone.trim()}
+              className="mt-6 w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-40 active:scale-[0.98] transition"
+            >
+              Save changes
+            </button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function Field({
+  label, value, onChange, type = "text",
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="text-[10px] uppercase tracking-widest text-card-foreground/55 font-semibold">{label}</span>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-1.5 w-full h-11 px-4 rounded-2xl bg-card-foreground/[0.05] text-sm outline-none focus:ring-2 ring-primary/40"
+      />
+    </label>
+  );
+}
+
+function LogoutSheet({
+  open, onClose, onConfirm,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/50 z-[60]"
+          />
+          <motion.div
+            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 280 }}
+            className="absolute inset-x-0 bottom-0 z-[61] bg-card text-card-foreground rounded-t-3xl px-5 pt-4 pb-6"
+          >
+            <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+            <div className="mt-5 flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <LogOut className="w-6 h-6" />
+              </div>
+              <p className="font-display text-lg font-bold mt-3">Log out?</p>
+              <p className="text-sm text-card-foreground/60 mt-1 max-w-[260px]">
+                You'll need to sign in again with your PIN or biometrics.
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                onClick={onClose}
+                className="h-12 rounded-full bg-card-foreground/[0.06] font-semibold text-sm active:scale-[0.98] transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onConfirm}
+                className="h-12 rounded-full bg-destructive text-destructive-foreground font-semibold text-sm active:scale-[0.98] transition"
+              >
+                Log out
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
