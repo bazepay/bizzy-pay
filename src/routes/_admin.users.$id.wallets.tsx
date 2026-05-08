@@ -12,67 +12,87 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Wallet as WalletIcon } from "lucide-react";
 import { toast } from "sonner";
 import { fmtNgn } from "@/lib/mock-data";
-import { getWallets, type Wallet } from "@/lib/users-data";
+import { getBalance, FX_RATES, fxConvert, type FxCurrency } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/$id/wallets")({
   component: WalletsTab,
 });
 
+const CURRENCIES: FxCurrency[] = ["USD", "EUR", "GBP", "GHS"];
+
 function WalletsTab() {
   const { id } = Route.useParams();
-  const wallets = getWallets(id);
+  const bal = getBalance(id);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {wallets.map((w) => (
-        <WalletCard key={w.currency} w={w} />
-      ))}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <BalanceCard ngn={bal.ngn} ledger={bal.ledger} pending={bal.pending} />
+
+      <Card className="shadow-card lg:col-span-2">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Currency equivalents</CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {CURRENCIES.map((c) => {
+            const v = fxConvert(bal.ngn, c);
+            return (
+              <div key={c} className="rounded-md border p-3">
+                <div className="text-xs text-muted-foreground">{c}</div>
+                <div className="font-display text-lg font-bold mt-0.5">
+                  {v.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                </div>
+                <div className="text-[10px] text-muted-foreground mt-1 font-mono">
+                  1 {c} = ₦{FX_RATES[c].toLocaleString()}
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-function WalletCard({ w }: { w: Wallet }) {
+function BalanceCard({ ngn, ledger, pending }: { ngn: number; ledger: number; pending: number }) {
   const [open, setOpen] = useState(false);
   const [direction, setDirection] = useState<"credit" | "debit">("credit");
   const [amount, setAmount] = useState("");
   const [reason, setReason] = useState("");
 
-  const fmt = (n: number) => (w.currency === "NGN" ? fmtNgn(n) : `${n.toLocaleString()} ${w.currency}`);
-
   return (
     <Card className="shadow-card">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-base">{w.currency} wallet</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <WalletIcon className="h-4 w-4 text-primary" /> Wallet (NGN)
+        </CardTitle>
         <Badge variant="outline" className="text-xs">Live</Badge>
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
           <div className="text-xs text-muted-foreground">Available balance</div>
-          <div className="font-display text-2xl font-bold">{fmt(w.balance)}</div>
+          <div className="font-display text-2xl font-bold">{fmtNgn(ngn)}</div>
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
             <div className="text-xs text-muted-foreground">Ledger</div>
-            <div className="font-mono">{fmt(w.ledger)}</div>
+            <div className="font-mono">{fmtNgn(ledger)}</div>
           </div>
           <div>
             <div className="text-xs text-muted-foreground">Pending</div>
-            <div className="font-mono">{fmt(w.pending)}</div>
+            <div className="font-mono">{fmtNgn(pending)}</div>
           </div>
         </div>
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" variant="outline" className="w-full">
-              Manual adjustment
-            </Button>
+            <Button size="sm" variant="outline" className="w-full">Manual adjustment</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Adjust {w.currency} wallet</DialogTitle>
+              <DialogTitle>Adjust wallet</DialogTitle>
               <DialogDescription>Posts a double-entry ledger entry. Requires reason for audit.</DialogDescription>
             </DialogHeader>
             <div className="space-y-3">
@@ -87,7 +107,7 @@ function WalletCard({ w }: { w: Wallet }) {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Amount ({w.currency})</Label>
+                <Label>Amount (NGN)</Label>
                 <Input type="number" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" />
               </div>
               <div className="space-y-2">
@@ -100,7 +120,7 @@ function WalletCard({ w }: { w: Wallet }) {
               <Button
                 disabled={!amount || reason.trim().length < 4}
                 onClick={() => {
-                  toast.success(`Posted ${direction} of ${amount} ${w.currency}.`);
+                  toast.success(`Posted ${direction} of ₦${Number(amount).toLocaleString()}.`);
                   setOpen(false); setAmount(""); setReason("");
                 }}
               >

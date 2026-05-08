@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Smartphone, Activity, Wallet as WalletIcon } from "lucide-react";
 import { fmtNgn, fmtNum } from "@/lib/mock-data";
-import { getUser, getWallets, getTransactions, getDevices, fmtRelative, kycLabel } from "@/lib/users-data";
+import { getUser, getBalance, getTransactions, getDevices, fmtRelative, kycLabel, FX_RATES, fxConvert, type FxCurrency } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/$id/")({
   component: Overview,
@@ -12,10 +12,10 @@ export const Route = createFileRoute("/_admin/users/$id/")({
 function Overview() {
   const { id } = Route.useParams();
   const user = getUser(id)!;
-  const wallets = getWallets(id);
+  const bal = getBalance(id);
   const txns = getTransactions(id, 5);
   const devices = getDevices(id);
-  const totalNgn = wallets.find((w) => w.currency === "NGN")?.balance ?? 0;
+  const totalNgn = bal.ngn;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -69,14 +69,22 @@ function Overview() {
         <Card className="shadow-card">
           <CardHeader className="pb-2"><CardTitle className="text-base">Wallet snapshot</CardTitle></CardHeader>
           <CardContent className="space-y-2">
-            {wallets.map((w) => (
-              <div key={w.currency} className="flex items-center justify-between text-sm">
-                <span className="font-medium">{w.currency}</span>
-                <span className="font-mono">
-                  {w.currency === "NGN" ? fmtNgn(w.balance) : `${w.balance.toLocaleString()} ${w.currency}`}
-                </span>
-              </div>
-            ))}
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium">NGN</span>
+              <span className="font-mono">{fmtNgn(bal.ngn)}</span>
+            </div>
+            <div className="border-t pt-2 mt-1 space-y-1.5">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Equivalents</div>
+              {(["USD", "EUR", "GBP", "GHS"] as FxCurrency[]).map((c) => (
+                <div key={c} className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">{c}</span>
+                  <span className="font-mono">
+                    {fxConvert(bal.ngn, c).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                    <span className="text-muted-foreground ml-2">@ ₦{FX_RATES[c].toLocaleString()}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>

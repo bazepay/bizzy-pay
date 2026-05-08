@@ -71,7 +71,16 @@ export const getUser = (id: string) => users.find((u) => u.id === id);
 
 // ---------- Per-user details (deterministic by id) ----------
 
-export type Wallet = { currency: "NGN" | "USD" | "EUR" | "GHS"; balance: number; ledger: number; pending: number };
+export type Balance = { ngn: number; ledger: number; pending: number };
+export type FxCurrency = "USD" | "EUR" | "GBP" | "GHS";
+// NGN per 1 unit of foreign currency (mock rates)
+export const FX_RATES: Record<FxCurrency, number> = {
+  USD: 1580,
+  EUR: 1710,
+  GBP: 2010,
+  GHS: 105,
+};
+export const fxConvert = (ngn: number, c: FxCurrency) => ngn / FX_RATES[c];
 export type Txn = {
   id: string;
   type: "topup" | "transfer" | "airtime" | "data" | "electricity" | "tv" | "betting" | "card_spend" | "esim" | "number" | "refund" | "fee";
@@ -103,14 +112,14 @@ const PROVIDERS: Record<Txn["type"], string> = {
   fee: "System",
 };
 
-export function getWallets(userId: string): Wallet[] {
+export function getBalance(userId: string): Balance {
   const r = seeded(userId.length + userId.charCodeAt(2));
-  return [
-    { currency: "NGN", balance: Math.round(50_000 + r * 5_000_000), ledger: Math.round(50_000 + r * 5_200_000), pending: Math.round(r * 80_000) },
-    { currency: "USD", balance: Math.round(50 + r * 4_000), ledger: Math.round(50 + r * 4_200), pending: Math.round(r * 80) },
-    { currency: "EUR", balance: Math.round(r * 1_500), ledger: Math.round(r * 1_500), pending: 0 },
-    { currency: "GHS", balance: Math.round(r * 8_000), ledger: Math.round(r * 8_000), pending: 0 },
-  ];
+  const ngn = Math.round(50_000 + r * 5_000_000);
+  return {
+    ngn,
+    ledger: Math.round(ngn + r * 200_000),
+    pending: Math.round(r * 80_000),
+  };
 }
 
 export function getTransactions(userId: string, count = 18): Txn[] {
