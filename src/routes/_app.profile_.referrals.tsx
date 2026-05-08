@@ -86,7 +86,7 @@ function ReferralsPage() {
 
       {/* Code card */}
       <div className="px-6 -mt-6 relative">
-        <div className="rounded-3xl bg-card border border-card-foreground/10 shadow-lg p-5">
+        <div className="rounded-3xl bg-card border border-card-foreground/10 shadow-2xl shadow-[oklch(0.22_0.08_280)]/30 p-5">
           <p className="text-[10px] uppercase tracking-widest text-card-foreground/50 font-semibold">Your referral code</p>
           <div className="mt-2 flex items-center justify-between gap-3">
             <p className="font-display text-3xl font-bold tracking-wider">{REFERRAL.code}</p>
