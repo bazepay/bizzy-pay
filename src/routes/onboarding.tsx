@@ -69,21 +69,30 @@ function Onboarding() {
           </button>
         </header>
 
-        {/* Visual stage */}
-        <div className="flex-1 flex items-center justify-center px-6 pt-4 pb-2 min-h-[260px]">
+        {/* Visual stage — swipeable */}
+        <motion.div
+          className="flex-1 flex items-center justify-center px-6 pt-4 pb-2 min-h-[260px] overflow-hidden touch-pan-y"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.18}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -60 && i < slides.length - 1) setI(i + 1);
+            else if (info.offset.x > 60 && i > 0) setI(i - 1);
+          }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={`v-${i}`}
-              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -8 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, scale: 0.97, y: -6 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="w-full"
             >
               <slide.visual />
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* Sheet */}
         <div className="bg-card text-card-foreground rounded-t-[2rem] px-7 pt-7 pb-8 flex flex-col">
@@ -187,10 +196,10 @@ function WalletVisual() {
         </div>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, y: 20, x: 80 }}
-        animate={{ opacity: 1, y: 0, x: 80 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        className="absolute -bottom-2 right-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
+        className="absolute -bottom-2 right-4 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
       >
         <Sparkles className="w-3.5 h-3.5 text-primary" />
         +₦12,500 today
