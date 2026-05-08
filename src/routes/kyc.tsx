@@ -432,7 +432,7 @@ function Kyc() {
                       <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">
                         Current tier
                       </p>
-                      <p className="font-display text-xl font-bold mt-1">Basic</p>
+                      <p className="font-display text-xl font-bold mt-1">Full access</p>
                     </div>
                     <div className="px-3 py-1 rounded-full bg-lime text-lime-foreground text-[11px] font-bold uppercase tracking-wide">
                       Active
