@@ -84,7 +84,7 @@ function ProfilePage() {
         <div className="flex items-center justify-between">
           <h1 className="font-display text-2xl font-bold tracking-tight">Profile</h1>
           <button
-            onClick={() => navigate({ to: "/auth/login" })}
+            onClick={() => setLogoutOpen(true)}
             className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
             aria-label="Log out"
           >
@@ -101,6 +101,13 @@ function ProfilePage() {
             <p className="text-xs text-foreground/55 truncate">{user.email}</p>
             <p className="text-xs text-foreground/55">{user.phone}</p>
           </div>
+          <button
+            onClick={() => setEditOpen(true)}
+            className="w-9 h-9 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
+            aria-label="Edit profile"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
