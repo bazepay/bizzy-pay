@@ -14,7 +14,7 @@ import {
   fmtNgn, fmtNum,
 } from "@/lib/mock-data";
 import {
-  users, tierLabel, statusTone, riskTone, fmtRelative, type AccountStatus, type Country, type KycTier,
+  users, kycLabel, kycTone, statusTone, riskTone, fmtRelative,
 } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/")({
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/_admin/users/")({
 
 function UsersDirectory() {
   const [q, setQ] = useState("");
-  const [tier, setTier] = useState<string>("any");
+  const [kyc, setKyc] = useState<string>("any");
   const [status, setStatus] = useState<string>("any");
   const [country, setCountry] = useState<string>("any");
   const [page, setPage] = useState(0);
@@ -42,12 +42,12 @@ function UsersDirectory() {
         const hay = `${u.name} ${u.email} ${u.phone} ${u.id} ${u.bvnLast4 ?? ""} ${u.ninLast4 ?? ""}`.toLowerCase();
         if (!hay.includes(needle)) return false;
       }
-      if (tier !== "any" && String(u.kycTier) !== tier) return false;
+      if (kyc !== "any" && u.kyc !== kyc) return false;
       if (status !== "any" && u.status !== status) return false;
       if (country !== "any" && u.country !== country) return false;
       return true;
     });
-  }, [q, tier, status, country]);
+  }, [q, kyc, status, country]);
 
   const paged = filtered.slice(page * pageSize, (page + 1) * pageSize);
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -55,7 +55,7 @@ function UsersDirectory() {
   const totals = useMemo(() => {
     const active = users.filter((u) => u.status === "active").length;
     const frozen = users.filter((u) => u.status === "frozen").length;
-    const verified = users.filter((u) => u.kycTier > 0).length;
+    const verified = users.filter((u) => u.kyc === "verified").length;
     const ltv = users.reduce((s, u) => s + u.ltvNgn, 0);
     return { active, frozen, verified, ltv };
   }, []);
@@ -106,13 +106,11 @@ function UsersDirectory() {
             />
           </div>
 
-          <FilterSelect label="KYC tier" value={tier} onChange={(v) => { setTier(v); setPage(0); }}
+          <FilterSelect label="KYC" value={kyc} onChange={(v) => { setKyc(v); setPage(0); }}
             options={[
-              { value: "any", label: "Any tier" },
-              { value: "0", label: "Unverified" },
-              { value: "1", label: "Tier 1" },
-              { value: "2", label: "Tier 2" },
-              { value: "3", label: "Tier 3" },
+              { value: "any", label: "Any KYC" },
+              { value: "verified", label: "Verified" },
+              { value: "unverified", label: "Unverified" },
             ]}
           />
           <FilterSelect label="Status" value={status} onChange={(v) => { setStatus(v); setPage(0); }}
