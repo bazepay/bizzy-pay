@@ -112,12 +112,12 @@ type Sort = "cheap" | "expensive" | "data" | "longest";
 
 const FX = 1550;
 
-type VnCountry = { id: string; name: string; flag: string; code: string; iso: string };
+type VnCountry = { id: string; name: string; flag: string; code: string; iso: string; cities: number; sample: string };
 const vnCountries: VnCountry[] = [
-  { id: "us", name: "USA", flag: "🇺🇸", code: "+1", iso: "US" },
-  { id: "gb", name: "United Kingdom", flag: "🇬🇧", code: "+44", iso: "GB" },
-  { id: "ca", name: "Canada", flag: "🇨🇦", code: "+1", iso: "CA" },
-  { id: "nl", name: "Netherlands", flag: "🇳🇱", code: "+31", iso: "NL" },
+  { id: "us", name: "USA", flag: "🇺🇸", code: "+1", iso: "US", cities: 48, sample: "(415) 555-0142" },
+  { id: "gb", name: "United Kingdom", flag: "🇬🇧", code: "+44", iso: "GB", cities: 12, sample: "20 7946 0184" },
+  { id: "ca", name: "Canada", flag: "🇨🇦", code: "+1", iso: "CA", cities: 9, sample: "(416) 555-0119" },
+  { id: "nl", name: "Netherlands", flag: "🇳🇱", code: "+31", iso: "NL", cities: 6, sample: "20 491 2876" },
 ];
 type VnPlanKey = "day" | "week" | "month" | "year";
 type VnPlan = { key: VnPlanKey; label: string; price: number; perMonth: number; badge?: string; sub: string };
