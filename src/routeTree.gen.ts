@@ -21,7 +21,6 @@ import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppPayVirtualNumberRouteImport } from './routes/_app.pay.virtual-number'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
-import { Route as AppPayVirtualNumberRouteImport } from './routes/_app.pay.virtual-number'
 import { Route as AppPayInternetRouteImport } from './routes/_app.pay.internet'
 import { Route as AppPayEsimRouteImport } from './routes/_app.pay.esim'
 import { Route as AppPayElectricityRouteImport } from './routes/_app.pay.electricity'
@@ -92,6 +91,11 @@ const AppPayTvRoute = AppPayTvRouteImport.update({
 const AppPayInternetRoute = AppPayInternetRouteImport.update({
   id: '/internet',
   path: '/internet',
+  getParentRoute: () => AppPayRoute,
+} as any)
+const AppPayVirtualNumberRoute = AppPayVirtualNumberRouteImport.update({
+  id: '/virtual-number',
+  path: '/virtual-number',
   getParentRoute: () => AppPayRoute,
 } as any)
 const AppPayEsimRoute = AppPayEsimRouteImport.update({
