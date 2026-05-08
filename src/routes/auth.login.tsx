@@ -2,38 +2,26 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
-import { Fingerprint, Delete } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Fingerprint, Mail, Phone } from "lucide-react";
 
 export const Route = createFileRoute("/auth/login")({
   head: () => ({
     meta: [
       { title: "Sign in — BazePay" },
-      { name: "description", content: "Unlock your BazePay wallet." },
+      { name: "description", content: "Sign in to your BazePay wallet." },
     ],
   }),
   component: Login,
 });
 
 function Login() {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState(false);
+  const [mode, setMode] = useState<"phone" | "email">("phone");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const nav = useNavigate();
 
-  const press = (k: string) => {
-    setError(false);
-    if (k === "back") return setPin((p) => p.slice(0, -1));
-    if (pin.length >= 4) return;
-    const next = pin + k;
-    setPin(next);
-    if (next.length === 4) {
-      if (next === "0000") {
-        setError(true);
-        setTimeout(() => setPin(""), 600);
-      } else {
-        setTimeout(() => nav({ to: "/home" }), 250);
-      }
-    }
-  };
+  const canSubmit = identifier.trim().length > 4 && password.length >= 6;
 
   return (
     <PhoneFrame>
@@ -53,99 +41,124 @@ function Login() {
           </div>
         </div>
 
-        {/* Avatar + greeting */}
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center gap-8 px-6 -mt-2">
+        {/* Form */}
+        <div className="relative z-10 flex-1 flex flex-col px-7 pt-10">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 10 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center space-y-4"
           >
-            <div className="relative w-20 h-20 mx-auto">
-              <div className="absolute inset-0 rounded-3xl bg-lime/30 blur-2xl" />
-              <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-lime to-[oklch(0.78_0.18_130)] flex items-center justify-center text-3xl font-display font-bold text-[oklch(0.13_0.02_280)] shadow-[0_20px_40px_-10px_oklch(0.92_0.21_120/0.5)]">
-                A
-              </div>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.32em] font-bold text-lime/90">
-                Welcome back
-              </p>
-              <h1 className="font-display text-[26px] font-bold tracking-tight mt-2">
-                Hello, Adaeze
-              </h1>
-              <p className="text-[13px] text-white/55 mt-1.5">Enter your PIN to unlock</p>
-            </div>
+            <p className="text-[10px] uppercase tracking-[0.32em] font-bold text-lime/90">
+              Welcome back
+            </p>
+            <h1 className="font-display text-[32px] leading-[1.05] font-bold tracking-tight mt-3">
+              Sign in to
+              <br />
+              <span className="bg-gradient-to-r from-white to-[oklch(0.78_0.14_85)] bg-clip-text text-transparent">
+                BazePay.
+              </span>
+            </h1>
           </motion.div>
 
-          {/* PIN dots */}
-          <motion.div
-            animate={error ? { x: [0, -8, 8, -6, 6, 0] } : { x: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex gap-4"
-          >
-            {[0, 1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className={`w-3 h-3 rounded-full border transition-all duration-200 ${
-                  error
-                    ? "bg-destructive border-destructive"
-                    : pin.length > i
-                      ? "bg-lime border-lime scale-110 shadow-[0_0_12px_oklch(0.92_0.21_120/0.6)]"
-                      : "bg-transparent border-white/30"
-                }`}
-              />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Keypad */}
-        <div className="relative z-10 px-7 pb-6">
-          <div className="grid grid-cols-3 gap-2.5">
-            {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
+          {/* Mode toggle */}
+          <div className="mt-7 grid grid-cols-2 p-1 bg-white/[0.05] border border-white/[0.06] rounded-2xl">
+            {(["phone", "email"] as const).map((m) => (
               <button
-                key={n}
-                onClick={() => press(n)}
-                className="h-15 py-4 rounded-2xl bg-white/[0.05] border border-white/[0.06] backdrop-blur text-2xl font-display font-semibold hover:bg-white/[0.08] active:scale-95 transition"
+                key={m}
+                onClick={() => {
+                  setMode(m);
+                  setIdentifier("");
+                }}
+                className={`relative h-10 rounded-xl text-[13px] font-semibold capitalize transition ${
+                  mode === m ? "text-[oklch(0.13_0.02_280)]" : "text-white/55"
+                }`}
               >
-                {n}
+                {mode === m && (
+                  <motion.div
+                    layoutId="login-mode-pill"
+                    className="absolute inset-0 bg-lime rounded-xl"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="relative flex items-center justify-center gap-2">
+                  {m === "phone" ? <Phone className="w-3.5 h-3.5" /> : <Mail className="w-3.5 h-3.5" />}
+                  {m}
+                </span>
               </button>
             ))}
+          </div>
+
+          {/* Identifier */}
+          <div className="mt-4 relative">
+            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-white/40">
+              {mode === "phone" ? "+234" : "@"}
+            </span>
+            <input
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
+              className="w-full h-14 pl-16 pr-4 rounded-2xl bg-white/[0.05] border border-white/[0.08] text-white placeholder:text-white/30 text-[15px] focus:outline-none focus:border-lime/60 focus:bg-white/[0.07] transition"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="mt-3 relative">
+            <input
+              type={showPw ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="w-full h-14 pl-5 pr-12 rounded-2xl bg-white/[0.05] border border-white/[0.08] text-white placeholder:text-white/30 text-[15px] focus:outline-none focus:border-lime/60 focus:bg-white/[0.07] transition"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPw((v) => !v)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.06] transition"
+            >
+              {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+
+          <div className="mt-3 flex justify-end">
+            <button className="text-[12px] font-semibold text-white/55 hover:text-lime transition">
+              Forgot password?
+            </button>
+          </div>
+
+          {/* CTA + biometrics */}
+          <div className="mt-auto pb-7">
+            <div className="flex items-center gap-3">
+              <button
+                disabled={!canSubmit}
+                onClick={() => nav({ to: "/home" })}
+                className="group flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition shadow-[0_10px_30px_-8px_oklch(0.92_0.21_120/0.5)] disabled:opacity-40 disabled:shadow-none"
+              >
+                Sign in
+                <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
+              </button>
+              <button
+                onClick={() => nav({ to: "/home" })}
+                aria-label="Sign in with biometrics"
+                className="w-14 h-14 rounded-full bg-white/[0.05] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.08] active:scale-95 transition"
+              >
+                <Fingerprint className="w-6 h-6 text-lime" />
+              </button>
+            </div>
+
+            <p className="text-center text-[12.5px] text-white/55 mt-5">
+              New to BazePay?{" "}
+              <Link to="/auth/signup" className="text-lime font-semibold">
+                Create account
+              </Link>
+            </p>
+
             <button
               onClick={() => nav({ to: "/home" })}
-              className="py-4 rounded-2xl flex items-center justify-center hover:bg-white/[0.05] transition"
+              className="w-full text-center text-[11px] text-white/30 mt-3"
             >
-              <Fingerprint className="w-7 h-7 text-lime" />
-            </button>
-            <button
-              onClick={() => press("0")}
-              className="py-4 rounded-2xl bg-white/[0.05] border border-white/[0.06] backdrop-blur text-2xl font-display font-semibold hover:bg-white/[0.08] active:scale-95 transition"
-            >
-              0
-            </button>
-            <button
-              onClick={() => press("back")}
-              className="py-4 rounded-2xl flex items-center justify-center hover:bg-white/[0.05] transition"
-            >
-              <Delete className="w-6 h-6 text-white/70" />
+              Demo: skip to app
             </button>
           </div>
-
-          <div className="flex items-center justify-between mt-6 px-1">
-            <button className="text-[12.5px] font-semibold text-white/55 hover:text-white transition">
-              Forgot PIN?
-            </button>
-            <Link to="/auth/signup" className="text-[12.5px] text-white/55">
-              New here? <span className="text-lime font-semibold">Sign up</span>
-            </Link>
-          </div>
-
-          <button
-            onClick={() => nav({ to: "/home" })}
-            className="w-full text-center text-[11px] text-white/30 mt-4"
-          >
-            Demo: skip to app
-          </button>
         </div>
       </div>
     </PhoneFrame>
