@@ -290,6 +290,8 @@ function EsimPage() {
             autoRenew={vnAutoRenew}
             setAutoRenew={setVnAutoRenew}
           />
+        ) : mode === "topup" ? (
+          <MyEsimsPanel />
         ) : (
           <>
             {/* Mode-specific picker */}
