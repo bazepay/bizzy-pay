@@ -112,53 +112,54 @@ function ReferralsPage() {
           <Stat label="Pending" value={REFERRAL.pending} muted />
         </div>
 
-      {/* How it works */}
-      <p className="px-6 text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-7 mb-3">
-        How it works
-      </p>
-      <div className="px-6 space-y-2.5">
-        {STEPS.map((s, i) => {
-          const Icon = s.icon;
-          return (
-            <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-card-foreground/[0.04]">
-              <div className="relative w-9 h-9 shrink-0 rounded-full bg-primary/12 flex items-center justify-center text-primary">
-                <Icon className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">{i + 1}</span>
+        {/* How it works */}
+        <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-9 mb-3">
+          How it works
+        </p>
+        <div className="space-y-2.5">
+          {STEPS.map((s, i) => {
+            const Icon = s.icon;
+            return (
+              <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-card-foreground/[0.04]">
+                <div className="relative w-9 h-9 shrink-0 rounded-full bg-primary/12 flex items-center justify-center text-primary">
+                  <Icon className="w-4 h-4" />
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">{i + 1}</span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">{s.h}</p>
+                  <p className="text-[11px] text-card-foreground/60 leading-relaxed mt-0.5">{s.p}</p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold">{s.h}</p>
-                <p className="text-[11px] text-card-foreground/60 leading-relaxed mt-0.5">{s.p}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
 
-      {/* History */}
-      <div className="flex items-center justify-between px-6 mt-7 mb-3">
-        <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold">Activity</p>
-        <span className="text-[11px] text-card-foreground/45">{HISTORY.length} entries</span>
-      </div>
-      <div className="px-6 space-y-2 pb-10">
-        {HISTORY.map((h, i) => {
-          const earned = h.status === "Earned";
-          return (
-            <div key={i} className="flex items-center gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]">
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
-                earned ? "bg-primary/15 text-primary" : "bg-card-foreground/10 text-card-foreground/55"
-              }`}>
-                {earned ? <Check className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
+        {/* History */}
+        <div className="flex items-center justify-between mt-9 mb-3">
+          <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold">Activity</p>
+          <span className="text-[11px] text-card-foreground/45">{HISTORY.length} entries</span>
+        </div>
+        <div className="space-y-2">
+          {HISTORY.map((h, i) => {
+            const earned = h.status === "Earned";
+            return (
+              <div key={i} className="flex items-center gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                  earned ? "bg-primary/15 text-primary" : "bg-card-foreground/10 text-card-foreground/55"
+                }`}>
+                  {earned ? <Check className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold">{h.name}</p>
+                  <p className="text-[11px] text-card-foreground/55">{h.date} · {h.status}</p>
+                </div>
+                <p className={`text-sm font-display font-bold ${earned ? "text-primary" : "text-card-foreground/55"}`}>
+                  {h.amount}
+                </p>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold">{h.name}</p>
-                <p className="text-[11px] text-card-foreground/55">{h.date} · {h.status}</p>
-              </div>
-              <p className={`text-sm font-display font-bold ${earned ? "text-primary" : "text-card-foreground/55"}`}>
-                {h.amount}
-              </p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
