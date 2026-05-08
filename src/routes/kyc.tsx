@@ -312,7 +312,7 @@ function CountryStep({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search country"
-          className="w-full h-11 pl-10 pr-4 rounded-2xl bg-muted text-sm outline-none focus:ring-2 ring-primary/40"
+          className="w-full h-11 pl-10 pr-4 rounded-2xl bg-card text-card-foreground border border-border text-sm outline-none focus:ring-2 ring-primary/40"
         />
       </div>
 
