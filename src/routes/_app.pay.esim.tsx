@@ -19,6 +19,7 @@ import {
   Hash,
   Clock,
   Lock,
+  Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/pay/esim")({
@@ -112,12 +113,12 @@ type Sort = "cheap" | "expensive" | "data" | "longest";
 
 const FX = 1550;
 
-type VnCountry = { id: string; name: string; flag: string; code: string; iso: string };
+type VnCountry = { id: string; name: string; flag: string; code: string; iso: string; cities: number; sample: string };
 const vnCountries: VnCountry[] = [
-  { id: "us", name: "USA", flag: "🇺🇸", code: "+1", iso: "US" },
-  { id: "gb", name: "United Kingdom", flag: "🇬🇧", code: "+44", iso: "GB" },
-  { id: "ca", name: "Canada", flag: "🇨🇦", code: "+1", iso: "CA" },
-  { id: "nl", name: "Netherlands", flag: "🇳🇱", code: "+31", iso: "NL" },
+  { id: "us", name: "USA", flag: "🇺🇸", code: "+1", iso: "US", cities: 48, sample: "(415) 555-0142" },
+  { id: "gb", name: "United Kingdom", flag: "🇬🇧", code: "+44", iso: "GB", cities: 12, sample: "20 7946 0184" },
+  { id: "ca", name: "Canada", flag: "🇨🇦", code: "+1", iso: "CA", cities: 9, sample: "(416) 555-0119" },
+  { id: "nl", name: "Netherlands", flag: "🇳🇱", code: "+31", iso: "NL", cities: 6, sample: "20 491 2876" },
 ];
 type VnPlanKey = "day" | "week" | "month" | "year";
 type VnPlan = { key: VnPlanKey; label: string; price: number; perMonth: number; badge?: string; sub: string };
@@ -1050,31 +1051,7 @@ function VirtualNumberPanel({
 }) {
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-          Country
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          {vnCountries.map((c) => {
-            const sel = c.id === countryId;
-            return (
-              <button
-                key={c.id}
-                onClick={() => setCountryId(c.id)}
-                className={`flex items-center gap-3 rounded-2xl p-3 text-left transition ${
-                  sel ? "bg-primary/10 ring-2 ring-primary" : "bg-card-foreground/[0.04] ring-1 ring-transparent"
-                }`}
-              >
-                <span className="text-2xl leading-none">{c.flag}</span>
-                <div className="min-w-0">
-                  <p className="font-semibold text-sm truncate">{c.name}</p>
-                  <p className="text-[11px] text-card-foreground/55">{c.code} · {c.iso}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <CountrySelector countryId={countryId} setCountryId={setCountryId} />
 
       <div>
         <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
@@ -1314,6 +1291,181 @@ function VnSuccessSheet({
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CountrySelector({
+  countryId,
+  setCountryId,
+}: {
+  countryId: string;
+  setCountryId: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const selected = vnCountries.find((c) => c.id === countryId)!;
+  const filtered = vnCountries.filter(
+    (c) =>
+      c.name.toLowerCase().includes(q.toLowerCase()) ||
+      c.code.includes(q) ||
+      c.iso.toLowerCase().includes(q.toLowerCase()),
+  );
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2 px-1">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+          Number from
+        </p>
+        <button
+          onClick={() => setOpen(true)}
+          className="text-[11px] font-bold text-primary inline-flex items-center gap-1"
+        >
+          200+ countries <ChevronRight className="w-3 h-3" />
+        </button>
+      </div>
+
+      {/* Hero card for selected country */}
+      <button
+        onClick={() => setOpen(true)}
+        className="relative w-full overflow-hidden rounded-2xl p-4 text-left active:scale-[0.99] transition"
+        style={{
+          background:
+            "linear-gradient(135deg, oklch(0.32 0.14 220) 0%, oklch(0.22 0.12 260) 100%)",
+          color: "#fff",
+        }}
+      >
+        <div
+          className="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-30 blur-2xl"
+          style={{ background: "oklch(0.72 0.16 220)" }}
+        />
+        <div className="relative flex items-center gap-3">
+          <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/15 flex items-center justify-center text-3xl leading-none">
+            {selected.flag}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <p className="font-display font-bold text-base tracking-tight">{selected.name}</p>
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-white/15">
+                {selected.iso}
+              </span>
+            </div>
+            <p className="text-[12px] opacity-85 mt-0.5 tabular-nums">
+              {selected.code} {selected.sample}
+            </p>
+            <p className="text-[10px] opacity-65 mt-1">
+              {selected.cities} city codes · instant SMS
+            </p>
+          </div>
+          <ChevronRight className="w-4 h-4 opacity-70" />
+        </div>
+      </button>
+
+      {/* Quick swap chips */}
+      <div className="mt-3 flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
+        {vnCountries.map((c) => {
+          const sel = c.id === countryId;
+          return (
+            <button
+              key={c.id}
+              onClick={() => setCountryId(c.id)}
+              className={`shrink-0 h-9 pl-2 pr-3 rounded-full flex items-center gap-1.5 text-[12px] font-semibold transition ${
+                sel
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card-foreground/[0.05] text-card-foreground/80"
+              }`}
+            >
+              <span className="text-base leading-none">{c.flag}</span>
+              {c.iso}
+              <span className={`text-[10px] tabular-nums ${sel ? "opacity-80" : "opacity-55"}`}>
+                {c.code}
+              </span>
+            </button>
+          );
+        })}
+        <button
+          onClick={() => setOpen(true)}
+          className="shrink-0 h-9 px-3 rounded-full bg-card-foreground/[0.05] flex items-center gap-1 text-[12px] font-semibold text-card-foreground/70"
+        >
+          <Search className="w-3 h-3" /> More
+        </button>
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 z-[80] flex items-end">
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            aria-label="Close"
+          />
+          <div className="relative w-full max-h-[80vh] flex flex-col bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-6 animate-in slide-in-from-bottom duration-300">
+            <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+            <div className="px-6 mt-4 flex items-center justify-between">
+              <h3 className="font-display font-bold text-lg">Choose country</h3>
+              <button
+                onClick={() => setOpen(false)}
+                className="w-8 h-8 rounded-full bg-card-foreground/[0.06] flex items-center justify-center"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="px-6 mt-3">
+              <div className="h-11 rounded-full bg-card-foreground/[0.05] flex items-center gap-2 px-4">
+                <Search className="w-4 h-4 text-card-foreground/50" />
+                <input
+                  autoFocus
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Search country, code or ISO"
+                  className="flex-1 bg-transparent outline-none text-sm placeholder:text-card-foreground/40"
+                />
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 mt-3 pb-3">
+              {filtered.length === 0 ? (
+                <p className="text-center text-[12px] text-card-foreground/55 py-8">
+                  No matches. More countries coming soon.
+                </p>
+              ) : (
+                <div className="space-y-1">
+                  {filtered.map((c) => {
+                    const sel = c.id === countryId;
+                    return (
+                      <button
+                        key={c.id}
+                        onClick={() => {
+                          setCountryId(c.id);
+                          setOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 rounded-2xl p-3 text-left transition ${
+                          sel ? "bg-primary/10" : "active:bg-card-foreground/[0.04]"
+                        }`}
+                      >
+                        <span className="text-2xl leading-none w-9 text-center">{c.flag}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm">{c.name}</p>
+                          <p className="text-[11px] text-card-foreground/55 tabular-nums">
+                            {c.code} · {c.cities} cities
+                          </p>
+                        </div>
+                        {sel ? (
+                          <Check className="w-4 h-4 text-primary" strokeWidth={3} />
+                        ) : (
+                          <ChevronRight className="w-4 h-4 text-card-foreground/30" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              <p className="text-[11px] text-card-foreground/45 text-center mt-4 leading-relaxed">
+                More countries coming soon. Join the waitlist from your dashboard.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
