@@ -670,7 +670,7 @@ function EsimPage() {
 
       {confirm && !success && plan && mode !== "vnumber" && (
         <ConfirmSheet
-          mode={mode === "vnumber" ? "new" : mode}
+          mode={mode}
           esimLabel={activeEsim?.label ?? ""}
           email={email}
           meta={meta}
@@ -683,7 +683,7 @@ function EsimPage() {
 
       {success && plan && mode !== "vnumber" && (
         <SuccessSheet
-          mode={mode === "vnumber" ? "new" : mode}
+          mode={mode}
           esimLabel={activeEsim?.label ?? ""}
           email={email}
           meta={meta}
