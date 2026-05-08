@@ -13,6 +13,17 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
+import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
+import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
+import { Route as AdminUsersIdIndexRouteImport } from './routes/_admin.users.$id.index'
+import { Route as AdminUsersIdWalletsRouteImport } from './routes/_admin.users.$id.wallets'
+import { Route as AdminUsersIdTransactionsRouteImport } from './routes/_admin.users.$id.transactions'
+import { Route as AdminUsersIdNumbersRouteImport } from './routes/_admin.users.$id.numbers'
+import { Route as AdminUsersIdNotesRouteImport } from './routes/_admin.users.$id.notes'
+import { Route as AdminUsersIdKycRouteImport } from './routes/_admin.users.$id.kyc'
+import { Route as AdminUsersIdEsimsRouteImport } from './routes/_admin.users.$id.esims'
+import { Route as AdminUsersIdDevicesRouteImport } from './routes/_admin.users.$id.devices'
+import { Route as AdminUsersIdCardsRouteImport } from './routes/_admin.users.$id.cards'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -33,16 +44,93 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
+  id: '/users/$id',
+  path: '/users/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersIdIndexRoute = AdminUsersIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdWalletsRoute = AdminUsersIdWalletsRouteImport.update({
+  id: '/wallets',
+  path: '/wallets',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdTransactionsRoute =
+  AdminUsersIdTransactionsRouteImport.update({
+    id: '/transactions',
+    path: '/transactions',
+    getParentRoute: () => AdminUsersIdRoute,
+  } as any)
+const AdminUsersIdNumbersRoute = AdminUsersIdNumbersRouteImport.update({
+  id: '/numbers',
+  path: '/numbers',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdNotesRoute = AdminUsersIdNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdKycRoute = AdminUsersIdKycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdEsimsRoute = AdminUsersIdEsimsRouteImport.update({
+  id: '/esims',
+  path: '/esims',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdDevicesRoute = AdminUsersIdDevicesRouteImport.update({
+  id: '/devices',
+  path: '/devices',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
+const AdminUsersIdCardsRoute = AdminUsersIdCardsRouteImport.update({
+  id: '/cards',
+  path: '/cards',
+  getParentRoute: () => AdminUsersIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/users/$id': typeof AdminUsersIdRouteWithChildren
+  '/users/': typeof AdminUsersIndexRoute
+  '/users/$id/cards': typeof AdminUsersIdCardsRoute
+  '/users/$id/devices': typeof AdminUsersIdDevicesRoute
+  '/users/$id/esims': typeof AdminUsersIdEsimsRoute
+  '/users/$id/kyc': typeof AdminUsersIdKycRoute
+  '/users/$id/notes': typeof AdminUsersIdNotesRoute
+  '/users/$id/numbers': typeof AdminUsersIdNumbersRoute
+  '/users/$id/transactions': typeof AdminUsersIdTransactionsRoute
+  '/users/$id/wallets': typeof AdminUsersIdWalletsRoute
+  '/users/$id/': typeof AdminUsersIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/users': typeof AdminUsersIndexRoute
+  '/users/$id/cards': typeof AdminUsersIdCardsRoute
+  '/users/$id/devices': typeof AdminUsersIdDevicesRoute
+  '/users/$id/esims': typeof AdminUsersIdEsimsRoute
+  '/users/$id/kyc': typeof AdminUsersIdKycRoute
+  '/users/$id/notes': typeof AdminUsersIdNotesRoute
+  '/users/$id/numbers': typeof AdminUsersIdNumbersRoute
+  '/users/$id/transactions': typeof AdminUsersIdTransactionsRoute
+  '/users/$id/wallets': typeof AdminUsersIdWalletsRoute
+  '/users/$id': typeof AdminUsersIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,13 +138,67 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/_admin/dashboard': typeof AdminDashboardRoute
+  '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
+  '/_admin/users/': typeof AdminUsersIndexRoute
+  '/_admin/users/$id/cards': typeof AdminUsersIdCardsRoute
+  '/_admin/users/$id/devices': typeof AdminUsersIdDevicesRoute
+  '/_admin/users/$id/esims': typeof AdminUsersIdEsimsRoute
+  '/_admin/users/$id/kyc': typeof AdminUsersIdKycRoute
+  '/_admin/users/$id/notes': typeof AdminUsersIdNotesRoute
+  '/_admin/users/$id/numbers': typeof AdminUsersIdNumbersRoute
+  '/_admin/users/$id/transactions': typeof AdminUsersIdTransactionsRoute
+  '/_admin/users/$id/wallets': typeof AdminUsersIdWalletsRoute
+  '/_admin/users/$id/': typeof AdminUsersIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/users/$id'
+    | '/users/'
+    | '/users/$id/cards'
+    | '/users/$id/devices'
+    | '/users/$id/esims'
+    | '/users/$id/kyc'
+    | '/users/$id/notes'
+    | '/users/$id/numbers'
+    | '/users/$id/transactions'
+    | '/users/$id/wallets'
+    | '/users/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard'
-  id: '__root__' | '/' | '/_admin' | '/login' | '/_admin/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/users'
+    | '/users/$id/cards'
+    | '/users/$id/devices'
+    | '/users/$id/esims'
+    | '/users/$id/kyc'
+    | '/users/$id/notes'
+    | '/users/$id/numbers'
+    | '/users/$id/transactions'
+    | '/users/$id/wallets'
+    | '/users/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_admin'
+    | '/login'
+    | '/_admin/dashboard'
+    | '/_admin/users/$id'
+    | '/_admin/users/'
+    | '/_admin/users/$id/cards'
+    | '/_admin/users/$id/devices'
+    | '/_admin/users/$id/esims'
+    | '/_admin/users/$id/kyc'
+    | '/_admin/users/$id/notes'
+    | '/_admin/users/$id/numbers'
+    | '/_admin/users/$id/transactions'
+    | '/_admin/users/$id/wallets'
+    | '/_admin/users/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,15 +237,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/users/': {
+      id: '/_admin/users/'
+      path: '/users'
+      fullPath: '/users/'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/users/$id': {
+      id: '/_admin/users/$id'
+      path: '/users/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof AdminUsersIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/users/$id/': {
+      id: '/_admin/users/$id/'
+      path: '/'
+      fullPath: '/users/$id/'
+      preLoaderRoute: typeof AdminUsersIdIndexRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/wallets': {
+      id: '/_admin/users/$id/wallets'
+      path: '/wallets'
+      fullPath: '/users/$id/wallets'
+      preLoaderRoute: typeof AdminUsersIdWalletsRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/transactions': {
+      id: '/_admin/users/$id/transactions'
+      path: '/transactions'
+      fullPath: '/users/$id/transactions'
+      preLoaderRoute: typeof AdminUsersIdTransactionsRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/numbers': {
+      id: '/_admin/users/$id/numbers'
+      path: '/numbers'
+      fullPath: '/users/$id/numbers'
+      preLoaderRoute: typeof AdminUsersIdNumbersRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/notes': {
+      id: '/_admin/users/$id/notes'
+      path: '/notes'
+      fullPath: '/users/$id/notes'
+      preLoaderRoute: typeof AdminUsersIdNotesRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/kyc': {
+      id: '/_admin/users/$id/kyc'
+      path: '/kyc'
+      fullPath: '/users/$id/kyc'
+      preLoaderRoute: typeof AdminUsersIdKycRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/esims': {
+      id: '/_admin/users/$id/esims'
+      path: '/esims'
+      fullPath: '/users/$id/esims'
+      preLoaderRoute: typeof AdminUsersIdEsimsRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/devices': {
+      id: '/_admin/users/$id/devices'
+      path: '/devices'
+      fullPath: '/users/$id/devices'
+      preLoaderRoute: typeof AdminUsersIdDevicesRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
+    '/_admin/users/$id/cards': {
+      id: '/_admin/users/$id/cards'
+      path: '/cards'
+      fullPath: '/users/$id/cards'
+      preLoaderRoute: typeof AdminUsersIdCardsRouteImport
+      parentRoute: typeof AdminUsersIdRoute
+    }
   }
 }
 
+interface AdminUsersIdRouteChildren {
+  AdminUsersIdCardsRoute: typeof AdminUsersIdCardsRoute
+  AdminUsersIdDevicesRoute: typeof AdminUsersIdDevicesRoute
+  AdminUsersIdEsimsRoute: typeof AdminUsersIdEsimsRoute
+  AdminUsersIdKycRoute: typeof AdminUsersIdKycRoute
+  AdminUsersIdNotesRoute: typeof AdminUsersIdNotesRoute
+  AdminUsersIdNumbersRoute: typeof AdminUsersIdNumbersRoute
+  AdminUsersIdTransactionsRoute: typeof AdminUsersIdTransactionsRoute
+  AdminUsersIdWalletsRoute: typeof AdminUsersIdWalletsRoute
+  AdminUsersIdIndexRoute: typeof AdminUsersIdIndexRoute
+}
+
+const AdminUsersIdRouteChildren: AdminUsersIdRouteChildren = {
+  AdminUsersIdCardsRoute: AdminUsersIdCardsRoute,
+  AdminUsersIdDevicesRoute: AdminUsersIdDevicesRoute,
+  AdminUsersIdEsimsRoute: AdminUsersIdEsimsRoute,
+  AdminUsersIdKycRoute: AdminUsersIdKycRoute,
+  AdminUsersIdNotesRoute: AdminUsersIdNotesRoute,
+  AdminUsersIdNumbersRoute: AdminUsersIdNumbersRoute,
+  AdminUsersIdTransactionsRoute: AdminUsersIdTransactionsRoute,
+  AdminUsersIdWalletsRoute: AdminUsersIdWalletsRoute,
+  AdminUsersIdIndexRoute: AdminUsersIdIndexRoute,
+}
+
+const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
+  AdminUsersIdRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminUsersIdRoute: typeof AdminUsersIdRouteWithChildren
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminUsersIdRoute: AdminUsersIdRouteWithChildren,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
