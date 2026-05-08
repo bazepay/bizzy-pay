@@ -47,6 +47,32 @@ export const recentAlerts = [
   { id: "a4", level: "med" as const, title: "Velocity rule triggered", body: "5 users flagged", at: "41m ago" },
 ];
 
+// Sparkline series for hero KPIs (14 points)
+export const spark = {
+  users: [38, 41, 39, 44, 46, 45, 49, 47, 50, 52, 51, 55, 57, 60],
+  volume: [180, 195, 210, 198, 224, 261, 247, 270, 289, 312, 298, 320, 345, 360],
+  revenue: [9.2, 10.1, 10.8, 11.4, 11.0, 12.1, 12.7, 13.0, 13.6, 13.9, 14.2, 14.6, 14.8, 15.0],
+  kyc: [68, 69, 70, 70.5, 71, 71.6, 72, 72.4, 72.8, 73, 73.1, 73.2, 73.4, 73.5],
+};
+
+// Operational queues — drives the actionable "Action center"
+export const opsQueues = [
+  { key: "kyc", label: "KYC review", count: 41, sla: "24h", breaching: 12, tone: "warning" as const, href: "/compliance/kyc" },
+  { key: "payouts", label: "Payouts to approve", count: 8, sla: "4h", breaching: 1, tone: "primary" as const, href: "/finance/payouts" },
+  { key: "disputes", label: "Open disputes", count: 14, sla: "72h", breaching: 3, tone: "destructive" as const, href: "/finance/disputes" },
+  { key: "chat", label: "Live chat queue", count: 6, sla: "5m", breaching: 0, tone: "success" as const, href: "/support/chat" },
+  { key: "fraud", label: "Fraud signals", count: 5, sla: "1h", breaching: 2, tone: "destructive" as const, href: "/risk/signals" },
+];
+
+// Provider / system health
+export const systemHealth = [
+  { name: "Flutterwave", status: "degraded" as const, latency: "1.8s", uptime: "99.21%" },
+  { name: "Paystack", status: "ok" as const, latency: "240ms", uptime: "99.98%" },
+  { name: "Reloadly", status: "ok" as const, latency: "410ms", uptime: "99.94%" },
+  { name: "Sumsub KYC", status: "ok" as const, latency: "620ms", uptime: "99.91%" },
+  { name: "eSIM Provider", status: "down" as const, latency: "—", uptime: "97.10%" },
+];
+
 export const recentActivity = [
   { id: "ac1", actor: "Ada O.", action: "approved KYC", target: "user u_8341", at: "1m ago" },
   { id: "ac2", actor: "system", action: "auto-refunded", target: "txn tx_91220", at: "4m ago" },
