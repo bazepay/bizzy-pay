@@ -113,7 +113,7 @@ function CardDetail() {
       </div>
 
       <div className="px-6 mt-5">
-        <VirtualCardArt card={display} revealed={revealed} size="lg" />
+        <VirtualCardArt card={card} revealed={revealed} size="lg" />
         {cards.length > 1 && (
           <div className="mt-3 flex items-center justify-center gap-1.5">
             {cards.map((c) => {
@@ -157,7 +157,10 @@ function CardDetail() {
         <ActionTile
           icon={frozen ? <Sun className="w-4 h-4" /> : <Snowflake className="w-4 h-4" />}
           label={frozen ? "Unfreeze" : "Freeze"}
-          onClick={() => setFrozen((v) => !v)}
+          onClick={() => {
+            toggleFreeze(card.id);
+            toast.success(frozen ? "Card unfrozen" : "Card frozen");
+          }}
           active={frozen}
         />
         <ActionTile
@@ -180,7 +183,7 @@ function CardDetail() {
               Monthly spend
             </p>
             <p className="text-[11px] tabular-nums text-card-foreground/65">
-              {formatNgn(card.monthlySpentNgn)} / {formatNgn(limit)}
+              {formatNgn(card.monthlySpentNgn)} / {formatNgn(card.monthlyLimitNgn)}
             </p>
           </div>
           <div className="mt-3 h-2 rounded-full bg-card-foreground/[0.08] overflow-hidden">
@@ -266,14 +269,33 @@ function CardDetail() {
 
       {showLimits && (
         <LimitsSheet
-          limit={limit}
-          setLimit={setLimit}
-          blocked={blocked}
-          setBlocked={setBlocked}
+          cardId={card.id}
+          initialLimit={card.monthlyLimitNgn}
+          initialBlocked={card.blockedCategories}
+          onCancel={() => {
+            setShowLimits(false);
+            setShowCancel(true);
+          }}
           onClose={() => setShowLimits(false)}
         />
       )}
-      {showFund && <FundSheet onClose={() => setShowFund(false)} />}
+      {showFund && (
+        <FundSheet
+          cardId={card.id}
+          onClose={() => setShowFund(false)}
+        />
+      )}
+      {showCancel && (
+        <ConfirmCancelSheet
+          label={card.label}
+          onConfirm={() => {
+            cancelCard(card.id);
+            toast.success("Card cancelled");
+            navigate({ to: "/cards" });
+          }}
+          onClose={() => setShowCancel(false)}
+        />
+      )}
     </div>
   );
 }
