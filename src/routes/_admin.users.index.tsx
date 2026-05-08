@@ -10,6 +10,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import {
   fmtNgn, fmtNum,
 } from "@/lib/mock-data";
@@ -74,14 +77,25 @@ function UsersDirectory() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const headers = ["id", "name", "email", "phone", "country", "kyc", "status", "risk", "ltv_ngn", "joined", "last_active"];
+              const rows = filtered.map((u) => [u.id, u.name, u.email, u.phone, u.country, u.kyc, u.status, u.riskScore, u.ltvNgn, u.signupAt, u.lastActiveAt].join(","));
+              const csv = [headers.join(","), ...rows].join("\n");
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url; a.download = `users-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+              URL.revokeObjectURL(url);
+              toast.success(`Exported ${filtered.length} users.`);
+            }}
+          >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export
           </Button>
-          <Button size="sm" className="bg-primary text-primary-foreground">
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
-            Invite user
-          </Button>
+          <InviteUserDialog />
         </div>
       </motion.div>
 
