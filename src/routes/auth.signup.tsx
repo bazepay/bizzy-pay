@@ -2,15 +2,8 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
-import { ArrowLeft, ArrowRight, Mail, Phone, Shield, Search, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Shield, Search, Check, ChevronDown, X } from "lucide-react";
 import { COUNTRIES, DIAL_CODES } from "@/lib/countries";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/auth/signup")({
   head: () => ({
@@ -60,7 +53,7 @@ function Signup() {
 
   return (
     <PhoneFrame>
-      <div className="h-full min-h-screen md:min-h-0 bg-background text-foreground flex flex-col">
+      <div className="h-full min-h-screen md:min-h-0 bg-background text-foreground flex flex-col relative overflow-hidden">
         <div className="h-10" />
 
         {/* Header */}
@@ -136,76 +129,36 @@ function Signup() {
                 <label className="text-[11.5px] font-semibold text-card-foreground/55 uppercase tracking-wide">
                   Country
                 </label>
-                <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
-                  <DialogTrigger asChild>
-                    <button
-                      type="button"
-                      className="mt-2 w-full h-14 px-4 rounded-2xl bg-muted text-left flex items-center gap-3 border border-transparent hover:border-primary/30 transition"
-                    >
-                      <span className="text-2xl leading-none">{country.flag}</span>
-                      <span className="flex-1 text-[15px] font-medium">{country.name}</span>
-                      <span className="text-[13px] text-card-foreground/50">+{dial}</span>
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-sm p-0 overflow-hidden">
-                    <DialogHeader className="px-5 pt-5 pb-3">
-                      <DialogTitle>Select country</DialogTitle>
-                    </DialogHeader>
-                    <div className="px-5 pb-3">
-                      <div className="relative">
-                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                        <input
-                          autoFocus
-                          value={search}
-                          onChange={(e) => setSearch(e.target.value)}
-                          placeholder="Search country"
-                          className="w-full h-11 pl-9 pr-3 rounded-xl bg-muted text-sm focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <div className="max-h-80 overflow-y-auto pb-3">
-                      {filtered.map((c) => {
-                        const selected = c.code === countryCode;
-                        return (
-                          <button
-                            key={c.code}
-                            onClick={() => {
-                              setCountryCode(c.code);
-                              setPickerOpen(false);
-                              setSearch("");
-                            }}
-                            className={`w-full px-5 py-2.5 flex items-center gap-3 text-left hover:bg-muted transition ${selected ? "bg-muted" : ""}`}
-                          >
-                            <span className="text-xl leading-none">{c.flag}</span>
-                            <span className="flex-1 text-[14px]">{c.name}</span>
-                            <span className="text-[12px] text-muted-foreground">
-                              +{DIAL_CODES[c.code] ?? ""}
-                            </span>
-                            {selected && <Check className="w-4 h-4 text-primary" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(true)}
+                  className="mt-2 w-full h-14 px-4 rounded-2xl bg-muted text-left flex items-center gap-3 border border-transparent hover:border-primary/30 transition"
+                >
+                  <span className="text-2xl leading-none">{country.flag}</span>
+                  <span className="flex-1 text-[15px] font-medium">{country.name}</span>
+                  <span className="text-[13px] text-card-foreground/50">+{dial}</span>
+                  <ChevronDown className="w-4 h-4 text-card-foreground/40" />
+                </button>
 
                 {/* Phone */}
                 <label className="mt-5 text-[11.5px] font-semibold text-card-foreground/55 uppercase tracking-wide">
                   Phone number
                 </label>
-                <div className="mt-2 relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold text-card-foreground/70 flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-card-foreground/40" />
-                    +{dial}
-                  </span>
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPickerOpen(true)}
+                    className="h-14 px-4 rounded-2xl bg-muted flex items-center gap-2 hover:border-primary/30 border border-transparent transition shrink-0"
+                  >
+                    <span className="text-xl leading-none">{country.flag}</span>
+                    <span className="text-[14px] font-semibold text-card-foreground/80">+{dial}</span>
+                  </button>
                   <input
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/[^\d\s]/g, ""))}
                     inputMode="tel"
                     placeholder="803 555 0142"
-                    className={`w-full h-14 pr-4 rounded-2xl bg-muted border text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition ${
-                      dial.length <= 1 ? "pl-14" : dial.length === 2 ? "pl-16" : dial.length === 3 ? "pl-[72px]" : "pl-20"
-                    } border-transparent`}
+                    className="flex-1 min-w-0 h-14 px-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
                   />
                 </div>
 
@@ -300,6 +253,83 @@ function Signup() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Country picker — bottom sheet matching app design */}
+        <AnimatePresence>
+          {pickerOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setPickerOpen(false)}
+                className="absolute inset-0 z-40 bg-black/70 backdrop-blur-sm"
+              />
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", stiffness: 320, damping: 34 }}
+                className="absolute inset-x-0 bottom-0 z-50 bg-card text-card-foreground rounded-t-[2rem] flex flex-col max-h-[85%]"
+              >
+                <div className="pt-3 flex justify-center">
+                  <div className="h-1 w-10 rounded-full bg-card-foreground/15" />
+                </div>
+                <div className="px-6 pt-4 pb-3 flex items-center justify-between">
+                  <h2 className="font-display text-xl font-bold">Select country</h2>
+                  <button
+                    onClick={() => setPickerOpen(false)}
+                    className="w-9 h-9 rounded-full bg-muted flex items-center justify-center hover:bg-muted/70 transition"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="px-6 pb-3">
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-card-foreground/40" />
+                    <input
+                      autoFocus
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search country"
+                      className="w-full h-12 pl-11 pr-4 rounded-2xl bg-muted text-[14px] text-card-foreground placeholder:text-card-foreground/40 focus:outline-none focus:border-primary/40 border border-transparent"
+                    />
+                  </div>
+                </div>
+                <div className="flex-1 overflow-y-auto px-3 pb-6">
+                  {filtered.map((c) => {
+                    const selected = c.code === countryCode;
+                    return (
+                      <button
+                        key={c.code}
+                        onClick={() => {
+                          setCountryCode(c.code);
+                          setPickerOpen(false);
+                          setSearch("");
+                        }}
+                        className={`w-full px-3 py-3 rounded-xl flex items-center gap-3 text-left transition ${
+                          selected ? "bg-primary/10" : "hover:bg-muted"
+                        }`}
+                      >
+                        <span className="text-2xl leading-none">{c.flag}</span>
+                        <span className="flex-1 text-[14.5px] font-medium">{c.name}</span>
+                        <span className="text-[12.5px] text-card-foreground/50">
+                          +{DIAL_CODES[c.code] ?? ""}
+                        </span>
+                        {selected && <Check className="w-4 h-4 text-primary" />}
+                      </button>
+                    );
+                  })}
+                  {filtered.length === 0 && (
+                    <p className="text-center text-[13px] text-card-foreground/50 py-8">
+                      No country found
+                    </p>
+                  )}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </PhoneFrame>
   );
