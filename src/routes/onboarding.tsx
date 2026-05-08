@@ -24,20 +24,20 @@ type Slide = {
 const slides: Slide[] = [
   {
     eyebrow: "Skip the bank queue",
-    title: "Spend Naira, no Nigerian bank needed.",
-    body: "No BVN. No NIN. Built for visitors and diaspora.",
+    title: "Naira spending, without a Nigerian bank account.",
+    body: "No BVN, no NIN, no proof of address. Built for visitors and diaspora who just need to pay and move.",
     visual: WalletVisual,
   },
   {
     eyebrow: "Top up your way",
-    title: "Fund with your foreign card.",
-    body: "Visa, Mastercard, Amex — we convert to Naira at fair rates.",
+    title: "Fund with your foreign card. Spend in Naira.",
+    body: "Use your Visa, Mastercard or Amex. We convert at fair rates — pay vendors, transfer to any bank, settle bills instantly.",
     visual: CardVisual,
   },
   {
     eyebrow: "Land ready",
-    title: "eSIM and a Nigerian number.",
-    body: "Online the moment you touch down. Receive OTPs on a local number.",
+    title: "An eSIM and a Nigerian number, before you board.",
+    body: "Online the moment you land in Lagos. Receive OTPs on a local number — no SIM swap, no airport queue.",
     visual: ESimVisual,
   },
 ];
