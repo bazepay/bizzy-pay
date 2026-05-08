@@ -12,7 +12,14 @@ export const Route = createFileRoute("/_app/profile_/help/chat")({
   component: SupportChat,
 });
 
-type Msg = { id: string; from: "me" | "agent"; text: string; at: string };
+type Attachment = { name: string; size: number; type: string; url?: string };
+type Msg = {
+  id: string;
+  from: "me" | "agent";
+  text: string;
+  at: string;
+  attachments?: Attachment[];
+};
 
 const QUICK = [
   "I can't fund my wallet",
