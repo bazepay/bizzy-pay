@@ -207,46 +207,47 @@ function DashboardPage() {
       {/* Main grid: chart 2/3 + Action center 1/3 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 shadow-card">
-          <CardHeader className="pb-3">
-            <div className="flex items-start justify-between flex-wrap gap-3">
-              <div>
-                <CardTitle className="text-base">Performance</CardTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Trend across volume, fees, and service mix
-                </p>
-              </div>
-              <Tabs defaultValue="volume" className="w-auto">
+          <Tabs defaultValue="volume">
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between flex-wrap gap-3">
+                <div>
+                  <CardTitle className="text-base">Performance</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Trend across volume, fees, and service mix
+                  </p>
+                </div>
                 <TabsList className="h-8">
                   <TabsTrigger value="volume" className="text-xs h-6 px-3">Volume</TabsTrigger>
                   <TabsTrigger value="fees" className="text-xs h-6 px-3">Fees</TabsTrigger>
                   <TabsTrigger value="mix" className="text-xs h-6 px-3">Service mix</TabsTrigger>
                 </TabsList>
-
-                <TabsContent value="volume" className="mt-4">
-                  <ChartArea dataKey="volume" stroke="oklch(0.32 0.14 280)" formatter={(v) => fmtNgn(v)} yFmt={(v) => `₦${(v / 1_000_000).toFixed(0)}M`} />
-                </TabsContent>
-                <TabsContent value="fees" className="mt-4">
-                  <ChartArea dataKey="fees" stroke="oklch(0.78 0.15 85)" formatter={(v) => fmtNgn(v)} yFmt={(v) => `₦${(v / 1_000).toFixed(0)}k`} />
-                </TabsContent>
-                <TabsContent value="mix" className="mt-4">
-                  <div className="h-[280px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={serviceBreakdown} layout="vertical" margin={{ left: 8, right: 16 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 280)" horizontal={false} />
-                        <XAxis type="number" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" tickFormatter={(v) => `${v}%`} />
-                        <YAxis dataKey="name" type="category" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" width={80} />
-                        <Tooltip
-                          contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.91 0.01 280)", fontSize: 12 }}
-                          formatter={(v: number) => `${v}%`}
-                        />
-                        <Bar dataKey="value" fill="oklch(0.82 0.16 85)" radius={[0, 6, 6, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </CardHeader>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <TabsContent value="volume" className="mt-0">
+                <ChartArea dataKey="volume" stroke="oklch(0.32 0.14 280)" formatter={(v) => fmtNgn(v)} yFmt={(v) => `₦${(v / 1_000_000).toFixed(0)}M`} />
+              </TabsContent>
+              <TabsContent value="fees" className="mt-0">
+                <ChartArea dataKey="fees" stroke="oklch(0.78 0.15 85)" formatter={(v) => fmtNgn(v)} yFmt={(v) => `₦${(v / 1_000).toFixed(0)}k`} />
+              </TabsContent>
+              <TabsContent value="mix" className="mt-0">
+                <div className="h-[280px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={serviceBreakdown} layout="vertical" margin={{ left: 8, right: 16 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.91 0.01 280)" horizontal={false} />
+                      <XAxis type="number" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" tickFormatter={(v) => `${v}%`} />
+                      <YAxis dataKey="name" type="category" tick={{ fontSize: 11 }} stroke="oklch(0.5 0.02 280)" width={80} />
+                      <Tooltip
+                        contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.91 0.01 280)", fontSize: 12 }}
+                        formatter={(v: number) => `${v}%`}
+                      />
+                      <Bar dataKey="value" fill="oklch(0.82 0.16 85)" radius={[0, 6, 6, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </TabsContent>
+            </CardContent>
+          </Tabs>
         </Card>
 
         {/* Action center */}
