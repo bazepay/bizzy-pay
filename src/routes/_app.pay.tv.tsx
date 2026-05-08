@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Calendar,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/pay/tv")({
   head: () => ({
@@ -90,6 +91,7 @@ function TvPage() {
   const [planId, setPlanId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise TV subscription" });
 
   const provider = providers.find((p) => p.id === providerId)!;
   const providerPlans = plans[providerId] ?? [];
@@ -350,7 +352,7 @@ function TvPage() {
           plan={plan}
           cashback={cashback}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => requirePin(() => setSuccess(true))}
         />
       )}
 
@@ -364,6 +366,7 @@ function TvPage() {
           onDone={() => navigate({ to: "/wallet" })}
         />
       )}
+      {pinGate}
     </div>
   );
 }

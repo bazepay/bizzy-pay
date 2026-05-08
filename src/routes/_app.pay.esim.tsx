@@ -22,6 +22,7 @@ import {
   Search,
   Plus,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 import { esims, esimStatusMeta, dataPct } from "@/lib/esims";
 
 export const Route = createFileRoute("/_app/pay/esim")({
@@ -149,6 +150,7 @@ function EsimPage() {
   const [planId, setPlanId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise eSIM purchase" });
   const [dataF, setDataF] = useState<DataFilter>("all");
   const [valF, setValF] = useState<ValidityFilter>("all");
   const [sort, setSort] = useState<Sort>("cheap");
@@ -684,7 +686,7 @@ function EsimPage() {
           plan={plan}
           cashback={cashback}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => requirePin(() => setSuccess(true))}
         />
       )}
 
@@ -728,6 +730,7 @@ function EsimPage() {
           }}
         />
       )}
+      {pinGate}
     </div>
   );
 }

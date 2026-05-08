@@ -10,6 +10,7 @@ import {
   Zap,
   ShieldCheck,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/pay/electricity")({
   head: () => ({
@@ -57,6 +58,7 @@ function ElectricityPage() {
   const [custom, setCustom] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise electricity payment" });
 
   const disco = discos.find((d) => d.id === discoId)!;
   const finalAmount = amount ?? (custom ? Number(custom) : 0);
@@ -332,7 +334,7 @@ function ElectricityPage() {
           cashback={cashback}
           tokenUnits={tokenUnits}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => requirePin(() => setSuccess(true))}
         />
       )}
 
@@ -347,6 +349,7 @@ function ElectricityPage() {
           onDone={() => navigate({ to: "/wallet" })}
         />
       )}
+      {pinGate}
     </div>
   );
 }

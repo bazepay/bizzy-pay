@@ -10,6 +10,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/pay/airtime")({
   head: () => ({
@@ -61,6 +62,7 @@ function AirtimePage() {
   const [savePin, setSavePin] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise airtime purchase" });
 
   const detected = useMemo(() => detectNetwork(phone), [phone]);
   const activeNet = autoNet && detected ? detected : network;
@@ -314,9 +316,13 @@ function AirtimePage() {
           amount={finalAmount}
           cashback={cashback}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => {
+            setConfirm(false);
+            requirePin(() => setSuccess(true));
+          }}
         />
       )}
+      {pinGate}
 
       {success && (
         <SuccessSheet

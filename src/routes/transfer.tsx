@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { wallets } from "@/lib/wallets";
+import { verifyPin, hasPin } from "@/lib/pin-store";
 
 export const Route = createFileRoute("/transfer")({
   head: () => ({
@@ -192,12 +193,18 @@ function TransferFlow() {
   // auto-submit pin
   useEffect(() => {
     if (step === "pin" && pin.length === 4) {
-      const t = setTimeout(() => {
-        setReference("BZP" + Date.now().toString().slice(-8));
-        setStep("success");
-        setPin("");
-      }, 600);
-      return () => clearTimeout(t);
+      if (verifyPin(pin)) {
+        const t = setTimeout(() => {
+          setReference("BZP" + Date.now().toString().slice(-8));
+          setStep("success");
+          setPin("");
+        }, 400);
+        return () => clearTimeout(t);
+      } else {
+        toast.error("Incorrect PIN");
+        const t = setTimeout(() => setPin(""), 350);
+        return () => clearTimeout(t);
+      }
     }
   }, [pin, step]);
 
@@ -575,7 +582,14 @@ function TransferFlow() {
               </div>
 
               <button
-                onClick={() => setStep("pin")}
+                onClick={() => {
+                  if (!hasPin()) {
+                    toast.info("Set up your transaction PIN first");
+                    navigate({ to: "/auth/pin-setup" });
+                    return;
+                  }
+                  setStep("pin");
+                }}
                 className="mt-5 w-full h-12 rounded-2xl bg-primary text-primary-foreground font-bold text-sm active:scale-[0.99] transition"
               >
                 Confirm & send

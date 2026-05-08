@@ -14,6 +14,7 @@ import { VirtualCardArt } from "@/components/virtual-card";
 import type { CardBrand } from "@/lib/cards";
 import { formatNgn, ISSUE_FEE_NGN } from "@/lib/cards";
 import { issueCard } from "@/lib/cards-store";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/cards/new")({
   head: () => ({
@@ -42,20 +43,23 @@ function NewCardPage() {
   const [themeId, setThemeId] = useState(themes[0].id);
   const theme = themes.find((t) => t.id === themeId)!;
   const newIdRef = useRef<string | null>(null);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise card issuance" });
 
   const labelOk = label.trim().length >= 2;
 
   const handlePay = () => {
-    setStep("issuing");
-    setTimeout(() => {
-      const card = issueCard({
-        label: label.trim(),
-        brand,
-        gradient: { from: theme.from, to: theme.to },
-      });
-      newIdRef.current = card.id;
-      setStep("success");
-    }, 1800);
+    requirePin(() => {
+      setStep("issuing");
+      setTimeout(() => {
+        const card = issueCard({
+          label: label.trim(),
+          brand,
+          gradient: { from: theme.from, to: theme.to },
+        });
+        newIdRef.current = card.id;
+        setStep("success");
+      }, 1800);
+    });
   };
 
   const back = () => {
@@ -131,6 +135,7 @@ function NewCardPage() {
       {(step === "issuing" || step === "success") && (
         <IssuingScreen done={step === "success"} newId={newIdRef.current} />
       )}
+      {pinGate}
     </div>
   );
 }

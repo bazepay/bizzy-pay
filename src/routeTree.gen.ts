@@ -16,6 +16,7 @@ import { Route as KycRouteImport } from './routes/kyc'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
+import { Route as AuthPinSetupRouteImport } from './routes/auth.pin-setup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppWalletRouteImport } from './routes/_app.wallet'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
@@ -78,6 +79,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/auth/signup',
   path: '/auth/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthPinSetupRoute = AuthPinSetupRouteImport.update({
+  id: '/auth/pin-setup',
+  path: '/auth/pin-setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -237,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AppProfileRoute
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/pin-setup': typeof AuthPinSetupRoute
   '/auth/signup': typeof AuthSignupRoute
   '/cards/$id': typeof AppCardsIdRoute
   '/cards/new': typeof AppCardsNewRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AppProfileRoute
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/pin-setup': typeof AuthPinSetupRoute
   '/auth/signup': typeof AuthSignupRoute
   '/cards/$id': typeof AppCardsIdRoute
   '/cards/new': typeof AppCardsNewRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/_app/profile': typeof AppProfileRoute
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/pin-setup': typeof AuthPinSetupRoute
   '/auth/signup': typeof AuthSignupRoute
   '/_app/cards/$id': typeof AppCardsIdRoute
   '/_app/cards/new': typeof AppCardsNewRoute
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/auth/login'
+    | '/auth/pin-setup'
     | '/auth/signup'
     | '/cards/$id'
     | '/cards/new'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/wallet'
     | '/auth/login'
+    | '/auth/pin-setup'
     | '/auth/signup'
     | '/cards/$id'
     | '/cards/new'
@@ -425,6 +436,7 @@ export interface FileRouteTypes {
     | '/_app/profile'
     | '/_app/wallet'
     | '/auth/login'
+    | '/auth/pin-setup'
     | '/auth/signup'
     | '/_app/cards/$id'
     | '/_app/cards/new'
@@ -460,6 +472,7 @@ export interface RootRouteChildren {
   TopupRoute: typeof TopupRoute
   TransferRoute: typeof TransferRoute
   AuthLoginRoute: typeof AuthLoginRoute
+  AuthPinSetupRoute: typeof AuthPinSetupRoute
   AuthSignupRoute: typeof AuthSignupRoute
 }
 
@@ -512,6 +525,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/signup'
       fullPath: '/auth/signup'
       preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/pin-setup': {
+      id: '/auth/pin-setup'
+      path: '/auth/pin-setup'
+      fullPath: '/auth/pin-setup'
+      preLoaderRoute: typeof AuthPinSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/login': {
@@ -801,6 +821,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopupRoute: TopupRoute,
   TransferRoute: TransferRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthPinSetupRoute: AuthPinSetupRoute,
   AuthSignupRoute: AuthSignupRoute,
 }
 export const routeTree = rootRouteImport
