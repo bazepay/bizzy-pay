@@ -94,6 +94,17 @@ function TxnDetail() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <button
+          onClick={async () => {
+            const text = `${txn.merchant} · ${formatNgn(Math.abs(txn.amountNgn))} · ${refId}`;
+            if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (data: ShareData) => Promise<void> }).share) {
+              try {
+                await (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({ title: "BazePay receipt", text });
+              } catch {}
+            } else {
+              copy(text, "share");
+              toast.success("Receipt copied");
+            }
+          }}
           className="w-10 h-10 rounded-full bg-card text-card-foreground flex items-center justify-center"
           aria-label="Share receipt"
         >
