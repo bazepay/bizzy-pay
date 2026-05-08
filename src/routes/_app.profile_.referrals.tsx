@@ -83,29 +83,23 @@ function ReferralsPage() {
 
       {/* White surface */}
       <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-10 -mt-6 relative">
-        {/* Code card — dashed ticket */}
+        {/* Code card */}
         <button
           onClick={copy}
-          className="group w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.97_0.02_280)] to-[oklch(0.94_0.04_85)] dark:from-card-foreground/[0.06] dark:to-card-foreground/[0.02] p-5 text-left active:scale-[0.99] transition"
+          className="group w-full flex items-center justify-between gap-3 px-5 py-4 rounded-2xl bg-card-foreground/[0.04] active:bg-card-foreground/[0.07] transition text-left"
         >
-          <div className="absolute inset-1 rounded-[1.4rem] border-2 border-dashed border-card-foreground/15 pointer-events-none" />
-          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
-          <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-primary/15 blur-2xl" />
-
-          <div className="relative flex items-center justify-between">
-            <p className="text-[10px] uppercase tracking-widest text-card-foreground/55 font-semibold">Your referral code</p>
-            <span className="text-[10px] uppercase tracking-wider font-bold text-primary flex items-center gap-1 opacity-70 group-active:opacity-100">
-              <Copy className="w-3 h-3" /> Tap to copy
-            </span>
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-widest text-card-foreground/50 font-semibold">Your code</p>
+            <p className="font-display text-xl font-bold tracking-[0.18em] mt-1">{REFERRAL.code}</p>
           </div>
-          <p className="relative font-display text-4xl font-bold tracking-[0.2em] mt-3 bg-gradient-to-r from-[oklch(0.5_0.18_280)] to-[oklch(0.55_0.15_85)] bg-clip-text text-transparent">
-            {REFERRAL.code}
-          </p>
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold text-card-foreground/60">
+            <Copy className="w-3.5 h-3.5" /> Copy
+          </span>
         </button>
 
         <button
           onClick={share}
-          className="mt-3 w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition shadow-md shadow-primary/30"
+          className="mt-3 w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition"
         >
           <Share2 className="w-4 h-4" /> Share invite
         </button>
