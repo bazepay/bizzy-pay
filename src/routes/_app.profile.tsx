@@ -217,7 +217,7 @@ function ProfilePage() {
           />
         </div>
 
-        <p className="text-center text-[11px] text-card-foreground/40 mt-8">
+        <p className="text-center text-[11px] text-card-foreground/40 mt-6">
           BazePay · v1.0.0 (prototype)
         </p>
       </div>
