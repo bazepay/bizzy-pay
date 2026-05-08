@@ -322,7 +322,7 @@ function CountryStep({
             No country matches "{q}".
           </p>
         ) : (
-          <ul className="divide-y divide-border rounded-2xl bg-card border border-border overflow-hidden">
+          <ul className="divide-y divide-border rounded-2xl bg-card text-card-foreground border border-border overflow-hidden">
             {filtered.map((c) => {
               const isSel = selected?.code === c.code;
               return (
