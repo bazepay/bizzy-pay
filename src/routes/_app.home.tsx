@@ -121,7 +121,12 @@ function HomePage() {
 
         <div className="mt-4 space-y-4">
           {txns.map((t) => (
-            <div key={t.id} className="flex items-center gap-3">
+            <Link
+              key={t.id}
+              to="/transaction/$id"
+              params={{ id: String(t.id) }}
+              className="flex items-center gap-3 -mx-2 px-2 py-1 rounded-xl active:bg-card-foreground/[0.04] transition"
+            >
               <div
                 className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
                 style={{ background: t.avatarBg, color: t.avatarColor }}
@@ -138,7 +143,7 @@ function HomePage() {
                 </p>
                 <p className="text-xs text-card-foreground/45 mt-0.5">{t.action}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
