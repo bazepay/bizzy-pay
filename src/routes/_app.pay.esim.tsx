@@ -1027,3 +1027,280 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
     </div>
   );
 }
+
+function VirtualNumberPanel({
+  countryId,
+  setCountryId,
+  planKey,
+  setPlanKey,
+  autoRenew,
+  setAutoRenew,
+}: {
+  countryId: string;
+  setCountryId: (v: string) => void;
+  planKey: VnPlanKey;
+  setPlanKey: (v: VnPlanKey) => void;
+  autoRenew: boolean;
+  setAutoRenew: (v: boolean) => void;
+}) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+          Country
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {vnCountries.map((c) => {
+            const sel = c.id === countryId;
+            return (
+              <button
+                key={c.id}
+                onClick={() => setCountryId(c.id)}
+                className={`flex items-center gap-3 rounded-2xl p-3 text-left transition ${
+                  sel ? "bg-primary/10 ring-2 ring-primary" : "bg-card-foreground/[0.04] ring-1 ring-transparent"
+                }`}
+              >
+                <span className="text-2xl leading-none">{c.flag}</span>
+                <div className="min-w-0">
+                  <p className="font-semibold text-sm truncate">{c.name}</p>
+                  <p className="text-[11px] text-card-foreground/55">{c.code} · {c.iso}</p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+          Subscription
+        </p>
+        <div className="space-y-2">
+          {vnPlans.map((p) => {
+            const sel = p.key === planKey;
+            return (
+              <button
+                key={p.key}
+                onClick={() => setPlanKey(p.key)}
+                className={`w-full flex items-center gap-3 rounded-2xl p-4 text-left transition ${
+                  sel ? "bg-primary/10 ring-2 ring-primary" : "bg-card-foreground/[0.04] ring-1 ring-transparent"
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                    sel ? "border-primary bg-primary" : "border-card-foreground/25"
+                  }`}
+                >
+                  {sel && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-sm">{p.label}</p>
+                    {p.badge && (
+                      <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-success/15 text-success">
+                        {p.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-card-foreground/55 mt-0.5">{p.sub}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-display font-bold text-base tabular-nums">${p.price.toFixed(2)}</p>
+                  {p.key === "year" && (
+                    <p className="text-[10px] text-card-foreground/55">${p.perMonth.toFixed(2)}/mo</p>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <button
+        onClick={() => setAutoRenew(!autoRenew)}
+        className="w-full flex items-center gap-3 rounded-2xl bg-card-foreground/[0.04] p-4 text-left"
+      >
+        <div className="w-9 h-9 rounded-full bg-card-foreground/[0.06] flex items-center justify-center">
+          <RefreshCw className="w-4 h-4" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-sm">Auto-renew</p>
+          <p className="text-[11px] text-card-foreground/55">Keep the same number long-term</p>
+        </div>
+        <span className={`relative w-10 h-6 rounded-full transition ${autoRenew ? "bg-primary" : "bg-card-foreground/20"}`}>
+          <span
+            className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition ${
+              autoRenew ? "left-[1.125rem]" : "left-0.5"
+            }`}
+          />
+        </span>
+      </button>
+
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+          Works with 500+ apps
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {vnApps.map((a) => (
+            <span key={a} className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-card-foreground/[0.05]">
+              {a}
+            </span>
+          ))}
+          <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-card-foreground/[0.05] text-card-foreground/60">
+            +500 more
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2">
+        {[
+          { icon: Clock, label: "Activates in seconds" },
+          { icon: Lock, label: "Private · anonymous" },
+          { icon: MessageSquare, label: "Real local PSTN" },
+        ].map((t) => (
+          <div key={t.label} className="rounded-2xl bg-card-foreground/[0.04] p-3 flex flex-col gap-1.5 items-start">
+            <t.icon className="w-4 h-4 text-service-esim" />
+            <p className="text-[11px] font-medium leading-tight">{t.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-[11px] text-card-foreground/55 leading-relaxed px-1">
+        SMS reception only. Voice calls are not included. Number stays active for the subscription duration.
+      </p>
+    </div>
+  );
+}
+
+function VnConfirmSheet({
+  country,
+  plan,
+  autoRenew,
+  onClose,
+  onPay,
+}: {
+  country: VnCountry;
+  plan: VnPlan;
+  autoRenew: boolean;
+  onClose: () => void;
+  onPay: () => void;
+}) {
+  const cashback = +(plan.price * 0.005).toFixed(2);
+  return (
+    <div className="fixed inset-0 z-[70] flex items-end" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 animate-in slide-in-from-bottom duration-300"
+      >
+        <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+        <div className="px-6 mt-4">
+          <h3 className="font-display font-bold text-base">Confirm purchase</h3>
+          <p className="text-[11px] text-card-foreground/55 mt-0.5">Number activates instantly after payment</p>
+        </div>
+        <div className="px-6 mt-5 flex flex-col items-center">
+          <p className="text-[11px] text-card-foreground/55">You'll pay</p>
+          <p className="font-display text-3xl font-bold mt-1">${plan.price.toFixed(2)}</p>
+          <p className="text-[10px] text-card-foreground/50 mt-1">≈ ₦{Math.round(plan.price * FX).toLocaleString()}</p>
+          {cashback > 0 && (
+            <span className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-success/15 text-success text-[10px] font-bold uppercase tracking-wider">
+              <Sparkles className="w-3 h-3" /> +${cashback.toFixed(2)} cashback
+            </span>
+          )}
+        </div>
+        <div className="mx-6 mt-5 rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
+          <Row label="Country" value={`${country.flag} ${country.name} (${country.code})`} />
+          <Row label="Plan" value={plan.label} />
+          <Row label="Auto-renew" value={autoRenew ? "On" : "Off"} />
+          <Row label="Capability" value="SMS reception" />
+          <Row label="Pay from" value="Wallet · USD" />
+        </div>
+        <div className="px-6 mt-5 grid grid-cols-2 gap-2">
+          <button onClick={onClose} className="h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm">
+            Cancel
+          </button>
+          <button
+            onClick={onPay}
+            className="h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-2"
+          >
+            Buy now <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VnSuccessSheet({
+  country,
+  plan,
+  number,
+  autoRenew,
+  onDone,
+}: {
+  country: VnCountry;
+  plan: VnPlan;
+  number: string;
+  autoRenew: boolean;
+  onDone: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+  const ref = `BZP-VN-${Math.floor(Math.random() * 90000 + 10000)}`;
+  const copy = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(number).then(
+        () => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        },
+        () => {},
+      );
+    }
+  };
+  return (
+    <div className="fixed inset-0 z-[80] flex items-end">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 animate-in slide-in-from-bottom duration-300">
+        <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+        <div className="px-6 mt-6 flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-full bg-success/15 text-success flex items-center justify-center">
+            <Check className="w-7 h-7" strokeWidth={3} />
+          </div>
+          <h3 className="font-display font-bold text-xl mt-4">Number ready</h3>
+          <p className="text-[12px] text-card-foreground/55 mt-1">
+            {country.flag} {country.name} · {plan.label}
+          </p>
+        </div>
+
+        <button
+          onClick={copy}
+          className="mx-6 mt-5 rounded-2xl bg-card-foreground/[0.04] p-4 flex items-center gap-3 text-left active:scale-[0.99] transition w-[calc(100%-3rem)]"
+        >
+          <div className="w-10 h-10 rounded-xl bg-service-esim/15 text-service-esim flex items-center justify-center">
+            <Hash className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] text-card-foreground/55">Your number</p>
+            <p className="font-display font-bold text-lg tracking-tight tabular-nums">{number}</p>
+          </div>
+          <span className="text-[11px] font-bold text-primary">{copied ? "Copied" : "Copy"}</span>
+        </button>
+
+        <div className="mx-6 mt-3 rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
+          <Row label="Auto-renew" value={autoRenew ? "On" : "Off"} />
+          <Row label="Inbox" value="View SMS in dashboard" />
+          <Row label="Reference" value={ref} />
+        </div>
+
+        <div className="px-6 mt-5">
+          <button
+            onClick={onDone}
+            className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
