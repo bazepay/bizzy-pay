@@ -140,19 +140,17 @@ function ProfilePage() {
         <SectionTitle>Refer & earn</SectionTitle>
         <button
           onClick={() => navigate({ to: "/profile/referrals" })}
-          className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.62_0.11_280)] to-[oklch(0.5_0.12_290)] text-white p-5 text-left active:scale-[0.99] transition shadow-md"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-card-foreground/[0.03] active:bg-card-foreground/[0.06] transition text-left"
         >
-          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-[oklch(0.82_0.16_85)]/18 blur-2xl" />
-          <div className="relative flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
-              <Gift className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-display font-bold text-base">Earn ₦2,000 per friend</p>
-              <p className="text-xs text-white/75 mt-0.5">{user.referralCount} invited · {user.referralEarned} earned</p>
-            </div>
-            <ChevronRight className="w-5 h-5 text-white/70" />
+          <div className="w-9 h-9 rounded-full bg-[oklch(0.82_0.16_85)]/18 flex items-center justify-center text-[oklch(0.55_0.15_85)]">
+            <Gift className="w-4 h-4" />
           </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold">Earn ₦2,000 per friend</p>
+            <p className="text-[11px] text-card-foreground/55">{user.referralCount} invited · {user.referralEarned} earned</p>
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/15 text-primary">New</span>
+          <ChevronRight className="w-4 h-4 text-card-foreground/40 ml-1" />
         </button>
 
         {/* Support */}
