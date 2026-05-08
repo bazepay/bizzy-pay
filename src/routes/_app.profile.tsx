@@ -211,7 +211,7 @@ function ProfilePage() {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-7 mb-3 px-1">
+    <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-9 mb-3 px-1">
       {children}
     </p>
   );
@@ -224,7 +224,7 @@ function ToggleRow({
   on: boolean; onChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3.5">
+    <div className="flex items-center gap-3 px-4 py-3">
       <div className="w-9 h-9 rounded-full bg-card flex items-center justify-center text-card-foreground/70">
         {icon}
       </div>
@@ -257,7 +257,7 @@ function RowButton({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-card-foreground/[0.04] transition text-left"
+      className="w-full flex items-center gap-3 px-4 py-3 active:bg-card-foreground/[0.04] transition text-left"
     >
       <div className="w-9 h-9 rounded-full bg-card flex items-center justify-center text-card-foreground/70">
         {icon}
