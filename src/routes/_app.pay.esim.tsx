@@ -280,345 +280,357 @@ function EsimPage() {
           })}
         </div>
 
-        {/* Mode-specific picker */}
-        {mode === "new" ? (
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-              Coverage
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {(Object.keys(scopeMeta) as Scope[]).map((s) => {
-                const m = scopeMeta[s];
-                const sel = scope === s;
-                const count = plans.filter((p) => p.scope === s).length;
-                const Icon = m.icon;
-                return (
-                  <button
-                    key={s}
-                    onClick={() => {
-                      setScope(s);
-                      setPlanId(null);
-                    }}
-                    className="relative rounded-2xl py-3 flex flex-col items-center gap-1.5 transition active:scale-95"
-                    style={{
-                      background: sel
-                        ? m.color
-                        : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
-                      color: sel ? "#fff" : "var(--card-foreground)",
-                      boxShadow: sel ? `0 8px 20px -8px ${m.color}` : "none",
-                    }}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-[12px] font-bold leading-none">{m.label}</span>
-                    <span className="text-[9px] font-semibold opacity-70 leading-none">
-                      {count} plans
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-2 px-1 text-[10px] text-card-foreground/55">{meta.tagline}</p>
-          </div>
+        {mode === "vnumber" ? (
+          <VirtualNumberPanel
+            countryId={vnCountryId}
+            setCountryId={setVnCountryId}
+            planKey={vnPlanKey}
+            setPlanKey={setVnPlanKey}
+            autoRenew={vnAutoRenew}
+            setAutoRenew={setVnAutoRenew}
+          />
         ) : (
-          <div>
-            <div className="flex items-center justify-between mb-2 px-1">
-              <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
-                Your installed eSIMs
-              </p>
-              <span className="text-[10px] font-semibold text-card-foreground/45">
-                {installed.length} active
-              </span>
-            </div>
-            <div className="space-y-2">
-              {installed.map((i) => {
-                const m = scopeMeta[i.scope];
-                const sel = topupId === i.id;
-                const Icon = m.icon;
-                return (
-                  <button
-                    key={i.id}
-                    onClick={() => {
-                      setTopupId(i.id);
-                      setScope(i.scope);
-                      setPlanId(null);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition active:scale-[0.99]"
-                    style={{
-                      background: sel
-                        ? `color-mix(in oklab, ${m.color} 14%, transparent)`
-                        : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
-                      border: sel
-                        ? `1px solid color-mix(in oklab, ${m.color} 40%, transparent)`
-                        : "1px solid transparent",
-                    }}
-                  >
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ background: `color-mix(in oklab, ${m.color} 18%, transparent)`, color: m.color }}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold">{i.label}</p>
-                      <p className="text-[11px] text-card-foreground/55 truncate">
-                        {m.label} · {i.remaining} · {i.expiresIn}
-                      </p>
-                    </div>
-                    {sel && (
-                      <span
-                        className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ background: m.color, color: "#fff" }}
+          <>
+            {/* Mode-specific picker */}
+            {mode === "new" ? (
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+                  Coverage
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {(Object.keys(scopeMeta) as Scope[]).map((s) => {
+                    const m = scopeMeta[s];
+                    const sel = scope === s;
+                    const count = plans.filter((p) => p.scope === s).length;
+                    const Icon = m.icon;
+                    return (
+                      <button
+                        key={s}
+                        onClick={() => {
+                          setScope(s);
+                          setPlanId(null);
+                        }}
+                        className="relative rounded-2xl py-3 flex flex-col items-center gap-1.5 transition active:scale-95"
+                        style={{
+                          background: sel
+                            ? m.color
+                            : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
+                          color: sel ? "#fff" : "var(--card-foreground)",
+                          boxShadow: sel ? `0 8px 20px -8px ${m.color}` : "none",
+                        }}
                       >
-                        <Check className="w-3 h-3" strokeWidth={3} />
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-2 px-1 text-[10px] text-card-foreground/55">
-              Top ups apply to the existing eSIM profile automatically — no reinstall.
-            </p>
-          </div>
-        )}
-
-        {/* Email — new mode only */}
-        {mode === "new" && (
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-              Email for QR delivery
-            </p>
-            <div className="relative">
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value.slice(0, 60))}
-                type="email"
-                placeholder="you@email.com"
-                className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] pl-4 pr-12 text-base font-semibold tracking-wide outline-none focus:bg-card-foreground/[0.06]"
-              />
-              {email && (
-                <button
-                  onClick={() => setEmail("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-card-foreground/10 flex items-center justify-center"
-                  aria-label="Clear"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-            {verified && (
-              <div className="mt-2 px-1 flex items-center gap-1.5 text-[11px] text-success">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span className="font-semibold">QR will be emailed instantly</span>
+                        <Icon className="w-4 h-4" />
+                        <span className="text-[12px] font-bold leading-none">{m.label}</span>
+                        <span className="text-[9px] font-semibold opacity-70 leading-none">
+                          {count} plans
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 px-1 text-[10px] text-card-foreground/55">{meta.tagline}</p>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+                    Your installed eSIMs
+                  </p>
+                  <span className="text-[10px] font-semibold text-card-foreground/45">
+                    {installed.length} active
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {installed.map((i) => {
+                    const m = scopeMeta[i.scope];
+                    const sel = topupId === i.id;
+                    const Icon = m.icon;
+                    return (
+                      <button
+                        key={i.id}
+                        onClick={() => {
+                          setTopupId(i.id);
+                          setScope(i.scope);
+                          setPlanId(null);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition active:scale-[0.99]"
+                        style={{
+                          background: sel
+                            ? `color-mix(in oklab, ${m.color} 14%, transparent)`
+                            : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
+                          border: sel
+                            ? `1px solid color-mix(in oklab, ${m.color} 40%, transparent)`
+                            : "1px solid transparent",
+                        }}
+                      >
+                        <div
+                          className="w-10 h-10 rounded-xl flex items-center justify-center"
+                          style={{ background: `color-mix(in oklab, ${m.color} 18%, transparent)`, color: m.color }}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold">{i.label}</p>
+                          <p className="text-[11px] text-card-foreground/55 truncate">
+                            {m.label} · {i.remaining} · {i.expiresIn}
+                          </p>
+                        </div>
+                        {sel && (
+                          <span
+                            className="w-5 h-5 rounded-full flex items-center justify-center"
+                            style={{ background: m.color, color: "#fff" }}
+                          >
+                            <Check className="w-3 h-3" strokeWidth={3} />
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 px-1 text-[10px] text-card-foreground/55">
+                  Top ups apply to the existing eSIM profile automatically — no reinstall.
+                </p>
               </div>
             )}
-          </div>
-        )}
 
-        {/* Plans header + filters */}
-        <div>
-          <div className="flex items-center justify-between mb-2 px-1">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
-              Plans
-            </p>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowFilters((v) => !v)}
-                className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition ${
-                  filtersActive || showFilters
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card-foreground/[0.06] text-card-foreground/60"
-                }`}
-              >
-                <SlidersHorizontal className="w-3 h-3" />
-                {filtersActive ? "On" : "Filter"}
-              </button>
-              <span className="text-[10px] font-semibold text-card-foreground/45">
-                {filteredPlans.length} of {plans.filter((p) => p.scope === effectiveScope).length}
-              </span>
-            </div>
-          </div>
+            {/* Email — new mode only */}
+            {mode === "new" && (
+              <div className="mt-6">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
+                  Email for QR delivery
+                </p>
+                <div className="relative">
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value.slice(0, 60))}
+                    type="email"
+                    placeholder="you@email.com"
+                    className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] pl-4 pr-12 text-base font-semibold tracking-wide outline-none focus:bg-card-foreground/[0.06]"
+                  />
+                  {email && (
+                    <button
+                      onClick={() => setEmail("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-card-foreground/10 flex items-center justify-center"
+                      aria-label="Clear"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+                {verified && (
+                  <div className="mt-2 px-1 flex items-center gap-1.5 text-[11px] text-success">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span className="font-semibold">QR will be emailed instantly</span>
+                  </div>
+                )}
+              </div>
+            )}
 
-          {showFilters && (
-            <div className="mb-3 rounded-2xl bg-card-foreground/[0.04] p-3 space-y-3">
-              <FilterRow
-                label="Data"
-                options={[
-                  { v: "all", l: "All" },
-                  { v: "1-2", l: "1–2 GB" },
-                  { v: "2-5", l: "2–5 GB" },
-                  { v: "5-10", l: "5–10 GB" },
-                  { v: "10-20", l: "10–20 GB" },
-                  { v: "20+", l: "20+ GB" },
-                  { v: "unl", l: "Unlimited" },
-                ]}
-                value={dataF}
-                onChange={(v) => setDataF(v as DataFilter)}
-              />
-              <FilterRow
-                label="Validity"
-                options={[
-                  { v: "all", l: "All" },
-                  { v: "1-7", l: "1–7 d" },
-                  { v: "8-15", l: "8–15 d" },
-                  { v: "16-30", l: "16–30 d" },
-                  { v: "30+", l: "30+ d" },
-                ]}
-                value={valF}
-                onChange={(v) => setValF(v as ValidityFilter)}
-              />
-              <FilterRow
-                label="Sort"
-                icon={<ArrowDownUp className="w-3 h-3" />}
-                options={[
-                  { v: "cheap", l: "Cheapest" },
-                  { v: "expensive", l: "Expensive" },
-                  { v: "data", l: "Most data" },
-                  { v: "longest", l: "Longest" },
-                ]}
-                value={sort}
-                onChange={(v) => setSort(v as Sort)}
-              />
-              {filtersActive && (
-                <button
-                  onClick={() => {
-                    setDataF("all");
-                    setValF("all");
-                    setSort("cheap");
-                  }}
-                  className="text-[11px] font-bold text-primary"
-                >
-                  Reset filters
-                </button>
+            {/* Plans header + filters */}
+            <div className="mt-6">
+              <div className="flex items-center justify-between mb-2 px-1">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50">
+                  Plans
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowFilters((v) => !v)}
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition ${
+                      filtersActive || showFilters
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card-foreground/[0.06] text-card-foreground/60"
+                    }`}
+                  >
+                    <SlidersHorizontal className="w-3 h-3" />
+                    {filtersActive ? "On" : "Filter"}
+                  </button>
+                  <span className="text-[10px] font-semibold text-card-foreground/45">
+                    {filteredPlans.length} of {plans.filter((p) => p.scope === effectiveScope).length}
+                  </span>
+                </div>
+              </div>
+
+              {showFilters && (
+                <div className="mb-3 rounded-2xl bg-card-foreground/[0.04] p-3 space-y-3">
+                  <FilterRow
+                    label="Data"
+                    options={[
+                      { v: "all", l: "All" },
+                      { v: "1-2", l: "1–2 GB" },
+                      { v: "2-5", l: "2–5 GB" },
+                      { v: "5-10", l: "5–10 GB" },
+                      { v: "10-20", l: "10–20 GB" },
+                      { v: "20+", l: "20+ GB" },
+                      { v: "unl", l: "Unlimited" },
+                    ]}
+                    value={dataF}
+                    onChange={(v) => setDataF(v as DataFilter)}
+                  />
+                  <FilterRow
+                    label="Validity"
+                    options={[
+                      { v: "all", l: "All" },
+                      { v: "1-7", l: "1–7 d" },
+                      { v: "8-15", l: "8–15 d" },
+                      { v: "16-30", l: "16–30 d" },
+                      { v: "30+", l: "30+ d" },
+                    ]}
+                    value={valF}
+                    onChange={(v) => setValF(v as ValidityFilter)}
+                  />
+                  <FilterRow
+                    label="Sort"
+                    icon={<ArrowDownUp className="w-3 h-3" />}
+                    options={[
+                      { v: "cheap", l: "Cheapest" },
+                      { v: "expensive", l: "Expensive" },
+                      { v: "data", l: "Most data" },
+                      { v: "longest", l: "Longest" },
+                    ]}
+                    value={sort}
+                    onChange={(v) => setSort(v as Sort)}
+                  />
+                  {filtersActive && (
+                    <button
+                      onClick={() => {
+                        setDataF("all");
+                        setValF("all");
+                        setSort("cheap");
+                      }}
+                      className="text-[11px] font-bold text-primary"
+                    >
+                      Reset filters
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {filteredPlans.length === 0 ? (
+                <div className="rounded-2xl bg-card-foreground/[0.04] p-6 text-center">
+                  <p className="text-[12px] text-card-foreground/60">No plans match these filters.</p>
+                  <button
+                    onClick={() => {
+                      setDataF("all");
+                      setValF("all");
+                    }}
+                    className="mt-2 text-[11px] font-bold text-primary"
+                  >
+                    Reset
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {filteredPlans.map((p) => {
+                    const sel = planId === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => setPlanId(p.id)}
+                        className="relative w-full rounded-2xl p-3.5 text-left transition active:scale-[0.99]"
+                        style={{
+                          background: sel
+                            ? meta.color
+                            : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
+                          color: sel ? "#fff" : "var(--card-foreground)",
+                          boxShadow: sel ? `0 8px 20px -10px ${meta.color}` : "none",
+                        }}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="font-display text-base font-bold leading-none">
+                                {p.data}
+                              </span>
+                              <span className="text-[11px] font-semibold opacity-70 leading-none">
+                                · {p.duration}
+                              </span>
+                              {p.best && (
+                                <span
+                                  className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full leading-none"
+                                  style={{
+                                    background: sel ? "rgba(255,255,255,0.22)" : `color-mix(in oklab, ${meta.color} 14%, transparent)`,
+                                    color: sel ? "#fff" : meta.color,
+                                  }}
+                                >
+                                  Best
+                                </span>
+                              )}
+                            </div>
+                            {p.countries && (
+                              <p className="text-[10px] mt-1 opacity-70 leading-tight truncate">
+                                {p.countries}
+                              </p>
+                            )}
+                            <div className="mt-2 flex items-center gap-2.5 flex-wrap">
+                              <Chip selected={sel} color={meta.color}>
+                                <Wifi className="w-2.5 h-2.5" /> {p.network}
+                              </Chip>
+                              {p.has5g && (
+                                <Chip selected={sel} color={meta.color} accent>
+                                  5G
+                                </Chip>
+                              )}
+                              {p.voice && (
+                                <Chip selected={sel} color={meta.color}>
+                                  <Phone className="w-2.5 h-2.5" /> {p.voice}
+                                </Chip>
+                              )}
+                              {p.sms && (
+                                <Chip selected={sel} color={meta.color}>
+                                  <MessageSquare className="w-2.5 h-2.5" /> {p.sms}
+                                </Chip>
+                              )}
+                              {p.reloadable && (
+                                <Chip selected={sel} color={meta.color}>
+                                  <RefreshCw className="w-2.5 h-2.5" /> Reloadable
+                                </Chip>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="font-display text-lg font-bold leading-none">
+                              ${p.price.toFixed(2)}
+                            </p>
+                            <p className="text-[9px] mt-1 opacity-70 leading-none">
+                              ≈ ₦{Math.round(p.price * FX).toLocaleString()}
+                            </p>
+                            {sel && (
+                              <span className="mt-2 inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider">
+                                <Check className="w-2.5 h-2.5" strokeWidth={3} /> Selected
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
-          )}
 
-          {filteredPlans.length === 0 ? (
-            <div className="rounded-2xl bg-card-foreground/[0.04] p-6 text-center">
-              <p className="text-[12px] text-card-foreground/60">No plans match these filters.</p>
-              <button
-                onClick={() => {
-                  setDataF("all");
-                  setValF("all");
-                }}
-                className="mt-2 text-[11px] font-bold text-primary"
-              >
-                Reset
-              </button>
+            {/* Compatibility note */}
+            <div className="rounded-2xl bg-card-foreground/[0.04] p-4 flex gap-3 mt-6">
+              <div className="w-8 h-8 rounded-full bg-service-esim/15 text-service-esim flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div className="text-[11px] text-card-foreground/65 leading-relaxed">
+                {mode === "new" ? (
+                  <>
+                    <span className="font-semibold text-card-foreground/85">
+                      Activate in 2 minutes.
+                    </span>{" "}
+                    No SIM swap, keep your number. Auto-roams to the strongest of 36 carriers. Works on iPhone XR/XS+, Pixel 3+, Galaxy S20+.
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-card-foreground/85">Top up — no reinstall.</span>{" "}
+                    Data refills the existing eSIM profile in under 30 seconds.
+                  </>
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {filteredPlans.map((p) => {
-                const sel = planId === p.id;
-                return (
-                  <button
-                    key={p.id}
-                    onClick={() => setPlanId(p.id)}
-                    className="relative w-full rounded-2xl p-3.5 text-left transition active:scale-[0.99]"
-                    style={{
-                      background: sel
-                        ? meta.color
-                        : "color-mix(in oklab, var(--card-foreground) 4%, transparent)",
-                      color: sel ? "#fff" : "var(--card-foreground)",
-                      boxShadow: sel ? `0 8px 20px -10px ${meta.color}` : "none",
-                    }}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="font-display text-base font-bold leading-none">
-                            {p.data}
-                          </span>
-                          <span className="text-[11px] font-semibold opacity-70 leading-none">
-                            · {p.duration}
-                          </span>
-                          {p.best && (
-                            <span
-                              className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full leading-none"
-                              style={{
-                                background: sel ? "rgba(255,255,255,0.22)" : `color-mix(in oklab, ${meta.color} 14%, transparent)`,
-                                color: sel ? "#fff" : meta.color,
-                              }}
-                            >
-                              Best
-                            </span>
-                          )}
-                        </div>
-                        {p.countries && (
-                          <p className="text-[10px] mt-1 opacity-70 leading-tight truncate">
-                            {p.countries}
-                          </p>
-                        )}
-                        <div className="mt-2 flex items-center gap-2.5 flex-wrap">
-                          <Chip selected={sel} color={meta.color}>
-                            <Wifi className="w-2.5 h-2.5" /> {p.network}
-                          </Chip>
-                          {p.has5g && (
-                            <Chip selected={sel} color={meta.color} accent>
-                              5G
-                            </Chip>
-                          )}
-                          {p.voice && (
-                            <Chip selected={sel} color={meta.color}>
-                              <Phone className="w-2.5 h-2.5" /> {p.voice}
-                            </Chip>
-                          )}
-                          {p.sms && (
-                            <Chip selected={sel} color={meta.color}>
-                              <MessageSquare className="w-2.5 h-2.5" /> {p.sms}
-                            </Chip>
-                          )}
-                          {p.reloadable && (
-                            <Chip selected={sel} color={meta.color}>
-                              <RefreshCw className="w-2.5 h-2.5" /> Reloadable
-                            </Chip>
-                          )}
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="font-display text-lg font-bold leading-none">
-                          ${p.price.toFixed(2)}
-                        </p>
-                        <p className="text-[9px] mt-1 opacity-70 leading-none">
-                          ≈ ₦{Math.round(p.price * FX).toLocaleString()}
-                        </p>
-                        {sel && (
-                          <span className="mt-2 inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider">
-                            <Check className="w-2.5 h-2.5" strokeWidth={3} /> Selected
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Compatibility note */}
-        <div className="rounded-2xl bg-card-foreground/[0.04] p-4 flex gap-3">
-          <div className="w-8 h-8 rounded-full bg-service-esim/15 text-service-esim flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-4 h-4" />
-          </div>
-          <div className="text-[11px] text-card-foreground/65 leading-relaxed">
-            {mode === "new" ? (
-              <>
-                <span className="font-semibold text-card-foreground/85">
-                  Activate in 2 minutes.
-                </span>{" "}
-                No SIM swap, keep your number. Auto-roams to the strongest of 36 carriers. Works on iPhone XR/XS+, Pixel 3+, Galaxy S20+.
-              </>
-            ) : (
-              <>
-                <span className="font-semibold text-card-foreground/85">Top up — no reinstall.</span>{" "}
-                Data refills the existing eSIM profile in under 30 seconds.
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+          </>
+        )}
 
       {/* Footer CTA */}
       <div className="absolute bottom-0 left-0 right-0 px-4 pb-5 pt-3 bg-gradient-to-t from-card via-card to-transparent">
