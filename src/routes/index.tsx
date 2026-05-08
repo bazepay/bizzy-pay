@@ -17,9 +17,9 @@ function Splash() {
   return (
     <PhoneFrame>
       <div className="relative h-screen md:h-[860px] w-full bg-background text-foreground flex flex-col items-center justify-center overflow-hidden">
-        {/* Ambient glows matching app palette */}
+        {/* Ambient glows — primary only, matching app palette */}
         <div className="absolute -top-24 -left-20 w-72 h-72 rounded-full bg-primary/30 blur-3xl" />
-        <div className="absolute -bottom-28 -right-20 w-80 h-80 rounded-full bg-lime/25 blur-3xl" />
+        <div className="absolute -bottom-28 -right-20 w-80 h-80 rounded-full bg-primary/25 blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-primary/10 blur-3xl" />
 
         <motion.div
