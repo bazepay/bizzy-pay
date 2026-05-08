@@ -170,43 +170,57 @@ function WalletPage() {
           )}
         </div>
 
-        {/* Flat list */}
-        <div className="mt-5 space-y-3">
-          {filtered.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setDetail(t)}
-              className="w-full flex items-center gap-3 text-left -mx-2 px-2 py-1 rounded-xl active:bg-card-foreground/[0.04] transition"
-            >
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
-                }`}
-              >
-                {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate">{t.title}</p>
-                <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time}</p>
-              </div>
-              <div className="text-right">
-                <p
-                  className={`text-sm font-bold ${
-                    t.isCredit ? "text-primary" : "text-card-foreground"
-                  }`}
-                >
-                  {t.amount}
+        {/* Day-grouped list */}
+        <div className="mt-5 space-y-6">
+          {(() => {
+            const groups = new Map<number, Txn[]>();
+            for (const t of filtered) {
+              const arr = groups.get(t.daysAgo) ?? [];
+              arr.push(t);
+              groups.set(t.daysAgo, arr);
+            }
+            const sortedKeys = [...groups.keys()].sort((a, b) => a - b);
+            return sortedKeys.map((d) => (
+              <div key={d}>
+                <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-card-foreground/45 mb-2 px-1">
+                  {dayLabel(d)}
                 </p>
-                <p
-                  className={`text-[10px] mt-0.5 font-semibold ${
-                    t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
-                  }`}
-                >
-                  {t.status}
-                </p>
+                <div className="space-y-1">
+                  {groups.get(d)!.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => navigate({ to: "/transaction/$id", params: { id: t.id } })}
+                      className="w-full flex items-center gap-3 text-left -mx-2 px-2 py-2 rounded-xl active:bg-card-foreground/[0.04] transition"
+                    >
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
+                        }`}
+                      >
+                        {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm truncate">{t.title}</p>
+                        <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time.split(" · ")[1] ?? t.time}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-sm font-bold ${t.isCredit ? "text-primary" : "text-card-foreground"}`}>
+                          {t.amount}
+                        </p>
+                        <p
+                          className={`text-[10px] mt-0.5 font-semibold ${
+                            t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
+                          }`}
+                        >
+                          {t.status}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </button>
-          ))}
+            ));
+          })()}
           {filtered.length === 0 && (
             <p className="text-center text-sm text-card-foreground/40 py-10">
               No transactions match your filters.
@@ -223,7 +237,7 @@ function WalletPage() {
           onClose={() => setFilterOpen(false)}
         />
       )}
-      {detail && <TxnDetailSheet txn={detail} onClose={() => setDetail(null)} />}
+      
 
       <BottomNav />
     </div>
