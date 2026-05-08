@@ -555,12 +555,11 @@ function Sheet({
               <div className="flex items-baseline gap-2 mt-1.5">
                 <span className="font-display text-3xl font-bold">{w.symbol}</span>
                 <input
-                  autoFocus
                   inputMode="decimal"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="bg-transparent outline-none flex-1 font-display text-3xl font-bold placeholder:text-card-foreground/25"
+                  className="bg-transparent outline-none flex-1 min-w-0 font-display text-3xl font-bold placeholder:text-card-foreground/25"
                 />
               </div>
               <div className="mt-3 flex gap-2">
