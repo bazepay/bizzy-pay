@@ -150,17 +150,22 @@ function SupportChat() {
           const mine = m.from === "me";
           return (
             <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-              <div className="max-w-[78%]">
-                <div
-                  className={`px-3.5 py-2.5 rounded-2xl text-sm leading-snug ${
-                    mine
-                      ? "bg-primary text-primary-foreground rounded-br-md"
-                      : "bg-card-foreground/[0.06] rounded-bl-md"
-                  }`}
-                >
-                  {m.text}
-                </div>
-                <p className={`text-[10px] text-card-foreground/45 mt-1 ${mine ? "text-right" : "text-left"}`}>
+              <div className="max-w-[78%] space-y-1.5">
+                {m.attachments?.map((a, i) => (
+                  <AttachmentBubble key={i} att={a} mine={mine} />
+                ))}
+                {m.text && (
+                  <div
+                    className={`px-3.5 py-2.5 rounded-2xl text-sm leading-snug ${
+                      mine
+                        ? "bg-primary text-primary-foreground rounded-br-md"
+                        : "bg-card-foreground/[0.06] rounded-bl-md"
+                    }`}
+                  >
+                    {m.text}
+                  </div>
+                )}
+                <p className={`text-[10px] text-card-foreground/45 ${mine ? "text-right" : "text-left"}`}>
                   {m.at}
                 </p>
               </div>
