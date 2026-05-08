@@ -36,7 +36,7 @@ const slides: Slide[] = [
   },
   {
     eyebrow: "Land ready",
-    title: "An eSIM and a Nigerian number, before you board.",
+    title: "An eSIM and a virtual number, before you board.",
     body: "Online the moment you land in Nigeria. Receive OTPs on a local number — no SIM swap, no airport queue.",
     visual: ESimVisual,
   },
