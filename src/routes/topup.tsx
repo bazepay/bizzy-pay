@@ -120,12 +120,12 @@ function TopupFlow() {
                 <span className="text-foreground/40">₦</span>
                 {formatted}
               </p>
-              <div className="mt-6 flex gap-2 flex-wrap justify-center">
+              <div className="mt-6 flex gap-1.5 justify-center w-full px-1">
                 {QUICK.map((q) => (
                   <button
                     key={q}
                     onClick={() => setAmount(String(q))}
-                    className="px-4 h-9 rounded-full bg-foreground/10 text-xs font-bold active:scale-95 transition"
+                    className="flex-1 min-w-0 px-2 h-9 rounded-full bg-foreground/10 text-[11px] font-bold active:scale-95 transition whitespace-nowrap"
                   >
                     ₦{q.toLocaleString()}
                   </button>
