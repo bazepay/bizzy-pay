@@ -40,6 +40,7 @@ const initialUser = {
   email: "adaeze@bazepay.com",
   phone: "+234 801 234 5678",
   initials: "AO",
+  avatar: "" as string,
   tier: "Tier 2 — Enhanced",
   limit: "₦5,000,000 / month",
   referralCode: "ADAEZE25",
