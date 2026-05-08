@@ -54,12 +54,18 @@ function HomePage() {
 
       {/* CTAs */}
       <div className="px-6 mt-7 grid grid-cols-2 gap-3">
-        <button className="h-12 rounded-full bg-lime text-lime-foreground font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+        <Link
+          to="/topup"
+          className="h-12 rounded-full bg-lime text-lime-foreground font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition"
+        >
           <Plus className="w-4 h-4" /> Top up
-        </button>
-        <button className="h-12 rounded-full bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+        </Link>
+        <Link
+          to="/transfer"
+          className="h-12 rounded-full bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition"
+        >
           <ArrowLeftRight className="w-4 h-4" /> Transfer
-        </button>
+        </Link>
       </div>
 
       {/* Stats */}
