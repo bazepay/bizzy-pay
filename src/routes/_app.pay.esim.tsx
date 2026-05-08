@@ -1473,3 +1473,7 @@ function CountrySelector({
     </div>
   );
 }
+
+function MyEsimsPanel() {
+  return <MyEsimsPanelImpl />;
+}
