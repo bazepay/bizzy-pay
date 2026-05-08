@@ -87,7 +87,25 @@ function KycQueue() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => toast.success("KYC report exported.")}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const headers = ["id", "user_id", "user_name", "email", "id_type", "id_last4", "decision", "liveness", "ocr_match", "risk", "sanctions", "pep", "duplicate_face", "submitted_at", "decided_at", "decided_by"];
+              const rows = filtered.map((s) => [
+                s.id, s.user.id, s.user.name, s.user.email, s.idType, s.idNumberLast4, s.decision,
+                s.livenessScore.toFixed(3), s.ocrMatchScore.toFixed(3), s.riskScore,
+                s.sanctionsHit, s.pepHit, s.duplicateFaceHit, s.submittedAt, s.decidedAt ?? "", s.decidedBy ?? "",
+              ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","));
+              const csv = [headers.join(","), ...rows].join("\n");
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url; a.download = `kyc-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+              URL.revokeObjectURL(url);
+              toast.success(`Exported ${filtered.length} submissions.`);
+            }}
+          >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export
           </Button>
