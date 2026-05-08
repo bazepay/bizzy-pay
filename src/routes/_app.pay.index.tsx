@@ -117,34 +117,19 @@ function PayHub() {
         )}
 
         {q === "" && (
-          <div className="mt-1 mb-5 grid grid-cols-2 gap-3">
-            <Link
-              to="/esims"
-              className="flex items-center gap-3 rounded-2xl bg-card-foreground/[0.04] p-4 active:scale-[0.99] transition"
-            >
-              <div className="w-10 h-10 rounded-xl bg-service-esim/15 text-service-esim flex items-center justify-center">
-                <Smartphone className="w-5 h-5" strokeWidth={2.2} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm">My eSIMs</p>
-                <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">2 active · top up</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-card-foreground/40 shrink-0" />
-            </Link>
-            <Link
-              to="/numbers"
-              className="flex items-center gap-3 rounded-2xl bg-card-foreground/[0.04] p-4 active:scale-[0.99] transition"
-            >
-              <div className="w-10 h-10 rounded-xl bg-service-esim/15 text-service-esim flex items-center justify-center">
-                <Phone className="w-5 h-5" strokeWidth={2.2} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm">My Numbers</p>
-                <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">3 active · 2 SMS</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-card-foreground/40 shrink-0" />
-            </Link>
-          </div>
+          <Link
+            to="/numbers"
+            className="mt-1 mb-5 flex items-center gap-3 rounded-2xl bg-card-foreground/[0.04] p-4 active:scale-[0.99] transition"
+          >
+            <div className="w-10 h-10 rounded-xl bg-service-esim/15 text-service-esim flex items-center justify-center">
+              <Phone className="w-5 h-5" strokeWidth={2.2} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm">My Numbers</p>
+              <p className="text-[11px] text-card-foreground/55 mt-0.5">3 active · 2 unread SMS</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-card-foreground/40" />
+          </Link>
         )}
 
         <h2 className="font-display font-bold text-base">All services</h2>
