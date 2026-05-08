@@ -124,11 +124,12 @@ function ReferralsPage() {
           const Icon = s.icon;
           return (
             <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-card-foreground/[0.04]">
-              <div className="w-9 h-9 shrink-0 rounded-full bg-primary/12 flex items-center justify-center text-primary">
+              <div className="relative w-9 h-9 shrink-0 rounded-full bg-primary/12 flex items-center justify-center text-primary">
                 <Icon className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">{i + 1}</span>
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold">{i + 1}. {s.h}</p>
+                <p className="text-sm font-semibold">{s.h}</p>
                 <p className="text-[11px] text-card-foreground/60 leading-relaxed mt-0.5">{s.p}</p>
               </div>
             </div>
