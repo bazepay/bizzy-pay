@@ -224,6 +224,7 @@ function EsimPage() {
       </div>
 
       {/* Hero */}
+      {mode !== "topup" && (
       <div className="px-6 mt-5">
         <div
           className="relative overflow-hidden rounded-3xl p-5 transition-colors"
