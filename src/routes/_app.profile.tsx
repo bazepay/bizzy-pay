@@ -207,10 +207,10 @@ function ProfilePage() {
         open={editOpen}
         onClose={() => setEditOpen(false)}
         user={user}
-        onSave={(name, email, phone) => {
-          setUser((u) => ({ ...u, name, email, phone, initials: getInitials(name) }));
+        onSave={(avatar) => {
+          setUser((u) => ({ ...u, avatar }));
           setEditOpen(false);
-          toast.success("Profile updated");
+          toast.success("Profile photo updated");
         }}
       />
       <LogoutSheet
