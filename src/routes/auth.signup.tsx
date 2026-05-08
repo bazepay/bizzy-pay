@@ -164,7 +164,7 @@ function Signup() {
                     onClick={() => setPickerOpen(true)}
                     className="h-14 px-4 rounded-2xl bg-muted flex items-center gap-2 hover:border-primary/30 border border-transparent transition shrink-0"
                   >
-                    <span className="text-xl leading-none">{country.flag}</span>
+                    <Flag code={country.code} className="w-6 h-[18px]" />
                     <span className="text-[14px] font-semibold text-card-foreground/80">+{dial}</span>
                   </button>
                   <input
