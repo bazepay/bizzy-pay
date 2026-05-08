@@ -49,19 +49,18 @@ function CardsPage() {
       <Header count={cards.length} total={totalNgn} />
 
       {/* Stacked wallet */}
-      <div className="px-6 mt-7">
+      <div className="px-6 mt-3">
         <div
           className="relative mx-auto"
           style={{
-            // reserve room: card + (n-1) peeks
-            height: `calc(min(360px, 56vw) + ${(cards.length - 1) * 28}px)`,
-            maxWidth: "440px",
+            height: `calc(min(230px, 50vw) + ${(cards.length - 1) * 24}px)`,
+            maxWidth: "380px",
           }}
         >
           {stackOrder.map((c, i) => {
             const isTop = i === 0;
             // bottom-anchored stack — top card sits at the bottom of the container
-            const offsetFromBottom = i * 28; // peek height
+            const offsetFromBottom = i * 24;
             const realIdx = cards.findIndex((x) => x.id === c.id);
             return (
               <button
