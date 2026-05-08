@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowLeft,
   Check,
@@ -13,6 +13,7 @@ import {
 import { VirtualCardArt } from "@/components/virtual-card";
 import type { CardBrand } from "@/lib/cards";
 import { formatNgn, ISSUE_FEE_NGN } from "@/lib/cards";
+import { issueCard } from "@/lib/cards-store";
 
 export const Route = createFileRoute("/_app/cards/new")({
   head: () => ({
@@ -40,12 +41,21 @@ function NewCardPage() {
   const [brand, setBrand] = useState<CardBrand>("Visa");
   const [themeId, setThemeId] = useState(themes[0].id);
   const theme = themes.find((t) => t.id === themeId)!;
+  const newIdRef = useRef<string | null>(null);
 
   const labelOk = label.trim().length >= 2;
 
   const handlePay = () => {
     setStep("issuing");
-    setTimeout(() => setStep("success"), 1800);
+    setTimeout(() => {
+      const card = issueCard({
+        label: label.trim(),
+        brand,
+        gradient: { from: theme.from, to: theme.to },
+      });
+      newIdRef.current = card.id;
+      setStep("success");
+    }, 1800);
   };
 
   const back = () => {
@@ -119,7 +129,7 @@ function NewCardPage() {
       )}
 
       {(step === "issuing" || step === "success") && (
-        <IssuingScreen done={step === "success"} />
+        <IssuingScreen done={step === "success"} newId={newIdRef.current} />
       )}
     </div>
   );
