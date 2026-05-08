@@ -4,7 +4,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { VirtualCardArt } from "@/components/virtual-card";
 import { cards, formatUsd } from "@/lib/cards";
 
-export const Route = createFileRoute("/_app/cards/")({
+export const Route = createFileRoute("/_app/cards")({
   head: () => ({
     meta: [
       { title: "Virtual Cards · BazePay" },
