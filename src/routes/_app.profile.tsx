@@ -58,24 +58,6 @@ function ProfilePage() {
   const [editOpen, setEditOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
 
-  const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(user.referralCode);
-      toast.success("Referral code copied");
-    } catch {
-      toast.error("Could not copy");
-    }
-  };
-
-  const shareCode = async () => {
-    const text = `Join me on BazePay and we both earn ₦2,000. Use my code: ${user.referralCode}`;
-    if (navigator.share) {
-      try { await navigator.share({ title: "BazePay", text }); } catch {/* dismissed */}
-    } else {
-      await navigator.clipboard.writeText(text);
-      toast.success("Invite copied to clipboard");
-    }
-  };
 
   return (
     <div className="min-h-full bg-card text-card-foreground flex flex-col">
