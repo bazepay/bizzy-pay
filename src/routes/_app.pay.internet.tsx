@@ -35,10 +35,6 @@ const providers: Provider[] = [
   { id: "smile", name: "Smile", short: "SM", tagline: "4G LTE · Voice", color: "#2BB673" },
   { id: "spectranet", name: "Spectranet", short: "SP", tagline: "4G LTE · Mi-Fi", color: "#0066B3" },
   { id: "swift", name: "Swift", short: "SW", tagline: "Fibre · 4G", color: "#F26522" },
-  { id: "fiberone", name: "FiberOne", short: "F1", tagline: "Fibre · FTTH", color: "#7B1FA2" },
-  { id: "tizeti", name: "Tizeti", short: "TZ", tagline: "Wifi.com.ng", color: "#0FA958" },
-  { id: "starlink", name: "Starlink", short: "SL", tagline: "Satellite", color: "#1A1A1A" },
-  { id: "coollink", name: "Coollink", short: "CL", tagline: "Fibre · Office", color: "#FFB300" },
 ];
 
 type Plan = {
