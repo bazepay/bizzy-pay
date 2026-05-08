@@ -458,7 +458,7 @@ function Shell({
       </div>
 
       {/* White surface */}
-      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+      <div className="relative bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
         <div className="flex-1">{children}</div>
         <div className="pt-6">{footer}</div>
       </div>
