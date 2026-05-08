@@ -202,28 +202,119 @@ function SupportChat() {
         )}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          send(input);
-        }}
-        className="px-5 pt-3 pb-6 border-t border-card-foreground/[0.06] flex items-center gap-2"
-      >
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message…"
-          className="flex-1 h-12 rounded-full bg-card-foreground/[0.06] px-4 text-sm outline-none focus:ring-2 ring-primary/40"
-        />
-        <button
-          type="submit"
-          disabled={!input.trim()}
-          className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 active:scale-95 transition"
-          aria-label="Send"
+      <div className="border-t border-card-foreground/[0.06]">
+        {pending.length > 0 && (
+          <div className="px-5 pt-3 flex gap-2 overflow-x-auto no-scrollbar">
+            {pending.map((a, i) => (
+              <div
+                key={i}
+                className="relative shrink-0 rounded-xl bg-card-foreground/[0.06] p-1.5 pr-2 flex items-center gap-2 max-w-[180px]"
+              >
+                {a.url ? (
+                  <img src={a.url} alt={a.name} className="w-10 h-10 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-lg bg-card-foreground/[0.08] flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-card-foreground/60" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-[11px] font-semibold truncate">{a.name}</p>
+                  <p className="text-[10px] text-card-foreground/50">{formatSize(a.size)}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPending((p) => p.filter((_, j) => j !== i))}
+                  className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-card-foreground text-card flex items-center justify-center"
+                  aria-label="Remove"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            send(input);
+          }}
+          className="px-5 pt-3 pb-6 flex items-center gap-2"
         >
-          <Send className="w-4 h-4" />
-        </button>
-      </form>
+          <input
+            ref={fileInput}
+            type="file"
+            multiple
+            accept="image/*,application/pdf,.doc,.docx,.txt,.csv"
+            className="hidden"
+            onChange={(e) => onFiles(e.target.files)}
+          />
+          <button
+            type="button"
+            onClick={() => fileInput.current?.click()}
+            className="w-11 h-12 rounded-full bg-card-foreground/[0.06] flex items-center justify-center active:scale-95 transition shrink-0"
+            aria-label="Attach file"
+          >
+            <Paperclip className="w-4 h-4" />
+          </button>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Type a message…"
+            className="flex-1 h-12 rounded-full bg-card-foreground/[0.06] px-4 text-sm outline-none focus:ring-2 ring-primary/40"
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() && pending.length === 0}
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 active:scale-95 transition"
+            aria-label="Send"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function formatSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function AttachmentBubble({ att, mine }: { att: Attachment; mine: boolean }) {
+  if (att.url) {
+    return (
+      <a
+        href={att.url}
+        target="_blank"
+        rel="noreferrer"
+        className="block rounded-2xl overflow-hidden border border-card-foreground/[0.08]"
+      >
+        <img src={att.url} alt={att.name} className="max-h-56 w-full object-cover" />
+      </a>
+    );
+  }
+  return (
+    <div
+      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-2xl ${
+        mine ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.06]"
+      }`}
+    >
+      <div
+        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+          mine ? "bg-primary-foreground/20" : "bg-card-foreground/[0.08]"
+        }`}
+      >
+        {att.type.startsWith("image/") ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+      </div>
+      <div className="min-w-0">
+        <p className="text-[12px] font-semibold truncate max-w-[180px]">{att.name}</p>
+        <p className={`text-[10px] ${mine ? "text-primary-foreground/70" : "text-card-foreground/50"}`}>
+          {formatSize(att.size)}
+        </p>
+      </div>
     </div>
   );
 }
