@@ -126,6 +126,26 @@ export const COUNTRIES: Country[] = [
   { code: "TT", name: "Trinidad & Tobago", flag: "🇹🇹" },
 ];
 
+export const DIAL_CODES: Record<string, string> = {
+  NG: "234", GH: "233", KE: "254", ZA: "27", UG: "256", TZ: "255", RW: "250",
+  SN: "221", CI: "225", CM: "237", EG: "20", MA: "212", ET: "251", DZ: "213",
+  TN: "216", AO: "244", ZM: "260", ZW: "263", BW: "267", NA: "264", MZ: "258",
+  MW: "265", MG: "261", ML: "223", BF: "226", BJ: "229", TG: "228", GM: "220",
+  SL: "232", LR: "231", GN: "224", NE: "227", TD: "235", SD: "249", SS: "211",
+  SO: "252", DJ: "253", ER: "291", GA: "241", CG: "242", CD: "243", BI: "257",
+  LS: "266", SZ: "268", MU: "230", SC: "248", CV: "238", ST: "239", GQ: "240",
+  GW: "245", MR: "222", LY: "218", KM: "269", CF: "236",
+  US: "1", GB: "44", CA: "1", DE: "49", FR: "33", IT: "39", ES: "34", PT: "351",
+  NL: "31", BE: "32", CH: "41", AT: "43", SE: "46", NO: "47", DK: "45", FI: "358",
+  IE: "353", PL: "48", CZ: "420", GR: "30", RO: "40", HU: "36", TR: "90", RU: "7",
+  UA: "380", AE: "971", SA: "966", QA: "974", KW: "965", BH: "973", OM: "968",
+  JO: "962", LB: "961", IL: "972", IR: "98", IQ: "964", PK: "92", IN: "91",
+  BD: "880", LK: "94", NP: "977", CN: "86", JP: "81", KR: "82", SG: "65", MY: "60",
+  ID: "62", PH: "63", TH: "66", VN: "84", AU: "61", NZ: "64", BR: "55", AR: "54",
+  CL: "56", CO: "57", PE: "51", MX: "52", VE: "58", EC: "593", UY: "598", PY: "595",
+  BO: "591", CR: "506", PA: "507", DO: "1", JM: "1", TT: "1",
+};
+
 export type IdType = "NIN" | "BVN" | "PASSPORT";
 
 export function idTypesForCountry(code: string): IdType[] {
