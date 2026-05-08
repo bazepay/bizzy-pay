@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Send, Sparkles, Phone, Paperclip, X, FileText, Image as ImageIcon } from "lucide-react";
 
-export const Route = createFileRoute("/_app/profile_/help/chat")({
+export const Route = createFileRoute("/_app/profile_/help_/chat")({
   head: () => ({
     meta: [
       { title: "Support chat — BazePay" },

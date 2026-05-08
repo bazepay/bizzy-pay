@@ -43,7 +43,7 @@ import { Route as AppCardsNewRouteImport } from './routes/_app.cards.new'
 import { Route as AppCardsIdRouteImport } from './routes/_app.cards.$id'
 import { Route as AppProfileSecurityTwofaRouteImport } from './routes/_app.profile_.security.twofa'
 import { Route as AppProfileSecurityPinRouteImport } from './routes/_app.profile_.security.pin'
-import { Route as AppProfileHelpChatRouteImport } from './routes/_app.profile_.help.chat'
+import { Route as AppProfileHelpChatRouteImport } from './routes/_app.profile_.help_.chat'
 import { Route as AppCardsIdTxnTxnIdRouteImport } from './routes/_app.cards.$id_.txn.$txnId'
 
 const TransferRoute = TransferRouteImport.update({
@@ -216,9 +216,9 @@ const AppProfileSecurityPinRoute = AppProfileSecurityPinRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AppProfileHelpChatRoute = AppProfileHelpChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => AppProfileHelpRoute,
+  id: '/profile_/help_/chat',
+  path: '/profile/help/chat',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppCardsIdTxnTxnIdRoute = AppCardsIdTxnTxnIdRouteImport.update({
   id: '/cards/$id_/txn/$txnId',
@@ -251,7 +251,7 @@ export interface FileRoutesByFullPath {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
-  '/profile/help': typeof AppProfileHelpRouteWithChildren
+  '/profile/help': typeof AppProfileHelpRoute
   '/profile/legal': typeof AppProfileLegalRoute
   '/profile/referrals': typeof AppProfileReferralsRoute
   '/cards/': typeof AppCardsIndexRoute
@@ -287,7 +287,7 @@ export interface FileRoutesByTo {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
-  '/profile/help': typeof AppProfileHelpRouteWithChildren
+  '/profile/help': typeof AppProfileHelpRoute
   '/profile/legal': typeof AppProfileLegalRoute
   '/profile/referrals': typeof AppProfileReferralsRoute
   '/cards': typeof AppCardsIndexRoute
@@ -326,14 +326,14 @@ export interface FileRoutesById {
   '/_app/pay/esim': typeof AppPayEsimRoute
   '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
-  '/_app/profile_/help': typeof AppProfileHelpRouteWithChildren
+  '/_app/profile_/help': typeof AppProfileHelpRoute
   '/_app/profile_/legal': typeof AppProfileLegalRoute
   '/_app/profile_/referrals': typeof AppProfileReferralsRoute
   '/_app/cards/': typeof AppCardsIndexRoute
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
-  '/_app/profile_/help/chat': typeof AppProfileHelpChatRoute
+  '/_app/profile_/help_/chat': typeof AppProfileHelpChatRoute
   '/_app/profile_/security/pin': typeof AppProfileSecurityPinRoute
   '/_app/profile_/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/_app/cards/$id_/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
@@ -446,7 +446,7 @@ export interface FileRouteTypes {
     | '/_app/esims/'
     | '/_app/numbers/'
     | '/_app/pay/'
-    | '/_app/profile_/help/chat'
+    | '/_app/profile_/help_/chat'
     | '/_app/profile_/security/pin'
     | '/_app/profile_/security/twofa'
     | '/_app/cards/$id_/txn/$txnId'
@@ -704,12 +704,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileSecurityPinRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/profile_/help/chat': {
-      id: '/_app/profile_/help/chat'
-      path: '/chat'
+    '/_app/profile_/help_/chat': {
+      id: '/_app/profile_/help_/chat'
+      path: '/profile/help/chat'
       fullPath: '/profile/help/chat'
       preLoaderRoute: typeof AppProfileHelpChatRouteImport
-      parentRoute: typeof AppProfileHelpRoute
+      parentRoute: typeof AppRoute
     }
     '/_app/cards/$id_/txn/$txnId': {
       id: '/_app/cards/$id_/txn/$txnId'
@@ -748,18 +748,6 @@ const AppPayRouteChildren: AppPayRouteChildren = {
 const AppPayRouteWithChildren =
   AppPayRoute._addFileChildren(AppPayRouteChildren)
 
-interface AppProfileHelpRouteChildren {
-  AppProfileHelpChatRoute: typeof AppProfileHelpChatRoute
-}
-
-const AppProfileHelpRouteChildren: AppProfileHelpRouteChildren = {
-  AppProfileHelpChatRoute: AppProfileHelpChatRoute,
-}
-
-const AppProfileHelpRouteWithChildren = AppProfileHelpRoute._addFileChildren(
-  AppProfileHelpRouteChildren,
-)
-
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppPayRoute: typeof AppPayRouteWithChildren
@@ -769,12 +757,13 @@ interface AppRouteChildren {
   AppCardsNewRoute: typeof AppCardsNewRoute
   AppEsimsIdRoute: typeof AppEsimsIdRoute
   AppNumbersIdRoute: typeof AppNumbersIdRoute
-  AppProfileHelpRoute: typeof AppProfileHelpRouteWithChildren
+  AppProfileHelpRoute: typeof AppProfileHelpRoute
   AppProfileLegalRoute: typeof AppProfileLegalRoute
   AppProfileReferralsRoute: typeof AppProfileReferralsRoute
   AppCardsIndexRoute: typeof AppCardsIndexRoute
   AppEsimsIndexRoute: typeof AppEsimsIndexRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
+  AppProfileHelpChatRoute: typeof AppProfileHelpChatRoute
   AppProfileSecurityPinRoute: typeof AppProfileSecurityPinRoute
   AppProfileSecurityTwofaRoute: typeof AppProfileSecurityTwofaRoute
   AppCardsIdTxnTxnIdRoute: typeof AppCardsIdTxnTxnIdRoute
@@ -789,12 +778,13 @@ const AppRouteChildren: AppRouteChildren = {
   AppCardsNewRoute: AppCardsNewRoute,
   AppEsimsIdRoute: AppEsimsIdRoute,
   AppNumbersIdRoute: AppNumbersIdRoute,
-  AppProfileHelpRoute: AppProfileHelpRouteWithChildren,
+  AppProfileHelpRoute: AppProfileHelpRoute,
   AppProfileLegalRoute: AppProfileLegalRoute,
   AppProfileReferralsRoute: AppProfileReferralsRoute,
   AppCardsIndexRoute: AppCardsIndexRoute,
   AppEsimsIndexRoute: AppEsimsIndexRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
+  AppProfileHelpChatRoute: AppProfileHelpChatRoute,
   AppProfileSecurityPinRoute: AppProfileSecurityPinRoute,
   AppProfileSecurityTwofaRoute: AppProfileSecurityTwofaRoute,
   AppCardsIdTxnTxnIdRoute: AppCardsIdTxnTxnIdRoute,
@@ -816,3 +806,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
