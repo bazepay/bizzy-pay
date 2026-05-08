@@ -253,6 +253,7 @@ function EsimPage() {
           </p>
         </div>
       </div>
+      )}
 
       <div className="flex-1 mt-6 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-32 space-y-6">
         {/* Mode toggle */}
