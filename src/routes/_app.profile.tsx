@@ -72,18 +72,18 @@ function ProfilePage() {
           </button>
         </div>
 
-        <div className="mt-6 flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.82_0.16_85)] text-white flex items-center justify-center font-display text-xl font-bold shadow-lg ring-2 ring-white/10">
+        <div className="mt-6 flex items-start gap-4">
+          <div className="w-16 h-16 shrink-0 rounded-full bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.82_0.16_85)] text-white flex items-center justify-center font-display text-xl font-bold shadow-lg ring-2 ring-white/10">
             {user.initials}
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-display text-lg font-bold truncate">{user.name}</p>
-            <p className="text-xs text-foreground/55 truncate">{user.email}</p>
+          <div className="min-w-0 flex-1 pt-1">
+            <p className="font-display text-lg font-bold truncate leading-tight">{user.name}</p>
+            <p className="text-xs text-foreground/55 truncate mt-0.5">{user.email}</p>
             <p className="text-xs text-foreground/55">{user.phone}</p>
           </div>
           <button
             onClick={() => setEditOpen(true)}
-            className="w-9 h-9 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
+            className="w-9 h-9 mt-3 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
             aria-label="Edit profile"
           >
             <Pencil className="w-3.5 h-3.5" />
@@ -140,9 +140,9 @@ function ProfilePage() {
         <SectionTitle>Refer & earn</SectionTitle>
         <button
           onClick={() => navigate({ to: "/profile/referrals" })}
-          className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.42_0.16_290)] text-white p-5 text-left active:scale-[0.99] transition shadow-lg"
+          className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.62_0.11_280)] to-[oklch(0.5_0.12_290)] text-white p-5 text-left active:scale-[0.99] transition shadow-md"
         >
-          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-[oklch(0.82_0.16_85)]/30 blur-2xl" />
+          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-[oklch(0.82_0.16_85)]/18 blur-2xl" />
           <div className="relative flex items-center gap-3">
             <div className="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
               <Gift className="w-5 h-5" />
@@ -211,7 +211,7 @@ function ProfilePage() {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-7 mb-3 px-1">
+    <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-9 mb-3 px-1">
       {children}
     </p>
   );
@@ -224,7 +224,7 @@ function ToggleRow({
   on: boolean; onChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3.5">
+    <div className="flex items-center gap-3 px-4 py-3">
       <div className="w-9 h-9 rounded-full bg-card flex items-center justify-center text-card-foreground/70">
         {icon}
       </div>
@@ -257,7 +257,7 @@ function RowButton({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-card-foreground/[0.04] transition text-left"
+      className="w-full flex items-center gap-3 px-4 py-3 active:bg-card-foreground/[0.04] transition text-left"
     >
       <div className="w-9 h-9 rounded-full bg-card flex items-center justify-center text-card-foreground/70">
         {icon}
