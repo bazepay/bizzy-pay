@@ -15,17 +15,17 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h1 className="text-7xl font-display font-bold text-primary">404</h1>
+        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          The admin page you're looking for doesn't exist.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Go to dashboard
           </Link>
         </div>
       </div>
@@ -36,32 +36,21 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <h1 className="text-xl font-semibold">Something went wrong</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+        <div className="mt-6 flex justify-center gap-2">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             Try again
           </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
         </div>
       </div>
     </div>
@@ -73,17 +62,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BazePay — Banking for the Nigerian diaspora" },
-      { name: "description", content: "Onboard in minutes. Multi-currency wallet, instant Naira virtual cards, bill payments and eSIM for travelers." },
+      { title: "BazePay Admin Console" },
+      { name: "description", content: "BazePay back-office: users, KYC, transactions, cards, eSIM, support, and compliance." },
       { name: "theme-color", content: "#1a1335" },
-      { property: "og:title", content: "BazePay — Banking for the Nigerian diaspora" },
-      { property: "og:description", content: "Onboard in minutes. Multi-currency wallet, instant Naira virtual cards, bill payments and eSIM for travelers." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:title", content: "BazePay — Banking for the Nigerian diaspora" },
-      { name: "twitter:description", content: "Onboard in minutes. Multi-currency wallet, instant Naira virtual cards, bill payments and eSIM for travelers." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8d4d2f92-c228-4f14-b47c-b5e061414665/id-preview-77b64ed9--b7393557-893b-413e-8ec8-aa5c6337ce2f.lovable.app-1778206540511.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8d4d2f92-c228-4f14-b47c-b5e061414665/id-preview-77b64ed9--b7393557-893b-413e-8ec8-aa5c6337ce2f.lovable.app-1778206540511.png" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -114,11 +96,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <Toaster />
+      <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
 }
