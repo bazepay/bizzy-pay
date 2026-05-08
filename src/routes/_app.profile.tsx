@@ -100,24 +100,13 @@ function ProfilePage() {
 
       {/* White surface */}
       <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-28 -mt-6 relative">
-        {/* KYC verified card */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white p-5 shadow-xl">
-          <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
-          <div className="relative flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full bg-[oklch(0.82_0.16_85)]/20 flex items-center justify-center">
-              <ShieldCheck className="w-5 h-5 text-[oklch(0.82_0.16_85)]" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="font-display text-base font-bold">Identity verified</p>
-                <span className="px-2 py-0.5 rounded-full bg-[oklch(0.82_0.16_85)] text-[oklch(0.2_0.05_280)] text-[9px] font-bold uppercase tracking-wider">
-                  Active
-                </span>
-              </div>
-              <p className="text-xs text-white/70 mt-0.5">Limit · {user.limit}</p>
-            </div>
-          </div>
-        </div>
+        {/* KYC card */}
+        <KycCard
+          status={user.kycStatus}
+          limit={user.limit}
+          reason={user.kycRejectionReason}
+          onRetry={() => navigate({ to: "/kyc" })}
+        />
 
         {/* Security */}
         <SectionTitle>Security</SectionTitle>
