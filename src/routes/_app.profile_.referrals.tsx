@@ -53,15 +53,12 @@ function ReferralsPage() {
 
   return (
     <div className="min-h-full bg-card text-card-foreground flex flex-col">
-      {/* Hero — compact */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white px-6 pt-12 pb-12">
-        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
-        <div className="absolute -bottom-20 -left-10 w-56 h-56 rounded-full bg-[oklch(0.55_0.18_280)]/35 blur-3xl" />
-
-        <div className="relative flex items-center gap-3">
+      {/* Dark hero */}
+      <div className="relative bg-background text-foreground px-6 pt-12 pb-16">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => navigate({ to: "/profile" })}
-            className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center"
             aria-label="Back"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -69,24 +66,25 @@ function ReferralsPage() {
           <h1 className="font-display text-xl font-bold">Refer & earn</h1>
         </div>
 
-        <div className="relative mt-5 flex items-center gap-3 animate-fade-in">
-          <div className="w-12 h-12 rounded-2xl bg-[oklch(0.82_0.16_85)]/25 flex items-center justify-center shrink-0">
+        <div className="mt-5 flex items-center gap-3 animate-fade-in">
+          <div className="w-12 h-12 rounded-2xl bg-[oklch(0.82_0.16_85)]/20 flex items-center justify-center shrink-0">
             <Gift className="w-6 h-6 text-[oklch(0.82_0.16_85)]" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-widest text-white/60 font-semibold">Earn together</p>
+            <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">Earn together</p>
             <p className="font-display text-xl font-bold leading-tight">₦2,000 per friend</p>
           </div>
         </div>
 
-        <p className="relative text-xs text-white/70 leading-relaxed mt-3 max-w-sm">
+        <p className="text-xs text-foreground/65 leading-relaxed mt-3 max-w-sm">
           Get ₦2,000 for every friend who joins and funds their wallet. They get ₦2,000 too.
         </p>
       </div>
 
-      {/* Code card */}
-      <div className="px-6 -mt-6 relative">
-        <div className="rounded-3xl bg-card border border-card-foreground/10 shadow-2xl shadow-[oklch(0.22_0.08_280)]/30 p-5">
+      {/* White surface */}
+      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-10 -mt-6 relative">
+        {/* Code card */}
+        <div className="rounded-3xl bg-gradient-to-br from-card to-card-foreground/[0.04] border border-card-foreground/10 shadow-md p-5">
           <p className="text-[10px] uppercase tracking-widest text-card-foreground/50 font-semibold">Your referral code</p>
           <div className="mt-2 flex items-center justify-between gap-3">
             <p className="font-display text-3xl font-bold tracking-wider">{REFERRAL.code}</p>
@@ -106,14 +104,13 @@ function ReferralsPage() {
             <Share2 className="w-4 h-4" /> Share invite
           </button>
         </div>
-      </div>
 
-      {/* Stats */}
-      <div className="px-6 mt-5 grid grid-cols-3 gap-2.5">
-        <Stat label="Invited" value={String(REFERRAL.invited)} />
-        <Stat label="Earned" value={REFERRAL.earned} accent />
-        <Stat label="Pending" value={REFERRAL.pending} muted />
-      </div>
+        {/* Stats */}
+        <div className="mt-5 grid grid-cols-3 gap-2.5">
+          <Stat label="Invited" value={String(REFERRAL.invited)} />
+          <Stat label="Earned" value={REFERRAL.earned} accent />
+          <Stat label="Pending" value={REFERRAL.pending} muted />
+        </div>
 
       {/* How it works */}
       <p className="px-6 text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-7 mb-3">
