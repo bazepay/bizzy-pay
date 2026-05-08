@@ -204,9 +204,10 @@ function CardsPage() {
                           isCredit ? "text-emerald-500" : ""
                         }`}
                       >
-                      {isCredit ? "+" : ""}
-                      {formatNgn(t.amountNgn)}
-                    </p>
+                        {isCredit ? "+" : ""}
+                        {formatNgn(t.amountNgn)}
+                      </p>
+                    </Link>
                   </li>
                 );
               })}
