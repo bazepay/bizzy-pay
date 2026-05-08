@@ -682,6 +682,7 @@ function TransferFlow() {
         )}
       </AnimatePresence>
     </div>
+    </PhoneFrame>
   );
 }
 
