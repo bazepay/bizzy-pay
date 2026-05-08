@@ -50,8 +50,8 @@ function Signup() {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="flex items-center gap-1.5">
-            <div className={`h-[3px] w-8 rounded-full ${step === "identifier" ? "bg-lime" : "bg-lime/40"}`} />
-            <div className={`h-[3px] w-8 rounded-full ${step === "otp" ? "bg-lime" : "bg-white/15"}`} />
+            <div className={`h-[3px] w-8 rounded-full ${step === "identifier" ? "bg-primary" : "bg-primary/40"}`} />
+            <div className={`h-[3px] w-8 rounded-full ${step === "otp" ? "bg-primary" : "bg-white/15"}`} />
           </div>
           <div className="w-10" />
         </header>
