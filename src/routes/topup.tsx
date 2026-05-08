@@ -84,7 +84,8 @@ function TopupFlow() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <PhoneFrame>
+    <div className="min-h-screen md:min-h-0 md:h-[860px] bg-background text-foreground flex flex-col">
       <div className="h-10" />
       <div className="px-6 pt-4 flex items-center justify-between">
         <button
