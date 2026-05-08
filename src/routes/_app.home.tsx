@@ -11,7 +11,6 @@ import {
   Phone,
   Wifi,
 } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
 import { CurrencySwitcher } from "@/components/currency-switcher";
@@ -19,16 +18,6 @@ import { CurrencySwitcher } from "@/components/currency-switcher";
 export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
-
-const spendData = [
-  { day: "Mon", spent: 18 },
-  { day: "Tue", spent: 32 },
-  { day: "Wed", spent: 12 },
-  { day: "Thu", spent: 47 },
-  { day: "Fri", spent: 28 },
-  { day: "Sat", spent: 64 },
-  { day: "Sun", spent: 41 },
-];
 
 const services = [
   { label: "eSIM", icon: Wifi, token: "service-esim", slug: "esim" },
