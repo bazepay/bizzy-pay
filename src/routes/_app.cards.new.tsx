@@ -290,26 +290,39 @@ function DetailsScreen({
           <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
             Card design
           </p>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-3">
             {themes.map((t) => {
               const sel = themeId === t.id;
               return (
                 <button
                   key={t.id}
                   onClick={() => setThemeId(t.id)}
-                  className={`relative aspect-[1.4/1] rounded-2xl overflow-hidden transition ${
-                    sel ? "ring-2 ring-primary ring-offset-2 ring-offset-card" : ""
-                  }`}
-                  style={{
-                    background: `linear-gradient(135deg, ${t.from} 0%, ${t.to} 100%)`,
-                  }}
+                  className="flex flex-col items-center gap-1.5 group"
                 >
-                  {sel && (
-                    <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-white text-primary flex items-center justify-center">
-                      <Check className="w-3 h-3" strokeWidth={3} />
-                    </span>
-                  )}
-                  <span className="absolute bottom-1.5 left-1.5 text-[9px] font-bold text-white/85 uppercase tracking-wider">
+                  <div
+                    className={`relative aspect-[1.586/1] w-full rounded-xl overflow-hidden transition-all ${
+                      sel
+                        ? "ring-2 ring-primary ring-offset-2 ring-offset-card scale-[1.02]"
+                        : "ring-1 ring-card-foreground/[0.08] group-active:scale-95"
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, ${t.from} 0%, ${t.to} 100%)`,
+                    }}
+                  >
+                    <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full opacity-50 blur-lg bg-amber-300" />
+                    {sel && (
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="w-6 h-6 rounded-full bg-white text-primary flex items-center justify-center shadow-md">
+                          <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                      sel ? "text-card-foreground" : "text-card-foreground/55"
+                    }`}
+                  >
                     {t.label}
                   </span>
                 </button>
