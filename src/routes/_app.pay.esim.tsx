@@ -8,7 +8,6 @@ import {
   Sparkles,
   X,
   ShieldCheck,
-  Calendar,
   Wifi,
   RefreshCw,
   Phone,
@@ -17,6 +16,9 @@ import {
   SlidersHorizontal,
   Plane,
   MapPin,
+  Hash,
+  Clock,
+  Lock,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/pay/esim")({
