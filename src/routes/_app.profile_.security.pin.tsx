@@ -76,7 +76,7 @@ function ChangePinPage() {
 
   if (step === "done") {
     return (
-      <div className="min-h-full bg-background text-foreground flex flex-col items-center justify-center px-6 text-center">
+      <div className="min-h-full bg-card text-card-foreground flex flex-col items-center justify-center px-6 text-center">
         <motion.div
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -86,7 +86,7 @@ function ChangePinPage() {
           <Check className="w-10 h-10" />
         </motion.div>
         <h1 className="font-display text-2xl font-bold mt-6">{titles.done.t}</h1>
-        <p className="text-sm text-foreground/60 mt-2">{titles.done.s}</p>
+        <p className="text-sm text-card-foreground/60 mt-2">{titles.done.s}</p>
         <button
           onClick={() => navigate({ to: "/profile" })}
           className="mt-10 w-full max-w-[280px] h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm active:scale-[0.98] transition"
@@ -98,16 +98,16 @@ function ChangePinPage() {
   }
 
   return (
-    <div className="min-h-full bg-background text-foreground flex flex-col">
+    <div className="min-h-full bg-card text-card-foreground flex flex-col">
       <header className="px-6 pt-12 pb-2 flex items-center gap-4">
         <button
           onClick={() => navigate({ to: "/profile" })}
-          className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center"
+          className="w-10 h-10 rounded-full bg-card-foreground/10 flex items-center justify-center"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+        <div className="flex-1 h-1.5 bg-card-foreground/10 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-primary"
             animate={{ width: step === "current" ? "33%" : step === "new" ? "66%" : "100%" }}
@@ -129,7 +129,7 @@ function ChangePinPage() {
             transition={{ duration: 0.18 }}
           >
             <h1 className="font-display text-2xl font-bold mt-5">{titles[step].t}</h1>
-            <p className="text-sm text-foreground/55 mt-1.5">{titles[step].s}</p>
+            <p className="text-sm text-card-foreground/55 mt-1.5">{titles[step].s}</p>
           </motion.div>
         </AnimatePresence>
 
@@ -142,7 +142,7 @@ function ChangePinPage() {
             <div
               key={i}
               className={`w-3.5 h-3.5 rounded-full transition-all ${
-                i < value.length ? "bg-primary scale-110" : "bg-foreground/15"
+                i < value.length ? "bg-primary scale-110" : "bg-card-foreground/15"
               }`}
             />
           ))}
@@ -155,7 +155,7 @@ function ChangePinPage() {
             <button
               key={d}
               onClick={() => press(d)}
-              className="h-14 rounded-2xl bg-foreground/[0.06] font-display text-2xl font-semibold active:scale-95 active:bg-foreground/10 transition"
+              className="h-14 rounded-2xl bg-card-foreground/[0.06] font-display text-2xl font-semibold active:scale-95 active:bg-card-foreground/10 transition"
             >
               {d}
             </button>
@@ -163,13 +163,13 @@ function ChangePinPage() {
           <div />
           <button
             onClick={() => press("0")}
-            className="h-14 rounded-2xl bg-foreground/[0.06] font-display text-2xl font-semibold active:scale-95 active:bg-foreground/10 transition"
+            className="h-14 rounded-2xl bg-card-foreground/[0.06] font-display text-2xl font-semibold active:scale-95 active:bg-card-foreground/10 transition"
           >
             0
           </button>
           <button
             onClick={back}
-            className="h-14 rounded-2xl text-sm font-semibold text-foreground/70 active:bg-foreground/[0.06] transition"
+            className="h-14 rounded-2xl text-sm font-semibold text-card-foreground/70 active:bg-card-foreground/[0.06] transition"
           >
             Delete
           </button>

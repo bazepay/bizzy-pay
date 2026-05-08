@@ -48,11 +48,11 @@ function HelpCenterPage() {
   }, [query, activeCat]);
 
   return (
-    <div className="min-h-full bg-background text-foreground flex flex-col">
+    <div className="min-h-full bg-card text-card-foreground flex flex-col">
       <header className="px-6 pt-12 pb-4 flex items-center gap-3">
         <button
           onClick={() => navigate({ to: "/profile" })}
-          className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center"
+          className="w-10 h-10 rounded-full bg-card-foreground/10 flex items-center justify-center"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -62,12 +62,12 @@ function HelpCenterPage() {
 
       <div className="px-6 pb-6">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/45" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-card-foreground/45" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search articles…"
-            className="w-full h-12 pl-11 pr-4 rounded-full bg-foreground/[0.06] text-sm outline-none focus:ring-2 ring-primary/40"
+            className="w-full h-12 pl-11 pr-4 rounded-full bg-card-foreground/[0.06] text-sm outline-none focus:ring-2 ring-primary/40"
           />
         </div>
 
@@ -80,7 +80,7 @@ function HelpCenterPage() {
                 key={c.id}
                 onClick={() => setActiveCat(active ? null : c.id)}
                 className={`flex items-center gap-2.5 p-3.5 rounded-2xl text-left transition ${
-                  active ? "bg-primary text-primary-foreground" : "bg-foreground/[0.05]"
+                  active ? "bg-primary text-primary-foreground" : "bg-card-foreground/[0.05]"
                 }`}
               >
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
@@ -94,13 +94,13 @@ function HelpCenterPage() {
           })}
         </div>
 
-        <p className="text-[11px] uppercase tracking-widest text-foreground/45 font-semibold mt-7 mb-3 px-1">
+        <p className="text-[11px] uppercase tracking-widest text-card-foreground/45 font-semibold mt-7 mb-3 px-1">
           {activeCat ? `${filtered.length} articles` : "Popular questions"}
         </p>
 
         <div className="space-y-2.5">
           {filtered.length === 0 && (
-            <div className="text-center py-10 text-sm text-foreground/55">
+            <div className="text-center py-10 text-sm text-card-foreground/55">
               <HelpCircle className="w-8 h-8 mx-auto mb-2 opacity-40" />
               No results. Try different keywords.
             </div>
@@ -108,13 +108,13 @@ function HelpCenterPage() {
           {filtered.map((f, i) => {
             const open = openIdx === i;
             return (
-              <div key={i} className="rounded-2xl bg-foreground/[0.04] overflow-hidden">
+              <div key={i} className="rounded-2xl bg-card-foreground/[0.04] overflow-hidden">
                 <button
                   onClick={() => setOpenIdx(open ? null : i)}
                   className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left"
                 >
                   <span className="text-sm font-semibold">{f.q}</span>
-                  <motion.span animate={{ rotate: open ? 180 : 0 }} className="text-foreground/50">
+                  <motion.span animate={{ rotate: open ? 180 : 0 }} className="text-card-foreground/50">
                     <ChevronDown className="w-4 h-4" />
                   </motion.span>
                 </button>
@@ -127,7 +127,7 @@ function HelpCenterPage() {
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <p className="px-4 pb-4 text-sm text-foreground/70 leading-relaxed">{f.a}</p>
+                      <p className="px-4 pb-4 text-sm text-card-foreground/70 leading-relaxed">{f.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -138,7 +138,7 @@ function HelpCenterPage() {
 
         <button
           onClick={() => navigate({ to: "/profile" })}
-          className="mt-7 w-full h-12 rounded-2xl bg-foreground/[0.05] flex items-center justify-center gap-2 text-sm font-semibold active:scale-[0.99] transition"
+          className="mt-7 w-full h-12 rounded-2xl bg-card-foreground/[0.05] flex items-center justify-center gap-2 text-sm font-semibold active:scale-[0.99] transition"
         >
           <MessageCircle className="w-4 h-4" />
           Still need help? Chat with us
