@@ -14,7 +14,9 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
 import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
+import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
+import { Route as AdminKycIdRouteImport } from './routes/_admin.kyc.$id'
 import { Route as AdminUsersIdIndexRouteImport } from './routes/_admin.users.$id.index'
 import { Route as AdminUsersIdWalletsRouteImport } from './routes/_admin.users.$id.wallets'
 import { Route as AdminUsersIdTransactionsRouteImport } from './routes/_admin.users.$id.transactions'
@@ -49,9 +51,19 @@ const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminKycIndexRoute = AdminKycIndexRouteImport.update({
+  id: '/kyc/',
+  path: '/kyc/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
   id: '/users/$id',
   path: '/users/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminKycIdRoute = AdminKycIdRouteImport.update({
+  id: '/kyc/$id',
+  path: '/kyc/$id',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminUsersIdIndexRoute = AdminUsersIdIndexRouteImport.update({
@@ -105,7 +117,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/kyc/$id': typeof AdminKycIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
+  '/kyc/': typeof AdminKycIndexRoute
   '/users/': typeof AdminUsersIndexRoute
   '/users/$id/cards': typeof AdminUsersIdCardsRoute
   '/users/$id/devices': typeof AdminUsersIdDevicesRoute
@@ -121,6 +135,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/kyc/$id': typeof AdminKycIdRoute
+  '/kyc': typeof AdminKycIndexRoute
   '/users': typeof AdminUsersIndexRoute
   '/users/$id/cards': typeof AdminUsersIdCardsRoute
   '/users/$id/devices': typeof AdminUsersIdDevicesRoute
@@ -138,7 +154,9 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/_admin/dashboard': typeof AdminDashboardRoute
+  '/_admin/kyc/$id': typeof AdminKycIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
+  '/_admin/kyc/': typeof AdminKycIndexRoute
   '/_admin/users/': typeof AdminUsersIndexRoute
   '/_admin/users/$id/cards': typeof AdminUsersIdCardsRoute
   '/_admin/users/$id/devices': typeof AdminUsersIdDevicesRoute
@@ -156,7 +174,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/kyc/$id'
     | '/users/$id'
+    | '/kyc/'
     | '/users/'
     | '/users/$id/cards'
     | '/users/$id/devices'
@@ -172,6 +192,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/kyc/$id'
+    | '/kyc'
     | '/users'
     | '/users/$id/cards'
     | '/users/$id/devices'
@@ -188,7 +210,9 @@ export interface FileRouteTypes {
     | '/_admin'
     | '/login'
     | '/_admin/dashboard'
+    | '/_admin/kyc/$id'
     | '/_admin/users/$id'
+    | '/_admin/kyc/'
     | '/_admin/users/'
     | '/_admin/users/$id/cards'
     | '/_admin/users/$id/devices'
@@ -244,11 +268,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/kyc/': {
+      id: '/_admin/kyc/'
+      path: '/kyc'
+      fullPath: '/kyc/'
+      preLoaderRoute: typeof AdminKycIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/users/$id': {
       id: '/_admin/users/$id'
       path: '/users/$id'
       fullPath: '/users/$id'
       preLoaderRoute: typeof AdminUsersIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/kyc/$id': {
+      id: '/_admin/kyc/$id'
+      path: '/kyc/$id'
+      fullPath: '/kyc/$id'
+      preLoaderRoute: typeof AdminKycIdRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/users/$id/': {
@@ -347,13 +385,17 @@ const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminKycIdRoute: typeof AdminKycIdRoute
   AdminUsersIdRoute: typeof AdminUsersIdRouteWithChildren
+  AdminKycIndexRoute: typeof AdminKycIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminKycIdRoute: AdminKycIdRoute,
   AdminUsersIdRoute: AdminUsersIdRouteWithChildren,
+  AdminKycIndexRoute: AdminKycIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
