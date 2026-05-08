@@ -225,6 +225,25 @@ function ProfilePage() {
       <BottomNav />
 
       <SupportSheet open={supportOpen} onClose={() => setSupportOpen(false)} />
+      <EditProfileSheet
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        user={user}
+        onSave={(name, email, phone) => {
+          setUser((u) => ({ ...u, name, email, phone, initials: getInitials(name) }));
+          setEditOpen(false);
+          toast.success("Profile updated");
+        }}
+      />
+      <LogoutSheet
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={() => {
+          setLogoutOpen(false);
+          toast.success("Logged out");
+          navigate({ to: "/auth/login" });
+        }}
+      />
     </div>
   );
 }
