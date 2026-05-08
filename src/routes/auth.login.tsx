@@ -46,7 +46,7 @@ function Login() {
             <h1 className="font-display text-4xl font-bold tracking-tight">
               Welcome back
             </h1>
-            <p className="text-sm text-foreground/55 mt-2">
+            <p className="text-sm text-card-foreground/55 mt-2">
               Sign in to your BazePay account.
             </p>
           </motion.div>
@@ -64,7 +64,7 @@ function Login() {
                   setIdentifier("");
                 }}
                 className={`relative h-10 rounded-xl text-[13px] font-semibold capitalize transition ${
-                  mode === m ? "text-foreground" : "text-foreground/50"
+                  mode === m ? "text-card-foreground" : "text-card-foreground/50"
                 }`}
               >
                 {mode === m && (
@@ -84,14 +84,14 @@ function Login() {
 
           {/* Identifier */}
           <div className="mt-5 relative">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-foreground/40">
+            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-card-foreground/40">
               {mode === "phone" ? "+234" : "@"}
             </span>
             <input
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-              className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
+              className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
             />
           </div>
 
@@ -102,19 +102,19 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full h-14 pl-5 pr-12 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
+              className="w-full h-14 pl-5 pr-12 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
             />
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-foreground/[0.06] transition"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-card-foreground/50 hover:text-foreground hover:bg-foreground/[0.06] transition"
             >
               {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
 
           <div className="mt-3 flex justify-end">
-            <button className="text-[12px] font-semibold text-foreground/55 hover:text-primary transition">
+            <button className="text-[12px] font-semibold text-card-foreground/55 hover:text-primary transition">
               Forgot password?
             </button>
           </div>
@@ -139,7 +139,7 @@ function Login() {
               </button>
             </div>
 
-            <p className="text-center text-[12.5px] text-foreground/55 mt-4">
+            <p className="text-center text-[12.5px] text-card-foreground/55 mt-4">
               New to BazePay?{" "}
               <Link to="/auth/signup" className="text-primary font-semibold">
                 Create account
@@ -148,7 +148,7 @@ function Login() {
 
             <button
               onClick={() => nav({ to: "/home" })}
-              className="w-full text-center text-[11px] text-foreground/30 mt-3"
+              className="w-full text-center text-[11px] text-card-foreground/30 mt-3"
             >
               Demo: skip to app
             </button>

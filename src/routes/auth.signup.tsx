@@ -70,7 +70,7 @@ function Signup() {
                 <h1 className="font-display text-4xl font-bold tracking-tight">
                   Create your account
                 </h1>
-                <p className="text-sm text-foreground/55 mt-2">
+                <p className="text-sm text-card-foreground/55 mt-2">
                   We'll send a one-time code to verify it's you.
                 </p>
               </motion.div>
@@ -85,7 +85,7 @@ function Signup() {
                 <h1 className="font-display text-4xl font-bold tracking-tight">
                   Enter the 6-digit code
                 </h1>
-                <p className="text-sm text-foreground/55 mt-2">
+                <p className="text-sm text-card-foreground/55 mt-2">
                   Sent to{" "}
                   <span className="text-foreground font-semibold">
                     {value || (mode === "phone" ? "+234 803 555 0142" : "you@example.com")}
@@ -118,7 +118,7 @@ function Signup() {
                         setValue("");
                       }}
                       className={`relative h-10 rounded-xl text-[13px] font-semibold capitalize transition ${
-                        mode === m ? "text-foreground" : "text-foreground/50"
+                        mode === m ? "text-card-foreground" : "text-card-foreground/50"
                       }`}
                     >
                       {mode === m && (
@@ -138,18 +138,18 @@ function Signup() {
 
                 {/* Input */}
                 <div className="mt-5 relative">
-                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-foreground/40">
+                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-card-foreground/40">
                     {mode === "phone" ? "+234" : "@"}
                   </span>
                   <input
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 focus:bg-background/0 transition"
+                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 focus:bg-background/0 transition"
                   />
                 </div>
 
-                <div className="mt-4 flex items-start gap-2 text-[11.5px] text-foreground/55 leading-relaxed">
+                <div className="mt-4 flex items-start gap-2 text-[11.5px] text-card-foreground/55 leading-relaxed">
                   <Shield className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
                   <p>
                     By continuing, you agree to our{" "}
@@ -167,7 +167,7 @@ function Signup() {
                     Send code
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
                   </button>
-                  <p className="text-center text-[12.5px] text-foreground/55 mt-4">
+                  <p className="text-center text-[12.5px] text-card-foreground/55 mt-4">
                     Already have an account?{" "}
                     <Link to="/auth/login" className="text-primary font-semibold">
                       Sign in
@@ -201,13 +201,13 @@ function Signup() {
                 </div>
 
                 <div className="mt-5 px-4 py-3 rounded-2xl bg-primary/[0.06] border border-primary/15 text-center">
-                  <p className="text-[11.5px] text-foreground/65">
+                  <p className="text-[11.5px] text-card-foreground/65">
                     Demo code:{" "}
                     <span className="font-mono font-bold text-primary tracking-widest">123456</span>
                   </p>
                 </div>
 
-                <button className="mt-5 text-center text-[12.5px] text-foreground/55">
+                <button className="mt-5 text-center text-[12.5px] text-card-foreground/55">
                   Didn't receive it? <span className="text-primary font-semibold">Resend in 0:30</span>
                 </button>
 
