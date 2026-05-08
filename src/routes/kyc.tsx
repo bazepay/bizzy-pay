@@ -113,9 +113,8 @@ function Kyc() {
                     className="absolute inset-0 m-auto w-40 h-40 rounded-full bg-primary/30 blur-2xl"
                   />
                   <motion.div
-                    initial={{ rotate: -8, y: 4 }}
-                    animate={{ rotate: [-8, 8, -8], y: [4, -4, 4] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ scale: [1, 1.04, 1] }}
+                    transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
                     className="relative w-32 h-36 rounded-[2rem] bg-gradient-to-br from-primary to-[oklch(0.45_0.22_290)] shadow-[0_30px_60px_-15px_oklch(0.55_0.24_280_/_0.7)] flex items-center justify-center ring-1 ring-white/10"
                   >
                     <ShieldCheck className="w-14 h-14 text-white" strokeWidth={2.2} />
@@ -124,28 +123,6 @@ function Kyc() {
                       transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
                       className="absolute inset-0 rounded-[2rem] ring-2 ring-white/30"
                     />
-                  </motion.div>
-                  {/* tiny floating chips */}
-                  <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute left-2 top-2 px-2 py-1 rounded-full bg-foreground/10 backdrop-blur text-[10px] font-semibold text-foreground/80 flex items-center gap-1"
-                  >
-                    <IdCard className="w-3 h-3" /> ID
-                  </motion.div>
-                  <motion.div
-                    animate={{ y: [0, 6, 0] }}
-                    transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute right-2 top-10 px-2 py-1 rounded-full bg-[oklch(0.82_0.16_85)]/25 text-[10px] font-semibold text-[oklch(0.82_0.16_85)] flex items-center gap-1"
-                  >
-                    <Camera className="w-3 h-3" /> Selfie
-                  </motion.div>
-                  <motion.div
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute right-4 bottom-2 px-2 py-1 rounded-full bg-primary/20 text-[10px] font-semibold text-primary-foreground/90 flex items-center gap-1"
-                  >
-                    <Sparkles className="w-3 h-3" /> Smile ID
                   </motion.div>
                 </div>
 
