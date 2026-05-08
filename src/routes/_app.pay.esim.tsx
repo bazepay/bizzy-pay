@@ -20,7 +20,9 @@ import {
   Clock,
   Lock,
   Search,
+  Plus,
 } from "lucide-react";
+import { esims, esimStatusMeta, dataPct } from "@/lib/esims";
 
 export const Route = createFileRoute("/_app/pay/esim")({
   head: () => ({
@@ -224,6 +226,7 @@ function EsimPage() {
       </div>
 
       {/* Hero */}
+      {mode !== "topup" && (
       <div className="px-6 mt-5">
         <div
           className="relative overflow-hidden rounded-3xl p-5 transition-colors"
@@ -252,6 +255,7 @@ function EsimPage() {
           </p>
         </div>
       </div>
+      )}
 
       <div className="flex-1 mt-6 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-32 space-y-6">
         {/* Mode toggle */}
@@ -275,7 +279,7 @@ function EsimPage() {
                   sel ? "bg-primary text-primary-foreground shadow" : "text-card-foreground/60"
                 }`}
               >
-                {m === "new" ? "Buy eSIM" : m === "topup" ? "Top up" : "Number"}
+                {m === "new" ? "Buy eSIM" : m === "topup" ? "My eSIMs" : "Number"}
               </button>
             );
           })}
@@ -290,6 +294,8 @@ function EsimPage() {
             autoRenew={vnAutoRenew}
             setAutoRenew={setVnAutoRenew}
           />
+        ) : mode === "topup" ? (
+          <MyEsimsPanel />
         ) : (
           <>
             {/* Mode-specific picker */}
@@ -1469,3 +1475,105 @@ function CountrySelector({
     </div>
   );
 }
+
+function MyEsimsPanel() {
+  const items = esims;
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between px-1">
+        <div>
+          <h2 className="font-display font-bold text-lg tracking-tight">My eSIMs</h2>
+          <p className="text-[11px] text-card-foreground/55 mt-0.5">
+            {items.length} {items.length === 1 ? "eSIM" : "eSIMs"} on this account.
+          </p>
+        </div>
+        <Link
+          to="/pay/esim"
+          className="text-[11px] font-bold text-primary inline-flex items-center gap-1"
+        >
+          <Plus className="w-3.5 h-3.5" /> Buy new
+        </Link>
+      </div>
+
+      {items.length === 0 ? (
+        <div className="rounded-2xl bg-card-foreground/[0.04] p-8 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-service-esim/15 text-service-esim flex items-center justify-center mx-auto">
+            <Wifi className="w-6 h-6" />
+          </div>
+          <p className="font-display font-bold text-base mt-3">No eSIMs yet</p>
+          <p className="text-[12px] text-card-foreground/55 mt-1">
+            Buy your first eSIM to get instant data abroad.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          {items.map((e) => {
+            const s = esimStatusMeta(e.status);
+            const pct = dataPct(e);
+            const unlimited = e.dataTotalGb < 0;
+            const remaining = unlimited
+              ? "Unlimited"
+              : `${(e.dataTotalGb - e.dataUsedGb).toFixed(1)} GB left`;
+            return (
+              <Link
+                key={e.id}
+                to="/esims/$id"
+                params={{ id: e.id }}
+                className="block rounded-2xl bg-card-foreground/[0.04] p-4 active:scale-[0.99] transition"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-service-esim/15 text-service-esim flex items-center justify-center text-xl shrink-0">
+                    {e.flag}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-display font-bold text-base tracking-tight truncate">
+                        {e.label}
+                      </p>
+                      {e.has5g && (
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-primary/15 text-primary">
+                          5G
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-card-foreground/55 mt-0.5 truncate">
+                      {e.planName}
+                    </p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-card-foreground/40 mt-3 shrink-0" />
+                </div>
+
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${s.className}`}
+                  >
+                    {s.label}
+                  </span>
+                  <span className="text-[11px] text-card-foreground/55 tabular-nums">
+                    {e.status === "expired"
+                      ? "Renew to reuse"
+                      : `${remaining} · ${e.daysLeft}d left`}
+                  </span>
+                </div>
+
+                {e.status !== "expired" && !unlimited && (
+                  <div className="mt-2 h-1 rounded-full bg-card-foreground/[0.06] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-service-esim"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      <p className="px-1 text-[11px] text-card-foreground/55 leading-relaxed">
+        Tap any eSIM to view data, top up, or re-download the install QR.
+      </p>
+    </div>
+  );
+}
+
