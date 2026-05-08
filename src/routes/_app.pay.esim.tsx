@@ -275,7 +275,7 @@ function EsimPage() {
                   sel ? "bg-primary text-primary-foreground shadow" : "text-card-foreground/60"
                 }`}
               >
-                {m === "new" ? "Buy eSIM" : m === "topup" ? "Top up" : "Number"}
+                {m === "new" ? "Buy eSIM" : m === "topup" ? "My eSIMs" : "Number"}
               </button>
             );
           })}
