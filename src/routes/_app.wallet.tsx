@@ -627,6 +627,7 @@ function Sheet({
 }
 
 function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [tokenCopied, setTokenCopied] = useState(false);
   const statusTone =
