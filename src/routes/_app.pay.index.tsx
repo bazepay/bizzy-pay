@@ -135,6 +135,8 @@ function PayHub() {
                 ? ({ to: "/pay/betting" } as const)
                 : s.slug === "internet"
                 ? ({ to: "/pay/internet" } as const)
+                : s.slug === "virtual-number"
+                ? ({ to: "/pay/virtual-number" } as const)
                 : ({ to: "/pay/$service", params: { service: s.slug } } as const);
             return (
               <Link
