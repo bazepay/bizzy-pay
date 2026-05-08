@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -22,6 +22,7 @@ import {
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
 import { CurrencySwitcher } from "@/components/currency-switcher";
+import { txns, dayLabel, type Txn } from "@/lib/transactions";
 
 // NGN is the single real wallet. Other currencies are display conversions only.
 const NGN_BASE = 845320.5;
@@ -54,41 +55,14 @@ type Filters = {
 };
 const defaultFilters: Filters = { direction: "all", status: "all", date: "all" };
 
-type Txn = {
-  id: string;
-  title: string;
-  amount: string;
-  isCredit: boolean;
-  time: string;
-  status: "Success" | "Pending" | "Failed";
-  daysAgo: number;
-  category: string;
-  reference: string;
-  method: string;
-  fee: string;
-  note?: string;
-  token?: string;
-  units?: string;
-};
-
-const txns: Txn[] = [
-  { id: "t1", title: "Top up · Visa •• 4421", amount: "+₦250,000.00", isCredit: true, time: "Today · 09:14", status: "Success", daysAgo: 0, category: "Wallet top up", reference: "BZP-9X4K2P-2401", method: "Visa card •• 4421", fee: "₦0.00", note: "Card top up via Stripe" },
-  { id: "t2", title: "MTN Airtime", amount: "-₦5,000.00", isCredit: false, time: "Today · 08:02", status: "Success", daysAgo: 0, category: "Airtime", reference: "BZP-AIR-77241", method: "Wallet · NGN", fee: "₦0.00", note: "+234 803 555 0142" },
-  { id: "t3", title: "Spotify", amount: "-₦1,900.00", isCredit: false, time: "Yesterday · 19:40", status: "Success", daysAgo: 1, category: "Card payment", reference: "BZP-CRD-55102", method: "Naira card •• 8821", fee: "₦0.00" },
-  { id: "t4", title: "Ikeja Electric", amount: "-₦15,000.00", isCredit: false, time: "Yesterday · 11:20", status: "Success", daysAgo: 1, category: "Electricity", reference: "BZP-ELC-38842", method: "Wallet · NGN", fee: "₦100.00", note: "Meter 0123456789", token: "1234 5678 9012 3456", units: "78.4 kWh" },
-  { id: "t5", title: "eSIM · UK 5GB", amount: "-$18.00", isCredit: false, time: "May 5 · 16:00", status: "Success", daysAgo: 2, category: "eSIM", reference: "BZP-ESM-21099", method: "Wallet · USD", fee: "$0.00", note: "30 days · United Kingdom" },
-  { id: "t6", title: "DStv Compact+", amount: "-₦19,800.00", isCredit: false, time: "May 4 · 10:00", status: "Success", daysAgo: 3, category: "TV subscription", reference: "BZP-TV-44820", method: "Wallet · NGN", fee: "₦0.00", note: "IUC 7012345678" },
-  { id: "t7", title: "From Tunde A.", amount: "+₦50,000.00", isCredit: true, time: "May 3 · 14:32", status: "Success", daysAgo: 4, category: "Bank transfer", reference: "BZP-TRF-19023", method: "GTBank · 0123456789", fee: "₦0.00", note: "Lunch money" },
-  { id: "t8", title: "SportyBet Top-up", amount: "-₦10,000.00", isCredit: false, time: "May 2 · 20:11", status: "Pending", daysAgo: 5, category: "Betting", reference: "BZP-BET-77231", method: "Wallet · NGN", fee: "₦0.00", note: "User: ada42" },
-];
 
 function WalletPage() {
+  const navigate = useNavigate();
   const [active, setActive] = useState<CurrencyCode>("NGN");
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
-  const [detail, setDetail] = useState<Txn | null>(null);
 
   const dayLimit =
     filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
@@ -196,43 +170,57 @@ function WalletPage() {
           )}
         </div>
 
-        {/* Flat list */}
-        <div className="mt-5 space-y-3">
-          {filtered.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setDetail(t)}
-              className="w-full flex items-center gap-3 text-left -mx-2 px-2 py-1 rounded-xl active:bg-card-foreground/[0.04] transition"
-            >
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
-                }`}
-              >
-                {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate">{t.title}</p>
-                <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time}</p>
-              </div>
-              <div className="text-right">
-                <p
-                  className={`text-sm font-bold ${
-                    t.isCredit ? "text-primary" : "text-card-foreground"
-                  }`}
-                >
-                  {t.amount}
+        {/* Day-grouped list */}
+        <div className="mt-5 space-y-6">
+          {(() => {
+            const groups = new Map<number, Txn[]>();
+            for (const t of filtered) {
+              const arr = groups.get(t.daysAgo) ?? [];
+              arr.push(t);
+              groups.set(t.daysAgo, arr);
+            }
+            const sortedKeys = [...groups.keys()].sort((a, b) => a - b);
+            return sortedKeys.map((d) => (
+              <div key={d}>
+                <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-card-foreground/45 mb-2 px-1">
+                  {dayLabel(d)}
                 </p>
-                <p
-                  className={`text-[10px] mt-0.5 font-semibold ${
-                    t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
-                  }`}
-                >
-                  {t.status}
-                </p>
+                <div className="space-y-1">
+                  {groups.get(d)!.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => navigate({ to: "/transaction/$id", params: { id: t.id } })}
+                      className="w-full flex items-center gap-3 text-left -mx-2 px-2 py-2 rounded-xl active:bg-card-foreground/[0.04] transition"
+                    >
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          t.isCredit ? "bg-success/15 text-success" : "bg-accent text-card-foreground/70"
+                        }`}
+                      >
+                        {t.isCredit ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm truncate">{t.title}</p>
+                        <p className="text-[11px] text-card-foreground/45 mt-0.5">{t.time.split(" · ")[1] ?? t.time}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-sm font-bold ${t.isCredit ? "text-primary" : "text-card-foreground"}`}>
+                          {t.amount}
+                        </p>
+                        <p
+                          className={`text-[10px] mt-0.5 font-semibold ${
+                            t.status === "Pending" ? "text-orange-500" : "text-card-foreground/40"
+                          }`}
+                        >
+                          {t.status}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </button>
-          ))}
+            ));
+          })()}
           {filtered.length === 0 && (
             <p className="text-center text-sm text-card-foreground/40 py-10">
               No transactions match your filters.
@@ -249,7 +237,7 @@ function WalletPage() {
           onClose={() => setFilterOpen(false)}
         />
       )}
-      {detail && <TxnDetailSheet txn={detail} onClose={() => setDetail(null)} />}
+      
 
       <BottomNav />
     </div>

@@ -11,6 +11,7 @@ import {
   Phone,
   Wifi,
 } from "lucide-react";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
 import { CurrencySwitcher } from "@/components/currency-switcher";
@@ -18,6 +19,16 @@ import { CurrencySwitcher } from "@/components/currency-switcher";
 export const Route = createFileRoute("/_app/home")({
   component: HomePage,
 });
+
+const spendData = [
+  { day: "Mon", spent: 18 },
+  { day: "Tue", spent: 32 },
+  { day: "Wed", spent: 12 },
+  { day: "Thu", spent: 47 },
+  { day: "Fri", spent: 28 },
+  { day: "Sat", spent: 64 },
+  { day: "Sun", spent: 41 },
+];
 
 const services = [
   { label: "eSIM", icon: Wifi, token: "service-esim", slug: "esim" },
@@ -66,6 +77,62 @@ function HomePage() {
       <div className="px-6 mt-6 grid grid-cols-2 gap-3">
         <StatCard label="Topped up" amount="₦1.2M" delta="+18%" sub="vs last month" positive />
         <StatCard label="Spent" amount="₦654K" delta="-8%" sub="vs last month" positive={false} />
+      </div>
+
+      {/* Spend chart */}
+      <div className="px-6 mt-3">
+        <div className="rounded-2xl bg-white/[0.05] border border-white/10 p-4 pr-2">
+          <div className="flex items-end justify-between pr-2">
+            <div>
+              <p className="text-[11px] text-foreground/55 font-semibold">This week</p>
+              <p className="font-display text-lg font-bold mt-0.5">
+                ₦242K <span className="text-foreground/40 text-xs font-medium">spent</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-lime" />
+              <span className="text-[10px] text-foreground/55 font-semibold">Daily spend</span>
+            </div>
+          </div>
+          <div className="h-24 mt-2 -ml-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={spendData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="oklch(0.92 0.21 120)" stopOpacity={0.45} />
+                    <stop offset="100%" stopColor="oklch(0.92 0.21 120)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="day"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "oklch(0.98 0.005 260 / 0.45)", fontSize: 10, fontWeight: 600 }}
+                  dy={4}
+                />
+                <Tooltip
+                  cursor={{ stroke: "oklch(0.98 0.005 260 / 0.15)", strokeWidth: 1 }}
+                  contentStyle={{
+                    background: "oklch(0.16 0.03 280)",
+                    border: "1px solid oklch(0.98 0.005 260 / 0.1)",
+                    borderRadius: 12,
+                    fontSize: 11,
+                    color: "oklch(0.98 0.005 260)",
+                  }}
+                  labelStyle={{ color: "oklch(0.98 0.005 260 / 0.55)", fontWeight: 600 }}
+                  formatter={(v: number) => [`₦${v}K`, "Spent"]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="spent"
+                  stroke="oklch(0.92 0.21 120)"
+                  strokeWidth={2}
+                  fill="url(#spendFill)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Sheet */}
