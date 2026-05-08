@@ -5,6 +5,21 @@ import { PhoneFrame } from "@/components/phone-frame";
 import { ArrowLeft, ArrowRight, Mail, Shield, Search, Check, ChevronDown, X } from "lucide-react";
 import { COUNTRIES, DIAL_CODES } from "@/lib/countries";
 
+function Flag({ code, className = "w-7 h-5" }: { code: string; className?: string }) {
+  const lower = code.toLowerCase();
+  return (
+    <img
+      src={`https://flagcdn.com/w80/${lower}.png`}
+      srcSet={`https://flagcdn.com/w160/${lower}.png 2x`}
+      width={32}
+      height={24}
+      alt=""
+      className={`${className} rounded-[3px] object-cover shadow-sm shrink-0`}
+      loading="lazy"
+    />
+  );
+}
+
 export const Route = createFileRoute("/auth/signup")({
   head: () => ({
     meta: [
@@ -134,9 +149,8 @@ function Signup() {
                   onClick={() => setPickerOpen(true)}
                   className="mt-2 w-full h-14 px-4 rounded-2xl bg-muted text-left flex items-center gap-3 border border-transparent hover:border-primary/30 transition"
                 >
-                  <span className="text-2xl leading-none">{country.flag}</span>
+                  <Flag code={country.code} />
                   <span className="flex-1 text-[15px] font-medium">{country.name}</span>
-                  <span className="text-[13px] text-card-foreground/50">+{dial}</span>
                   <ChevronDown className="w-4 h-4 text-card-foreground/40" />
                 </button>
 
@@ -150,7 +164,7 @@ function Signup() {
                     onClick={() => setPickerOpen(true)}
                     className="h-14 px-4 rounded-2xl bg-muted flex items-center gap-2 hover:border-primary/30 border border-transparent transition shrink-0"
                   >
-                    <span className="text-xl leading-none">{country.flag}</span>
+                    <Flag code={country.code} className="w-6 h-[18px]" />
                     <span className="text-[14px] font-semibold text-card-foreground/80">+{dial}</span>
                   </button>
                   <input
@@ -311,7 +325,7 @@ function Signup() {
                           selected ? "bg-primary/10" : "hover:bg-muted"
                         }`}
                       >
-                        <span className="text-2xl leading-none">{c.flag}</span>
+                        <Flag code={c.code} />
                         <span className="flex-1 text-[14.5px] font-medium">{c.name}</span>
                         <span className="text-[12.5px] text-card-foreground/50">
                           +{DIAL_CODES[c.code] ?? ""}
