@@ -1,0 +1,192 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, Send, Sparkles, Phone } from "lucide-react";
+
+export const Route = createFileRoute("/_app/profile_/help/chat")({
+  head: () => ({
+    meta: [
+      { title: "Support chat — BazePay" },
+      { name: "description", content: "Chat with BazePay support." },
+    ],
+  }),
+  component: SupportChat,
+});
+
+type Msg = { id: string; from: "me" | "agent"; text: string; at: string };
+
+const QUICK = [
+  "I can't fund my wallet",
+  "My card was declined",
+  "Reverse a transaction",
+  "Upgrade my account tier",
+];
+
+function botReply(input: string): string {
+  const q = input.toLowerCase();
+  if (q.includes("fund") || q.includes("deposit"))
+    return "Got it. Funding usually clears within 30 seconds. Could you share the time of the transfer and the bank used?";
+  if (q.includes("decline") || q.includes("card"))
+    return "Sorry about that. Most declines are due to insufficient balance or a merchant block. Want me to check the last 5 attempts on your card?";
+  if (q.includes("revers") || q.includes("refund"))
+    return "I can raise a reversal. Please send the transaction reference (BZP-…) and I'll trace it with our partner bank.";
+  if (q.includes("tier") || q.includes("upgrade") || q.includes("limit"))
+    return "Upgrading to Tier 3 takes about 2 minutes. Open Profile → Verification → Upgrade and have your utility bill ready.";
+  if (q.includes("airtime") || q.includes("data") || q.includes("bill"))
+    return "Bill purchases are instant. If it didn't deliver in 2 minutes you'll see an automatic reversal in your wallet.";
+  if (q.includes("pin") || q.includes("password"))
+    return "You can reset your PIN from Profile → Security → Reset PIN. We'll verify via your phone number.";
+  if (q.length < 6)
+    return "Could you tell me a bit more about what's happening so I can help?";
+  return "Thanks — a specialist is jumping in. In the meantime, can you share the date, amount, and reference of the transaction?";
+}
+
+const now = () =>
+  new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+function SupportChat() {
+  const navigate = useNavigate();
+  const [messages, setMessages] = useState<Msg[]>([
+    {
+      id: "m0",
+      from: "agent",
+      text: "Hi, I'm Ada from BazePay support. How can I help today?",
+      at: now(),
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
+  const scroller = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
+  }, [messages, typing]);
+
+  const send = (text: string) => {
+    const t = text.trim();
+    if (!t) return;
+    const mine: Msg = { id: `m-${Date.now()}`, from: "me", text: t, at: now() };
+    setMessages((m) => [...m, mine]);
+    setInput("");
+    setTyping(true);
+    setTimeout(() => {
+      const reply: Msg = {
+        id: `m-${Date.now() + 1}`,
+        from: "agent",
+        text: botReply(t),
+        at: now(),
+      };
+      setMessages((m) => [...m, reply]);
+      setTyping(false);
+    }, 900 + Math.random() * 700);
+  };
+
+  return (
+    <div className="min-h-full h-full flex flex-col bg-card text-card-foreground">
+      <header className="px-5 pt-12 pb-3 flex items-center gap-3 border-b border-card-foreground/[0.06]">
+        <button
+          onClick={() => navigate({ to: "/profile/help" })}
+          className="w-10 h-10 rounded-full bg-card-foreground/[0.06] flex items-center justify-center"
+          aria-label="Back"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <div className="flex-1 min-w-0">
+          <p className="font-display font-bold text-base leading-tight">Ada · BazePay</p>
+          <p className="text-[11px] text-card-foreground/55 inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-success" /> Online · usually replies in 1 min
+          </p>
+        </div>
+        <button
+          className="w-10 h-10 rounded-full bg-card-foreground/[0.06] flex items-center justify-center"
+          aria-label="Call support"
+        >
+          <Phone className="w-4 h-4" />
+        </button>
+      </header>
+
+      <div ref={scroller} className="flex-1 overflow-y-auto no-scrollbar px-5 py-4 space-y-3">
+        {messages.map((m) => {
+          const mine = m.from === "me";
+          return (
+            <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+              <div className="max-w-[78%]">
+                <div
+                  className={`px-3.5 py-2.5 rounded-2xl text-sm leading-snug ${
+                    mine
+                      ? "bg-primary text-primary-foreground rounded-br-md"
+                      : "bg-card-foreground/[0.06] rounded-bl-md"
+                  }`}
+                >
+                  {m.text}
+                </div>
+                <p className={`text-[10px] text-card-foreground/45 mt-1 ${mine ? "text-right" : "text-left"}`}>
+                  {m.at}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+        {typing && (
+          <div className="flex justify-start">
+            <div className="px-3.5 py-3 rounded-2xl rounded-bl-md bg-card-foreground/[0.06] flex items-center gap-1">
+              <Dot delay={0} />
+              <Dot delay={150} />
+              <Dot delay={300} />
+            </div>
+          </div>
+        )}
+
+        {messages.length === 1 && (
+          <div className="pt-2">
+            <p className="text-[10px] uppercase tracking-widest text-card-foreground/45 font-bold mb-2 inline-flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3" /> Quick topics
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {QUICK.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => send(q)}
+                  className="px-3 py-1.5 rounded-full bg-card-foreground/[0.05] text-xs font-semibold active:scale-95 transition"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          send(input);
+        }}
+        className="px-5 pt-3 pb-6 border-t border-card-foreground/[0.06] flex items-center gap-2"
+      >
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type a message…"
+          className="flex-1 h-12 rounded-full bg-card-foreground/[0.06] px-4 text-sm outline-none focus:ring-2 ring-primary/40"
+        />
+        <button
+          type="submit"
+          disabled={!input.trim()}
+          className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 active:scale-95 transition"
+          aria-label="Send"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function Dot({ delay }: { delay: number }) {
+  return (
+    <span
+      className="w-1.5 h-1.5 rounded-full bg-card-foreground/50 animate-bounce"
+      style={{ animationDelay: `${delay}ms`, animationDuration: "1s" }}
+    />
+  );
+}

@@ -137,8 +137,8 @@ function HelpCenterPage() {
         </div>
 
         <button
-          onClick={() => navigate({ to: "/profile" })}
-          className="mt-7 w-full h-12 rounded-2xl bg-card-foreground/[0.05] flex items-center justify-center gap-2 text-sm font-semibold active:scale-[0.99] transition"
+          onClick={() => navigate({ to: "/profile/help/chat" })}
+          className="mt-7 w-full h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center gap-2 text-sm font-semibold active:scale-[0.99] transition"
         >
           <MessageCircle className="w-4 h-4" />
           Still need help? Chat with us

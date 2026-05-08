@@ -352,7 +352,7 @@ function LimitsSheet({
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
-      <div className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-300">
+      <div className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[85vh] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300">
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
         <div className="px-6 mt-4 flex items-center justify-between">
           <h3 className="font-display font-bold text-lg">Limits & controls</h3>

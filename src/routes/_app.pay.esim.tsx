@@ -1003,6 +1003,28 @@ function SuccessSheet({
           </div>
         )}
 
+        {!isTopup && (
+          <div className="mx-6 mt-3 rounded-2xl bg-card-foreground/[0.04] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-card-foreground/55 mb-2">
+              Activate in 3 steps
+            </p>
+            <ol className="space-y-1.5">
+              {[
+                "Settings → Cellular / Mobile Data → Add eSIM",
+                "Tap Use QR Code and scan the QR above",
+                "Label as Travel and turn on data roaming",
+              ].map((s, i) => (
+                <li key={i} className="flex gap-2.5 text-[12px] leading-relaxed">
+                  <span className="shrink-0 w-4 h-4 rounded-full bg-card-foreground/[0.08] flex items-center justify-center text-[9px] font-bold mt-0.5">
+                    {i + 1}
+                  </span>
+                  <span className="text-card-foreground/75">{s}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
         <div className="mx-6 mt-3 rounded-2xl bg-card-foreground/[0.04] px-4 py-3 flex items-center justify-between">
           <p className="text-[12px] text-card-foreground/55">Reference</p>
           <p className="text-[13px] font-semibold">{ref}</p>
