@@ -485,21 +485,21 @@ function EditProfileSheet({
 }: {
   open: boolean;
   onClose: () => void;
-  user: { name: string; email: string; phone: string };
-  onSave: (name: string, email: string, phone: string) => void;
+  user: { name: string; email: string; phone: string; initials: string; avatar: string };
+  onSave: (avatar: string) => void;
 }) {
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [phone, setPhone] = useState(user.phone);
+  const [avatar, setAvatar] = useState(user.avatar);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  // sync when reopened
   useEffect(() => {
-    if (open) {
-      setName(user.name);
-      setEmail(user.email);
-      setPhone(user.phone);
-    }
+    if (open) setAvatar(user.avatar);
   }, [open, user]);
+
+  const handleFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => setAvatar(String(reader.result));
+    reader.readAsDataURL(file);
+  };
 
   return (
     <AnimatePresence>
@@ -517,24 +517,59 @@ function EditProfileSheet({
           >
             <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
             <div className="flex items-center justify-between mt-3">
-              <p className="font-display text-lg font-bold">Edit profile</p>
+              <p className="font-display text-lg font-bold">Profile photo</p>
               <button onClick={onClose} className="w-8 h-8 rounded-full bg-card-foreground/[0.06] flex items-center justify-center">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="mt-5 space-y-3">
-              <Field label="Full name" value={name} onChange={setName} />
-              <Field label="Email" value={email} onChange={setEmail} type="email" />
-              <Field label="Phone" value={phone} onChange={setPhone} type="tel" />
+            <div className="mt-6 flex flex-col items-center">
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="relative w-28 h-28 rounded-full bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.82_0.16_85)] text-white flex items-center justify-center font-display text-3xl font-bold shadow-lg overflow-hidden active:scale-95 transition"
+                aria-label="Change photo"
+              >
+                {avatar ? (
+                  <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  user.initials
+                )}
+                <span className="absolute bottom-0 inset-x-0 h-8 bg-black/45 text-white text-[10px] font-semibold uppercase tracking-widest flex items-center justify-center">
+                  Change
+                </span>
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                }}
+              />
+              {avatar && (
+                <button
+                  onClick={() => setAvatar("")}
+                  className="mt-3 text-xs font-semibold text-destructive"
+                >
+                  Remove photo
+                </button>
+              )}
+            </div>
+
+            <div className="mt-6 rounded-2xl bg-card-foreground/[0.04] p-4">
+              <p className="text-[11px] uppercase tracking-widest text-card-foreground/55 font-semibold">Locked by KYC</p>
+              <p className="text-xs text-card-foreground/65 mt-1.5 leading-relaxed">
+                Your name, email and phone are tied to your verified identity and can't be edited here. Contact support if these need to change.
+              </p>
             </div>
 
             <button
-              onClick={() => onSave(name.trim(), email.trim(), phone.trim())}
-              disabled={!name.trim() || !email.trim() || !phone.trim()}
-              className="mt-6 w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-40 active:scale-[0.98] transition"
+              onClick={() => onSave(avatar)}
+              className="mt-6 w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm active:scale-[0.98] transition"
             >
-              Save changes
+              Save photo
             </button>
           </motion.div>
         </>
