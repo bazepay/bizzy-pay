@@ -125,7 +125,7 @@ function Login() {
               <button
                 disabled={!canSubmit}
                 onClick={() => nav({ to: "/home" })}
-                className="group flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
+                className="group flex-1 flex items-center justify-center gap-2 h-14 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
               >
                 Sign in
                 <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />

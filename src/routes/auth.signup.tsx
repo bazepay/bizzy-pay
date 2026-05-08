@@ -50,8 +50,8 @@ function Signup() {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="flex items-center gap-1.5">
-            <div className={`h-[3px] w-8 rounded-full ${step === "identifier" ? "bg-lime" : "bg-lime/40"}`} />
-            <div className={`h-[3px] w-8 rounded-full ${step === "otp" ? "bg-lime" : "bg-white/15"}`} />
+            <div className={`h-[3px] w-8 rounded-full ${step === "identifier" ? "bg-primary" : "bg-primary/40"}`} />
+            <div className={`h-[3px] w-8 rounded-full ${step === "otp" ? "bg-primary" : "bg-white/15"}`} />
           </div>
           <div className="w-10" />
         </header>
@@ -162,7 +162,7 @@ function Signup() {
                   <button
                     disabled={!canContinue}
                     onClick={() => setStep("otp")}
-                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
+                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
                   >
                     Send code
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
@@ -214,7 +214,7 @@ function Signup() {
                 <div className="mt-auto">
                   <button
                     onClick={() => nav({ to: "/kyc" })}
-                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition"
+                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition"
                   >
                     Verify & continue
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
