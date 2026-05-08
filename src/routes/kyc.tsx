@@ -545,7 +545,13 @@ function CountryStep({
                       onClick={() => onSelect(c)}
                       className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-card-foreground/[0.06] transition"
                     >
-                      <span className="text-2xl leading-none">{c.flag}</span>
+                      <img
+                        src={`https://flagcdn.com/w80/${c.code.toLowerCase()}.png`}
+                        srcSet={`https://flagcdn.com/w160/${c.code.toLowerCase()}.png 2x`}
+                        alt=""
+                        loading="lazy"
+                        className="w-8 h-6 rounded-sm object-cover shrink-0 ring-1 ring-card-foreground/10"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold truncate">{c.name}</p>
                         <p className="text-[11px] text-card-foreground/55">
