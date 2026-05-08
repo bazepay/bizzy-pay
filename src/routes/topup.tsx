@@ -328,6 +328,7 @@ function TopupFlow() {
         )}
       </AnimatePresence>
     </div>
+    {pinGate}
     </PhoneFrame>
   );
 }
