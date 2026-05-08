@@ -158,40 +158,22 @@ function ProfilePage() {
 
         {/* Referrals */}
         <SectionTitle>Refer & earn</SectionTitle>
-        <div className="rounded-3xl bg-card-foreground/[0.03] p-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[oklch(0.82_0.16_85)]/20 flex items-center justify-center text-[oklch(0.55_0.15_85)]">
+        <button
+          onClick={() => navigate({ to: "/profile/referrals" })}
+          className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.42_0.16_290)] text-white p-5 text-left active:scale-[0.99] transition shadow-lg"
+        >
+          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-[oklch(0.82_0.16_85)]/30 blur-2xl" />
+          <div className="relative flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
               <Gift className="w-5 h-5" />
             </div>
-            <div>
-              <p className="font-display font-bold text-sm">Earn ₦2,000 per friend</p>
-              <p className="text-xs text-card-foreground/55">They get ₦2,000 when they fund their wallet.</p>
+            <div className="flex-1 min-w-0">
+              <p className="font-display font-bold text-base">Earn ₦2,000 per friend</p>
+              <p className="text-xs text-white/75 mt-0.5">{user.referralCount} invited · {user.referralEarned} earned</p>
             </div>
+            <ChevronRight className="w-5 h-5 text-white/70" />
           </div>
-
-          <button
-            onClick={copyCode}
-            className="mt-4 w-full flex items-center justify-between px-4 h-12 rounded-2xl bg-card border border-card-foreground/10 active:scale-[0.99] transition"
-          >
-            <div className="text-left">
-              <p className="text-[10px] uppercase tracking-widest text-card-foreground/50">Your code</p>
-              <p className="font-display font-bold tracking-wider">{user.referralCode}</p>
-            </div>
-            <Copy className="w-4 h-4 text-card-foreground/50" />
-          </button>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <Stat label="Friends invited" value={String(user.referralCount)} />
-            <Stat label="Total earned" value={user.referralEarned} />
-          </div>
-
-          <button
-            onClick={shareCode}
-            className="mt-4 w-full h-11 rounded-full bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition"
-          >
-            <Share2 className="w-4 h-4" /> Share invite
-          </button>
-        </div>
+        </button>
 
         {/* Support */}
         <SectionTitle>Help & support</SectionTitle>
