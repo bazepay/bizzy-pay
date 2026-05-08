@@ -23,6 +23,8 @@ import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppNumbersIndexRouteImport } from './routes/_app.numbers.index'
 import { Route as AppEsimsIndexRouteImport } from './routes/_app.esims.index'
 import { Route as AppCardsIndexRouteImport } from './routes/_app.cards.index'
+import { Route as AppProfileLegalRouteImport } from './routes/_app.profile.legal'
+import { Route as AppProfileHelpRouteImport } from './routes/_app.profile.help'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
 import { Route as AppPayInternetRouteImport } from './routes/_app.pay.internet'
 import { Route as AppPayEsimRouteImport } from './routes/_app.pay.esim'
@@ -35,6 +37,7 @@ import { Route as AppNumbersIdRouteImport } from './routes/_app.numbers.$id'
 import { Route as AppEsimsIdRouteImport } from './routes/_app.esims.$id'
 import { Route as AppCardsNewRouteImport } from './routes/_app.cards.new'
 import { Route as AppCardsIdRouteImport } from './routes/_app.cards.$id'
+import { Route as AppProfileSecurityPinRouteImport } from './routes/_app.profile.security.pin'
 import { Route as AppCardsIdTxnTxnIdRouteImport } from './routes/_app.cards.$id_.txn.$txnId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -106,6 +109,16 @@ const AppCardsIndexRoute = AppCardsIndexRouteImport.update({
   path: '/cards/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileLegalRoute = AppProfileLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => AppProfileRoute,
+} as any)
+const AppProfileHelpRoute = AppProfileHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => AppProfileRoute,
+} as any)
 const AppPayTvRoute = AppPayTvRouteImport.update({
   id: '/tv',
   path: '/tv',
@@ -166,6 +179,11 @@ const AppCardsIdRoute = AppCardsIdRouteImport.update({
   path: '/cards/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileSecurityPinRoute = AppProfileSecurityPinRouteImport.update({
+  id: '/security/pin',
+  path: '/security/pin',
+  getParentRoute: () => AppProfileRoute,
+} as any)
 const AppCardsIdTxnTxnIdRoute = AppCardsIdTxnTxnIdRouteImport.update({
   id: '/cards/$id_/txn/$txnId',
   path: '/cards/$id/txn/$txnId',
@@ -178,7 +196,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
   '/pay': typeof AppPayRouteWithChildren
-  '/profile': typeof AppProfileRoute
+  '/profile': typeof AppProfileRouteWithChildren
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -194,10 +212,13 @@ export interface FileRoutesByFullPath {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/profile/help': typeof AppProfileHelpRoute
+  '/profile/legal': typeof AppProfileLegalRoute
   '/cards/': typeof AppCardsIndexRoute
   '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
   '/pay/': typeof AppPayIndexRoute
+  '/profile/security/pin': typeof AppProfileSecurityPinRoute
   '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRoutesByTo {
@@ -205,7 +226,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/onboarding': typeof OnboardingRoute
   '/home': typeof AppHomeRoute
-  '/profile': typeof AppProfileRoute
+  '/profile': typeof AppProfileRouteWithChildren
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -221,10 +242,13 @@ export interface FileRoutesByTo {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/profile/help': typeof AppProfileHelpRoute
+  '/profile/legal': typeof AppProfileLegalRoute
   '/cards': typeof AppCardsIndexRoute
   '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
   '/pay': typeof AppPayIndexRoute
+  '/profile/security/pin': typeof AppProfileSecurityPinRoute
   '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRoutesById {
@@ -235,7 +259,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/_app/home': typeof AppHomeRoute
   '/_app/pay': typeof AppPayRouteWithChildren
-  '/_app/profile': typeof AppProfileRoute
+  '/_app/profile': typeof AppProfileRouteWithChildren
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -251,10 +275,13 @@ export interface FileRoutesById {
   '/_app/pay/esim': typeof AppPayEsimRoute
   '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
+  '/_app/profile/help': typeof AppProfileHelpRoute
+  '/_app/profile/legal': typeof AppProfileLegalRoute
   '/_app/cards/': typeof AppCardsIndexRoute
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
+  '/_app/profile/security/pin': typeof AppProfileSecurityPinRoute
   '/_app/cards/$id_/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRouteTypes {
@@ -281,10 +308,13 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/profile/help'
+    | '/profile/legal'
     | '/cards/'
     | '/esims/'
     | '/numbers/'
     | '/pay/'
+    | '/profile/security/pin'
     | '/cards/$id/txn/$txnId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -308,10 +338,13 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/profile/help'
+    | '/profile/legal'
     | '/cards'
     | '/esims'
     | '/numbers'
     | '/pay'
+    | '/profile/security/pin'
     | '/cards/$id/txn/$txnId'
   id:
     | '__root__'
@@ -337,10 +370,13 @@ export interface FileRouteTypes {
     | '/_app/pay/esim'
     | '/_app/pay/internet'
     | '/_app/pay/tv'
+    | '/_app/profile/help'
+    | '/_app/profile/legal'
     | '/_app/cards/'
     | '/_app/esims/'
     | '/_app/numbers/'
     | '/_app/pay/'
+    | '/_app/profile/security/pin'
     | '/_app/cards/$id_/txn/$txnId'
   fileRoutesById: FileRoutesById
 }
@@ -453,6 +489,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCardsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/profile/legal': {
+      id: '/_app/profile/legal'
+      path: '/legal'
+      fullPath: '/profile/legal'
+      preLoaderRoute: typeof AppProfileLegalRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
+    '/_app/profile/help': {
+      id: '/_app/profile/help'
+      path: '/help'
+      fullPath: '/profile/help'
+      preLoaderRoute: typeof AppProfileHelpRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
     '/_app/pay/tv': {
       id: '/_app/pay/tv'
       path: '/tv'
@@ -537,6 +587,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCardsIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/profile/security/pin': {
+      id: '/_app/profile/security/pin'
+      path: '/security/pin'
+      fullPath: '/profile/security/pin'
+      preLoaderRoute: typeof AppProfileSecurityPinRouteImport
+      parentRoute: typeof AppProfileRoute
+    }
     '/_app/cards/$id_/txn/$txnId': {
       id: '/_app/cards/$id_/txn/$txnId'
       path: '/cards/$id/txn/$txnId'
@@ -574,10 +631,26 @@ const AppPayRouteChildren: AppPayRouteChildren = {
 const AppPayRouteWithChildren =
   AppPayRoute._addFileChildren(AppPayRouteChildren)
 
+interface AppProfileRouteChildren {
+  AppProfileHelpRoute: typeof AppProfileHelpRoute
+  AppProfileLegalRoute: typeof AppProfileLegalRoute
+  AppProfileSecurityPinRoute: typeof AppProfileSecurityPinRoute
+}
+
+const AppProfileRouteChildren: AppProfileRouteChildren = {
+  AppProfileHelpRoute: AppProfileHelpRoute,
+  AppProfileLegalRoute: AppProfileLegalRoute,
+  AppProfileSecurityPinRoute: AppProfileSecurityPinRoute,
+}
+
+const AppProfileRouteWithChildren = AppProfileRoute._addFileChildren(
+  AppProfileRouteChildren,
+)
+
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppPayRoute: typeof AppPayRouteWithChildren
-  AppProfileRoute: typeof AppProfileRoute
+  AppProfileRoute: typeof AppProfileRouteWithChildren
   AppWalletRoute: typeof AppWalletRoute
   AppCardsIdRoute: typeof AppCardsIdRoute
   AppCardsNewRoute: typeof AppCardsNewRoute
@@ -592,7 +665,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
   AppPayRoute: AppPayRouteWithChildren,
-  AppProfileRoute: AppProfileRoute,
+  AppProfileRoute: AppProfileRouteWithChildren,
   AppWalletRoute: AppWalletRoute,
   AppCardsIdRoute: AppCardsIdRoute,
   AppCardsNewRoute: AppCardsNewRoute,
@@ -617,13 +690,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
