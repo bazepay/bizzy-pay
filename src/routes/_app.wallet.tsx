@@ -57,12 +57,12 @@ const defaultFilters: Filters = { direction: "all", status: "all", date: "all" }
 
 
 function WalletPage() {
+  const navigate = useNavigate();
   const [active, setActive] = useState<CurrencyCode>("NGN");
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
-  const [detail, setDetail] = useState<Txn | null>(null);
 
   const dayLimit =
     filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
