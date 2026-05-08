@@ -19,7 +19,9 @@ import { Route as AppWalletRouteImport } from './routes/_app.wallet'
 import { Route as AppPayRouteImport } from './routes/_app.pay'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
+import { Route as AppPayVirtualNumberRouteImport } from './routes/_app.pay.virtual-number'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
+import { Route as AppPayVirtualNumberRouteImport } from './routes/_app.pay.virtual-number'
 import { Route as AppPayInternetRouteImport } from './routes/_app.pay.internet'
 import { Route as AppPayEsimRouteImport } from './routes/_app.pay.esim'
 import { Route as AppPayElectricityRouteImport } from './routes/_app.pay.electricity'
@@ -75,6 +77,11 @@ const AppHomeRoute = AppHomeRouteImport.update({
 const AppPayIndexRoute = AppPayIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppPayRoute,
+} as any)
+const AppPayVirtualNumberRoute = AppPayVirtualNumberRouteImport.update({
+  id: '/virtual-number',
+  path: '/virtual-number',
   getParentRoute: () => AppPayRoute,
 } as any)
 const AppPayTvRoute = AppPayTvRouteImport.update({
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/pay/virtual-number': typeof AppPayVirtualNumberRoute
   '/pay/': typeof AppPayIndexRoute
 }
 export interface FileRoutesByTo {
@@ -153,6 +161,7 @@ export interface FileRoutesByTo {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/pay/virtual-number': typeof AppPayVirtualNumberRoute
   '/pay': typeof AppPayIndexRoute
 }
 export interface FileRoutesById {
@@ -174,6 +183,7 @@ export interface FileRoutesById {
   '/_app/pay/esim': typeof AppPayEsimRoute
   '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
+  '/_app/pay/virtual-number': typeof AppPayVirtualNumberRoute
   '/_app/pay/': typeof AppPayIndexRoute
 }
 export interface FileRouteTypes {
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/pay/virtual-number'
     | '/pay/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/pay/virtual-number'
     | '/pay'
   id:
     | '__root__'
@@ -233,6 +245,7 @@ export interface FileRouteTypes {
     | '/_app/pay/esim'
     | '/_app/pay/internet'
     | '/_app/pay/tv'
+    | '/_app/pay/virtual-number'
     | '/_app/pay/'
   fileRoutesById: FileRoutesById
 }
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPayIndexRouteImport
       parentRoute: typeof AppPayRoute
     }
+    '/_app/pay/virtual-number': {
+      id: '/_app/pay/virtual-number'
+      path: '/virtual-number'
+      fullPath: '/pay/virtual-number'
+      preLoaderRoute: typeof AppPayVirtualNumberRouteImport
+      parentRoute: typeof AppPayRoute
+    }
     '/_app/pay/tv': {
       id: '/_app/pay/tv'
       path: '/tv'
@@ -385,6 +405,7 @@ interface AppPayRouteChildren {
   AppPayEsimRoute: typeof AppPayEsimRoute
   AppPayInternetRoute: typeof AppPayInternetRoute
   AppPayTvRoute: typeof AppPayTvRoute
+  AppPayVirtualNumberRoute: typeof AppPayVirtualNumberRoute
   AppPayIndexRoute: typeof AppPayIndexRoute
 }
 
@@ -397,6 +418,7 @@ const AppPayRouteChildren: AppPayRouteChildren = {
   AppPayEsimRoute: AppPayEsimRoute,
   AppPayInternetRoute: AppPayInternetRoute,
   AppPayTvRoute: AppPayTvRoute,
+  AppPayVirtualNumberRoute: AppPayVirtualNumberRoute,
   AppPayIndexRoute: AppPayIndexRoute,
 }
 
