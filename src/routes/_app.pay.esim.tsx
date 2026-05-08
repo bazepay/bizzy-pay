@@ -1242,12 +1242,14 @@ function VnSuccessSheet({
   number,
   autoRenew,
   onDone,
+  onOpenInbox,
 }: {
   country: VnCountry;
   plan: VnPlan;
   number: string;
   autoRenew: boolean;
   onDone: () => void;
+  onOpenInbox: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const ref = `BZP-VN-${Math.floor(Math.random() * 90000 + 10000)}`;
@@ -1293,14 +1295,20 @@ function VnSuccessSheet({
 
         <div className="mx-6 mt-3 rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
           <Row label="Auto-renew" value={autoRenew ? "On" : "Off"} />
-          <Row label="Inbox" value="View SMS in dashboard" />
+          <Row label="Inbox" value="Live SMS · view now" />
           <Row label="Reference" value={ref} />
         </div>
 
-        <div className="px-6 mt-5">
+        <div className="px-6 mt-5 space-y-2">
+          <button
+            onClick={onOpenInbox}
+            className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm"
+          >
+            Open Inbox
+          </button>
           <button
             onClick={onDone}
-            className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm"
+            className="w-full h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm"
           >
             Done
           </button>
