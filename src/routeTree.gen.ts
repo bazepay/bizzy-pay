@@ -37,6 +37,7 @@ import { Route as AppNumbersIdRouteImport } from './routes/_app.numbers.$id'
 import { Route as AppEsimsIdRouteImport } from './routes/_app.esims.$id'
 import { Route as AppCardsNewRouteImport } from './routes/_app.cards.new'
 import { Route as AppCardsIdRouteImport } from './routes/_app.cards.$id'
+import { Route as AppProfileSecurityTwofaRouteImport } from './routes/_app.profile_.security.twofa'
 import { Route as AppProfileSecurityPinRouteImport } from './routes/_app.profile_.security.pin'
 import { Route as AppCardsIdTxnTxnIdRouteImport } from './routes/_app.cards.$id_.txn.$txnId'
 
@@ -179,6 +180,11 @@ const AppCardsIdRoute = AppCardsIdRouteImport.update({
   path: '/cards/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileSecurityTwofaRoute = AppProfileSecurityTwofaRouteImport.update({
+  id: '/profile_/security/twofa',
+  path: '/profile/security/twofa',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProfileSecurityPinRoute = AppProfileSecurityPinRouteImport.update({
   id: '/profile_/security/pin',
   path: '/profile/security/pin',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/numbers/': typeof AppNumbersIndexRoute
   '/pay/': typeof AppPayIndexRoute
   '/profile/security/pin': typeof AppProfileSecurityPinRoute
+  '/profile/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRoutesByTo {
@@ -249,6 +256,7 @@ export interface FileRoutesByTo {
   '/numbers': typeof AppNumbersIndexRoute
   '/pay': typeof AppPayIndexRoute
   '/profile/security/pin': typeof AppProfileSecurityPinRoute
+  '/profile/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRoutesById {
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
   '/_app/profile_/security/pin': typeof AppProfileSecurityPinRoute
+  '/_app/profile_/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/_app/cards/$id_/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
 }
 export interface FileRouteTypes {
@@ -315,6 +324,7 @@ export interface FileRouteTypes {
     | '/numbers/'
     | '/pay/'
     | '/profile/security/pin'
+    | '/profile/security/twofa'
     | '/cards/$id/txn/$txnId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/numbers'
     | '/pay'
     | '/profile/security/pin'
+    | '/profile/security/twofa'
     | '/cards/$id/txn/$txnId'
   id:
     | '__root__'
@@ -377,6 +388,7 @@ export interface FileRouteTypes {
     | '/_app/numbers/'
     | '/_app/pay/'
     | '/_app/profile_/security/pin'
+    | '/_app/profile_/security/twofa'
     | '/_app/cards/$id_/txn/$txnId'
   fileRoutesById: FileRoutesById
 }
@@ -587,6 +599,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCardsIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/profile_/security/twofa': {
+      id: '/_app/profile_/security/twofa'
+      path: '/profile/security/twofa'
+      fullPath: '/profile/security/twofa'
+      preLoaderRoute: typeof AppProfileSecurityTwofaRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/profile_/security/pin': {
       id: '/_app/profile_/security/pin'
       path: '/profile/security/pin'
@@ -646,6 +665,7 @@ interface AppRouteChildren {
   AppEsimsIndexRoute: typeof AppEsimsIndexRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
   AppProfileSecurityPinRoute: typeof AppProfileSecurityPinRoute
+  AppProfileSecurityTwofaRoute: typeof AppProfileSecurityTwofaRoute
   AppCardsIdTxnTxnIdRoute: typeof AppCardsIdTxnTxnIdRoute
 }
 
@@ -664,6 +684,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppEsimsIndexRoute: AppEsimsIndexRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
   AppProfileSecurityPinRoute: AppProfileSecurityPinRoute,
+  AppProfileSecurityTwofaRoute: AppProfileSecurityTwofaRoute,
   AppCardsIdTxnTxnIdRoute: AppCardsIdTxnTxnIdRoute,
 }
 
@@ -680,13 +701,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
