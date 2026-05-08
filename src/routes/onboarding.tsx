@@ -17,7 +17,6 @@ export const Route = createFileRoute("/onboarding")({
 type Slide = {
   eyebrow: string;
   title: string;
-  highlight: string;
   body: string;
   visual: () => ReactElement;
 };
@@ -25,22 +24,19 @@ type Slide = {
 const slides: Slide[] = [
   {
     eyebrow: "Wallet",
-    title: "One wallet,",
-    highlight: "every currency.",
+    title: "One wallet, every currency.",
     body: "Hold Naira, Dollars, Euros and Pounds. Convert at fair rates with no branch visits.",
     visual: WalletVisual,
   },
   {
     eyebrow: "Cards",
-    title: "Virtual cards,",
-    highlight: "issued instantly.",
+    title: "Virtual cards, issued instantly.",
     body: "Spin up a Naira or USD card in seconds. Subscribe, shop and travel — fully in control.",
     visual: CardVisual,
   },
   {
     eyebrow: "Anywhere",
-    title: "Land ready.",
-    highlight: "Stay connected.",
+    title: "Land ready. Stay connected.",
     body: "Pay bills home, top up airtime and grab an eSIM before you board. No SIM swaps.",
     visual: ESimVisual,
   },
@@ -54,37 +50,34 @@ function Onboarding() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-screen md:h-[860px] flex flex-col bg-[oklch(0.11_0.025_280)] text-white overflow-hidden">
-        {/* Ambient glows */}
-        <div className="pointer-events-none absolute -top-32 -right-24 w-[420px] h-[420px] rounded-full bg-primary/40 blur-[120px]" />
-        <div className="pointer-events-none absolute top-1/3 -left-32 w-[360px] h-[360px] rounded-full bg-lime/20 blur-[120px]" />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:18px_18px]" />
+      <div className="h-full min-h-screen md:min-h-0 bg-background text-foreground flex flex-col">
+        <div className="h-10" />
 
         {/* Top bar */}
-        <div className="relative z-10 flex items-center justify-between px-6 pt-12">
+        <header className="px-6 pt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-lime to-[oklch(0.85_0.2_130)] flex items-center justify-center font-display font-bold text-[13px] text-[oklch(0.2_0.05_80)]">
+            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center font-display font-bold text-[14px] text-primary-foreground">
               B
             </div>
             <span className="font-display font-bold text-[15px] tracking-tight">BazePay</span>
           </div>
           <button
             onClick={() => nav({ to: "/auth/signup" })}
-            className="text-[12px] font-semibold text-white/55 hover:text-white transition px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06]"
+            className="text-[12px] font-semibold text-foreground/55 hover:text-foreground transition px-3 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08]"
           >
             Skip
           </button>
-        </div>
+        </header>
 
         {/* Visual stage */}
-        <div className="relative z-10 flex-1 flex items-center justify-center px-6 pt-2">
+        <div className="flex-1 flex items-center justify-center px-6 pt-4 pb-2 min-h-[260px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={`v-${i}`}
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: -10 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, scale: 0.96, y: -8 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="w-full"
             >
               <slide.visual />
@@ -92,65 +85,56 @@ function Onboarding() {
           </AnimatePresence>
         </div>
 
-        {/* Copy */}
-        <div className="relative z-10 px-7">
+        {/* Sheet */}
+        <div className="bg-card text-card-foreground rounded-t-[2rem] px-7 pt-7 pb-8 flex flex-col">
           <AnimatePresence mode="wait">
             <motion.div
               key={`c-${i}`}
-              initial={{ opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4, delay: 0.05 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35 }}
             >
-              <p className="text-[10px] uppercase tracking-[0.32em] font-bold text-lime/90">
+              <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-primary">
                 {slide.eyebrow}
               </p>
-              <h1 className="font-display text-[34px] leading-[1.05] font-bold tracking-tight mt-3">
+              <h1 className="font-display text-[30px] leading-[1.1] font-bold tracking-tight mt-2.5">
                 {slide.title}
-                <br />
-                <span className="bg-gradient-to-r from-white via-white to-[oklch(0.78_0.14_85)] bg-clip-text text-transparent">
-                  {slide.highlight}
-                </span>
               </h1>
-              <p className="text-[13.5px] text-white/55 leading-relaxed mt-4 max-w-[300px]">
+              <p className="text-[13.5px] text-card-foreground/60 leading-relaxed mt-3 max-w-[320px]">
                 {slide.body}
               </p>
             </motion.div>
           </AnimatePresence>
-        </div>
 
-        {/* Footer: progress + CTA */}
-        <div className="relative z-10 px-6 pt-7 pb-8">
-          <div className="flex items-center gap-1.5 mb-6">
+          {/* Progress */}
+          <div className="flex items-center gap-1.5 mt-6">
             {slides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setI(idx)}
                 className={`h-[3px] rounded-full transition-all duration-500 ${
-                  idx === i ? "flex-[3] bg-lime" : "flex-1 bg-white/15"
+                  idx === i ? "flex-[3] bg-primary" : "flex-1 bg-card-foreground/15"
                 }`}
                 aria-label={`Slide ${idx + 1}`}
               />
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Footer */}
+          <div className="mt-6 flex items-center gap-3">
             <button
               onClick={() => nav({ to: "/auth/login" })}
-              className="text-[12.5px] font-semibold text-white/60 hover:text-white transition whitespace-nowrap"
+              className="text-[12.5px] font-semibold text-card-foreground/60 hover:text-card-foreground transition whitespace-nowrap"
             >
               Sign in
             </button>
             <button
-              onClick={() =>
-                isLast ? nav({ to: "/auth/signup" }) : setI(i + 1)
-              }
-              className="ml-auto group flex items-center gap-2 h-13 pl-6 pr-2 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition shadow-[0_10px_30px_-8px_oklch(0.92_0.21_120/0.5)]"
+              onClick={() => (isLast ? nav({ to: "/auth/signup" }) : setI(i + 1))}
+              className="ml-auto group flex items-center justify-center gap-2 h-14 px-7 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition"
             >
               {isLast ? "Get started" : "Continue"}
-              <span className="w-9 h-9 rounded-full bg-[oklch(0.13_0.02_280)] text-white flex items-center justify-center group-active:translate-x-0.5 transition">
-                <ArrowRight className="w-4 h-4" />
-              </span>
+              <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
             </button>
           </div>
         </div>
@@ -163,15 +147,13 @@ function Onboarding() {
 
 function WalletVisual() {
   return (
-    <div className="relative h-[300px] flex items-center justify-center">
-      {/* Back card */}
+    <div className="relative h-[260px] flex items-center justify-center">
       <motion.div
         initial={{ rotate: -10, x: -30, y: 10, opacity: 0 }}
         animate={{ rotate: -8, x: -28, y: 8, opacity: 1 }}
         transition={{ delay: 0.15, duration: 0.6 }}
         className="absolute w-[230px] h-[140px] rounded-3xl bg-gradient-to-br from-[oklch(0.4_0.18_280)] to-[oklch(0.28_0.12_280)] border border-white/10"
       />
-      {/* Front balance card */}
       <motion.div
         initial={{ rotate: 6, opacity: 0, scale: 0.92 }}
         animate={{ rotate: 4, opacity: 1, scale: 1 }}
@@ -193,9 +175,9 @@ function WalletVisual() {
             { c: "$", bg: "oklch(0.94 0.04 30)" },
             { c: "€", bg: "oklch(0.94 0.04 250)" },
             { c: "£", bg: "oklch(0.94 0.04 305)" },
-          ].map((t, i) => (
+          ].map((t, idx) => (
             <div
-              key={i}
+              key={idx}
               className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border border-foreground/5"
               style={{ background: t.bg }}
             >
@@ -204,14 +186,13 @@ function WalletVisual() {
           ))}
         </div>
       </motion.div>
-      {/* Floating chip */}
       <motion.div
         initial={{ opacity: 0, y: 20, x: 80 }}
         animate={{ opacity: 1, y: 0, x: 80 }}
         transition={{ delay: 0.5, duration: 0.5 }}
         className="absolute -bottom-2 right-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
       >
-        <Sparkles className="w-3.5 h-3.5 text-lime" />
+        <Sparkles className="w-3.5 h-3.5 text-primary" />
         +₦12,500 today
       </motion.div>
     </div>
@@ -220,7 +201,7 @@ function WalletVisual() {
 
 function CardVisual() {
   return (
-    <div className="relative h-[300px] flex items-center justify-center">
+    <div className="relative h-[260px] flex items-center justify-center">
       <motion.div
         initial={{ rotate: -14, opacity: 0, y: 20 }}
         animate={{ rotate: -10, opacity: 1, y: 0 }}
@@ -235,7 +216,7 @@ function CardVisual() {
         transition={{ delay: 0.3, duration: 0.6 }}
         className="relative w-[260px] h-[160px] rounded-3xl p-5 translate-x-8 overflow-hidden bg-gradient-to-br from-[oklch(0.55_0.24_280)] via-[oklch(0.45_0.22_290)] to-[oklch(0.3_0.15_300)] shadow-[0_30px_60px_-20px_oklch(0.55_0.24_280/0.7)]"
       >
-        <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-lime/30 blur-3xl" />
+        <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-primary/40 blur-3xl" />
         <div className="flex justify-between items-start relative">
           <span className="font-display font-bold text-sm">BazePay</span>
           <Wifi className="w-4 h-4 rotate-90 opacity-70" />
@@ -257,7 +238,7 @@ function CardVisual() {
         transition={{ delay: 0.55, duration: 0.5 }}
         className="absolute -bottom-1 left-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
       >
-        <Shield className="w-3.5 h-3.5 text-lime" />
+        <Shield className="w-3.5 h-3.5 text-primary" />
         Freeze in 1 tap
       </motion.div>
     </div>
@@ -266,8 +247,7 @@ function CardVisual() {
 
 function ESimVisual() {
   return (
-    <div className="relative h-[300px] flex items-center justify-center">
-      {/* Globe halo */}
+    <div className="relative h-[260px] flex items-center justify-center">
       <motion.div
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -278,10 +258,9 @@ function ESimVisual() {
         initial={{ scale: 0.4, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.7 }}
-        className="absolute w-[150px] h-[150px] rounded-full border border-lime/30"
+        className="absolute w-[150px] h-[150px] rounded-full border border-primary/30"
       />
 
-      {/* QR / eSIM card */}
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.92 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -292,16 +271,13 @@ function ESimVisual() {
           <span className="text-[10px] uppercase tracking-widest font-bold text-foreground/50">
             eSIM ready
           </span>
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-lime text-lime-foreground">
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground">
             5G
           </span>
         </div>
         <div className="mt-3 grid grid-cols-8 gap-[2px] aspect-square">
           {Array.from({ length: 64 }).map((_, idx) => {
-            const filled =
-              [0,1,2,3,4,5,6,7,8,15,16,23,24,31,32,39,40,47,48,55,56,57,58,59,60,61,62,63,
-               10,11,13,18,20,21,26,28,34,36,37,42,44,45,50,52]
-                .includes(idx);
+            const filled = [0,1,2,3,4,5,6,7,8,15,16,23,24,31,32,39,40,47,48,55,56,57,58,59,60,61,62,63,10,11,13,18,20,21,26,28,34,36,37,42,44,45,50,52].includes(idx);
             return (
               <div
                 key={idx}
@@ -314,8 +290,8 @@ function ESimVisual() {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, x: -20, y: 0 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.55, duration: 0.5 }}
         className="absolute top-6 left-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
       >
