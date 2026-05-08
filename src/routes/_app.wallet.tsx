@@ -627,6 +627,7 @@ function Sheet({
 }
 
 function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [tokenCopied, setTokenCopied] = useState(false);
   const statusTone =
@@ -766,7 +767,7 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
         <div className="px-6 mt-5 grid grid-cols-3 gap-2">
           <DetailAction icon={Download} label="Receipt" />
           <DetailAction icon={Share2} label="Share" />
-          <DetailAction icon={HelpCircle} label="Get help" />
+          <DetailAction icon={HelpCircle} label="Get help" onClick={() => navigate({ to: "/profile/help/chat" })} />
         </div>
 
         {/* Footer */}
@@ -783,9 +784,12 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
   );
 }
 
-function DetailAction({ icon: Icon, label }: { icon: typeof Download; label: string }) {
+function DetailAction({ icon: Icon, label, onClick }: { icon: typeof Download; label: string; onClick?: () => void }) {
   return (
-    <button className="h-16 rounded-2xl bg-card-foreground/[0.04] flex flex-col items-center justify-center gap-1 text-card-foreground/80 active:scale-[0.98] transition">
+    <button
+      onClick={onClick}
+      className="h-16 rounded-2xl bg-card-foreground/[0.04] flex flex-col items-center justify-center gap-1 text-card-foreground/80 active:scale-[0.98] transition"
+    >
       <Icon className="w-4 h-4" />
       <span className="text-[11px] font-semibold">{label}</span>
     </button>
