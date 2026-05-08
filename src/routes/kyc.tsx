@@ -73,7 +73,7 @@ function Kyc() {
 
   return (
     <PhoneFrame>
-      <div className="min-h-full bg-card text-card-foreground flex flex-col">
+      <div className="min-h-full bg-background text-foreground flex flex-col">
         <AnimatePresence mode="wait">
           {step === "intro" && (
             <motion.div
