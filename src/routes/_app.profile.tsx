@@ -17,7 +17,6 @@ import {
   Send,
   X,
   Check,
-  Sparkles,
 } from "lucide-react";
 import { BottomNav } from "@/components/bottom-nav";
 import { toast } from "sonner";
