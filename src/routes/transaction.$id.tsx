@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate, notFound, Link } from "@tanstack/react-router";
+import { PhoneFrame } from "@/components/phone-frame";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -100,7 +101,8 @@ function TxnReceipt() {
   const isElectricity = txn.category === "Electricity";
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <PhoneFrame>
+    <div className="min-h-screen md:min-h-0 md:h-[860px] bg-background text-foreground flex flex-col">
       <div className="h-10" />
       <div className="px-6 pt-4 flex items-center justify-between">
         <button
@@ -215,6 +217,7 @@ function TxnReceipt() {
         </p>
       </div>
     </div>
+    </PhoneFrame>
   );
 }
 
