@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { ArrowLeft, Gift, Copy, Share2, Users, Coins, Check, ArrowRight } from "lucide-react";
+import { ArrowLeft, Gift, Copy, Share2, Users, Coins, Check, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/profile_/referrals")({
