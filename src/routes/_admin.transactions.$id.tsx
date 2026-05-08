@@ -218,7 +218,7 @@ function TxnDetail() {
                 size="sm"
                 variant={flagged ? "secondary" : "outline"}
                 className="w-full justify-start"
-                onClick={() => { setFlagged((f) => !f); toast.success(flagged ? "Unflagged" : "Flagged for fraud team"); }}
+                onClick={() => { setFlagged((f: boolean) => !f); toast.success(flagged ? "Unflagged" : "Flagged for fraud team"); }}
               >
                 <Flag className="h-3.5 w-3.5 mr-2" />
                 {flagged ? "Remove flag" : "Flag for fraud"}
