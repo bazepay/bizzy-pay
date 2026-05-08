@@ -39,6 +39,7 @@ function KycReview() {
   const navigate = useNavigate();
   const sub = getKycSubmission(id);
   const [decision, setDecision] = useState<KycDecision | null>(sub?.decision === "pending" || sub?.decision === "in_review" ? null : sub?.decision ?? null);
+  const [reviewer, setReviewer] = useState<string | undefined>(sub?.reviewer);
   const [confirm, setConfirm] = useState<null | { type: "approve" | "reject" | "more_info"; title: string; cta: string; danger?: boolean }>(null);
   const [reason, setReason] = useState("");
 
@@ -178,6 +179,23 @@ function KycReview() {
                 <div className="text-xs mt-1 text-right font-mono">{sub.riskScore}/100</div>
               </div>
               <div className="grid grid-cols-1 gap-1.5 pt-2">
+                {(finalDecision === "pending" || finalDecision === "in_review") && (
+                  <Button
+                    size="sm"
+                    variant={reviewer ? "outline" : "secondary"}
+                    onClick={() => {
+                      if (reviewer) {
+                        setReviewer(undefined);
+                        toast.success("Review released back to the queue.");
+                      } else {
+                        setReviewer("You");
+                        toast.success("You're now reviewing this submission.");
+                      }
+                    }}
+                  >
+                    {reviewer ? `Release (${reviewer})` : "Claim review"}
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   onClick={() => ask({ type: "approve", title: "Approve KYC?", cta: "Approve" })}
