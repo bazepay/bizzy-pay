@@ -167,11 +167,11 @@ function ReferralsPage() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, accent, muted }: { label: string; value: string; accent?: boolean; muted?: boolean }) {
   return (
     <div className="rounded-2xl bg-card-foreground/[0.04] p-3 text-center">
       <p className="text-[10px] uppercase tracking-widest text-card-foreground/50">{label}</p>
-      <p className="font-display font-bold text-base mt-0.5">{value}</p>
+      <p className={`font-display font-bold text-base mt-0.5 ${accent ? "text-primary" : muted ? "text-card-foreground/55" : ""}`}>{value}</p>
     </div>
   );
 }
