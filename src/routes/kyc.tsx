@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
-import { Button } from "@/components/ui/button";
 import {
   Camera,
   ShieldCheck,
@@ -50,17 +49,19 @@ function Kyc() {
     }
   }, [step]);
 
-  const progress = useMemo(() => {
-    return {
-      intro: 10,
-      country: 25,
-      idType: 45,
-      idInput: 60,
-      selfie: 80,
-      processing: 95,
-      done: 100,
-    }[step];
-  }, [step]);
+  const progress = useMemo(
+    () =>
+      ({
+        intro: 10,
+        country: 25,
+        idType: 45,
+        idInput: 60,
+        selfie: 80,
+        processing: 95,
+        done: 100,
+      })[step],
+    [step],
+  );
 
   const goBack = () => {
     if (step === "intro") return nav({ to: "/profile" });
@@ -72,57 +73,50 @@ function Kyc() {
 
   return (
     <PhoneFrame>
-      <div className="min-h-screen md:h-[860px] bg-background text-foreground flex flex-col">
-        {step !== "done" && step !== "processing" && (
-          <header className="p-6 flex items-center gap-4">
-            <button
-              onClick={goBack}
-              className="w-10 h-10 rounded-full bg-muted flex items-center justify-center"
-              aria-label="Back"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </header>
-        )}
-
+      <div className="min-h-full bg-card text-card-foreground flex flex-col">
         <AnimatePresence mode="wait">
           {step === "intro" && (
-            <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 px-6 flex flex-col">
-              <h1 className="text-3xl font-bold">Verify your identity</h1>
-              <p className="text-muted-foreground mt-2">Powered by Smile ID. Takes about 2 minutes.</p>
-              <div className="mt-8 space-y-3">
+            <Shell
+              key="intro"
+              progress={progress}
+              onBack={goBack}
+              title="Verify your identity"
+              subtitle="Powered by Smile ID. Takes about 2 minutes."
+              footer={
+                <PrimaryButton onClick={() => setStep("country")}>
+                  Start verification
+                </PrimaryButton>
+              }
+            >
+              <div className="space-y-2.5">
                 {[
                   { i: Globe, t: "Pick your country", s: "We tailor accepted IDs to where you live." },
                   { i: IdCard, t: "Provide an ID number", s: "NIN/BVN in Nigeria, passport elsewhere." },
                   { i: Camera, t: "Take a quick selfie", s: "Liveness check matched to your ID." },
                   { i: ShieldCheck, t: "Verified instantly", s: "Most checks complete in seconds." },
                 ].map((it, idx) => (
-                  <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-muted/60">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center shrink-0">
-                      <it.i className="w-6 h-6 text-white" />
+                  <div
+                    key={idx}
+                    className="flex gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                      <it.i className="w-5 h-5" />
                     </div>
-                    <div>
-                      <p className="font-semibold">{it.t}</p>
-                      <p className="text-sm text-muted-foreground">{it.s}</p>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-sm">{it.t}</p>
+                      <p className="text-xs text-card-foreground/55 mt-0.5">{it.s}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <Button onClick={() => setStep("country")} className="mt-auto mb-6 h-12 bg-primary text-primary-foreground rounded-2xl font-semibold">
-                Start verification
-              </Button>
-            </motion.div>
+            </Shell>
           )}
 
           {step === "country" && (
             <CountryStep
               key="country"
+              progress={progress}
+              onBack={goBack}
               selected={country}
               onSelect={(c) => {
                 setCountry(c);
@@ -133,12 +127,30 @@ function Kyc() {
           )}
 
           {step === "idType" && country && (
-            <motion.div key="idType" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 px-6 flex flex-col">
-              <h2 className="text-xl font-bold">Choose ID document</h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Accepted IDs in <span className="font-medium text-foreground">{country.flag} {country.name}</span>.
-              </p>
-              <div className="mt-6 space-y-3">
+            <Shell
+              key="idType"
+              progress={progress}
+              onBack={goBack}
+              title="Choose ID document"
+              subtitle={
+                <>
+                  Accepted IDs in{" "}
+                  <span className="font-semibold text-foreground">
+                    {country.flag} {country.name}
+                  </span>
+                  .
+                </>
+              }
+              footer={
+                <PrimaryButton
+                  disabled={!idType}
+                  onClick={() => setStep("idInput")}
+                >
+                  Continue
+                </PrimaryButton>
+              }
+            >
+              <div className="space-y-2.5">
                 {idTypesForCountry(country.code).map((t) => {
                   const Icon = ID_ICONS[t];
                   const selected = idType === t;
@@ -146,42 +158,61 @@ function Kyc() {
                     <button
                       key={t}
                       onClick={() => setIdType(t)}
-                      className={`w-full p-4 rounded-2xl border-2 text-left transition flex items-center gap-3 ${
-                        selected ? "border-primary bg-primary/10 text-foreground" : "border-border bg-card text-card-foreground"
+                      className={`w-full p-3.5 rounded-2xl text-left transition flex items-center gap-3 border ${
+                        selected
+                          ? "border-primary bg-primary/[0.06]"
+                          : "border-transparent bg-card-foreground/[0.04] active:bg-card-foreground/[0.07]"
                       }`}
                     >
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary text-primary-foreground" : "bg-muted text-card-foreground/70"}`}>
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          selected
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-card text-card-foreground/70"
+                        }`}
+                      >
                         <Icon className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold">{ID_LABELS[t].title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{ID_LABELS[t].desc}</p>
+                        <p className="font-semibold text-sm">{ID_LABELS[t].title}</p>
+                        <p className="text-xs text-card-foreground/55 mt-0.5">
+                          {ID_LABELS[t].desc}
+                        </p>
                       </div>
                       {selected && <Check className="w-5 h-5 text-primary" />}
                     </button>
                   );
                 })}
               </div>
-              <Button
-                disabled={!idType}
-                onClick={() => setStep("idInput")}
-                className="mt-auto mb-6 h-12 bg-primary text-primary-foreground rounded-2xl font-semibold disabled:opacity-50"
-              >
-                Continue
-              </Button>
-            </motion.div>
+            </Shell>
           )}
 
           {step === "idInput" && idType && (
-            <motion.div key="idInput" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 px-6 flex flex-col">
-              <h2 className="text-xl font-bold">{ID_LABELS[idType].title}</h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                {idType === "PASSPORT"
+            <Shell
+              key="idInput"
+              progress={progress}
+              onBack={goBack}
+              title={ID_LABELS[idType].title}
+              subtitle={
+                idType === "PASSPORT"
                   ? "Enter your passport number exactly as shown."
-                  : "Enter your 11-digit number."}
-              </p>
-              <label className="block mt-6">
-                <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
+                  : "Enter your 11-digit number."
+              }
+              footer={
+                <PrimaryButton
+                  disabled={
+                    idType === "PASSPORT"
+                      ? idValue.length < 6
+                      : idValue.length !== 11
+                  }
+                  onClick={() => setStep("selfie")}
+                >
+                  Continue
+                </PrimaryButton>
+              }
+            >
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-widest text-card-foreground/55 font-semibold">
                   {idType === "PASSPORT" ? "Passport number" : `${idType} number`}
                 </span>
                 <input
@@ -190,85 +221,100 @@ function Kyc() {
                   maxLength={idType === "PASSPORT" ? 12 : 11}
                   value={idValue}
                   onChange={(e) => {
-                    const v = idType === "PASSPORT"
-                      ? e.target.value.toUpperCase()
-                      : e.target.value.replace(/\D/g, "");
+                    const v =
+                      idType === "PASSPORT"
+                        ? e.target.value.toUpperCase()
+                        : e.target.value.replace(/\D/g, "");
                     setIdValue(v);
                   }}
                   placeholder={idType === "PASSPORT" ? "A12345678" : "12345678901"}
-                  className="mt-2 w-full h-12 px-4 rounded-2xl bg-card text-card-foreground border border-border text-base outline-none focus:ring-2 ring-primary/40 tracking-wider"
+                  className="mt-2 w-full h-12 px-4 rounded-2xl bg-card-foreground/[0.05] text-card-foreground text-base outline-none focus:ring-2 ring-primary/40 tracking-wider placeholder:text-card-foreground/35"
                 />
               </label>
-              <p className="text-[11px] text-muted-foreground mt-2 px-1">
+              <p className="text-[11px] text-card-foreground/55 mt-3 px-1">
                 We use Smile ID to match this against the official record.
               </p>
-              <Button
-                disabled={idType === "PASSPORT" ? idValue.length < 6 : idValue.length !== 11}
-                onClick={() => setStep("selfie")}
-                className="mt-auto mb-6 h-12 bg-primary text-primary-foreground rounded-2xl font-semibold disabled:opacity-50"
-              >
-                Continue
-              </Button>
-            </motion.div>
+            </Shell>
           )}
 
           {step === "selfie" && (
-            <motion.div key="selfie" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 px-6 flex flex-col items-center">
-              <h2 className="text-xl font-bold">Position your face</h2>
-              <p className="text-sm text-muted-foreground mt-1">Look into the camera and stay still.</p>
-
-              <div className="relative mt-10 w-64 h-80 rounded-[8rem] bg-gradient-hero overflow-hidden flex items-center justify-center shadow-card">
-                <div className="absolute inset-3 rounded-[7rem] border-2 border-dashed border-white/30" />
-                <motion.div
-                  className="absolute left-3 right-3 h-1 bg-gold rounded-full shadow-[0_0_20px_rgba(255,200,80,0.8)]"
-                  animate={{ top: ["10%", "90%", "10%"] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <div className="text-6xl">👤</div>
+            <Shell
+              key="selfie"
+              progress={progress}
+              onBack={goBack}
+              title="Position your face"
+              subtitle="Look into the camera and stay still."
+              footer={
+                <PrimaryButton onClick={() => setStep("processing")}>
+                  Capture
+                </PrimaryButton>
+              }
+            >
+              <div className="flex justify-center pt-2">
+                <div className="relative w-60 h-72 rounded-[7rem] bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] overflow-hidden flex items-center justify-center shadow-xl">
+                  <div className="absolute inset-3 rounded-[6rem] border-2 border-dashed border-white/25" />
+                  <motion.div
+                    className="absolute left-3 right-3 h-1 bg-[oklch(0.82_0.16_85)] rounded-full shadow-[0_0_20px_oklch(0.82_0.16_85)]"
+                    animate={{ top: ["10%", "90%", "10%"] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <div className="text-6xl">👤</div>
+                </div>
               </div>
-
-              <Button onClick={() => setStep("processing")} className="mt-auto mb-6 w-full h-12 bg-primary text-primary-foreground rounded-2xl font-semibold">
-                Capture
-              </Button>
-            </motion.div>
+            </Shell>
           )}
 
           {step === "processing" && (
-            <motion.div key="proc" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-center gap-6">
+            <motion.div
+              key="proc"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex-1 min-h-screen md:min-h-[860px] bg-background text-foreground flex flex-col items-center justify-center gap-6"
+            >
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
-                className="w-20 h-20 rounded-full border-4 border-muted border-t-primary"
+                className="w-20 h-20 rounded-full border-4 border-foreground/15 border-t-primary"
               />
               <div className="text-center">
-                <p className="font-semibold text-lg">Verifying with Smile ID</p>
-                <p className="text-sm text-muted-foreground">Matching biometrics…</p>
+                <p className="font-display font-bold text-lg">Verifying with Smile ID</p>
+                <p className="text-sm text-foreground/55 mt-1">Matching biometrics…</p>
               </div>
             </motion.div>
           )}
 
           {step === "done" && (
-            <motion.div key="done" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex-1 flex flex-col px-6">
+            <motion.div
+              key="done"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex-1 min-h-screen md:min-h-[860px] bg-background text-foreground flex flex-col px-6"
+            >
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                  className="w-24 h-24 rounded-full bg-gradient-gold flex items-center justify-center shadow-glow"
+                  className="w-24 h-24 rounded-full bg-[oklch(0.82_0.16_85)] flex items-center justify-center shadow-[0_0_60px_oklch(0.82_0.16_85_/_0.5)]"
                 >
                   <Sparkles className="w-12 h-12 text-[oklch(0.2_0.05_80)]" />
                 </motion.div>
-                <h1 className="mt-6 text-2xl font-bold">You're verified!</h1>
-                <p className="text-muted-foreground mt-2 max-w-xs">
-                  Your <span className="text-foreground font-semibold">Basic Tier</span> is active. Complete profile details later to upgrade to Enhanced.
+                <h1 className="font-display mt-6 text-2xl font-bold">You're verified!</h1>
+                <p className="text-foreground/60 mt-2 max-w-xs">
+                  Your{" "}
+                  <span className="text-foreground font-semibold">Basic Tier</span>{" "}
+                  is active. Complete profile details later to upgrade.
                 </p>
-                <div className="mt-8 px-4 py-3 rounded-2xl bg-primary/10 text-primary text-sm font-medium">
-                  Daily limit: ₦200,000
+                <div className="mt-8 px-4 py-3 rounded-full bg-primary/15 text-primary text-sm font-semibold">
+                  Daily limit · ₦200,000
                 </div>
               </div>
-              <Button onClick={() => nav({ to: "/profile" })} className="mb-6 h-12 bg-primary text-primary-foreground rounded-2xl font-semibold">
+              <button
+                onClick={() => nav({ to: "/profile" })}
+                className="mb-8 h-12 bg-primary text-primary-foreground rounded-full font-semibold text-sm active:scale-[0.98] transition"
+              >
                 Back to profile
-              </Button>
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -277,10 +323,88 @@ function Kyc() {
   );
 }
 
+function Shell({
+  progress,
+  onBack,
+  title,
+  subtitle,
+  children,
+  footer,
+}: {
+  progress: number;
+  onBack: () => void;
+  title: ReactNode;
+  subtitle: ReactNode;
+  children: ReactNode;
+  footer: ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex-1 flex flex-col min-h-screen md:min-h-[860px]"
+    >
+      {/* Dark hero */}
+      <div className="bg-background text-foreground px-6 pt-6 pb-10">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+        <h1 className="font-display text-2xl font-bold mt-6 leading-tight">
+          {title}
+        </h1>
+        <p className="text-sm text-foreground/55 mt-1.5">{subtitle}</p>
+      </div>
+
+      {/* White surface */}
+      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+        <div className="flex-1">{children}</div>
+        <div className="pt-6">{footer}</div>
+      </div>
+    </motion.div>
+  );
+}
+
+function PrimaryButton({
+  children,
+  onClick,
+  disabled,
+}: {
+  children: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-40 active:scale-[0.98] transition"
+    >
+      {children}
+    </button>
+  );
+}
+
 function CountryStep({
+  progress,
+  onBack,
   selected,
   onSelect,
 }: {
+  progress: number;
+  onBack: () => void;
   selected: Country | null;
   onSelect: (c: Country) => void;
 }) {
@@ -290,7 +414,9 @@ function CountryStep({
     const term = q.trim().toLowerCase();
     if (!term) return COUNTRIES;
     return COUNTRIES.filter(
-      (c) => c.name.toLowerCase().includes(term) || c.code.toLowerCase().includes(term),
+      (c) =>
+        c.name.toLowerCase().includes(term) ||
+        c.code.toLowerCase().includes(term),
     );
   }, [q]);
 
@@ -299,56 +425,79 @@ function CountryStep({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex-1 px-6 flex flex-col min-h-0"
+      className="flex-1 flex flex-col min-h-screen md:min-h-[860px]"
     >
-      <h2 className="text-xl font-bold">Select your country</h2>
-      <p className="text-sm text-muted-foreground mt-1">
-        We support 100+ countries through Smile ID.
-      </p>
-
-      <div className="mt-4 relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search country"
-          className="w-full h-11 pl-10 pr-4 rounded-2xl bg-card text-card-foreground border border-border text-sm outline-none focus:ring-2 ring-primary/40"
-        />
+      {/* Dark hero */}
+      <div className="bg-background text-foreground px-6 pt-6 pb-10">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+        <h1 className="font-display text-2xl font-bold mt-6 leading-tight">
+          Select your country
+        </h1>
+        <p className="text-sm text-foreground/55 mt-1.5">
+          We support 100+ countries through Smile ID.
+        </p>
       </div>
 
-      <div className="mt-4 flex-1 overflow-y-auto pb-6 -mx-6 px-6 no-scrollbar">
-        {filtered.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">
-            No country matches "{q}".
-          </p>
-        ) : (
-          <ul className="divide-y divide-border rounded-2xl bg-card text-card-foreground border border-border overflow-hidden">
-            {filtered.map((c) => {
-              const isSel = selected?.code === c.code;
-              return (
-                <li key={c.code}>
-                  <button
-                    onClick={() => onSelect(c)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-muted transition"
-                  >
-                    <span className="text-2xl leading-none">{c.flag}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate">{c.name}</p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {idTypesForCountry(c.code).join(" · ")} + Selfie
-                      </p>
-                    </div>
-                    {isSel ? (
-                      <Check className="w-4 h-4 text-primary" />
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                    )}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+      {/* White surface */}
+      <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-8 -mt-6 flex-1 flex flex-col min-h-0">
+        <div className="relative">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-card-foreground/45" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search country"
+            className="w-full h-11 pl-10 pr-4 rounded-full bg-card-foreground/[0.05] text-card-foreground text-sm outline-none focus:ring-2 ring-primary/40 placeholder:text-card-foreground/40"
+          />
+        </div>
+
+        <div className="mt-4 flex-1 overflow-y-auto -mx-6 px-6 no-scrollbar">
+          {filtered.length === 0 ? (
+            <p className="text-sm text-card-foreground/55 text-center py-8">
+              No country matches "{q}".
+            </p>
+          ) : (
+            <ul className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/10 overflow-hidden">
+              {filtered.map((c) => {
+                const isSel = selected?.code === c.code;
+                return (
+                  <li key={c.code}>
+                    <button
+                      onClick={() => onSelect(c)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-card-foreground/[0.06] transition"
+                    >
+                      <span className="text-2xl leading-none">{c.flag}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold truncate">{c.name}</p>
+                        <p className="text-[11px] text-card-foreground/55">
+                          {idTypesForCountry(c.code).join(" · ")} + Selfie
+                        </p>
+                      </div>
+                      {isSel ? (
+                        <Check className="w-4 h-4 text-primary" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-card-foreground/40" />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
     </motion.div>
   );
