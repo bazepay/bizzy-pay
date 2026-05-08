@@ -23,6 +23,7 @@ import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppNumbersIndexRouteImport } from './routes/_app.numbers.index'
 import { Route as AppEsimsIndexRouteImport } from './routes/_app.esims.index'
 import { Route as AppCardsIndexRouteImport } from './routes/_app.cards.index'
+import { Route as AppProfileReferralsRouteImport } from './routes/_app.profile_.referrals'
 import { Route as AppProfileLegalRouteImport } from './routes/_app.profile_.legal'
 import { Route as AppProfileHelpRouteImport } from './routes/_app.profile_.help'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
@@ -108,6 +109,11 @@ const AppEsimsIndexRoute = AppEsimsIndexRouteImport.update({
 const AppCardsIndexRoute = AppCardsIndexRouteImport.update({
   id: '/cards/',
   path: '/cards/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileReferralsRoute = AppProfileReferralsRouteImport.update({
+  id: '/profile_/referrals',
+  path: '/profile/referrals',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProfileLegalRoute = AppProfileLegalRouteImport.update({
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/pay/tv': typeof AppPayTvRoute
   '/profile/help': typeof AppProfileHelpRoute
   '/profile/legal': typeof AppProfileLegalRoute
+  '/profile/referrals': typeof AppProfileReferralsRoute
   '/cards/': typeof AppCardsIndexRoute
   '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
@@ -251,6 +258,7 @@ export interface FileRoutesByTo {
   '/pay/tv': typeof AppPayTvRoute
   '/profile/help': typeof AppProfileHelpRoute
   '/profile/legal': typeof AppProfileLegalRoute
+  '/profile/referrals': typeof AppProfileReferralsRoute
   '/cards': typeof AppCardsIndexRoute
   '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/_app/pay/tv': typeof AppPayTvRoute
   '/_app/profile_/help': typeof AppProfileHelpRoute
   '/_app/profile_/legal': typeof AppProfileLegalRoute
+  '/_app/profile_/referrals': typeof AppProfileReferralsRoute
   '/_app/cards/': typeof AppCardsIndexRoute
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/pay/tv'
     | '/profile/help'
     | '/profile/legal'
+    | '/profile/referrals'
     | '/cards/'
     | '/esims/'
     | '/numbers/'
@@ -350,6 +360,7 @@ export interface FileRouteTypes {
     | '/pay/tv'
     | '/profile/help'
     | '/profile/legal'
+    | '/profile/referrals'
     | '/cards'
     | '/esims'
     | '/numbers'
@@ -383,6 +394,7 @@ export interface FileRouteTypes {
     | '/_app/pay/tv'
     | '/_app/profile_/help'
     | '/_app/profile_/legal'
+    | '/_app/profile_/referrals'
     | '/_app/cards/'
     | '/_app/esims/'
     | '/_app/numbers/'
@@ -499,6 +511,13 @@ declare module '@tanstack/react-router' {
       path: '/cards'
       fullPath: '/cards/'
       preLoaderRoute: typeof AppCardsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile_/referrals': {
+      id: '/_app/profile_/referrals'
+      path: '/profile/referrals'
+      fullPath: '/profile/referrals'
+      preLoaderRoute: typeof AppProfileReferralsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/profile_/legal': {
@@ -661,6 +680,7 @@ interface AppRouteChildren {
   AppNumbersIdRoute: typeof AppNumbersIdRoute
   AppProfileHelpRoute: typeof AppProfileHelpRoute
   AppProfileLegalRoute: typeof AppProfileLegalRoute
+  AppProfileReferralsRoute: typeof AppProfileReferralsRoute
   AppCardsIndexRoute: typeof AppCardsIndexRoute
   AppEsimsIndexRoute: typeof AppEsimsIndexRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
@@ -680,6 +700,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppNumbersIdRoute: AppNumbersIdRoute,
   AppProfileHelpRoute: AppProfileHelpRoute,
   AppProfileLegalRoute: AppProfileLegalRoute,
+  AppProfileReferralsRoute: AppProfileReferralsRoute,
   AppCardsIndexRoute: AppCardsIndexRoute,
   AppEsimsIndexRoute: AppEsimsIndexRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
