@@ -154,7 +154,7 @@ function TwoFAPage() {
                 </p>
                 <div className="mt-5 rounded-3xl bg-card-foreground/[0.04] p-6 flex flex-col items-center">
                   <div className="w-40 h-40 rounded-2xl bg-card-foreground p-3">
-                    <div className="w-full h-full rounded-lg bg-background grid grid-cols-8 grid-rows-8 gap-0.5 p-2">
+                    <div className="w-full h-full rounded-lg bg-card grid grid-cols-8 grid-rows-8 gap-0.5 p-2">
                       {Array.from({ length: 64 }).map((_, i) => (
                         <div key={i} className={(i * 7 + 3) % 3 === 0 ? "bg-card-foreground" : ""} />
                       ))}
@@ -162,7 +162,7 @@ function TwoFAPage() {
                   </div>
                   <button
                     onClick={copy}
-                    className="mt-4 flex items-center gap-2 px-4 h-9 rounded-full bg-background text-xs font-mono tracking-wider"
+                    className="mt-4 flex items-center gap-2 px-4 h-9 rounded-full bg-card text-xs font-mono tracking-wider"
                   >
                     {SECRET} <Copy className="w-3 h-3" />
                   </button>

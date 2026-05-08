@@ -84,7 +84,7 @@ function HelpCenterPage() {
                 }`}
               >
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
-                  active ? "bg-primary-foreground/15" : "bg-background"
+                  active ? "bg-primary-foreground/15" : "bg-card"
                 }`}>
                   <Icon className="w-4 h-4" />
                 </div>
