@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Plus, ShieldCheck, CreditCard, Sparkles, ArrowUpRight, Snowflake, Eye, Layers } from "lucide-react";
 import { BottomNav } from "@/components/bottom-nav";
 import { VirtualCardArt } from "@/components/virtual-card";
-import { cards, cardTxns, formatNgn, ISSUE_FEE_NGN, relativeDay } from "@/lib/cards";
+import { formatNgn, ISSUE_FEE_NGN, relativeDay } from "@/lib/cards";
+import { useCardsStore } from "@/lib/cards-store";
 
 export const Route = createFileRoute("/_app/cards/")({
   head: () => ({
@@ -17,7 +18,9 @@ export const Route = createFileRoute("/_app/cards/")({
 
 function CardsPage() {
   const navigate = useNavigate();
+  const { cards, txns: allTxns } = useCardsStore();
   const [activeIdx, setActiveIdx] = useState(0);
+  const safeIdx = Math.min(activeIdx, Math.max(0, cards.length - 1));
   const totalNgn = cards.reduce((s, c) => s + c.balanceNgn, 0);
 
   if (cards.length === 0) {
@@ -33,14 +36,17 @@ function CardsPage() {
     );
   }
 
-  const active = cards[activeIdx];
-  const txns = cardTxns.filter((t) => t.cardId === active.id).slice(0, 4);
+  const active = cards[safeIdx];
+  const txns = allTxns
+    .filter((t) => t.cardId === active.id)
+    .sort((a, b) => +new Date(b.at) - +new Date(a.at))
+    .slice(0, 4);
   const spendPct = Math.min(100, Math.round((active.monthlySpentNgn / active.monthlyLimitNgn) * 100));
 
   // Build stack ordering: active on top, others fanned behind
   const stackOrder = [
     active,
-    ...cards.filter((_, i) => i !== activeIdx),
+    ...cards.filter((_, i) => i !== safeIdx),
   ];
 
   return (

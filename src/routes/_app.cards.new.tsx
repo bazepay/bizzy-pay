@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowLeft,
   Check,
@@ -13,6 +13,7 @@ import {
 import { VirtualCardArt } from "@/components/virtual-card";
 import type { CardBrand } from "@/lib/cards";
 import { formatNgn, ISSUE_FEE_NGN } from "@/lib/cards";
+import { issueCard } from "@/lib/cards-store";
 
 export const Route = createFileRoute("/_app/cards/new")({
   head: () => ({
@@ -40,12 +41,21 @@ function NewCardPage() {
   const [brand, setBrand] = useState<CardBrand>("Visa");
   const [themeId, setThemeId] = useState(themes[0].id);
   const theme = themes.find((t) => t.id === themeId)!;
+  const newIdRef = useRef<string | null>(null);
 
   const labelOk = label.trim().length >= 2;
 
   const handlePay = () => {
     setStep("issuing");
-    setTimeout(() => setStep("success"), 1800);
+    setTimeout(() => {
+      const card = issueCard({
+        label: label.trim(),
+        brand,
+        gradient: { from: theme.from, to: theme.to },
+      });
+      newIdRef.current = card.id;
+      setStep("success");
+    }, 1800);
   };
 
   const back = () => {
@@ -119,7 +129,7 @@ function NewCardPage() {
       )}
 
       {(step === "issuing" || step === "success") && (
-        <IssuingScreen done={step === "success"} />
+        <IssuingScreen done={step === "success"} newId={newIdRef.current} />
       )}
     </div>
   );
@@ -390,7 +400,7 @@ function PayScreen({
   );
 }
 
-function IssuingScreen({ done }: { done: boolean }) {
+function IssuingScreen({ done, newId }: { done: boolean; newId: string | null }) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
       <div
@@ -413,11 +423,11 @@ function IssuingScreen({ done }: { done: boolean }) {
           : "Confirming payment and assigning a fresh PAN — usually under 30 seconds."}
       </p>
 
-      {done && (
+      {done && newId && (
         <div className="w-full mt-8 space-y-2">
           <Link
             to="/cards/$id"
-            params={{ id: "vc-01" }}
+            params={{ id: newId }}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center"
           >
             View card details

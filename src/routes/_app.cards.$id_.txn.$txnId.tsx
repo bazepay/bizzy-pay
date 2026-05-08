@@ -13,6 +13,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { cards, cardTxns, formatNgn } from "@/lib/cards";
 
 export const Route = createFileRoute("/_app/cards/$id_/txn/$txnId")({
@@ -93,6 +94,17 @@ function TxnDetail() {
           <ArrowLeft className="w-4 h-4" />
         </button>
         <button
+          onClick={async () => {
+            const text = `${txn.merchant} · ${formatNgn(Math.abs(txn.amountNgn))} · ${refId}`;
+            if (typeof navigator !== "undefined" && (navigator as Navigator & { share?: (data: ShareData) => Promise<void> }).share) {
+              try {
+                await (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({ title: "BazePay receipt", text });
+              } catch {}
+            } else {
+              copy(text, "share");
+              toast.success("Receipt copied");
+            }
+          }}
           className="w-10 h-10 rounded-full bg-card text-card-foreground flex items-center justify-center"
           aria-label="Share receipt"
         >
@@ -196,7 +208,10 @@ function TxnDetail() {
 
         {/* Actions */}
         <div className="grid grid-cols-2 gap-3">
-          <button className="h-12 rounded-2xl bg-card-foreground/[0.06] text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+          <button
+            onClick={() => toast.success("Report submitted", { description: "Our team will follow up within 24 hours." })}
+            className="h-12 rounded-2xl bg-card-foreground/[0.06] text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition"
+          >
             <Flag className="w-4 h-4" /> Report problem
           </button>
           <Link

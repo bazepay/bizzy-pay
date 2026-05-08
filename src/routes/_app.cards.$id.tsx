@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Check,
@@ -13,17 +14,21 @@ import {
   ShieldCheck,
   Receipt,
   ChevronRight,
-  ChevronLeft,
 } from "lucide-react";
 import { VirtualCardArt, RevealToggle } from "@/components/virtual-card";
 import {
-  cards,
-  cardTxns,
   formatNgn,
   relativeDay,
   merchantCategories,
-  type VirtualCard,
 } from "@/lib/cards";
+import {
+  useCardsStore,
+  toggleFreeze,
+  topUpCard,
+  cancelCard,
+  setLimit as setLimitStore,
+  setBlocked as setBlockedStore,
+} from "@/lib/cards-store";
 
 export const Route = createFileRoute("/_app/cards/$id")({
   head: ({ params }) => ({
@@ -32,11 +37,7 @@ export const Route = createFileRoute("/_app/cards/$id")({
       { name: "description", content: "Manage card limits, freeze, and review transactions." },
     ],
   }),
-  loader: ({ params }) => {
-    const card = cards.find((c) => c.id === params.id);
-    if (!card) throw notFound();
-    return { card };
-  },
+  loader: ({ params }) => ({ id: params.id }),
   notFoundComponent: () => (
     <div className="min-h-full flex flex-col items-center justify-center p-6 text-center">
       <p className="text-sm text-foreground/60">Card not found.</p>
@@ -49,23 +50,37 @@ export const Route = createFileRoute("/_app/cards/$id")({
 });
 
 function CardDetail() {
-  const { card } = Route.useLoaderData();
+  const { id } = Route.useLoaderData();
   const navigate = useNavigate();
+  const { cards, txns: allTxns } = useCardsStore();
+  const card = cards.find((c) => c.id === id);
+
   const [revealed, setRevealed] = useState(false);
-  const [frozen, setFrozen] = useState(card.status === "frozen");
   const [showLimits, setShowLimits] = useState(false);
   const [showFund, setShowFund] = useState(false);
-  const [limit, setLimit] = useState(card.monthlyLimitNgn);
-  const [blocked, setBlocked] = useState<string[]>(card.blockedCategories);
+  const [showCancel, setShowCancel] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
   const txns = useMemo(
     () =>
-      cardTxns
-        .filter((t) => t.cardId === card.id)
+      allTxns
+        .filter((t) => t.cardId === id)
         .sort((a, b) => +new Date(b.at) - +new Date(a.at)),
-    [card.id],
+    [allTxns, id],
   );
+
+  useEffect(() => {
+    if (!card && cards.length === 0) {
+      navigate({ to: "/cards" });
+    }
+  }, [card, cards.length, navigate]);
+
+  if (!card) {
+    if (cards.length > 0) throw notFound();
+    return null;
+  }
+
+  const frozen = card.status === "frozen";
 
   const copy = (text: string, key: string) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -76,8 +91,7 @@ function CardDetail() {
     }
   };
 
-  const display: VirtualCard = { ...card, status: frozen ? "frozen" : "active" };
-  const pct = Math.min(100, Math.round((card.monthlySpentNgn / limit) * 100));
+  const pct = Math.min(100, Math.round((card.monthlySpentNgn / card.monthlyLimitNgn) * 100));
 
   return (
     <div className="min-h-full bg-background text-foreground flex flex-col">
@@ -99,7 +113,7 @@ function CardDetail() {
       </div>
 
       <div className="px-6 mt-5">
-        <VirtualCardArt card={display} revealed={revealed} size="lg" />
+        <VirtualCardArt card={card} revealed={revealed} size="lg" />
         {cards.length > 1 && (
           <div className="mt-3 flex items-center justify-center gap-1.5">
             {cards.map((c) => {
@@ -143,7 +157,10 @@ function CardDetail() {
         <ActionTile
           icon={frozen ? <Sun className="w-4 h-4" /> : <Snowflake className="w-4 h-4" />}
           label={frozen ? "Unfreeze" : "Freeze"}
-          onClick={() => setFrozen((v) => !v)}
+          onClick={() => {
+            toggleFreeze(card.id);
+            toast.success(frozen ? "Card unfrozen" : "Card frozen");
+          }}
           active={frozen}
         />
         <ActionTile
@@ -166,7 +183,7 @@ function CardDetail() {
               Monthly spend
             </p>
             <p className="text-[11px] tabular-nums text-card-foreground/65">
-              {formatNgn(card.monthlySpentNgn)} / {formatNgn(limit)}
+              {formatNgn(card.monthlySpentNgn)} / {formatNgn(card.monthlyLimitNgn)}
             </p>
           </div>
           <div className="mt-3 h-2 rounded-full bg-card-foreground/[0.08] overflow-hidden">
@@ -252,14 +269,33 @@ function CardDetail() {
 
       {showLimits && (
         <LimitsSheet
-          limit={limit}
-          setLimit={setLimit}
-          blocked={blocked}
-          setBlocked={setBlocked}
+          cardId={card.id}
+          initialLimit={card.monthlyLimitNgn}
+          initialBlocked={card.blockedCategories}
+          onCancel={() => {
+            setShowLimits(false);
+            setShowCancel(true);
+          }}
           onClose={() => setShowLimits(false)}
         />
       )}
-      {showFund && <FundSheet onClose={() => setShowFund(false)} />}
+      {showFund && (
+        <FundSheet
+          cardId={card.id}
+          onClose={() => setShowFund(false)}
+        />
+      )}
+      {showCancel && (
+        <ConfirmCancelSheet
+          label={card.label}
+          onConfirm={() => {
+            cancelCard(card.id);
+            toast.success("Card cancelled");
+            navigate({ to: "/cards" });
+          }}
+          onClose={() => setShowCancel(false)}
+        />
+      )}
     </div>
   );
 }
@@ -291,18 +327,28 @@ function ActionTile({
 }
 
 function LimitsSheet({
-  limit,
-  setLimit,
-  blocked,
-  setBlocked,
+  cardId,
+  initialLimit,
+  initialBlocked,
+  onCancel,
   onClose,
 }: {
-  limit: number;
-  setLimit: (n: number) => void;
-  blocked: string[];
-  setBlocked: (b: string[]) => void;
+  cardId: string;
+  initialLimit: number;
+  initialBlocked: string[];
+  onCancel: () => void;
   onClose: () => void;
 }) {
+  const [limit, setLimit] = useState(initialLimit);
+  const [blocked, setBlocked] = useState<string[]>(initialBlocked);
+
+  const save = () => {
+    setLimitStore(cardId, limit);
+    setBlockedStore(cardId, blocked);
+    toast.success("Limits updated");
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
@@ -370,12 +416,15 @@ function LimitsSheet({
 
         <div className="px-6 mt-6 space-y-2">
           <button
-            onClick={onClose}
+            onClick={save}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm"
           >
             Save changes
           </button>
-          <button className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2">
+          <button
+            onClick={onCancel}
+            className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2"
+          >
             <Trash2 className="w-4 h-4" /> Cancel card
           </button>
         </div>
@@ -384,8 +433,14 @@ function LimitsSheet({
   );
 }
 
-function FundSheet({ onClose }: { onClose: () => void }) {
+function FundSheet({ cardId, onClose }: { cardId: string; onClose: () => void }) {
   const [amount, setAmount] = useState(50000);
+  const submit = () => {
+    if (amount < 1000) return;
+    topUpCard(cardId, amount);
+    toast.success(`Topped up ${formatNgn(amount)}`);
+    onClose();
+  };
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
@@ -434,10 +489,52 @@ function FundSheet({ onClose }: { onClose: () => void }) {
         <div className="px-6 mt-5">
           <button
             disabled={amount < 1000}
-            onClick={onClose}
+            onClick={submit}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40"
           >
             Top up · {formatNgn(amount)}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConfirmCancelSheet({
+  label,
+  onConfirm,
+  onClose,
+}: {
+  label: string;
+  onConfirm: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-[90] flex items-end">
+      <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
+      <div className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 animate-in slide-in-from-bottom duration-300">
+        <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+        <div className="px-6 mt-5 text-center">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-destructive/15 text-destructive flex items-center justify-center">
+            <Trash2 className="w-6 h-6" />
+          </div>
+          <h3 className="font-display font-bold text-xl mt-4">Cancel {label}?</h3>
+          <p className="text-[12px] text-card-foreground/60 mt-2 leading-relaxed max-w-[280px] mx-auto">
+            This permanently closes the card. Any remaining balance is returned to your wallet.
+          </p>
+        </div>
+        <div className="px-6 mt-6 space-y-2">
+          <button
+            onClick={onConfirm}
+            className="w-full h-12 rounded-full bg-destructive text-destructive-foreground font-bold text-sm"
+          >
+            Cancel card
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm"
+          >
+            Keep card
           </button>
         </div>
       </div>
