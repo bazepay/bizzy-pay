@@ -70,7 +70,7 @@ function Signup() {
                 <h1 className="font-display text-4xl font-bold tracking-tight">
                   Create your account
                 </h1>
-                <p className="text-sm text-card-foreground/55 mt-2">
+                <p className="text-sm text-foreground/55 mt-2">
                   We'll send a one-time code to verify it's you.
                 </p>
               </motion.div>
@@ -85,9 +85,9 @@ function Signup() {
                 <h1 className="font-display text-4xl font-bold tracking-tight">
                   Enter the 6-digit code
                 </h1>
-                <p className="text-sm text-card-foreground/55 mt-2">
+                <p className="text-sm text-foreground/55 mt-2">
                   Sent to{" "}
-                  <span className="text-card-foreground font-semibold">
+                  <span className="text-foreground font-semibold">
                     {value || (mode === "phone" ? "+234 803 555 0142" : "you@example.com")}
                   </span>
                 </p>
