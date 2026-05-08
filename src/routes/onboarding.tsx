@@ -24,20 +24,20 @@ type Slide = {
 const slides: Slide[] = [
   {
     eyebrow: "Skip the bank queue",
-    title: "Spend Naira, no Nigerian bank needed.",
-    body: "No BVN. No NIN. Built for visitors and diaspora.",
+    title: "Naira spending, without a Nigerian bank account.",
+    body: "No BVN, no NIN, no proof of address. Built for visitors and diaspora who just need to pay and move.",
     visual: WalletVisual,
   },
   {
     eyebrow: "Top up your way",
-    title: "Fund with your foreign card.",
-    body: "Visa, Mastercard, Amex — we convert to Naira at fair rates.",
+    title: "Fund with your foreign card. Spend in Naira.",
+    body: "Use your Visa, Mastercard or Amex. We convert at fair rates — pay vendors, transfer to any bank, settle bills instantly.",
     visual: CardVisual,
   },
   {
     eyebrow: "Land ready",
-    title: "eSIM and a Nigerian number.",
-    body: "Online the moment you touch down. Receive OTPs on a local number.",
+    title: "An eSIM and a Nigerian number, before you board.",
+    body: "Online the moment you land in Lagos. Receive OTPs on a local number — no SIM swap, no airport queue.",
     visual: ESimVisual,
   },
 ];
@@ -107,10 +107,10 @@ function Onboarding() {
               <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-primary">
                 {slide.eyebrow}
               </p>
-              <h1 className="font-display text-[30px] leading-[1.1] font-bold tracking-tight mt-2.5">
+              <h1 className="font-display text-[24px] leading-[1.15] font-bold tracking-tight mt-2.5">
                 {slide.title}
               </h1>
-              <p className="text-[13.5px] text-card-foreground/60 leading-relaxed mt-3 max-w-[320px]">
+              <p className="text-[13px] text-card-foreground/60 leading-relaxed mt-3 max-w-[320px]">
                 {slide.body}
               </p>
             </motion.div>
