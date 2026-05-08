@@ -357,33 +357,123 @@ function Kyc() {
               key="done"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex-1 min-h-screen md:min-h-[860px] bg-background text-foreground flex flex-col px-6"
+              exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col min-h-screen md:min-h-[860px]"
             >
-              <div className="flex-1 flex flex-col items-center justify-center text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                  className="w-24 h-24 rounded-full bg-[oklch(0.82_0.16_85)] flex items-center justify-center shadow-[0_0_60px_oklch(0.82_0.16_85_/_0.5)]"
+              {/* Dark hero */}
+              <div className="relative bg-background text-foreground px-6 pt-6 pb-16 overflow-hidden">
+                <div className="absolute -top-16 -right-10 w-56 h-56 rounded-full bg-lime/25 blur-3xl" />
+                <div className="absolute top-20 -left-16 w-48 h-48 rounded-full bg-primary/30 blur-3xl" />
+
+                <div className="relative flex items-center gap-3">
+                  <div className="w-10 h-10" aria-hidden />
+                  <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+                    <div className="h-full bg-lime transition-all" style={{ width: `100%` }} />
+                  </div>
+                </div>
+
+                {/* Success mark */}
+                <div className="relative mt-8 flex justify-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 m-auto w-40 h-40 rounded-full bg-lime/30 blur-2xl"
+                  />
+                  <motion.div
+                    initial={{ scale: 0, rotate: -20 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.05 }}
+                    className="relative w-32 h-32 rounded-full bg-gradient-lime flex items-center justify-center shadow-[0_30px_60px_-15px_oklch(0.92_0.21_120_/_0.55)] ring-1 ring-white/10"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.35 }}
+                    >
+                      <Check className="w-14 h-14 text-lime-foreground" strokeWidth={3} />
+                    </motion.div>
+                    <motion.span
+                      animate={{ scale: [1, 1.35, 1], opacity: [0.7, 0, 0.7] }}
+                      transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+                      className="absolute inset-0 rounded-full ring-2 ring-lime/50"
+                    />
+                  </motion.div>
+                </div>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="font-display text-2xl font-bold mt-8 leading-tight text-center"
                 >
-                  <Sparkles className="w-12 h-12 text-[oklch(0.2_0.05_80)]" />
-                </motion.div>
-                <h1 className="font-display mt-6 text-2xl font-bold">You're verified!</h1>
-                <p className="text-foreground/60 mt-2 max-w-xs">
-                  Your{" "}
-                  <span className="text-foreground font-semibold">Basic Tier</span>{" "}
-                  is active. Complete profile details later to upgrade.
+                  You're verified
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-sm text-foreground/55 mt-1.5 text-center max-w-xs mx-auto"
+                >
+                  Welcome aboard. Your account is ready to roll.
+                </motion.p>
+              </div>
+
+              {/* White surface */}
+              <div className="relative bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+                <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mb-3 px-1">
+                  Account status
                 </p>
-                <div className="mt-8 px-4 py-3 rounded-full bg-primary/15 text-primary text-sm font-semibold">
-                  Daily limit · ₦200,000
+
+                {/* Tier card */}
+                <div className="relative rounded-2xl bg-gradient-card text-foreground p-5 overflow-hidden">
+                  <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-lime/20 blur-2xl" />
+                  <div className="relative flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">
+                        Current tier
+                      </p>
+                      <p className="font-display text-xl font-bold mt-1">Basic</p>
+                    </div>
+                    <div className="px-3 py-1 rounded-full bg-lime text-lime-foreground text-[11px] font-bold uppercase tracking-wide">
+                      Active
+                    </div>
+                  </div>
+                  <div className="relative mt-5 flex items-end justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">
+                        Daily limit
+                      </p>
+                      <p className="font-display text-2xl font-bold mt-1">₦200,000</p>
+                    </div>
+                    <ShieldCheck className="w-8 h-8 text-lime" />
+                  </div>
+                </div>
+
+                {/* Perks */}
+                <div className="mt-5 space-y-2.5">
+                  {[
+                    { i: ShieldCheck, t: "Identity verified", s: "Smile ID match confirmed." },
+                    { i: Sparkles, t: "Basic features unlocked", s: "Send, receive, and pay bills." },
+                    { i: IdCard, t: "Upgrade anytime", s: "Add proof of address for higher limits." },
+                  ].map((it, idx) => (
+                    <div key={idx} className="flex gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]">
+                      <div className="w-9 h-9 rounded-full bg-lime/20 text-card-foreground flex items-center justify-center shrink-0">
+                        <it.i className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm">{it.t}</p>
+                        <p className="text-xs text-card-foreground/55 mt-0.5">{it.s}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-6 mt-auto">
+                  <PrimaryButton onClick={() => nav({ to: "/profile" })}>
+                    Back to profile
+                  </PrimaryButton>
                 </div>
               </div>
-              <button
-                onClick={() => nav({ to: "/profile" })}
-                className="mb-8 h-12 bg-primary text-primary-foreground rounded-full font-semibold text-sm active:scale-[0.98] transition"
-              >
-                Back to profile
-              </button>
             </motion.div>
           )}
         </AnimatePresence>
