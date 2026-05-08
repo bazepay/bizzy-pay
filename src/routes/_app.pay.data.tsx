@@ -11,6 +11,7 @@ import {
   X,
   Search,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/pay/data")({
   head: () => ({
@@ -114,6 +115,7 @@ function DataPage() {
   const [query, setQuery] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise data purchase" });
 
   const detected = useMemo(() => detectNetwork(phone), [phone]);
   const activeNet = autoNet && detected ? detected : network;
@@ -390,7 +392,7 @@ function DataPage() {
           plan={selectedPlan}
           cashback={cashback}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => requirePin(() => setSuccess(true))}
         />
       )}
 
@@ -403,6 +405,7 @@ function DataPage() {
           onDone={() => navigate({ to: "/wallet" })}
         />
       )}
+      {pinGate}
     </div>
   );
 }

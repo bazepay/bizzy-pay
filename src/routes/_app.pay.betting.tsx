@@ -9,6 +9,7 @@ import {
   X,
   ShieldCheck,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/pay/betting")({
   head: () => ({
@@ -55,6 +56,7 @@ function BettingPage() {
   const [custom, setCustom] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise betting top-up" });
 
   const bookmaker = bookmakers.find((b) => b.id === bookmakerId)!;
   const finalAmount = amount ?? (custom ? Number(custom) : 0);
@@ -301,7 +303,7 @@ function BettingPage() {
           amount={finalAmount}
           cashback={cashback}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => requirePin(() => setSuccess(true))}
         />
       )}
 
@@ -315,6 +317,7 @@ function BettingPage() {
           onDone={() => navigate({ to: "/wallet" })}
         />
       )}
+      {pinGate}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
   Calendar,
   Gauge,
 } from "lucide-react";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/_app/pay/internet")({
   head: () => ({
@@ -104,6 +105,7 @@ function InternetPage() {
   const [planId, setPlanId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise internet payment" });
 
   const provider = providers.find((p) => p.id === providerId)!;
   const providerPlans = plans[providerId] ?? [];
@@ -369,7 +371,7 @@ function InternetPage() {
           plan={plan}
           cashback={cashback}
           onClose={() => setConfirm(false)}
-          onConfirm={() => setSuccess(true)}
+          onConfirm={() => requirePin(() => setSuccess(true))}
         />
       )}
 
@@ -383,6 +385,7 @@ function InternetPage() {
           onDone={() => navigate({ to: "/wallet" })}
         />
       )}
+      {pinGate}
     </div>
   );
 }
