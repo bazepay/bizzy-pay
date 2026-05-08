@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Receipt,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { VirtualCardArt, RevealToggle } from "@/components/virtual-card";
 import {
@@ -99,6 +100,45 @@ function CardDetail() {
 
       <div className="px-6 mt-5">
         <VirtualCardArt card={display} revealed={revealed} size="lg" />
+        {cards.length > 1 && (
+          <div className="mt-3 flex items-center justify-center gap-3">
+            {(() => {
+              const idx = cards.findIndex((c) => c.id === card.id);
+              const prev = cards[(idx - 1 + cards.length) % cards.length];
+              const next = cards[(idx + 1) % cards.length];
+              return (
+                <>
+                  <button
+                    onClick={() => navigate({ to: "/cards/$id", params: { id: prev.id } })}
+                    className="w-9 h-9 rounded-full bg-card text-card-foreground flex items-center justify-center active:scale-95 transition"
+                    aria-label="Previous card"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <div className="flex items-center gap-1.5">
+                    {cards.map((c, i) => (
+                      <button
+                        key={c.id}
+                        onClick={() => navigate({ to: "/cards/$id", params: { id: c.id } })}
+                        className={`h-1.5 rounded-full transition-all ${
+                          i === idx ? "w-6 bg-primary" : "w-1.5 bg-foreground/25"
+                        }`}
+                        aria-label={`Go to ${c.label}`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => navigate({ to: "/cards/$id", params: { id: next.id } })}
+                    className="w-9 h-9 rounded-full bg-card text-card-foreground flex items-center justify-center active:scale-95 transition"
+                    aria-label="Next card"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </>
+              );
+            })()}
+          </div>
+        )}
       </div>
 
       {/* Reveal + copy */}
