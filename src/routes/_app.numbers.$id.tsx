@@ -169,7 +169,7 @@ function NumberDetail() {
         <ManageSheet
           number={number}
           autoRenew={autoRenew}
-          onToggle={() => setAutoRenew((v) => !v)}
+          onToggle={() => setAutoRenew((v: boolean) => !v)}
           onClose={() => setShowManage(false)}
         />
       )}
