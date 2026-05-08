@@ -43,6 +43,7 @@ import { Route as AppCardsNewRouteImport } from './routes/_app.cards.new'
 import { Route as AppCardsIdRouteImport } from './routes/_app.cards.$id'
 import { Route as AppProfileSecurityTwofaRouteImport } from './routes/_app.profile_.security.twofa'
 import { Route as AppProfileSecurityPinRouteImport } from './routes/_app.profile_.security.pin'
+import { Route as AppProfileHelpChatRouteImport } from './routes/_app.profile_.help.chat'
 import { Route as AppCardsIdTxnTxnIdRouteImport } from './routes/_app.cards.$id_.txn.$txnId'
 
 const TransferRoute = TransferRouteImport.update({
@@ -214,6 +215,11 @@ const AppProfileSecurityPinRoute = AppProfileSecurityPinRouteImport.update({
   path: '/profile/security/pin',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileHelpChatRoute = AppProfileHelpChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AppProfileHelpRoute,
+} as any)
 const AppCardsIdTxnTxnIdRoute = AppCardsIdTxnTxnIdRouteImport.update({
   id: '/cards/$id_/txn/$txnId',
   path: '/cards/$id/txn/$txnId',
@@ -245,13 +251,14 @@ export interface FileRoutesByFullPath {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
-  '/profile/help': typeof AppProfileHelpRoute
+  '/profile/help': typeof AppProfileHelpRouteWithChildren
   '/profile/legal': typeof AppProfileLegalRoute
   '/profile/referrals': typeof AppProfileReferralsRoute
   '/cards/': typeof AppCardsIndexRoute
   '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
   '/pay/': typeof AppPayIndexRoute
+  '/profile/help/chat': typeof AppProfileHelpChatRoute
   '/profile/security/pin': typeof AppProfileSecurityPinRoute
   '/profile/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
@@ -280,13 +287,14 @@ export interface FileRoutesByTo {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
-  '/profile/help': typeof AppProfileHelpRoute
+  '/profile/help': typeof AppProfileHelpRouteWithChildren
   '/profile/legal': typeof AppProfileLegalRoute
   '/profile/referrals': typeof AppProfileReferralsRoute
   '/cards': typeof AppCardsIndexRoute
   '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
   '/pay': typeof AppPayIndexRoute
+  '/profile/help/chat': typeof AppProfileHelpChatRoute
   '/profile/security/pin': typeof AppProfileSecurityPinRoute
   '/profile/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/cards/$id/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
@@ -318,13 +326,14 @@ export interface FileRoutesById {
   '/_app/pay/esim': typeof AppPayEsimRoute
   '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
-  '/_app/profile_/help': typeof AppProfileHelpRoute
+  '/_app/profile_/help': typeof AppProfileHelpRouteWithChildren
   '/_app/profile_/legal': typeof AppProfileLegalRoute
   '/_app/profile_/referrals': typeof AppProfileReferralsRoute
   '/_app/cards/': typeof AppCardsIndexRoute
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
+  '/_app/profile_/help/chat': typeof AppProfileHelpChatRoute
   '/_app/profile_/security/pin': typeof AppProfileSecurityPinRoute
   '/_app/profile_/security/twofa': typeof AppProfileSecurityTwofaRoute
   '/_app/cards/$id_/txn/$txnId': typeof AppCardsIdTxnTxnIdRoute
@@ -363,6 +372,7 @@ export interface FileRouteTypes {
     | '/esims/'
     | '/numbers/'
     | '/pay/'
+    | '/profile/help/chat'
     | '/profile/security/pin'
     | '/profile/security/twofa'
     | '/cards/$id/txn/$txnId'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/esims'
     | '/numbers'
     | '/pay'
+    | '/profile/help/chat'
     | '/profile/security/pin'
     | '/profile/security/twofa'
     | '/cards/$id/txn/$txnId'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/_app/esims/'
     | '/_app/numbers/'
     | '/_app/pay/'
+    | '/_app/profile_/help/chat'
     | '/_app/profile_/security/pin'
     | '/_app/profile_/security/twofa'
     | '/_app/cards/$id_/txn/$txnId'
@@ -692,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileSecurityPinRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/profile_/help/chat': {
+      id: '/_app/profile_/help/chat'
+      path: '/chat'
+      fullPath: '/profile/help/chat'
+      preLoaderRoute: typeof AppProfileHelpChatRouteImport
+      parentRoute: typeof AppProfileHelpRoute
+    }
     '/_app/cards/$id_/txn/$txnId': {
       id: '/_app/cards/$id_/txn/$txnId'
       path: '/cards/$id/txn/$txnId'
@@ -729,6 +748,18 @@ const AppPayRouteChildren: AppPayRouteChildren = {
 const AppPayRouteWithChildren =
   AppPayRoute._addFileChildren(AppPayRouteChildren)
 
+interface AppProfileHelpRouteChildren {
+  AppProfileHelpChatRoute: typeof AppProfileHelpChatRoute
+}
+
+const AppProfileHelpRouteChildren: AppProfileHelpRouteChildren = {
+  AppProfileHelpChatRoute: AppProfileHelpChatRoute,
+}
+
+const AppProfileHelpRouteWithChildren = AppProfileHelpRoute._addFileChildren(
+  AppProfileHelpRouteChildren,
+)
+
 interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppPayRoute: typeof AppPayRouteWithChildren
@@ -738,7 +769,7 @@ interface AppRouteChildren {
   AppCardsNewRoute: typeof AppCardsNewRoute
   AppEsimsIdRoute: typeof AppEsimsIdRoute
   AppNumbersIdRoute: typeof AppNumbersIdRoute
-  AppProfileHelpRoute: typeof AppProfileHelpRoute
+  AppProfileHelpRoute: typeof AppProfileHelpRouteWithChildren
   AppProfileLegalRoute: typeof AppProfileLegalRoute
   AppProfileReferralsRoute: typeof AppProfileReferralsRoute
   AppCardsIndexRoute: typeof AppCardsIndexRoute
@@ -758,7 +789,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCardsNewRoute: AppCardsNewRoute,
   AppEsimsIdRoute: AppEsimsIdRoute,
   AppNumbersIdRoute: AppNumbersIdRoute,
-  AppProfileHelpRoute: AppProfileHelpRoute,
+  AppProfileHelpRoute: AppProfileHelpRouteWithChildren,
   AppProfileLegalRoute: AppProfileLegalRoute,
   AppProfileReferralsRoute: AppProfileReferralsRoute,
   AppCardsIndexRoute: AppCardsIndexRoute,
