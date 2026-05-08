@@ -1,8 +1,16 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PhoneFrame } from "@/components/phone-frame";
-import { ArrowLeft, ArrowRight, Mail, Phone, Shield } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Phone, Shield, Search, Check } from "lucide-react";
+import { COUNTRIES, DIAL_CODES } from "@/lib/countries";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/auth/signup")({
   head: () => ({
@@ -16,10 +24,24 @@ export const Route = createFileRoute("/auth/signup")({
 
 function Signup() {
   const [step, setStep] = useState<"identifier" | "otp">("identifier");
-  const [mode, setMode] = useState<"phone" | "email">("phone");
-  const [value, setValue] = useState("");
+  const [countryCode, setCountryCode] = useState("NG");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const nav = useNavigate();
+
+  const country = COUNTRIES.find((c) => c.code === countryCode) ?? COUNTRIES[0];
+  const dial = DIAL_CODES[countryCode] ?? "";
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return COUNTRIES;
+    return COUNTRIES.filter(
+      (c) => c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)
+    );
+  }, [search]);
 
   const handleOtpChange = (i: number, v: string) => {
     if (v && !/^\d$/.test(v)) return;
@@ -32,7 +54,9 @@ function Signup() {
     }
   };
 
-  const canContinue = value.trim().length > 4;
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const phoneValid = phone.replace(/\D/g, "").length >= 7;
+  const canContinue = emailValid && phoneValid;
 
   return (
     <PhoneFrame>
@@ -88,7 +112,7 @@ function Signup() {
                 <p className="text-sm text-foreground/55 mt-2">
                   Sent to{" "}
                   <span className="text-foreground font-semibold">
-                    {value || (mode === "phone" ? "+234 803 555 0142" : "you@example.com")}
+                    +{dial} {phone}
                   </span>
                 </p>
               </motion.div>
@@ -108,44 +132,96 @@ function Signup() {
                 transition={{ duration: 0.35 }}
                 className="flex-1 flex flex-col"
               >
-                {/* Mode toggle */}
-                <div className="grid grid-cols-2 p-1 bg-muted rounded-2xl">
-                  {(["phone", "email"] as const).map((m) => (
+                {/* Country */}
+                <label className="text-[11.5px] font-semibold text-card-foreground/55 uppercase tracking-wide">
+                  Country
+                </label>
+                <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
+                  <DialogTrigger asChild>
                     <button
-                      key={m}
-                      onClick={() => {
-                        setMode(m);
-                        setValue("");
-                      }}
-                      className={`relative h-10 rounded-xl text-[13px] font-semibold capitalize transition ${
-                        mode === m ? "text-card-foreground" : "text-card-foreground/50"
-                      }`}
+                      type="button"
+                      className="mt-2 w-full h-14 px-4 rounded-2xl bg-muted text-left flex items-center gap-3 border border-transparent hover:border-primary/30 transition"
                     >
-                      {mode === m && (
-                        <motion.div
-                          layoutId="signup-mode-pill"
-                          className="absolute inset-0 bg-card rounded-xl shadow-soft"
-                          transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                        />
-                      )}
-                      <span className="relative flex items-center justify-center gap-2">
-                        {m === "phone" ? <Phone className="w-3.5 h-3.5" /> : <Mail className="w-3.5 h-3.5" />}
-                        {m}
-                      </span>
+                      <span className="text-2xl leading-none">{country.flag}</span>
+                      <span className="flex-1 text-[15px] font-medium">{country.name}</span>
+                      <span className="text-[13px] text-card-foreground/50">+{dial}</span>
                     </button>
-                  ))}
-                </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm p-0 overflow-hidden">
+                    <DialogHeader className="px-5 pt-5 pb-3">
+                      <DialogTitle>Select country</DialogTitle>
+                    </DialogHeader>
+                    <div className="px-5 pb-3">
+                      <div className="relative">
+                        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                          autoFocus
+                          value={search}
+                          onChange={(e) => setSearch(e.target.value)}
+                          placeholder="Search country"
+                          className="w-full h-11 pl-9 pr-3 rounded-xl bg-muted text-sm focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div className="max-h-80 overflow-y-auto pb-3">
+                      {filtered.map((c) => {
+                        const selected = c.code === countryCode;
+                        return (
+                          <button
+                            key={c.code}
+                            onClick={() => {
+                              setCountryCode(c.code);
+                              setPickerOpen(false);
+                              setSearch("");
+                            }}
+                            className={`w-full px-5 py-2.5 flex items-center gap-3 text-left hover:bg-muted transition ${selected ? "bg-muted" : ""}`}
+                          >
+                            <span className="text-xl leading-none">{c.flag}</span>
+                            <span className="flex-1 text-[14px]">{c.name}</span>
+                            <span className="text-[12px] text-muted-foreground">
+                              +{DIAL_CODES[c.code] ?? ""}
+                            </span>
+                            {selected && <Check className="w-4 h-4 text-primary" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </DialogContent>
+                </Dialog>
 
-                {/* Input */}
-                <div className="mt-5 relative">
-                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-card-foreground/40">
-                    {mode === "phone" ? "+234" : "@"}
+                {/* Phone */}
+                <label className="mt-5 text-[11.5px] font-semibold text-card-foreground/55 uppercase tracking-wide">
+                  Phone number
+                </label>
+                <div className="mt-2 relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[14px] font-semibold text-card-foreground/70 flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-card-foreground/40" />
+                    +{dial}
                   </span>
                   <input
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 focus:bg-background/0 transition"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/[^\d\s]/g, ""))}
+                    inputMode="tel"
+                    placeholder="803 555 0142"
+                    className={`w-full h-14 pr-4 rounded-2xl bg-muted border text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition ${
+                      dial.length <= 1 ? "pl-14" : dial.length === 2 ? "pl-16" : dial.length === 3 ? "pl-[72px]" : "pl-20"
+                    } border-transparent`}
+                  />
+                </div>
+
+                {/* Email */}
+                <label className="mt-4 text-[11.5px] font-semibold text-card-foreground/55 uppercase tracking-wide">
+                  Email address
+                </label>
+                <div className="mt-2 relative">
+                  <Mail className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-card-foreground/40" />
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    inputMode="email"
+                    placeholder="you@example.com"
+                    className="w-full h-14 pl-11 pr-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
                   />
                 </div>
 
@@ -158,7 +234,7 @@ function Signup() {
                   </p>
                 </div>
 
-                <div className="mt-auto">
+                <div className="mt-auto pt-6">
                   <button
                     disabled={!canContinue}
                     onClick={() => setStep("otp")}
