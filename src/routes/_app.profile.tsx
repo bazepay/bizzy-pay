@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
+  ShieldAlert,
+  Clock,
   ChevronRight,
   Fingerprint,
   KeyRound,
@@ -16,6 +18,7 @@ import {
   X,
   Check,
   Pencil,
+  RefreshCw,
 } from "lucide-react";
 import { BottomNav } from "@/components/bottom-nav";
 import { toast } from "sonner";
