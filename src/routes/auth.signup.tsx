@@ -5,6 +5,21 @@ import { PhoneFrame } from "@/components/phone-frame";
 import { ArrowLeft, ArrowRight, Mail, Shield, Search, Check, ChevronDown, X } from "lucide-react";
 import { COUNTRIES, DIAL_CODES } from "@/lib/countries";
 
+function Flag({ code, className = "w-7 h-5" }: { code: string; className?: string }) {
+  const lower = code.toLowerCase();
+  return (
+    <img
+      src={`https://flagcdn.com/w80/${lower}.png`}
+      srcSet={`https://flagcdn.com/w160/${lower}.png 2x`}
+      width={32}
+      height={24}
+      alt=""
+      className={`${className} rounded-[3px] object-cover shadow-sm shrink-0`}
+      loading="lazy"
+    />
+  );
+}
+
 export const Route = createFileRoute("/auth/signup")({
   head: () => ({
     meta: [
