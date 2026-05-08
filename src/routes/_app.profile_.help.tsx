@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Search, ChevronDown, MessageCircle, HelpCircle, CreditCard, Wallet, Shield, Receipt } from "lucide-react";
 
-export const Route = createFileRoute("/_app/profile/help")({
+export const Route = createFileRoute("/_app/profile_/help")({
   head: () => ({
     meta: [
       { title: "Help center — BazePay" },
