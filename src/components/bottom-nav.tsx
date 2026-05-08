@@ -1,14 +1,14 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Wallet as WalletIcon, Receipt, CreditCard, User, type LucideIcon } from "lucide-react";
+import { House, Wallet, ReceiptText, CreditCard, CircleUserRound, type LucideIcon } from "lucide-react";
 
 type Item = { to: string; icon: LucideIcon; label: string };
 
 const items: Item[] = [
-  { to: "/home", icon: Home, label: "Home" },
-  { to: "/wallet", icon: WalletIcon, label: "Wallet" },
-  { to: "/pay", icon: Receipt, label: "Pay" },
+  { to: "/home", icon: House, label: "Home" },
+  { to: "/wallet", icon: Wallet, label: "Wallet" },
+  { to: "/pay", icon: ReceiptText, label: "Pay" },
   { to: "/cards", icon: CreditCard, label: "Cards" },
-  { to: "/profile", icon: User, label: "Profile" },
+  { to: "/profile", icon: CircleUserRound, label: "Profile" },
 ];
 
 export function BottomNav() {
