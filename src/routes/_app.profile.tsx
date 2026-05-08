@@ -81,8 +81,12 @@ function ProfilePage() {
         </div>
 
         <div className="mt-6 flex items-start gap-4">
-          <div className="w-16 h-16 shrink-0 rounded-full bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.82_0.16_85)] text-white flex items-center justify-center font-display text-xl font-bold shadow-lg ring-2 ring-white/10">
-            {user.initials}
+          <div className="w-16 h-16 shrink-0 rounded-full bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.82_0.16_85)] text-white flex items-center justify-center font-display text-xl font-bold shadow-lg ring-2 ring-white/10 overflow-hidden">
+            {user.avatar ? (
+              <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              user.initials
+            )}
           </div>
           <div className="min-w-0 flex-1 pt-1">
             <p className="font-display text-lg font-bold truncate leading-tight">{user.name}</p>
@@ -92,7 +96,7 @@ function ProfilePage() {
           <button
             onClick={() => setEditOpen(true)}
             className="w-9 h-9 mt-3 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
-            aria-label="Edit profile"
+            aria-label="Edit profile photo"
           >
             <Pencil className="w-3.5 h-3.5" />
           </button>
