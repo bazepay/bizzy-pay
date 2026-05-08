@@ -108,6 +108,24 @@ function ProfilePage() {
           onRetry={() => navigate({ to: "/kyc" })}
         />
 
+        {/* Demo: KYC status switcher */}
+        <div className="mt-3 flex items-center gap-1.5 p-1 rounded-full bg-card-foreground/[0.04] text-[10px] font-semibold">
+          <span className="px-2 text-card-foreground/45 uppercase tracking-widest">Demo</span>
+          {(["verified", "pending", "rejected"] as KycStatus[]).map((s) => (
+            <button
+              key={s}
+              onClick={() => setUser((u) => ({ ...u, kycStatus: s }))}
+              className={`flex-1 h-7 rounded-full capitalize transition ${
+                user.kycStatus === s
+                  ? "bg-card text-card-foreground shadow-sm"
+                  : "text-card-foreground/55 active:bg-card-foreground/[0.06]"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+
         {/* Security */}
         <SectionTitle>Security</SectionTitle>
         <div className="rounded-3xl bg-card-foreground/[0.03] divide-y divide-card-foreground/10 overflow-hidden">
