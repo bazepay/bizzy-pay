@@ -302,7 +302,7 @@ function FilterSheet({
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[90%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full max-w-[420px] bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[90%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
 
@@ -516,7 +516,7 @@ function Sheet({
       <div className="absolute inset-0 bg-black/50" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] p-6 pb-8 max-h-[88%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full max-w-[420px] bg-card text-card-foreground rounded-t-[2rem] p-6 pb-8 max-h-[88%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
 
@@ -667,7 +667,7 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[92%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
+        className="relative w-full max-w-[420px] bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 max-h-[92%] overflow-y-auto no-scrollbar animate-in slide-in-from-bottom duration-300"
       >
         <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
 
