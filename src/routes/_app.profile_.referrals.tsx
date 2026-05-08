@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { ArrowLeft, Gift, Copy, Share2, Users, Coins, Check, ArrowRight } from "lucide-react";
+import { ArrowLeft, Gift, Copy, Share2, Users, Coins, Check, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/profile_/referrals")({
@@ -54,10 +53,10 @@ function ReferralsPage() {
 
   return (
     <div className="min-h-full bg-card text-card-foreground flex flex-col">
-      {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white px-6 pt-12 pb-10">
+      {/* Hero — compact */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white px-6 pt-12 pb-12">
         <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
-        <div className="absolute -bottom-20 -left-10 w-56 h-56 rounded-full bg-[oklch(0.55_0.18_280)]/40 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 w-56 h-56 rounded-full bg-[oklch(0.55_0.18_280)]/35 blur-3xl" />
 
         <div className="relative flex items-center gap-3">
           <button
@@ -70,28 +69,24 @@ function ReferralsPage() {
           <h1 className="font-display text-xl font-bold">Refer & earn</h1>
         </div>
 
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", damping: 18, stiffness: 200 }}
-          className="relative mt-6 flex items-center gap-3"
-        >
-          <div className="w-14 h-14 rounded-2xl bg-[oklch(0.82_0.16_85)]/25 flex items-center justify-center">
-            <Gift className="w-7 h-7 text-[oklch(0.82_0.16_85)]" />
+        <div className="relative mt-5 flex items-center gap-3 animate-fade-in">
+          <div className="w-12 h-12 rounded-2xl bg-[oklch(0.82_0.16_85)]/25 flex items-center justify-center shrink-0">
+            <Gift className="w-6 h-6 text-[oklch(0.82_0.16_85)]" />
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-widest text-white/60 font-semibold">Earn together</p>
-            <p className="font-display text-2xl font-bold leading-tight">₦2,000 per friend</p>
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-widest text-white/60 font-semibold">Earn together</p>
+            <p className="font-display text-xl font-bold leading-tight">₦2,000 per friend</p>
           </div>
-        </motion.div>
+        </div>
 
-        <p className="relative text-sm text-white/75 leading-relaxed mt-4 max-w-sm">
+        <p className="relative text-xs text-white/70 leading-relaxed mt-3 max-w-sm">
           Get ₦2,000 for every friend who joins and funds their wallet. They get ₦2,000 too.
         </p>
       </div>
 
       {/* Code card */}
       <div className="px-6 -mt-6 relative">
-        <div className="rounded-3xl bg-card border border-card-foreground/10 shadow-lg p-5">
+        <div className="rounded-3xl bg-card border border-card-foreground/10 shadow-2xl shadow-[oklch(0.22_0.08_280)]/30 p-5">
           <p className="text-[10px] uppercase tracking-widest text-card-foreground/50 font-semibold">Your referral code</p>
           <div className="mt-2 flex items-center justify-between gap-3">
             <p className="font-display text-3xl font-bold tracking-wider">{REFERRAL.code}</p>
@@ -116,8 +111,8 @@ function ReferralsPage() {
       {/* Stats */}
       <div className="px-6 mt-5 grid grid-cols-3 gap-2.5">
         <Stat label="Invited" value={String(REFERRAL.invited)} />
-        <Stat label="Earned" value={REFERRAL.earned} />
-        <Stat label="Pending" value={REFERRAL.pending} />
+        <Stat label="Earned" value={REFERRAL.earned} accent />
+        <Stat label="Pending" value={REFERRAL.pending} muted />
       </div>
 
       {/* How it works */}
@@ -129,11 +124,12 @@ function ReferralsPage() {
           const Icon = s.icon;
           return (
             <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-card-foreground/[0.04]">
-              <div className="w-9 h-9 shrink-0 rounded-full bg-primary/12 flex items-center justify-center text-primary">
+              <div className="relative w-9 h-9 shrink-0 rounded-full bg-primary/12 flex items-center justify-center text-primary">
                 <Icon className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">{i + 1}</span>
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold">{i + 1}. {s.h}</p>
+                <p className="text-sm font-semibold">{s.h}</p>
                 <p className="text-[11px] text-card-foreground/60 leading-relaxed mt-0.5">{s.p}</p>
               </div>
             </div>
@@ -154,7 +150,7 @@ function ReferralsPage() {
               <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
                 earned ? "bg-primary/15 text-primary" : "bg-card-foreground/10 text-card-foreground/55"
               }`}>
-                {earned ? <Check className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+                {earned ? <Check className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold">{h.name}</p>
@@ -171,11 +167,11 @@ function ReferralsPage() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, accent, muted }: { label: string; value: string; accent?: boolean; muted?: boolean }) {
   return (
     <div className="rounded-2xl bg-card-foreground/[0.04] p-3 text-center">
       <p className="text-[10px] uppercase tracking-widest text-card-foreground/50">{label}</p>
-      <p className="font-display font-bold text-base mt-0.5">{value}</p>
+      <p className={`font-display font-bold text-base mt-0.5 ${accent ? "text-primary" : muted ? "text-card-foreground/55" : ""}`}>{value}</p>
     </div>
   );
 }
