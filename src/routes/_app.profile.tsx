@@ -78,7 +78,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="min-h-full bg-background text-foreground flex flex-col pb-32">
+    <div className="min-h-full bg-background text-foreground flex flex-col pb-24">
       {/* Dark hero */}
       <div className="relative px-6 pt-12 pb-20">
         <div className="flex items-center justify-between">
