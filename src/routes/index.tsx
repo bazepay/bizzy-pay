@@ -64,7 +64,7 @@ export function Logo({ size = 56 }: { size?: number }) {
   return (
     <div className="flex items-center gap-3">
       <div
-        className="rounded-2xl bg-gradient-to-br from-lime to-[oklch(0.85_0.2_130)] flex items-center justify-center font-display font-bold text-[oklch(0.2_0.05_80)] shadow-[0_20px_40px_-15px_oklch(0.92_0.21_120_/_0.6)]"
+        className="rounded-2xl bg-gradient-primary flex items-center justify-center font-display font-bold text-primary-foreground shadow-[0_20px_40px_-15px_oklch(0.55_0.24_280_/_0.65)]"
         style={{ width: size, height: size, fontSize: size * 0.5 }}
       >
         B
