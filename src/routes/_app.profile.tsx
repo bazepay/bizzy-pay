@@ -140,9 +140,9 @@ function ProfilePage() {
         <SectionTitle>Refer & earn</SectionTitle>
         <button
           onClick={() => navigate({ to: "/profile/referrals" })}
-          className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.55_0.18_280)] to-[oklch(0.42_0.16_290)] text-white p-5 text-left active:scale-[0.99] transition shadow-lg"
+          className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.62_0.11_280)] to-[oklch(0.5_0.12_290)] text-white p-5 text-left active:scale-[0.99] transition shadow-md"
         >
-          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-[oklch(0.82_0.16_85)]/30 blur-2xl" />
+          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-[oklch(0.82_0.16_85)]/18 blur-2xl" />
           <div className="relative flex items-center gap-3">
             <div className="w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
               <Gift className="w-5 h-5" />
