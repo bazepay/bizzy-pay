@@ -469,8 +469,8 @@ function Kyc() {
                 </div>
 
                 <div className="pt-6 mt-auto">
-                  <PrimaryButton onClick={() => nav({ to: "/profile" })}>
-                    Back to profile
+                  <PrimaryButton onClick={() => nav({ to: "/home" })}>
+                    Continue to home
                   </PrimaryButton>
                 </div>
               </div>
