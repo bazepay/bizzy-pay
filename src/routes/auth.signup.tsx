@@ -162,7 +162,7 @@ function Signup() {
                   <button
                     disabled={!canContinue}
                     onClick={() => setStep("otp")}
-                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
+                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
                   >
                     Send code
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
@@ -214,7 +214,7 @@ function Signup() {
                 <div className="mt-auto">
                   <button
                     onClick={() => nav({ to: "/kyc" })}
-                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition"
+                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-primary text-primary-foreground font-bold text-sm active:scale-[0.98] transition"
                   >
                     Verify & continue
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
