@@ -87,7 +87,7 @@ function Signup() {
                 </h1>
                 <p className="text-sm text-card-foreground/55 mt-2">
                   Sent to{" "}
-                  <span className="text-foreground font-semibold">
+                  <span className="text-card-foreground font-semibold">
                     {value || (mode === "phone" ? "+234 803 555 0142" : "you@example.com")}
                   </span>
                 </p>
@@ -145,7 +145,7 @@ function Signup() {
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 focus:bg-background/0 transition"
+                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 focus:bg-background/0 transition"
                   />
                 </div>
 
@@ -193,7 +193,7 @@ function Signup() {
                       onChange={(e) => handleOtpChange(i, e.target.value)}
                       maxLength={1}
                       inputMode="numeric"
-                      className={`w-12 h-14 rounded-2xl border text-center text-xl font-bold text-foreground outline-none transition ${
+                      className={`w-12 h-14 rounded-2xl border text-center text-xl font-bold text-card-foreground outline-none transition ${
                         d ? "border-primary/50 bg-primary/[0.06]" : "border-border bg-muted"
                       }`}
                     />

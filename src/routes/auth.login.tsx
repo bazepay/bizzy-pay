@@ -91,7 +91,7 @@ function Login() {
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-              className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
+              className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
             />
           </div>
 
@@ -102,12 +102,12 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full h-14 pl-5 pr-12 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
+              className="w-full h-14 pl-5 pr-12 rounded-2xl bg-muted border border-transparent text-card-foreground placeholder:text-card-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 transition"
             />
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-card-foreground/50 hover:text-foreground hover:bg-foreground/[0.06] transition"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-card-foreground/50 hover:text-card-foreground hover:bg-foreground/[0.06] transition"
             >
               {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
