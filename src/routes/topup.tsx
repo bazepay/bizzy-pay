@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
+import { usePinGate } from "@/components/pin-prompt";
 
 export const Route = createFileRoute("/topup")({
   head: () => ({
@@ -74,12 +75,14 @@ function TopupFlow() {
     setStep("method");
   };
 
+  const { requirePin, pinGate } = usePinGate({ subtitle: "Authorise wallet top-up" });
+
   const onPay = () => {
     if (!method) return;
     if (method.id === "transfer") {
       setStep("transfer-details");
     } else {
-      setStep("success");
+      requirePin(() => setStep("success"));
     }
   };
 
