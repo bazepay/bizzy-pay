@@ -613,6 +613,18 @@ function EsimPage() {
               <div className="w-8 h-8 rounded-full bg-service-esim/15 text-service-esim flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-4 h-4" />
               </div>
+              <div className="text-[11px] text-card-foreground/65 leading-relaxed">
+                {mode === "new" ? (
+                  <>
+                    <span className="font-semibold text-card-foreground/85">Activate in 2 minutes.</span>{" "}
+                    No SIM swap, keep your number. Auto-roams to the strongest of 36 carriers. Works on iPhone XR/XS+, Pixel 3+, Galaxy S20+.
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-card-foreground/85">Top up — no reinstall.</span>{" "}
+                    Data refills the existing eSIM profile in under 30 seconds.
+                  </>
+                )}
               </div>
             </div>
           </>
