@@ -184,21 +184,26 @@ function CardsPage() {
               {txns.map((t) => {
                 const isCredit = t.amountNgn > 0;
                 return (
-                  <li key={t.id} className="flex items-center gap-3 py-3">
-                    <div className="w-9 h-9 rounded-xl bg-card-foreground/[0.06] flex items-center justify-center text-[11px] font-bold uppercase shrink-0">
-                      {t.merchant.slice(0, 2)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-bold truncate">{t.merchant}</p>
-                      <p className="text-[10px] text-card-foreground/50 capitalize">
-                        {relativeDay(t.at)} · {t.status}
-                      </p>
-                    </div>
-                    <p
-                      className={`text-[13px] font-bold tabular-nums ${
-                        isCredit ? "text-emerald-500" : ""
-                      }`}
+                  <li key={t.id}>
+                    <Link
+                      to="/cards/$id/txn/$txnId"
+                      params={{ id: active.id, txnId: t.id }}
+                      className="flex items-center gap-3 py-3 active:opacity-70 transition"
                     >
+                      <div className="w-9 h-9 rounded-xl bg-card-foreground/[0.06] flex items-center justify-center text-[11px] font-bold uppercase shrink-0">
+                        {t.merchant.slice(0, 2)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-bold truncate">{t.merchant}</p>
+                        <p className="text-[10px] text-card-foreground/50 capitalize">
+                          {relativeDay(t.at)} · {t.status}
+                        </p>
+                      </div>
+                      <p
+                        className={`text-[13px] font-bold tabular-nums ${
+                          isCredit ? "text-emerald-500" : ""
+                        }`}
+                      >
                       {isCredit ? "+" : ""}
                       {formatNgn(t.amountNgn)}
                     </p>
