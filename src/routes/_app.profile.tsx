@@ -33,6 +33,8 @@ export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
 });
 
+type KycStatus = "verified" | "pending" | "rejected" | "unverified";
+
 const initialUser = {
   name: "Adaeze Okafor",
   email: "adaeze@bazepay.com",
@@ -43,6 +45,8 @@ const initialUser = {
   referralCode: "ADAEZE25",
   referralCount: 7,
   referralEarned: "₦14,000",
+  kycStatus: "rejected" as KycStatus,
+  kycRejectionReason: "ID photo was blurry and details didn't match.",
 };
 
 function getInitials(name: string) {
