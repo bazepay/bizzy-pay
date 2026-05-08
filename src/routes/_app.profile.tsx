@@ -203,6 +203,92 @@ function ProfilePage() {
   );
 }
 
+function KycCard({
+  status,
+  limit,
+  reason,
+  onRetry,
+}: {
+  status: KycStatus;
+  limit: string;
+  reason?: string;
+  onRetry: () => void;
+}) {
+  if (status === "verified") {
+    return (
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white p-5 shadow-xl">
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
+        <div className="relative flex items-center gap-3">
+          <div className="w-11 h-11 rounded-full bg-[oklch(0.82_0.16_85)]/20 flex items-center justify-center">
+            <ShieldCheck className="w-5 h-5 text-[oklch(0.82_0.16_85)]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <p className="font-display text-base font-bold">Identity verified</p>
+              <span className="px-2 py-0.5 rounded-full bg-[oklch(0.82_0.16_85)] text-[oklch(0.2_0.05_280)] text-[9px] font-bold uppercase tracking-wider">
+                Active
+              </span>
+            </div>
+            <p className="text-xs text-white/70 mt-0.5">Limit · {limit}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.96_0.04_85)] to-[oklch(0.92_0.06_85)] text-card-foreground p-5 border border-[oklch(0.82_0.16_85)]/30">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-full bg-[oklch(0.82_0.16_85)]/25 flex items-center justify-center">
+            <Clock className="w-5 h-5 text-[oklch(0.5_0.15_85)]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-display text-base font-bold">Verification in review</p>
+            <p className="text-xs text-card-foreground/60 mt-0.5">Usually under 2 minutes.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // rejected or unverified
+  const rejected = status === "rejected";
+  return (
+    <div className="relative overflow-hidden rounded-3xl bg-card-foreground/[0.03] border border-destructive/20 p-5">
+      <div className="flex items-start gap-3">
+        <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${rejected ? "bg-destructive/15 text-destructive" : "bg-card-foreground/10 text-card-foreground/70"}`}>
+          <ShieldAlert className="w-5 h-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-display text-base font-bold">
+              {rejected ? "Verification rejected" : "Verify your identity"}
+            </p>
+            {rejected && (
+              <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-[9px] font-bold uppercase tracking-wider">
+                Action needed
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-card-foreground/65 mt-1">
+            {rejected
+              ? reason ?? "Please retry with a clearer ID and selfie."
+              : "Unlock higher limits and full access."}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={onRetry}
+        className="mt-4 w-full h-11 rounded-full bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition"
+      >
+        <RefreshCw className="w-4 h-4" />
+        {rejected ? "Redo verification" : "Start verification"}
+      </button>
+    </div>
+  );
+}
+
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mt-9 mb-3 px-1">
