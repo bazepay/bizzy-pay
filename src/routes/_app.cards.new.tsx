@@ -400,7 +400,7 @@ function PayScreen({
   );
 }
 
-function IssuingScreen({ done }: { done: boolean }) {
+function IssuingScreen({ done, newId }: { done: boolean; newId: string | null }) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
       <div
@@ -423,11 +423,11 @@ function IssuingScreen({ done }: { done: boolean }) {
           : "Confirming payment and assigning a fresh PAN — usually under 30 seconds."}
       </p>
 
-      {done && (
+      {done && newId && (
         <div className="w-full mt-8 space-y-2">
           <Link
             to="/cards/$id"
-            params={{ id: "vc-01" }}
+            params={{ id: newId }}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center"
           >
             View card details
