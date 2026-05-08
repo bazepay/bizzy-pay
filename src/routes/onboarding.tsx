@@ -107,10 +107,10 @@ function Onboarding() {
               <p className="text-[10px] uppercase tracking-[0.28em] font-bold text-primary">
                 {slide.eyebrow}
               </p>
-              <h1 className="font-display text-[30px] leading-[1.1] font-bold tracking-tight mt-2.5">
+              <h1 className="font-display text-[24px] leading-[1.15] font-bold tracking-tight mt-2.5">
                 {slide.title}
               </h1>
-              <p className="text-[13.5px] text-card-foreground/60 leading-relaxed mt-3 max-w-[320px]">
+              <p className="text-[13px] text-card-foreground/60 leading-relaxed mt-3 max-w-[320px]">
                 {slide.body}
               </p>
             </motion.div>
