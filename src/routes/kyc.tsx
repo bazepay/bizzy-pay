@@ -155,10 +155,22 @@ function Kyc() {
                 <p className="text-sm text-foreground/55 mt-1.5 text-center">
                   Bank-grade verification in about 2 minutes.
                 </p>
+                {/* SVG curve transition */}
+                <svg
+                  className="absolute left-0 right-0 -bottom-px w-full h-12 text-card"
+                  viewBox="0 0 375 48"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0,48 L0,24 C60,0 140,0 187.5,16 C235,32 315,32 375,8 L375,48 Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
 
               {/* White surface */}
-              <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+              <div className="bg-card text-card-foreground px-6 pt-2 pb-8 flex-1 flex flex-col">
                 <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mb-3 px-1">
                   How it works
                 </p>
