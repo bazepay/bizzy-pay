@@ -18,7 +18,7 @@ import { VirtualCardArt, RevealToggle } from "@/components/virtual-card";
 import {
   cards,
   cardTxns,
-  formatUsd,
+  formatNgn,
   relativeDay,
   merchantCategories,
   type VirtualCard,
@@ -54,7 +54,7 @@ function CardDetail() {
   const [frozen, setFrozen] = useState(card.status === "frozen");
   const [showLimits, setShowLimits] = useState(false);
   const [showFund, setShowFund] = useState(false);
-  const [limit, setLimit] = useState(card.monthlyLimitUsd);
+  const [limit, setLimit] = useState(card.monthlyLimitNgn);
   const [blocked, setBlocked] = useState<string[]>(card.blockedCategories);
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -76,7 +76,7 @@ function CardDetail() {
   };
 
   const display: VirtualCard = { ...card, status: frozen ? "frozen" : "active" };
-  const pct = Math.min(100, Math.round((card.monthlySpentUsd / limit) * 100));
+  const pct = Math.min(100, Math.round((card.monthlySpentNgn / limit) * 100));
 
   return (
     <div className="min-h-full bg-background text-foreground flex flex-col">
@@ -148,7 +148,7 @@ function CardDetail() {
               Monthly spend
             </p>
             <p className="text-[11px] tabular-nums text-card-foreground/65">
-              {formatUsd(card.monthlySpentUsd)} / {formatUsd(limit)}
+              {formatNgn(card.monthlySpentNgn)} / {formatNgn(limit)}
             </p>
           </div>
           <div className="mt-3 h-2 rounded-full bg-card-foreground/[0.08] overflow-hidden">
@@ -157,7 +157,7 @@ function CardDetail() {
           <div className="mt-4 grid grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-card-foreground/50">Balance</p>
-              <p className="font-display font-bold text-xl tabular-nums mt-1">{formatUsd(card.balanceUsd)}</p>
+              <p className="font-display font-bold text-xl tabular-nums mt-1">{formatNgn(card.balanceNgn)}</p>
             </div>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-card-foreground/50">Status</p>
@@ -182,7 +182,7 @@ function CardDetail() {
           ) : (
             <div className="rounded-2xl bg-card-foreground/[0.04] divide-y divide-card-foreground/[0.06] overflow-hidden">
               {txns.map((t) => {
-                const isCredit = t.amountUsd > 0;
+                const isCredit = t.amountNgn > 0;
                 return (
                   <div
                     key={t.id}
@@ -212,7 +212,7 @@ function CardDetail() {
                       }`}
                     >
                       {isCredit ? "+" : "−"}
-                      {formatUsd(Math.abs(t.amountUsd))}
+                      {formatNgn(Math.abs(t.amountNgn))}
                     </p>
                   </div>
                 );
@@ -298,19 +298,19 @@ function LimitsSheet({
           <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/55 mb-2">
             Monthly limit
           </p>
-          <p className="font-display font-bold text-3xl tabular-nums">{formatUsd(limit)}</p>
+          <p className="font-display font-bold text-3xl tabular-nums">{formatNgn(limit)}</p>
           <input
             type="range"
-            min={50}
-            max={5000}
-            step={50}
+            min={50000}
+            max={5000000}
+            step={50000}
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
             className="w-full mt-3 accent-primary"
           />
           <div className="flex justify-between text-[10px] text-card-foreground/55 tabular-nums">
-            <span>$50</span>
-            <span>$5,000</span>
+            <span>₦50k</span>
+            <span>₦5M</span>
           </div>
         </div>
 
@@ -364,7 +364,7 @@ function LimitsSheet({
 }
 
 function FundSheet({ onClose }: { onClose: () => void }) {
-  const [amount, setAmount] = useState(50);
+  const [amount, setAmount] = useState(50000);
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
@@ -379,43 +379,44 @@ function FundSheet({ onClose }: { onClose: () => void }) {
 
         <div className="px-6 mt-5">
           <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/55 mb-2">
-            Amount (USD)
+            Amount (NGN)
           </p>
           <input
             type="number"
             value={amount}
-            min={5}
+            min={1000}
+            step={1000}
             onChange={(e) => setAmount(Math.max(0, Number(e.target.value) || 0))}
             className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] px-4 text-2xl font-bold tabular-nums outline-none"
           />
           <div className="grid grid-cols-4 gap-2 mt-3">
-            {[25, 50, 100, 250].map((a) => (
+            {[25000, 50000, 100000, 250000].map((a) => (
               <button
                 key={a}
                 onClick={() => setAmount(a)}
                 className="h-10 rounded-full bg-card-foreground/[0.04] text-sm font-bold tabular-nums"
               >
-                ${a}
+                ₦{(a / 1000).toFixed(0)}k
               </button>
             ))}
           </div>
         </div>
 
-        <div className="px-6 mt-5 rounded-2xl mx-6 bg-card-foreground/[0.04] p-4 flex items-center justify-between">
+        <div className="mx-6 mt-5 rounded-2xl bg-card-foreground/[0.04] p-4 flex items-center justify-between">
           <div>
             <p className="text-[11px] text-card-foreground/55">From</p>
-            <p className="text-sm font-semibold">USD Wallet</p>
+            <p className="text-sm font-semibold">NGN Wallet</p>
           </div>
           <ChevronRight className="w-4 h-4 text-card-foreground/40" />
         </div>
 
         <div className="px-6 mt-5">
           <button
-            disabled={amount < 5}
+            disabled={amount < 1000}
             onClick={onClose}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40"
           >
-            Top up · {formatUsd(amount)}
+            Top up · {formatNgn(amount)}
           </button>
         </div>
       </div>
