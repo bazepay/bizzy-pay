@@ -196,10 +196,10 @@ function WalletVisual() {
         </div>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, y: 20, x: 80 }}
-        animate={{ opacity: 1, y: 0, x: 80 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        className="absolute -bottom-2 right-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
+        className="absolute -bottom-2 right-4 flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/10 text-[11px] font-semibold"
       >
         <Sparkles className="w-3.5 h-3.5 text-primary" />
         +₦12,500 today
