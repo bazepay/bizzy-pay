@@ -196,7 +196,7 @@ function EsimDetail() {
         <ManageSheet
           esim={esim}
           autoRenew={autoRenew}
-          onToggle={() => setAutoRenew((v) => !v)}
+          onToggle={() => setAutoRenew((v: boolean) => !v)}
           onClose={() => setShowManage(false)}
         />
       )}
