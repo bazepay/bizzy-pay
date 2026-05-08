@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, notFound, Link } from "@tanstack/react-router";
-import { PhoneFrame } from "@/components/phone-frame";
+
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -18,7 +18,7 @@ import {
 import { toast } from "sonner";
 import { txnById, type Txn } from "@/lib/transactions";
 
-export const Route = createFileRoute("/transaction/$id")({
+export const Route = createFileRoute("/_app/transaction/$id")({
   head: ({ params }) => ({
     meta: [
       { title: `Receipt · ${params.id} · BazePay` },
@@ -101,8 +101,7 @@ function TxnReceipt() {
   const isElectricity = txn.category === "Electricity";
 
   return (
-    <PhoneFrame>
-    <div className="min-h-screen md:min-h-0 md:h-[860px] bg-background text-foreground flex flex-col">
+    <div className="min-h-full bg-background text-foreground flex flex-col">
       <div className="h-10" />
       <div className="px-6 pt-4 flex items-center justify-between">
         <button
@@ -217,7 +216,7 @@ function TxnReceipt() {
         </p>
       </div>
     </div>
-    </PhoneFrame>
+    
   );
 }
 

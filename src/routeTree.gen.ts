@@ -15,7 +15,6 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TransactionIdRouteImport } from './routes/transaction.$id'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as AppWalletRouteImport } from './routes/_app.wallet'
@@ -26,6 +25,7 @@ import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppNumbersIndexRouteImport } from './routes/_app.numbers.index'
 import { Route as AppEsimsIndexRouteImport } from './routes/_app.esims.index'
 import { Route as AppCardsIndexRouteImport } from './routes/_app.cards.index'
+import { Route as AppTransactionIdRouteImport } from './routes/_app.transaction.$id'
 import { Route as AppProfileReferralsRouteImport } from './routes/_app.profile_.referrals'
 import { Route as AppProfileLegalRouteImport } from './routes/_app.profile_.legal'
 import { Route as AppProfileHelpRouteImport } from './routes/_app.profile_.help'
@@ -73,11 +73,6 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TransactionIdRoute = TransactionIdRouteImport.update({
-  id: '/transaction/$id',
-  path: '/transaction/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
@@ -128,6 +123,11 @@ const AppEsimsIndexRoute = AppEsimsIndexRouteImport.update({
 const AppCardsIndexRoute = AppCardsIndexRouteImport.update({
   id: '/cards/',
   path: '/cards/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
+  id: '/transaction/$id',
+  path: '/transaction/$id',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProfileReferralsRoute = AppProfileReferralsRouteImport.update({
@@ -238,7 +238,6 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/transaction/$id': typeof TransactionIdRoute
   '/cards/$id': typeof AppCardsIdRoute
   '/cards/new': typeof AppCardsNewRoute
   '/esims/$id': typeof AppEsimsIdRoute
@@ -254,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/profile/help': typeof AppProfileHelpRoute
   '/profile/legal': typeof AppProfileLegalRoute
   '/profile/referrals': typeof AppProfileReferralsRoute
+  '/transaction/$id': typeof AppTransactionIdRoute
   '/cards/': typeof AppCardsIndexRoute
   '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
@@ -274,7 +274,6 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/transaction/$id': typeof TransactionIdRoute
   '/cards/$id': typeof AppCardsIdRoute
   '/cards/new': typeof AppCardsNewRoute
   '/esims/$id': typeof AppEsimsIdRoute
@@ -290,6 +289,7 @@ export interface FileRoutesByTo {
   '/profile/help': typeof AppProfileHelpRoute
   '/profile/legal': typeof AppProfileLegalRoute
   '/profile/referrals': typeof AppProfileReferralsRoute
+  '/transaction/$id': typeof AppTransactionIdRoute
   '/cards': typeof AppCardsIndexRoute
   '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
@@ -313,7 +313,6 @@ export interface FileRoutesById {
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/transaction/$id': typeof TransactionIdRoute
   '/_app/cards/$id': typeof AppCardsIdRoute
   '/_app/cards/new': typeof AppCardsNewRoute
   '/_app/esims/$id': typeof AppEsimsIdRoute
@@ -329,6 +328,7 @@ export interface FileRoutesById {
   '/_app/profile_/help': typeof AppProfileHelpRoute
   '/_app/profile_/legal': typeof AppProfileLegalRoute
   '/_app/profile_/referrals': typeof AppProfileReferralsRoute
+  '/_app/transaction/$id': typeof AppTransactionIdRoute
   '/_app/cards/': typeof AppCardsIndexRoute
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
@@ -352,7 +352,6 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
-    | '/transaction/$id'
     | '/cards/$id'
     | '/cards/new'
     | '/esims/$id'
@@ -368,6 +367,7 @@ export interface FileRouteTypes {
     | '/profile/help'
     | '/profile/legal'
     | '/profile/referrals'
+    | '/transaction/$id'
     | '/cards/'
     | '/esims/'
     | '/numbers/'
@@ -388,7 +388,6 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
-    | '/transaction/$id'
     | '/cards/$id'
     | '/cards/new'
     | '/esims/$id'
@@ -404,6 +403,7 @@ export interface FileRouteTypes {
     | '/profile/help'
     | '/profile/legal'
     | '/profile/referrals'
+    | '/transaction/$id'
     | '/cards'
     | '/esims'
     | '/numbers'
@@ -426,7 +426,6 @@ export interface FileRouteTypes {
     | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
-    | '/transaction/$id'
     | '/_app/cards/$id'
     | '/_app/cards/new'
     | '/_app/esims/$id'
@@ -442,6 +441,7 @@ export interface FileRouteTypes {
     | '/_app/profile_/help'
     | '/_app/profile_/legal'
     | '/_app/profile_/referrals'
+    | '/_app/transaction/$id'
     | '/_app/cards/'
     | '/_app/esims/'
     | '/_app/numbers/'
@@ -461,7 +461,6 @@ export interface RootRouteChildren {
   TransferRoute: typeof TransferRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
-  TransactionIdRoute: typeof TransactionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -506,13 +505,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/transaction/$id': {
-      id: '/transaction/$id'
-      path: '/transaction/$id'
-      fullPath: '/transaction/$id'
-      preLoaderRoute: typeof TransactionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/signup': {
@@ -583,6 +575,13 @@ declare module '@tanstack/react-router' {
       path: '/cards'
       fullPath: '/cards/'
       preLoaderRoute: typeof AppCardsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/transaction/$id': {
+      id: '/_app/transaction/$id'
+      path: '/transaction/$id'
+      fullPath: '/transaction/$id'
+      preLoaderRoute: typeof AppTransactionIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/profile_/referrals': {
@@ -760,6 +759,7 @@ interface AppRouteChildren {
   AppProfileHelpRoute: typeof AppProfileHelpRoute
   AppProfileLegalRoute: typeof AppProfileLegalRoute
   AppProfileReferralsRoute: typeof AppProfileReferralsRoute
+  AppTransactionIdRoute: typeof AppTransactionIdRoute
   AppCardsIndexRoute: typeof AppCardsIndexRoute
   AppEsimsIndexRoute: typeof AppEsimsIndexRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
@@ -781,6 +781,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProfileHelpRoute: AppProfileHelpRoute,
   AppProfileLegalRoute: AppProfileLegalRoute,
   AppProfileReferralsRoute: AppProfileReferralsRoute,
+  AppTransactionIdRoute: AppTransactionIdRoute,
   AppCardsIndexRoute: AppCardsIndexRoute,
   AppEsimsIndexRoute: AppEsimsIndexRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
@@ -801,7 +802,6 @@ const rootRouteChildren: RootRouteChildren = {
   TransferRoute: TransferRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
-  TransactionIdRoute: TransactionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
