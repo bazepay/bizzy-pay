@@ -132,7 +132,6 @@ function EsimDetail() {
         <div className="mt-4 grid grid-cols-2 gap-3">
           <Link
             to="/pay/esim"
-            search={{ topup: esim.id } as never}
             className="h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center gap-1.5 active:scale-[0.99] transition"
           >
             <Zap className="w-4 h-4" /> Top up
@@ -401,7 +400,6 @@ function ManageSheet({
         <div className="px-6 mt-4 space-y-2">
           <Link
             to="/pay/esim"
-            search={{ topup: esim.id } as never}
             className="w-full h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm flex items-center justify-center gap-2"
           >
             <Plus className="w-4 h-4" /> Top up data
