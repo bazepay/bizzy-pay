@@ -32,25 +32,31 @@ export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
 });
 
-const user = {
+const initialUser = {
   name: "Adaeze Okafor",
   email: "adaeze@bazepay.com",
   phone: "+234 801 234 5678",
   initials: "AO",
   tier: "Tier 2 — Enhanced",
-  tierProgress: 0.66,
-  nextTier: "Tier 3 — Premium",
   limit: "₦5,000,000 / month",
   referralCode: "ADAEZE25",
   referralCount: 7,
   referralEarned: "₦14,000",
 };
 
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "U";
+}
+
 function ProfilePage() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(initialUser);
   const [biometric, setBiometric] = useState(true);
   const [twoFA, setTwoFA] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const copyCode = async () => {
     try {
