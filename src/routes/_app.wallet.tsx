@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -22,6 +22,7 @@ import {
 import { wallets, type CurrencyCode } from "@/lib/wallets";
 import { BottomNav } from "@/components/bottom-nav";
 import { CurrencySwitcher } from "@/components/currency-switcher";
+import { txns, dayLabel, type Txn } from "@/lib/transactions";
 
 // NGN is the single real wallet. Other currencies are display conversions only.
 const NGN_BASE = 845320.5;
