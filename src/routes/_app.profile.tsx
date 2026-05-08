@@ -100,41 +100,23 @@ function ProfilePage() {
 
       {/* White surface */}
       <div className="flex-1 -mt-8 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-28">
-        {/* KYC tier card */}
+        {/* KYC verified card */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white p-5 shadow-xl">
           <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
-          <div className="relative flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/65">
-                <ShieldCheck className="w-3 h-3" /> Verified
+          <div className="relative flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full bg-[oklch(0.82_0.16_85)]/20 flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5 text-[oklch(0.82_0.16_85)]" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="font-display text-base font-bold">Identity verified</p>
+                <span className="px-2 py-0.5 rounded-full bg-[oklch(0.82_0.16_85)] text-[oklch(0.2_0.05_280)] text-[9px] font-bold uppercase tracking-wider">
+                  Active
+                </span>
               </div>
-              <p className="font-display text-xl font-bold mt-1.5">{user.tier}</p>
               <p className="text-xs text-white/70 mt-0.5">Limit · {user.limit}</p>
             </div>
-            <span className="px-2.5 py-1 rounded-full bg-[oklch(0.82_0.16_85)] text-[oklch(0.2_0.05_280)] text-[10px] font-bold uppercase tracking-wider">
-              Active
-            </span>
           </div>
-
-          <div className="relative mt-5">
-            <div className="h-1.5 rounded-full bg-white/15 overflow-hidden">
-              <div
-                className="h-full bg-[oklch(0.82_0.16_85)] rounded-full"
-                style={{ width: `${user.tierProgress * 100}%` }}
-              />
-            </div>
-            <div className="flex items-center justify-between mt-2 text-[11px] text-white/65">
-              <span>Upgrade to {user.nextTier}</span>
-              <span>{Math.round(user.tierProgress * 100)}%</span>
-            </div>
-          </div>
-
-          <Link
-            to="/kyc"
-            className="relative mt-4 w-full h-10 rounded-full bg-white text-[oklch(0.2_0.05_280)] font-semibold text-sm flex items-center justify-center gap-1.5 active:scale-[0.98] transition"
-          >
-            <Sparkles className="w-3.5 h-3.5" /> Upgrade tier
-          </Link>
         </div>
 
         {/* Security */}
