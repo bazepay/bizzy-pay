@@ -20,7 +20,9 @@ import {
   Clock,
   Lock,
   Search,
+  Plus,
 } from "lucide-react";
+import { esims, esimStatusMeta, dataPct } from "@/lib/esims";
 
 export const Route = createFileRoute("/_app/pay/esim")({
   head: () => ({
