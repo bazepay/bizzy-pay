@@ -443,7 +443,7 @@ function Kyc() {
                       <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">
                         Daily limit
                       </p>
-                      <p className="font-display text-2xl font-bold mt-1">₦200,000</p>
+                      <p className="font-display text-2xl font-bold mt-1">₦10,000,000</p>
                     </div>
                     <ShieldCheck className="w-8 h-8 text-lime" />
                   </div>
