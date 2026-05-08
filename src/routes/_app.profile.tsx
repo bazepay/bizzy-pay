@@ -148,12 +148,11 @@ function ProfilePage() {
             desc="Last changed 2 weeks ago"
             onClick={() => navigate({ to: "/profile/security/pin" })}
           />
-          <ToggleRow
+          <RowButton
             icon={<Lock className="w-4 h-4" />}
             label="Two-factor authentication"
-            desc="Extra layer on sign-in"
-            on={twoFA}
-            onChange={setTwoFA}
+            desc={twoFA ? "Enabled · extra layer on sign-in" : "Add extra layer on sign-in"}
+            onClick={() => navigate({ to: "/profile/security/twofa" })}
           />
         </div>
 

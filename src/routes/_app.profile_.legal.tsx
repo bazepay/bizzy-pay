@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, FileText } from "lucide-react";
 
-export const Route = createFileRoute("/_app/profile/legal")({
+export const Route = createFileRoute("/_app/profile_/legal")({
   head: () => ({
     meta: [
       { title: "Legal — BazePay" },

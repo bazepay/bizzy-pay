@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, KeyRound, Check } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/profile/security/pin")({
+export const Route = createFileRoute("/_app/profile_/security/pin")({
   head: () => ({
     meta: [
       { title: "Change PIN — BazePay" },
