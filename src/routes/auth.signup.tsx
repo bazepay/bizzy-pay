@@ -99,7 +99,7 @@ function Signup() {
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.3 }}
               >
-                <h1 className="font-display text-4xl font-bold tracking-tight">
+                <h1 className="font-display text-[28px] font-bold tracking-tight whitespace-nowrap">
                   Create your account
                 </h1>
                 <p className="text-sm text-foreground/55 mt-2">
