@@ -147,7 +147,7 @@ function Kyc() {
                       key={t}
                       onClick={() => setIdType(t)}
                       className={`w-full p-4 rounded-2xl border-2 text-left transition flex items-center gap-3 ${
-                        selected ? "border-primary bg-primary/5" : "border-border bg-card"
+                        selected ? "border-primary bg-primary/10 text-foreground" : "border-border bg-card text-card-foreground"
                       }`}
                     >
                       <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/70"}`}>
