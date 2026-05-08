@@ -20,6 +20,7 @@ import { Route as AppPayRouteImport } from './routes/_app.pay'
 import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppNumbersIndexRouteImport } from './routes/_app.numbers.index'
+import { Route as AppEsimsIndexRouteImport } from './routes/_app.esims.index'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
 import { Route as AppPayInternetRouteImport } from './routes/_app.pay.internet'
 import { Route as AppPayEsimRouteImport } from './routes/_app.pay.esim'
@@ -29,6 +30,7 @@ import { Route as AppPayBettingRouteImport } from './routes/_app.pay.betting'
 import { Route as AppPayAirtimeRouteImport } from './routes/_app.pay.airtime'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
 import { Route as AppNumbersIdRouteImport } from './routes/_app.numbers.$id'
+import { Route as AppEsimsIdRouteImport } from './routes/_app.esims.$id'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -84,6 +86,11 @@ const AppNumbersIndexRoute = AppNumbersIndexRouteImport.update({
   path: '/numbers/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEsimsIndexRoute = AppEsimsIndexRouteImport.update({
+  id: '/esims/',
+  path: '/esims/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPayTvRoute = AppPayTvRouteImport.update({
   id: '/tv',
   path: '/tv',
@@ -129,6 +136,11 @@ const AppNumbersIdRoute = AppNumbersIdRouteImport.update({
   path: '/numbers/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEsimsIdRoute = AppEsimsIdRouteImport.update({
+  id: '/esims/$id',
+  path: '/esims/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -139,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/esims/$id': typeof AppEsimsIdRoute
   '/numbers/$id': typeof AppNumbersIdRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
@@ -148,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
   '/pay/': typeof AppPayIndexRoute
 }
@@ -159,6 +173,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/esims/$id': typeof AppEsimsIdRoute
   '/numbers/$id': typeof AppNumbersIdRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
@@ -168,6 +183,7 @@ export interface FileRoutesByTo {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
   '/pay': typeof AppPayIndexRoute
 }
@@ -182,6 +198,7 @@ export interface FileRoutesById {
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/_app/esims/$id': typeof AppEsimsIdRoute
   '/_app/numbers/$id': typeof AppNumbersIdRoute
   '/_app/pay/$service': typeof AppPayServiceRoute
   '/_app/pay/airtime': typeof AppPayAirtimeRoute
@@ -191,6 +208,7 @@ export interface FileRoutesById {
   '/_app/pay/esim': typeof AppPayEsimRoute
   '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
+  '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
 }
@@ -205,6 +223,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/esims/$id'
     | '/numbers/$id'
     | '/pay/$service'
     | '/pay/airtime'
@@ -214,6 +233,7 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/esims/'
     | '/numbers/'
     | '/pay/'
   fileRoutesByTo: FileRoutesByTo
@@ -225,6 +245,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/esims/$id'
     | '/numbers/$id'
     | '/pay/$service'
     | '/pay/airtime'
@@ -234,6 +255,7 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/esims'
     | '/numbers'
     | '/pay'
   id:
@@ -247,6 +269,7 @@ export interface FileRouteTypes {
     | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/_app/esims/$id'
     | '/_app/numbers/$id'
     | '/_app/pay/$service'
     | '/_app/pay/airtime'
@@ -256,6 +279,7 @@ export interface FileRouteTypes {
     | '/_app/pay/esim'
     | '/_app/pay/internet'
     | '/_app/pay/tv'
+    | '/_app/esims/'
     | '/_app/numbers/'
     | '/_app/pay/'
   fileRoutesById: FileRoutesById
@@ -348,6 +372,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNumbersIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/esims/': {
+      id: '/_app/esims/'
+      path: '/esims'
+      fullPath: '/esims/'
+      preLoaderRoute: typeof AppEsimsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/pay/tv': {
       id: '/_app/pay/tv'
       path: '/tv'
@@ -411,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNumbersIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/esims/$id': {
+      id: '/_app/esims/$id'
+      path: '/esims/$id'
+      fullPath: '/esims/$id'
+      preLoaderRoute: typeof AppEsimsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -445,7 +483,9 @@ interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppPayRoute: typeof AppPayRouteWithChildren
   AppWalletRoute: typeof AppWalletRoute
+  AppEsimsIdRoute: typeof AppEsimsIdRoute
   AppNumbersIdRoute: typeof AppNumbersIdRoute
+  AppEsimsIndexRoute: typeof AppEsimsIndexRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
 }
 
@@ -453,7 +493,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
   AppPayRoute: AppPayRouteWithChildren,
   AppWalletRoute: AppWalletRoute,
+  AppEsimsIdRoute: AppEsimsIdRoute,
   AppNumbersIdRoute: AppNumbersIdRoute,
+  AppEsimsIndexRoute: AppEsimsIndexRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
 }
 
