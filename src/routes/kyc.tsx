@@ -76,40 +76,129 @@ function Kyc() {
       <div className="min-h-full bg-card text-card-foreground flex flex-col">
         <AnimatePresence mode="wait">
           {step === "intro" && (
-            <Shell
+            <motion.div
               key="intro"
-              progress={progress}
-              onBack={goBack}
-              title="Verify your identity"
-              subtitle="Powered by Smile ID. Takes about 2 minutes."
-              footer={
-                <PrimaryButton onClick={() => setStep("country")}>
-                  Start verification
-                </PrimaryButton>
-              }
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col min-h-screen md:min-h-[860px]"
             >
-              <div className="space-y-2.5">
-                {[
-                  { i: Globe, t: "Pick your country", s: "We tailor accepted IDs to where you live." },
-                  { i: IdCard, t: "Provide an ID number", s: "NIN/BVN in Nigeria, passport elsewhere." },
-                  { i: Camera, t: "Take a quick selfie", s: "Liveness check matched to your ID." },
-                  { i: ShieldCheck, t: "Verified instantly", s: "Most checks complete in seconds." },
-                ].map((it, idx) => (
-                  <div
-                    key={idx}
-                    className="flex gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]"
+              {/* Dark hero with illustration */}
+              <div className="relative bg-background text-foreground px-6 pt-6 pb-14 overflow-hidden">
+                {/* decorative orbs */}
+                <div className="absolute -top-16 -right-10 w-56 h-56 rounded-full bg-primary/30 blur-3xl" />
+                <div className="absolute top-20 -left-16 w-48 h-48 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-3xl" />
+
+                <div className="relative flex items-center gap-3">
+                  <button
+                    onClick={goBack}
+                    className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
+                    aria-label="Back"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <it.i className="w-5 h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm">{it.t}</p>
-                      <p className="text-xs text-card-foreground/55 mt-0.5">{it.s}</p>
-                    </div>
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary transition-all"
+                      style={{ width: `${progress}%` }}
+                    />
                   </div>
-                ))}
+                </div>
+
+                {/* Animated shield illustration */}
+                <div className="relative mt-8 flex justify-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.06, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 m-auto w-40 h-40 rounded-full bg-primary/30 blur-2xl"
+                  />
+                  <motion.div
+                    initial={{ rotate: -8, y: 4 }}
+                    animate={{ rotate: [-8, 8, -8], y: [4, -4, 4] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative w-32 h-36 rounded-[2rem] bg-gradient-to-br from-primary to-[oklch(0.45_0.22_290)] shadow-[0_30px_60px_-15px_oklch(0.55_0.24_280_/_0.7)] flex items-center justify-center ring-1 ring-white/10"
+                  >
+                    <ShieldCheck className="w-14 h-14 text-white" strokeWidth={2.2} />
+                    <motion.span
+                      animate={{ scale: [1, 1.4, 1], opacity: [0.9, 0, 0.9] }}
+                      transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+                      className="absolute inset-0 rounded-[2rem] ring-2 ring-white/30"
+                    />
+                  </motion.div>
+                  {/* tiny floating chips */}
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute left-2 top-2 px-2 py-1 rounded-full bg-foreground/10 backdrop-blur text-[10px] font-semibold text-foreground/80 flex items-center gap-1"
+                  >
+                    <IdCard className="w-3 h-3" /> ID
+                  </motion.div>
+                  <motion.div
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute right-2 top-10 px-2 py-1 rounded-full bg-[oklch(0.82_0.16_85)]/25 text-[10px] font-semibold text-[oklch(0.82_0.16_85)] flex items-center gap-1"
+                  >
+                    <Camera className="w-3 h-3" /> Selfie
+                  </motion.div>
+                  <motion.div
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute right-4 bottom-2 px-2 py-1 rounded-full bg-primary/20 text-[10px] font-semibold text-primary-foreground/90 flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3" /> Smile ID
+                  </motion.div>
+                </div>
+
+                <h1 className="font-display text-2xl font-bold mt-8 leading-tight text-center">
+                  Verify your identity
+                </h1>
+                <p className="text-sm text-foreground/55 mt-1.5 text-center">
+                  Bank-grade verification in about 2 minutes.
+                </p>
               </div>
-            </Shell>
+
+              {/* White surface */}
+              <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+                <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mb-3 px-1">
+                  How it works
+                </p>
+                <div className="space-y-2.5">
+                  {[
+                    { i: Globe, t: "Pick your country", s: "We tailor accepted IDs to where you live." },
+                    { i: IdCard, t: "Provide an ID number", s: "NIN/BVN in Nigeria, passport elsewhere." },
+                    { i: Camera, t: "Take a quick selfie", s: "Liveness check matched to your ID." },
+                    { i: ShieldCheck, t: "Verified instantly", s: "Most checks complete in seconds." },
+                  ].map((it, idx) => (
+                    <div
+                      key={idx}
+                      className="flex gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]"
+                    >
+                      <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 font-bold text-xs">
+                        {idx + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <it.i className="w-3.5 h-3.5 text-card-foreground/70" />
+                          <p className="font-semibold text-sm">{it.t}</p>
+                        </div>
+                        <p className="text-xs text-card-foreground/55 mt-0.5">{it.s}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 flex items-center gap-2 text-[11px] text-card-foreground/55">
+                  <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+                  Your data is encrypted and never shared without consent.
+                </div>
+
+                <div className="pt-6 mt-auto">
+                  <PrimaryButton onClick={() => setStep("country")}>
+                    Start verification
+                  </PrimaryButton>
+                </div>
+              </div>
+            </motion.div>
           )}
 
           {step === "country" && (
