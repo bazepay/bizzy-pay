@@ -25,7 +25,7 @@ function Login() {
 
   return (
     <PhoneFrame>
-      <div className="min-h-full bg-background text-foreground flex flex-col">
+      <div className="h-full min-h-screen md:min-h-0 bg-background text-foreground flex flex-col">
         <div className="h-10" />
 
         {/* Brand */}
