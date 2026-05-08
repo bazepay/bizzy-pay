@@ -53,10 +53,10 @@ function ReferralsPage() {
 
   return (
     <div className="min-h-full bg-card text-card-foreground flex flex-col">
-      {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white px-6 pt-12 pb-10">
+      {/* Hero — compact */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[oklch(0.22_0.08_280)] to-[oklch(0.32_0.12_270)] text-white px-6 pt-12 pb-12">
         <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-[oklch(0.82_0.16_85)]/25 blur-2xl" />
-        <div className="absolute -bottom-20 -left-10 w-56 h-56 rounded-full bg-[oklch(0.55_0.18_280)]/40 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 w-56 h-56 rounded-full bg-[oklch(0.55_0.18_280)]/35 blur-3xl" />
 
         <div className="relative flex items-center gap-3">
           <button
@@ -69,21 +69,17 @@ function ReferralsPage() {
           <h1 className="font-display text-xl font-bold">Refer & earn</h1>
         </div>
 
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", damping: 18, stiffness: 200 }}
-          className="relative mt-6 flex items-center gap-3"
-        >
-          <div className="w-14 h-14 rounded-2xl bg-[oklch(0.82_0.16_85)]/25 flex items-center justify-center">
-            <Gift className="w-7 h-7 text-[oklch(0.82_0.16_85)]" />
+        <div className="relative mt-5 flex items-center gap-3 animate-fade-in">
+          <div className="w-12 h-12 rounded-2xl bg-[oklch(0.82_0.16_85)]/25 flex items-center justify-center shrink-0">
+            <Gift className="w-6 h-6 text-[oklch(0.82_0.16_85)]" />
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-widest text-white/60 font-semibold">Earn together</p>
-            <p className="font-display text-2xl font-bold leading-tight">₦2,000 per friend</p>
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-widest text-white/60 font-semibold">Earn together</p>
+            <p className="font-display text-xl font-bold leading-tight">₦2,000 per friend</p>
           </div>
-        </motion.div>
+        </div>
 
-        <p className="relative text-sm text-white/75 leading-relaxed mt-4 max-w-sm">
+        <p className="relative text-xs text-white/70 leading-relaxed mt-3 max-w-sm">
           Get ₦2,000 for every friend who joins and funds their wallet. They get ₦2,000 too.
         </p>
       </div>
