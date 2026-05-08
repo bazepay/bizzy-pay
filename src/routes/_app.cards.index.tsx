@@ -241,9 +241,6 @@ function Header({ count, total }: { count: number; total: number }) {
     <div className="px-6 pt-4 flex items-center justify-between">
       <div>
         <h1 className="font-display text-3xl font-bold tracking-tight">Wallet</h1>
-        <p className="text-xs text-foreground/55 mt-1.5 tabular-nums">
-          {count} {count === 1 ? "card" : "cards"} · {formatNgn(total)} total
-        </p>
       </div>
       <Link
         to="/cards/new"
