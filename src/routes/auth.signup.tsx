@@ -36,26 +36,19 @@ function Signup() {
 
   return (
     <PhoneFrame>
-      <div className="relative h-screen md:h-[860px] flex flex-col bg-[oklch(0.11_0.025_280)] text-white overflow-hidden">
-        {/* Ambient glows */}
-        <div className="pointer-events-none absolute -top-32 -right-24 w-[420px] h-[420px] rounded-full bg-primary/40 blur-[120px]" />
-        <div className="pointer-events-none absolute bottom-0 -left-24 w-[320px] h-[320px] rounded-full bg-lime/15 blur-[120px]" />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:18px_18px]" />
+      <div className="min-h-full bg-background text-foreground flex flex-col">
+        <div className="h-10" />
 
         {/* Header */}
-        <header className="relative z-10 flex items-center justify-between px-6 pt-12">
-          <Link
-            to={step === "otp" ? "/auth/signup" : "/onboarding"}
-            onClick={(e) => {
-              if (step === "otp") {
-                e.preventDefault();
-                setStep("identifier");
-              }
-            }}
+        <header className="px-6 pt-4 flex items-center justify-between">
+          <button
+            onClick={() =>
+              step === "otp" ? setStep("identifier") : nav({ to: "/onboarding" })
+            }
             className="w-10 h-10 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center hover:bg-white/[0.1] transition"
           >
             <ArrowLeft className="w-4 h-4" />
-          </Link>
+          </button>
           <div className="flex items-center gap-1.5">
             <div className={`h-[3px] w-8 rounded-full ${step === "identifier" ? "bg-lime" : "bg-lime/40"}`} />
             <div className={`h-[3px] w-8 rounded-full ${step === "otp" ? "bg-lime" : "bg-white/15"}`} />
@@ -63,33 +56,60 @@ function Signup() {
           <div className="w-10" />
         </header>
 
-        <div className="relative z-10 flex-1 flex flex-col px-7 pt-10">
+        {/* Heading */}
+        <div className="px-6 pt-8">
+          <AnimatePresence mode="wait">
+            {step === "identifier" ? (
+              <motion.div
+                key="h-id"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h1 className="font-display text-4xl font-bold tracking-tight">
+                  Create your account
+                </h1>
+                <p className="text-sm text-foreground/55 mt-2">
+                  We'll send a one-time code to verify it's you.
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="h-otp"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h1 className="font-display text-4xl font-bold tracking-tight">
+                  Enter the 6-digit code
+                </h1>
+                <p className="text-sm text-foreground/55 mt-2">
+                  Sent to{" "}
+                  <span className="text-foreground font-semibold">
+                    {value || (mode === "phone" ? "+234 803 555 0142" : "you@example.com")}
+                  </span>
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Sheet */}
+        <div className="flex-1 mt-7 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 flex flex-col">
           <AnimatePresence mode="wait">
             {step === "identifier" ? (
               <motion.div
                 key="id"
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.35 }}
                 className="flex-1 flex flex-col"
               >
-                <p className="text-[10px] uppercase tracking-[0.32em] font-bold text-lime/90">
-                  Get started
-                </p>
-                <h1 className="font-display text-[34px] leading-[1.05] font-bold tracking-tight mt-3">
-                  Create your
-                  <br />
-                  <span className="bg-gradient-to-r from-white to-[oklch(0.78_0.14_85)] bg-clip-text text-transparent">
-                    BazePay account.
-                  </span>
-                </h1>
-                <p className="text-[13.5px] text-white/55 leading-relaxed mt-4 max-w-[300px]">
-                  We'll send a one-time code to verify it's really you.
-                </p>
-
                 {/* Mode toggle */}
-                <div className="mt-8 grid grid-cols-2 p-1 bg-white/[0.05] border border-white/[0.06] rounded-2xl">
+                <div className="grid grid-cols-2 p-1 bg-muted rounded-2xl">
                   {(["phone", "email"] as const).map((m) => (
                     <button
                       key={m}
@@ -98,13 +118,13 @@ function Signup() {
                         setValue("");
                       }}
                       className={`relative h-10 rounded-xl text-[13px] font-semibold capitalize transition ${
-                        mode === m ? "text-[oklch(0.13_0.02_280)]" : "text-white/55"
+                        mode === m ? "text-foreground" : "text-foreground/50"
                       }`}
                     >
                       {mode === m && (
                         <motion.div
-                          layoutId="mode-pill"
-                          className="absolute inset-0 bg-lime rounded-xl"
+                          layoutId="signup-mode-pill"
+                          className="absolute inset-0 bg-card rounded-xl shadow-soft"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                       )}
@@ -118,38 +138,38 @@ function Signup() {
 
                 {/* Input */}
                 <div className="mt-5 relative">
-                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-white/40">
+                  <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[13px] font-semibold text-foreground/40">
                     {mode === "phone" ? "+234" : "@"}
                   </span>
                   <input
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder={mode === "phone" ? "803 555 0142" : "you@example.com"}
-                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-white/[0.05] border border-white/[0.08] text-white placeholder:text-white/30 text-[15px] focus:outline-none focus:border-lime/60 focus:bg-white/[0.07] transition"
+                    className="w-full h-14 pl-16 pr-4 rounded-2xl bg-muted border border-transparent text-foreground placeholder:text-foreground/30 text-[15px] focus:outline-none focus:border-primary/40 focus:bg-background/0 transition"
                   />
                 </div>
 
-                <div className="mt-4 flex items-start gap-2 text-[11px] text-white/45 leading-relaxed">
-                  <Shield className="w-3.5 h-3.5 text-lime/70 mt-0.5 shrink-0" />
+                <div className="mt-4 flex items-start gap-2 text-[11.5px] text-foreground/55 leading-relaxed">
+                  <Shield className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
                   <p>
                     By continuing, you agree to our{" "}
-                    <span className="text-white/70 underline underline-offset-2">Terms</span> and{" "}
-                    <span className="text-white/70 underline underline-offset-2">Privacy Policy</span>.
+                    <span className="font-semibold underline underline-offset-2">Terms</span> and{" "}
+                    <span className="font-semibold underline underline-offset-2">Privacy</span>.
                   </p>
                 </div>
 
-                <div className="mt-auto pb-8">
+                <div className="mt-auto">
                   <button
                     disabled={!canContinue}
                     onClick={() => setStep("otp")}
-                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition shadow-[0_10px_30px_-8px_oklch(0.92_0.21_120/0.5)] disabled:opacity-40 disabled:shadow-none"
+                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition disabled:opacity-40"
                   >
                     Send code
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
                   </button>
-                  <p className="text-center text-[12.5px] text-white/55 mt-5">
+                  <p className="text-center text-[12.5px] text-foreground/55 mt-4">
                     Already have an account?{" "}
-                    <Link to="/auth/login" className="text-lime font-semibold">
+                    <Link to="/auth/login" className="text-primary font-semibold">
                       Sign in
                     </Link>
                   </p>
@@ -158,30 +178,13 @@ function Signup() {
             ) : (
               <motion.div
                 key="otp"
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.35 }}
                 className="flex-1 flex flex-col"
               >
-                <p className="text-[10px] uppercase tracking-[0.32em] font-bold text-lime/90">
-                  Verify
-                </p>
-                <h1 className="font-display text-[34px] leading-[1.05] font-bold tracking-tight mt-3">
-                  Enter the
-                  <br />
-                  <span className="bg-gradient-to-r from-white to-[oklch(0.78_0.14_85)] bg-clip-text text-transparent">
-                    6-digit code.
-                  </span>
-                </h1>
-                <p className="text-[13.5px] text-white/55 leading-relaxed mt-4">
-                  Sent to{" "}
-                  <span className="text-white font-semibold">
-                    {value || (mode === "phone" ? "+234 803 555 0142" : "you@example.com")}
-                  </span>
-                </p>
-
-                <div className="flex gap-2 mt-10 justify-between">
+                <div className="flex gap-2 justify-between">
                   {otp.map((d, i) => (
                     <input
                       key={i}
@@ -190,28 +193,28 @@ function Signup() {
                       onChange={(e) => handleOtpChange(i, e.target.value)}
                       maxLength={1}
                       inputMode="numeric"
-                      className={`w-12 h-14 rounded-2xl bg-white/[0.05] border text-center text-xl font-bold text-white outline-none transition ${
-                        d ? "border-lime/60 bg-white/[0.08]" : "border-white/[0.08]"
+                      className={`w-12 h-14 rounded-2xl border text-center text-xl font-bold text-foreground outline-none transition ${
+                        d ? "border-primary/50 bg-primary/[0.06]" : "border-border bg-muted"
                       }`}
                     />
                   ))}
                 </div>
 
-                <div className="mt-6 px-4 py-3 rounded-2xl bg-lime/[0.08] border border-lime/20 text-center">
-                  <p className="text-[11px] text-white/60">
+                <div className="mt-5 px-4 py-3 rounded-2xl bg-primary/[0.06] border border-primary/15 text-center">
+                  <p className="text-[11.5px] text-foreground/65">
                     Demo code:{" "}
-                    <span className="font-mono font-bold text-lime tracking-widest">123456</span>
+                    <span className="font-mono font-bold text-primary tracking-widest">123456</span>
                   </p>
                 </div>
 
-                <button className="mt-5 text-center text-[12.5px] text-white/55">
-                  Didn't receive it? <span className="text-lime font-semibold">Resend in 0:30</span>
+                <button className="mt-5 text-center text-[12.5px] text-foreground/55">
+                  Didn't receive it? <span className="text-primary font-semibold">Resend in 0:30</span>
                 </button>
 
-                <div className="mt-auto pb-8">
+                <div className="mt-auto">
                   <button
                     onClick={() => nav({ to: "/kyc" })}
-                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition shadow-[0_10px_30px_-8px_oklch(0.92_0.21_120/0.5)]"
+                    className="group w-full flex items-center justify-center gap-2 h-14 rounded-full bg-lime text-lime-foreground font-bold text-sm active:scale-[0.98] transition"
                   >
                     Verify & continue
                     <ArrowRight className="w-4 h-4 group-active:translate-x-0.5 transition" />
