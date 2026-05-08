@@ -117,7 +117,7 @@ function ProfilePage() {
               onClick={() => setUser((u) => ({ ...u, kycStatus: s }))}
               className={`flex-1 h-7 rounded-full capitalize transition ${
                 user.kycStatus === s
-                  ? "bg-card text-card-foreground shadow-sm"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-card-foreground/55 active:bg-card-foreground/[0.06]"
               }`}
             >
