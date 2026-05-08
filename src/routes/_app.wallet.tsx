@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowLeft,
   Search,
@@ -63,6 +63,7 @@ function WalletPage() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<null | "fund" | "payout">(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const dayLimit =
     filters.date === "today" ? 0 : filters.date === "7d" ? 7 : filters.date === "30d" ? 30 : Infinity;
@@ -102,11 +103,19 @@ function WalletPage() {
 
       {/* Header */}
       <div className="px-6 pt-2 flex items-center justify-between">
-        <button className="w-9 h-9 rounded-full bg-white/8 border border-white/10 flex items-center justify-center">
+        <button
+          onClick={() => navigate({ to: "/home" })}
+          className="w-9 h-9 rounded-full bg-white/8 border border-white/10 flex items-center justify-center"
+          aria-label="Back"
+        >
           <ArrowLeft className="w-4 h-4" />
         </button>
         <h1 className="font-display font-bold text-base">Wallet</h1>
-        <button className="w-9 h-9 rounded-full bg-white/8 border border-white/10 flex items-center justify-center">
+        <button
+          onClick={() => searchRef.current?.focus()}
+          className="w-9 h-9 rounded-full bg-white/8 border border-white/10 flex items-center justify-center"
+          aria-label="Search transactions"
+        >
           <Search className="w-4 h-4" />
         </button>
       </div>
@@ -158,6 +167,7 @@ function WalletPage() {
         <div className="mt-4 flex items-center gap-2 bg-accent rounded-full px-4 h-11">
           <Search className="w-4 h-4 text-card-foreground/40" />
           <input
+            ref={searchRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search transactions"

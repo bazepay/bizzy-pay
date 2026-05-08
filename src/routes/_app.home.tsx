@@ -116,7 +116,7 @@ function HomePage() {
 
         <div className="mt-6 flex items-center justify-between">
           <h2 className="font-display font-bold text-lg">Transaction History</h2>
-          <button className="text-xs font-semibold text-primary">View All</button>
+          <Link to="/wallet" className="text-xs font-semibold text-primary">View All</Link>
         </div>
 
         <div className="mt-4 space-y-4">
