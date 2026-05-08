@@ -1,14 +1,14 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Wallet as WalletIcon, Receipt, CreditCard, User, type LucideIcon } from "lucide-react";
+import { House, Wallet, ReceiptText, CreditCard, CircleUserRound, type LucideIcon } from "lucide-react";
 
 type Item = { to: string; icon: LucideIcon; label: string };
 
 const items: Item[] = [
-  { to: "/home", icon: Home, label: "Home" },
-  { to: "/wallet", icon: WalletIcon, label: "Wallet" },
-  { to: "/pay", icon: Receipt, label: "Pay" },
+  { to: "/home", icon: House, label: "Home" },
+  { to: "/wallet", icon: Wallet, label: "Wallet" },
+  { to: "/pay", icon: ReceiptText, label: "Pay" },
   { to: "/cards", icon: CreditCard, label: "Cards" },
-  { to: "/profile", icon: User, label: "Profile" },
+  { to: "/profile", icon: CircleUserRound, label: "Profile" },
 ];
 
 export function BottomNav() {
@@ -26,7 +26,7 @@ export function BottomNav() {
                 to={it.to}
                 className="bg-primary text-primary-foreground rounded-full px-4 py-2.5 flex items-center gap-2 font-semibold text-sm"
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-[18px] h-[18px]" strokeWidth={2.25} />
                 {it.label}
               </Link>
             );
@@ -35,9 +35,9 @@ export function BottomNav() {
             <Link
               key={it.to}
               to={it.to}
-              className="w-11 h-11 rounded-full flex items-center justify-center text-card-foreground/60"
+              className="w-11 h-11 rounded-full flex items-center justify-center text-card-foreground/55 hover:text-card-foreground transition"
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-[22px] h-[22px]" strokeWidth={1.75} />
             </Link>
           );
         })}
