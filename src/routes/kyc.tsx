@@ -432,7 +432,7 @@ function Kyc() {
                       <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">
                         Current tier
                       </p>
-                      <p className="font-display text-xl font-bold mt-1">Basic</p>
+                      <p className="font-display text-xl font-bold mt-1">Full access</p>
                     </div>
                     <div className="px-3 py-1 rounded-full bg-lime text-lime-foreground text-[11px] font-bold uppercase tracking-wide">
                       Active
@@ -443,7 +443,7 @@ function Kyc() {
                       <p className="text-[10px] uppercase tracking-widest text-foreground/55 font-semibold">
                         Daily limit
                       </p>
-                      <p className="font-display text-2xl font-bold mt-1">₦200,000</p>
+                      <p className="font-display text-2xl font-bold mt-1">₦10,000,000</p>
                     </div>
                     <ShieldCheck className="w-8 h-8 text-lime" />
                   </div>
@@ -453,8 +453,8 @@ function Kyc() {
                 <div className="mt-5 space-y-2.5">
                   {[
                     { i: ShieldCheck, t: "Identity verified", s: "Smile ID match confirmed." },
-                    { i: Sparkles, t: "Basic features unlocked", s: "Send, receive, and pay bills." },
-                    { i: IdCard, t: "Upgrade anytime", s: "Add proof of address for higher limits." },
+                    { i: Sparkles, t: "All features unlocked", s: "Send, receive, pay bills, and more." },
+                    { i: IdCard, t: "Higher limits", s: "Up to ₦10,000,000 per day." },
                   ].map((it, idx) => (
                     <div key={idx} className="flex gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]">
                       <div className="w-9 h-9 rounded-full bg-lime/20 text-card-foreground flex items-center justify-center shrink-0">
