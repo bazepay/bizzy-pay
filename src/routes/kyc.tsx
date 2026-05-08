@@ -72,7 +72,7 @@ function Kyc() {
 
   return (
     <PhoneFrame>
-      <div className="min-h-screen md:h-[860px] bg-background flex flex-col">
+      <div className="min-h-screen md:h-[860px] bg-background text-foreground flex flex-col">
         {step !== "done" && step !== "processing" && (
           <header className="p-6 flex items-center gap-4">
             <button
@@ -147,10 +147,10 @@ function Kyc() {
                       key={t}
                       onClick={() => setIdType(t)}
                       className={`w-full p-4 rounded-2xl border-2 text-left transition flex items-center gap-3 ${
-                        selected ? "border-primary bg-primary/5" : "border-border bg-card"
+                        selected ? "border-primary bg-primary/10 text-foreground" : "border-border bg-card text-card-foreground"
                       }`}
                     >
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/70"}`}>
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${selected ? "bg-primary text-primary-foreground" : "bg-muted text-card-foreground/70"}`}>
                         <Icon className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -196,7 +196,7 @@ function Kyc() {
                     setIdValue(v);
                   }}
                   placeholder={idType === "PASSPORT" ? "A12345678" : "12345678901"}
-                  className="mt-2 w-full h-12 px-4 rounded-2xl bg-muted text-base outline-none focus:ring-2 ring-primary/40 tracking-wider"
+                  className="mt-2 w-full h-12 px-4 rounded-2xl bg-card text-card-foreground border border-border text-base outline-none focus:ring-2 ring-primary/40 tracking-wider"
                 />
               </label>
               <p className="text-[11px] text-muted-foreground mt-2 px-1">
@@ -312,7 +312,7 @@ function CountryStep({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search country"
-          className="w-full h-11 pl-10 pr-4 rounded-2xl bg-muted text-sm outline-none focus:ring-2 ring-primary/40"
+          className="w-full h-11 pl-10 pr-4 rounded-2xl bg-card text-card-foreground border border-border text-sm outline-none focus:ring-2 ring-primary/40"
         />
       </div>
 
@@ -322,7 +322,7 @@ function CountryStep({
             No country matches "{q}".
           </p>
         ) : (
-          <ul className="divide-y divide-border rounded-2xl bg-card border border-border overflow-hidden">
+          <ul className="divide-y divide-border rounded-2xl bg-card text-card-foreground border border-border overflow-hidden">
             {filtered.map((c) => {
               const isSel = selected?.code === c.code;
               return (
