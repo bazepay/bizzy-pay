@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 import { cards, cardTxns, formatNgn } from "@/lib/cards";
 
-export const Route = createFileRoute("/_app/cards/$id/txn/$txnId")({
+export const Route = createFileRoute("/_app/cards/$id_/txn/$txnId")({
   head: ({ params }) => ({
     meta: [
       { title: `Transaction · ${params.txnId} · BazePay` },
