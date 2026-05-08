@@ -72,7 +72,7 @@ function Kyc() {
 
   return (
     <PhoneFrame>
-      <div className="min-h-screen md:h-[860px] bg-background flex flex-col">
+      <div className="min-h-screen md:h-[860px] bg-background text-foreground flex flex-col">
         {step !== "done" && step !== "processing" && (
           <header className="p-6 flex items-center gap-4">
             <button
