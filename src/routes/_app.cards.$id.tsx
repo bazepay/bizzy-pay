@@ -301,16 +301,16 @@ function LimitsSheet({
           <p className="font-display font-bold text-3xl tabular-nums">{formatNgn(limit)}</p>
           <input
             type="range"
-            min={50}
-            max={5000}
-            step={50}
+            min={50000}
+            max={5000000}
+            step={50000}
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
             className="w-full mt-3 accent-primary"
           />
           <div className="flex justify-between text-[10px] text-card-foreground/55 tabular-nums">
-            <span>$50</span>
-            <span>$5,000</span>
+            <span>₦50k</span>
+            <span>₦5M</span>
           </div>
         </div>
 
