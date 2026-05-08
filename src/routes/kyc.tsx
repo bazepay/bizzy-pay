@@ -453,8 +453,8 @@ function Kyc() {
                 <div className="mt-5 space-y-2.5">
                   {[
                     { i: ShieldCheck, t: "Identity verified", s: "Smile ID match confirmed." },
-                    { i: Sparkles, t: "Basic features unlocked", s: "Send, receive, and pay bills." },
-                    { i: IdCard, t: "Upgrade anytime", s: "Add proof of address for higher limits." },
+                    { i: Sparkles, t: "All features unlocked", s: "Send, receive, pay bills, and more." },
+                    { i: IdCard, t: "Higher limits", s: "Up to ₦10,000,000 per day." },
                   ].map((it, idx) => (
                     <div key={idx} className="flex gap-3 p-3.5 rounded-2xl bg-card-foreground/[0.04]">
                       <div className="w-9 h-9 rounded-full bg-lime/20 text-card-foreground flex items-center justify-center shrink-0">
