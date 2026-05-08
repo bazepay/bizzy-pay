@@ -26,7 +26,7 @@ export function BottomNav() {
                 to={it.to}
                 className="bg-primary text-primary-foreground rounded-full px-4 py-2.5 flex items-center gap-2 font-semibold text-sm"
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-[18px] h-[18px]" strokeWidth={2.25} />
                 {it.label}
               </Link>
             );
