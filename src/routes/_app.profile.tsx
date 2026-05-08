@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
@@ -17,6 +17,7 @@ import {
   Send,
   X,
   Check,
+  Pencil,
 } from "lucide-react";
 import { BottomNav } from "@/components/bottom-nav";
 import { toast } from "sonner";
@@ -31,25 +32,31 @@ export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
 });
 
-const user = {
+const initialUser = {
   name: "Adaeze Okafor",
   email: "adaeze@bazepay.com",
   phone: "+234 801 234 5678",
   initials: "AO",
   tier: "Tier 2 — Enhanced",
-  tierProgress: 0.66,
-  nextTier: "Tier 3 — Premium",
   limit: "₦5,000,000 / month",
   referralCode: "ADAEZE25",
   referralCount: 7,
   referralEarned: "₦14,000",
 };
 
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "U";
+}
+
 function ProfilePage() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(initialUser);
   const [biometric, setBiometric] = useState(true);
   const [twoFA, setTwoFA] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const copyCode = async () => {
     try {
@@ -77,7 +84,7 @@ function ProfilePage() {
         <div className="flex items-center justify-between">
           <h1 className="font-display text-2xl font-bold tracking-tight">Profile</h1>
           <button
-            onClick={() => navigate({ to: "/auth/login" })}
+            onClick={() => setLogoutOpen(true)}
             className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
             aria-label="Log out"
           >
@@ -94,6 +101,13 @@ function ProfilePage() {
             <p className="text-xs text-foreground/55 truncate">{user.email}</p>
             <p className="text-xs text-foreground/55">{user.phone}</p>
           </div>
+          <button
+            onClick={() => setEditOpen(true)}
+            className="w-9 h-9 rounded-full bg-foreground/10 flex items-center justify-center text-foreground/80 active:scale-95 transition"
+            aria-label="Edit profile"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
@@ -211,6 +225,25 @@ function ProfilePage() {
       <BottomNav />
 
       <SupportSheet open={supportOpen} onClose={() => setSupportOpen(false)} />
+      <EditProfileSheet
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        user={user}
+        onSave={(name, email, phone) => {
+          setUser((u) => ({ ...u, name, email, phone, initials: getInitials(name) }));
+          setEditOpen(false);
+          toast.success("Profile updated");
+        }}
+      />
+      <LogoutSheet
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={() => {
+          setLogoutOpen(false);
+          toast.success("Logged out");
+          navigate({ to: "/auth/login" });
+        }}
+      />
     </div>
   );
 }
@@ -375,6 +408,143 @@ function SupportSheet({ open, onClose }: { open: boolean; onClose: () => void })
                   {draft.trim() ? <Send className="w-4 h-4" /> : <Check className="w-4 h-4" />}
                 </button>
               </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function EditProfileSheet({
+  open, onClose, user, onSave,
+}: {
+  open: boolean;
+  onClose: () => void;
+  user: { name: string; email: string; phone: string };
+  onSave: (name: string, email: string, phone: string) => void;
+}) {
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [phone, setPhone] = useState(user.phone);
+
+  // sync when reopened
+  useEffect(() => {
+    if (open) {
+      setName(user.name);
+      setEmail(user.email);
+      setPhone(user.phone);
+    }
+  }, [open, user]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/50 z-[60]"
+          />
+          <motion.div
+            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 280 }}
+            className="absolute inset-x-0 bottom-0 z-[61] bg-card text-card-foreground rounded-t-3xl px-5 pt-4 pb-6"
+          >
+            <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+            <div className="flex items-center justify-between mt-3">
+              <p className="font-display text-lg font-bold">Edit profile</p>
+              <button onClick={onClose} className="w-8 h-8 rounded-full bg-card-foreground/[0.06] flex items-center justify-center">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              <Field label="Full name" value={name} onChange={setName} />
+              <Field label="Email" value={email} onChange={setEmail} type="email" />
+              <Field label="Phone" value={phone} onChange={setPhone} type="tel" />
+            </div>
+
+            <button
+              onClick={() => onSave(name.trim(), email.trim(), phone.trim())}
+              disabled={!name.trim() || !email.trim() || !phone.trim()}
+              className="mt-6 w-full h-12 rounded-full bg-primary text-primary-foreground font-semibold text-sm disabled:opacity-40 active:scale-[0.98] transition"
+            >
+              Save changes
+            </button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function Field({
+  label, value, onChange, type = "text",
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="text-[10px] uppercase tracking-widest text-card-foreground/55 font-semibold">{label}</span>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-1.5 w-full h-11 px-4 rounded-2xl bg-card-foreground/[0.05] text-sm outline-none focus:ring-2 ring-primary/40"
+      />
+    </label>
+  );
+}
+
+function LogoutSheet({
+  open, onClose, onConfirm,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/50 z-[60]"
+          />
+          <motion.div
+            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 280 }}
+            className="absolute inset-x-0 bottom-0 z-[61] bg-card text-card-foreground rounded-t-3xl px-5 pt-4 pb-6"
+          >
+            <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+            <div className="mt-5 flex flex-col items-center text-center">
+              <div className="w-14 h-14 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <LogOut className="w-6 h-6" />
+              </div>
+              <p className="font-display text-lg font-bold mt-3">Log out?</p>
+              <p className="text-sm text-card-foreground/60 mt-1 max-w-[260px]">
+                You'll need to sign in again with your PIN or biometrics.
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button
+                onClick={onClose}
+                className="h-12 rounded-full bg-card-foreground/[0.06] font-semibold text-sm active:scale-[0.98] transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onConfirm}
+                className="h-12 rounded-full bg-destructive text-destructive-foreground font-semibold text-sm active:scale-[0.98] transition"
+              >
+                Log out
+              </button>
             </div>
           </motion.div>
         </>
