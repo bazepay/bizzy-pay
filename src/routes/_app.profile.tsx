@@ -8,7 +8,6 @@ import {
   KeyRound,
   Lock,
   Gift,
-  Gift,
   MessageCircle,
   HelpCircle,
   FileText,
