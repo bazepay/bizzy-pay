@@ -21,6 +21,7 @@ import { Route as AppHomeRouteImport } from './routes/_app.home'
 import { Route as AppPayIndexRouteImport } from './routes/_app.pay.index'
 import { Route as AppNumbersIndexRouteImport } from './routes/_app.numbers.index'
 import { Route as AppEsimsIndexRouteImport } from './routes/_app.esims.index'
+import { Route as AppCardsIndexRouteImport } from './routes/_app.cards.index'
 import { Route as AppPayTvRouteImport } from './routes/_app.pay.tv'
 import { Route as AppPayInternetRouteImport } from './routes/_app.pay.internet'
 import { Route as AppPayEsimRouteImport } from './routes/_app.pay.esim'
@@ -89,6 +90,11 @@ const AppNumbersIndexRoute = AppNumbersIndexRouteImport.update({
 const AppEsimsIndexRoute = AppEsimsIndexRouteImport.update({
   id: '/esims/',
   path: '/esims/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCardsIndexRoute = AppCardsIndexRouteImport.update({
+  id: '/cards/',
+  path: '/cards/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPayTvRoute = AppPayTvRouteImport.update({
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/cards/': typeof AppCardsIndexRoute
   '/esims/': typeof AppEsimsIndexRoute
   '/numbers/': typeof AppNumbersIndexRoute
   '/pay/': typeof AppPayIndexRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/pay/esim': typeof AppPayEsimRoute
   '/pay/internet': typeof AppPayInternetRoute
   '/pay/tv': typeof AppPayTvRoute
+  '/cards': typeof AppCardsIndexRoute
   '/esims': typeof AppEsimsIndexRoute
   '/numbers': typeof AppNumbersIndexRoute
   '/pay': typeof AppPayIndexRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/_app/pay/esim': typeof AppPayEsimRoute
   '/_app/pay/internet': typeof AppPayInternetRoute
   '/_app/pay/tv': typeof AppPayTvRoute
+  '/_app/cards/': typeof AppCardsIndexRoute
   '/_app/esims/': typeof AppEsimsIndexRoute
   '/_app/numbers/': typeof AppNumbersIndexRoute
   '/_app/pay/': typeof AppPayIndexRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/cards/'
     | '/esims/'
     | '/numbers/'
     | '/pay/'
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/pay/esim'
     | '/pay/internet'
     | '/pay/tv'
+    | '/cards'
     | '/esims'
     | '/numbers'
     | '/pay'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/_app/pay/esim'
     | '/_app/pay/internet'
     | '/_app/pay/tv'
+    | '/_app/cards/'
     | '/_app/esims/'
     | '/_app/numbers/'
     | '/_app/pay/'
@@ -377,6 +389,13 @@ declare module '@tanstack/react-router' {
       path: '/esims'
       fullPath: '/esims/'
       preLoaderRoute: typeof AppEsimsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/cards/': {
+      id: '/_app/cards/'
+      path: '/cards'
+      fullPath: '/cards/'
+      preLoaderRoute: typeof AppCardsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/pay/tv': {
@@ -485,6 +504,7 @@ interface AppRouteChildren {
   AppWalletRoute: typeof AppWalletRoute
   AppEsimsIdRoute: typeof AppEsimsIdRoute
   AppNumbersIdRoute: typeof AppNumbersIdRoute
+  AppCardsIndexRoute: typeof AppCardsIndexRoute
   AppEsimsIndexRoute: typeof AppEsimsIndexRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
 }
@@ -495,6 +515,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWalletRoute: AppWalletRoute,
   AppEsimsIdRoute: AppEsimsIdRoute,
   AppNumbersIdRoute: AppNumbersIdRoute,
+  AppCardsIndexRoute: AppCardsIndexRoute,
   AppEsimsIndexRoute: AppEsimsIndexRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
 }
@@ -512,3 +533,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
