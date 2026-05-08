@@ -327,18 +327,28 @@ function ActionTile({
 }
 
 function LimitsSheet({
-  limit,
-  setLimit,
-  blocked,
-  setBlocked,
+  cardId,
+  initialLimit,
+  initialBlocked,
+  onCancel,
   onClose,
 }: {
-  limit: number;
-  setLimit: (n: number) => void;
-  blocked: string[];
-  setBlocked: (b: string[]) => void;
+  cardId: string;
+  initialLimit: number;
+  initialBlocked: string[];
+  onCancel: () => void;
   onClose: () => void;
 }) {
+  const [limit, setLimit] = useState(initialLimit);
+  const [blocked, setBlocked] = useState<string[]>(initialBlocked);
+
+  const save = () => {
+    setLimitStore(cardId, limit);
+    setBlockedStore(cardId, blocked);
+    toast.success("Limits updated");
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
@@ -406,12 +416,15 @@ function LimitsSheet({
 
         <div className="px-6 mt-6 space-y-2">
           <button
-            onClick={onClose}
+            onClick={save}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm"
           >
             Save changes
           </button>
-          <button className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2">
+          <button
+            onClick={onCancel}
+            className="w-full h-12 rounded-full bg-destructive/10 text-destructive font-bold text-sm flex items-center justify-center gap-2"
+          >
             <Trash2 className="w-4 h-4" /> Cancel card
           </button>
         </div>
@@ -420,8 +433,14 @@ function LimitsSheet({
   );
 }
 
-function FundSheet({ onClose }: { onClose: () => void }) {
+function FundSheet({ cardId, onClose }: { cardId: string; onClose: () => void }) {
   const [amount, setAmount] = useState(50000);
+  const submit = () => {
+    if (amount < 1000) return;
+    topUpCard(cardId, amount);
+    toast.success(`Topped up ${formatNgn(amount)}`);
+    onClose();
+  };
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
@@ -470,10 +489,52 @@ function FundSheet({ onClose }: { onClose: () => void }) {
         <div className="px-6 mt-5">
           <button
             disabled={amount < 1000}
-            onClick={onClose}
+            onClick={submit}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40"
           >
             Top up · {formatNgn(amount)}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConfirmCancelSheet({
+  label,
+  onConfirm,
+  onClose,
+}: {
+  label: string;
+  onConfirm: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-[90] flex items-end">
+      <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
+      <div className="relative w-full bg-card text-card-foreground rounded-t-[2rem] pt-3 pb-8 animate-in slide-in-from-bottom duration-300">
+        <div className="w-10 h-1 rounded-full bg-card-foreground/15 mx-auto" />
+        <div className="px-6 mt-5 text-center">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-destructive/15 text-destructive flex items-center justify-center">
+            <Trash2 className="w-6 h-6" />
+          </div>
+          <h3 className="font-display font-bold text-xl mt-4">Cancel {label}?</h3>
+          <p className="text-[12px] text-card-foreground/60 mt-2 leading-relaxed max-w-[280px] mx-auto">
+            This permanently closes the card. Any remaining balance is returned to your wallet.
+          </p>
+        </div>
+        <div className="px-6 mt-6 space-y-2">
+          <button
+            onClick={onConfirm}
+            className="w-full h-12 rounded-full bg-destructive text-destructive-foreground font-bold text-sm"
+          >
+            Cancel card
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full h-12 rounded-full bg-card-foreground/[0.06] font-bold text-sm"
+          >
+            Keep card
           </button>
         </div>
       </div>
