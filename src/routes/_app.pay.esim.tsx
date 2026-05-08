@@ -254,8 +254,8 @@ function EsimPage() {
 
       <div className="flex-1 mt-6 bg-card text-card-foreground rounded-t-[2rem] px-6 pt-6 pb-32 space-y-6">
         {/* Mode toggle */}
-        <div className="rounded-full bg-card-foreground/[0.06] p-1 grid grid-cols-2 gap-1">
-          {(["new", "topup"] as const).map((m) => {
+        <div className="rounded-full bg-card-foreground/[0.06] p-1 grid grid-cols-3 gap-1">
+          {(["new", "topup", "vnumber"] as const).map((m) => {
             const sel = mode === m;
             return (
               <button
@@ -264,17 +264,17 @@ function EsimPage() {
                   setMode(m);
                   setPlanId(null);
                   if (m === "new") setTopupId(null);
-                  else if (installed.length) {
+                  else if (m === "topup" && installed.length) {
                     const first = installed[0];
                     setTopupId(first.id);
                     setScope(first.scope);
                   }
                 }}
-                className={`h-9 rounded-full text-[12px] font-bold transition ${
+                className={`h-9 rounded-full text-[11px] font-bold transition px-2 ${
                   sel ? "bg-primary text-primary-foreground shadow" : "text-card-foreground/60"
                 }`}
               >
-                {m === "new" ? "Buy new eSIM" : "Top up existing"}
+                {m === "new" ? "Buy eSIM" : m === "topup" ? "Top up" : "Number"}
               </button>
             );
           })}
