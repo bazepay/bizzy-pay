@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Smartphone, Activity, Wallet as WalletIcon } from "lucide-react";
 import { fmtNgn, fmtNum } from "@/lib/mock-data";
-import { getUser, getWallets, getTransactions, getDevices, fmtRelative, tierLabel } from "@/lib/users-data";
+import { getUser, getWallets, getTransactions, getDevices, fmtRelative, kycLabel } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/$id/")({
   component: Overview,
@@ -23,7 +23,7 @@ function Overview() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Stat label="NGN balance" value={fmtNgn(totalNgn)} icon={WalletIcon} />
           <Stat label="Lifetime txns" value={fmtNum(txns.length * 14)} icon={Activity} />
-          <Stat label="KYC tier" value={tierLabel(user.kycTier)} icon={ShieldCheck} />
+          <Stat label="KYC" value={kycLabel(user.kyc)} icon={ShieldCheck} />
           <Stat label="Active devices" value={String(devices.filter((d) => d.current).length)} icon={Smartphone} />
         </div>
 

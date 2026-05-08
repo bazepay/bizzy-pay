@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, AlertTriangle, FileText, Camera } from "lucide-react";
-import { getUser, tierLabel } from "@/lib/users-data";
+import { getUser, kycLabel, kycTone } from "@/lib/users-data";
 
 export const Route = createFileRoute("/_admin/users/$id/kyc")({
   component: KycDossier,
@@ -19,7 +19,7 @@ function KycDossier() {
     { label: "Liveness check", pass: true, detail: `${(liveness * 100).toFixed(1)}% confidence` },
     { label: "Document OCR match", pass: true, detail: "Names match" },
     { label: "Sanctions / PEP", pass: user.riskScore < 70, detail: user.riskScore < 70 ? "No hits" : "1 PEP-adjacent hit" },
-    { label: "Address verification", pass: user.kycTier >= 2, detail: user.kycTier >= 2 ? "Utility bill on file" : "Not provided" },
+    { label: "Address verification", pass: user.kyc === "verified", detail: user.kyc === "verified" ? "Utility bill on file" : "Not provided" },
     { label: "Device fingerprint", pass: true, detail: "Trusted device" },
     { label: "IP / geo consistency", pass: true, detail: "Lagos, NG" },
   ];
@@ -67,8 +67,8 @@ function KycDossier() {
           <CardHeader className="pb-2"><CardTitle className="text-base">Decision</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             <div>
-              <div className="text-xs text-muted-foreground">Current tier</div>
-              <Badge variant="outline" className="mt-1">{tierLabel(user.kycTier)}</Badge>
+              <div className="text-xs text-muted-foreground">Current status</div>
+              <Badge variant="outline" className={`mt-1 ${kycTone(user.kyc)}`}>{kycLabel(user.kyc)}</Badge>
             </div>
             <div>
               <div className="text-xs text-muted-foreground mb-1">Risk score</div>
@@ -76,9 +76,7 @@ function KycDossier() {
               <div className="text-xs mt-1 text-right font-mono">{user.riskScore}/100</div>
             </div>
             <div className="grid grid-cols-1 gap-1.5 pt-2">
-              <Button size="sm">Approve · Tier 1</Button>
-              <Button size="sm" variant="outline">Approve · Tier 2</Button>
-              <Button size="sm" variant="outline">Approve · Tier 3 (4-eyes)</Button>
+              <Button size="sm">Approve KYC</Button>
               <Button size="sm" variant="outline">Request more info</Button>
               <Button size="sm" variant="outline" className="text-destructive">Reject</Button>
             </div>
@@ -92,7 +90,7 @@ function KycDossier() {
             <div className="flex justify-between"><span className="text-muted-foreground">Monthly cap</span><span className="font-mono">₦50,000,000</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Single txn</span><span className="font-mono">₦2,000,000</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Card issuance</span><span>Allowed</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">International</span><span>{user.kycTier >= 2 ? "Allowed" : "Blocked"}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">International</span><span>{user.kyc === "verified" ? "Allowed" : "Blocked"}</span></div>
           </CardContent>
         </Card>
       </div>
