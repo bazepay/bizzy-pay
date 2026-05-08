@@ -158,7 +158,7 @@ function Kyc() {
               </div>
 
               {/* White surface */}
-              <div className="bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
+              <div className="relative bg-card text-card-foreground rounded-t-[2rem] px-6 pt-7 pb-8 -mt-6 flex-1 flex flex-col">
                 <p className="text-[11px] uppercase tracking-widest text-card-foreground/50 font-semibold mb-3 px-1">
                   How it works
                 </p>
