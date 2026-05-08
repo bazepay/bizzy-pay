@@ -1050,31 +1050,7 @@ function VirtualNumberPanel({
 }) {
   return (
     <div className="space-y-6">
-      <div>
-        <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
-          Country
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          {vnCountries.map((c) => {
-            const sel = c.id === countryId;
-            return (
-              <button
-                key={c.id}
-                onClick={() => setCountryId(c.id)}
-                className={`flex items-center gap-3 rounded-2xl p-3 text-left transition ${
-                  sel ? "bg-primary/10 ring-2 ring-primary" : "bg-card-foreground/[0.04] ring-1 ring-transparent"
-                }`}
-              >
-                <span className="text-2xl leading-none">{c.flag}</span>
-                <div className="min-w-0">
-                  <p className="font-semibold text-sm truncate">{c.name}</p>
-                  <p className="text-[11px] text-card-foreground/55">{c.code} · {c.iso}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <CountrySelector countryId={countryId} setCountryId={setCountryId} />
 
       <div>
         <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/50 mb-2 px-1">
