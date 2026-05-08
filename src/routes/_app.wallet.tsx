@@ -298,7 +298,7 @@ function FilterSheet({
     (draft.date !== "all" ? 1 : 0);
 
   return (
-    <div className="absolute inset-0 z-[60] flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-end" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
@@ -512,7 +512,7 @@ function Sheet({
   const title = kind === "fund" ? "Top up wallet" : "Withdraw funds";
 
   return (
-    <div className="absolute inset-0 z-[60] flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-end" onClick={onClose}>
       <div className="absolute inset-0 bg-black/50" />
       <div
         onClick={(e) => e.stopPropagation()}
@@ -663,7 +663,7 @@ function TxnDetailSheet({ txn, onClose }: { txn: Txn; onClose: () => void }) {
   ];
 
   return (
-    <div className="absolute inset-0 z-[70] flex items-end" onClick={onClose}>
+    <div className="fixed inset-0 z-[70] flex items-end" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div
         onClick={(e) => e.stopPropagation()}
