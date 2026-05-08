@@ -325,6 +325,7 @@ function TopupFlow() {
         )}
       </AnimatePresence>
     </div>
+    </PhoneFrame>
   );
 }
 
