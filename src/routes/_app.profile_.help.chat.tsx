@@ -61,25 +61,59 @@ function SupportChat() {
     },
   ]);
   const [input, setInput] = useState("");
+  const [pending, setPending] = useState<Attachment[]>([]);
   const [typing, setTyping] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
 
+  useEffect(() => {
+    return () => {
+      pending.forEach((a) => a.url && URL.revokeObjectURL(a.url));
+    };
+  }, [pending]);
+
+  const onFiles = (files: FileList | null) => {
+    if (!files?.length) return;
+    const next: Attachment[] = [];
+    for (const f of Array.from(files).slice(0, 5)) {
+      if (f.size > 10 * 1024 * 1024) continue;
+      next.push({
+        name: f.name,
+        size: f.size,
+        type: f.type,
+        url: f.type.startsWith("image/") ? URL.createObjectURL(f) : undefined,
+      });
+    }
+    setPending((p) => [...p, ...next].slice(0, 5));
+    if (fileInput.current) fileInput.current.value = "";
+  };
+
   const send = (text: string) => {
     const t = text.trim();
-    if (!t) return;
-    const mine: Msg = { id: `m-${Date.now()}`, from: "me", text: t, at: now() };
+    if (!t && pending.length === 0) return;
+    const atts = pending;
+    const mine: Msg = {
+      id: `m-${Date.now()}`,
+      from: "me",
+      text: t,
+      at: now(),
+      attachments: atts.length ? atts : undefined,
+    };
     setMessages((m) => [...m, mine]);
     setInput("");
+    setPending([]);
     setTyping(true);
     setTimeout(() => {
       const reply: Msg = {
         id: `m-${Date.now() + 1}`,
         from: "agent",
-        text: botReply(t),
+        text: atts.length
+          ? `Got it — I can see ${atts.length === 1 ? "the file" : `all ${atts.length} files`} you sent. Let me take a look and get back to you shortly.`
+          : botReply(t),
         at: now(),
       };
       setMessages((m) => [...m, reply]);
