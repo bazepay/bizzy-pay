@@ -28,6 +28,7 @@ import { Route as AppPayDataRouteImport } from './routes/_app.pay.data'
 import { Route as AppPayBettingRouteImport } from './routes/_app.pay.betting'
 import { Route as AppPayAirtimeRouteImport } from './routes/_app.pay.airtime'
 import { Route as AppPayServiceRouteImport } from './routes/_app.pay.$service'
+import { Route as AppNumbersIdRouteImport } from './routes/_app.numbers.$id'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -123,6 +124,11 @@ const AppPayServiceRoute = AppPayServiceRouteImport.update({
   path: '/$service',
   getParentRoute: () => AppPayRoute,
 } as any)
+const AppNumbersIdRoute = AppNumbersIdRouteImport.update({
+  id: '/numbers/$id',
+  path: '/numbers/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -133,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/numbers/$id': typeof AppNumbersIdRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
   '/pay/betting': typeof AppPayBettingRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/numbers/$id': typeof AppNumbersIdRoute
   '/pay/$service': typeof AppPayServiceRoute
   '/pay/airtime': typeof AppPayAirtimeRoute
   '/pay/betting': typeof AppPayBettingRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/_app/wallet': typeof AppWalletRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
+  '/_app/numbers/$id': typeof AppNumbersIdRoute
   '/_app/pay/$service': typeof AppPayServiceRoute
   '/_app/pay/airtime': typeof AppPayAirtimeRoute
   '/_app/pay/betting': typeof AppPayBettingRoute
@@ -196,6 +205,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/numbers/$id'
     | '/pay/$service'
     | '/pay/airtime'
     | '/pay/betting'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/numbers/$id'
     | '/pay/$service'
     | '/pay/airtime'
     | '/pay/betting'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '/_app/wallet'
     | '/auth/login'
     | '/auth/signup'
+    | '/_app/numbers/$id'
     | '/_app/pay/$service'
     | '/_app/pay/airtime'
     | '/_app/pay/betting'
@@ -392,6 +404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPayServiceRouteImport
       parentRoute: typeof AppPayRoute
     }
+    '/_app/numbers/$id': {
+      id: '/_app/numbers/$id'
+      path: '/numbers/$id'
+      fullPath: '/numbers/$id'
+      preLoaderRoute: typeof AppNumbersIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -426,6 +445,7 @@ interface AppRouteChildren {
   AppHomeRoute: typeof AppHomeRoute
   AppPayRoute: typeof AppPayRouteWithChildren
   AppWalletRoute: typeof AppWalletRoute
+  AppNumbersIdRoute: typeof AppNumbersIdRoute
   AppNumbersIndexRoute: typeof AppNumbersIndexRoute
 }
 
@@ -433,6 +453,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
   AppPayRoute: AppPayRouteWithChildren,
   AppWalletRoute: AppWalletRoute,
+  AppNumbersIdRoute: AppNumbersIdRoute,
   AppNumbersIndexRoute: AppNumbersIndexRoute,
 }
 
