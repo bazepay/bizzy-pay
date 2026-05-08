@@ -10,6 +10,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import {
   fmtNgn, fmtNum,
 } from "@/lib/mock-data";
@@ -74,14 +77,25 @@ function UsersDirectory() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const headers = ["id", "name", "email", "phone", "country", "kyc", "status", "risk", "ltv_ngn", "joined", "last_active"];
+              const rows = filtered.map((u) => [u.id, u.name, u.email, u.phone, u.country, u.kyc, u.status, u.riskScore, u.ltvNgn, u.signupAt, u.lastActiveAt].join(","));
+              const csv = [headers.join(","), ...rows].join("\n");
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url; a.download = `users-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+              URL.revokeObjectURL(url);
+              toast.success(`Exported ${filtered.length} users.`);
+            }}
+          >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Export
           </Button>
-          <Button size="sm" className="bg-primary text-primary-foreground">
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
-            Invite user
-          </Button>
+          <InviteUserDialog />
         </div>
       </motion.div>
 
@@ -248,5 +262,45 @@ function FilterSelect({
         ))}
       </SelectContent>
     </Select>
+  );
+}
+
+function InviteUserDialog() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" className="bg-primary text-primary-foreground">
+          <Plus className="h-3.5 w-3.5 mr-1.5" />
+          Invite user
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Invite a new user</DialogTitle>
+          <DialogDescription>An onboarding link will be sent via email and SMS.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-2"><Label>Full name</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ada Okafor" /></div>
+          <div className="space-y-2"><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ada@mail.com" /></div>
+          <div className="space-y-2"><Label>Phone</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+234 801 234 5678" /></div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button
+            disabled={!name || !email}
+            onClick={() => {
+              toast.success(`Invite sent to ${email}.`);
+              setOpen(false); setName(""); setEmail(""); setPhone("");
+            }}
+          >
+            Send invite
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
