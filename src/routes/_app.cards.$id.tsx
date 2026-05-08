@@ -364,7 +364,7 @@ function LimitsSheet({
 }
 
 function FundSheet({ onClose }: { onClose: () => void }) {
-  const [amount, setAmount] = useState(50);
+  const [amount, setAmount] = useState(50000);
   return (
     <div className="fixed inset-0 z-[80] flex items-end">
       <button onClick={onClose} className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-label="Close" />
@@ -379,39 +379,40 @@ function FundSheet({ onClose }: { onClose: () => void }) {
 
         <div className="px-6 mt-5">
           <p className="text-[11px] font-bold uppercase tracking-wider text-card-foreground/55 mb-2">
-            Amount (USD)
+            Amount (NGN)
           </p>
           <input
             type="number"
             value={amount}
-            min={5}
+            min={1000}
+            step={1000}
             onChange={(e) => setAmount(Math.max(0, Number(e.target.value) || 0))}
             className="w-full h-14 rounded-2xl bg-card-foreground/[0.04] px-4 text-2xl font-bold tabular-nums outline-none"
           />
           <div className="grid grid-cols-4 gap-2 mt-3">
-            {[25, 50, 100, 250].map((a) => (
+            {[25000, 50000, 100000, 250000].map((a) => (
               <button
                 key={a}
                 onClick={() => setAmount(a)}
                 className="h-10 rounded-full bg-card-foreground/[0.04] text-sm font-bold tabular-nums"
               >
-                ${a}
+                ₦{(a / 1000).toFixed(0)}k
               </button>
             ))}
           </div>
         </div>
 
-        <div className="px-6 mt-5 rounded-2xl mx-6 bg-card-foreground/[0.04] p-4 flex items-center justify-between">
+        <div className="mx-6 mt-5 rounded-2xl bg-card-foreground/[0.04] p-4 flex items-center justify-between">
           <div>
             <p className="text-[11px] text-card-foreground/55">From</p>
-            <p className="text-sm font-semibold">USD Wallet</p>
+            <p className="text-sm font-semibold">NGN Wallet</p>
           </div>
           <ChevronRight className="w-4 h-4 text-card-foreground/40" />
         </div>
 
         <div className="px-6 mt-5">
           <button
-            disabled={amount < 5}
+            disabled={amount < 1000}
             onClick={onClose}
             className="w-full h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm disabled:opacity-40"
           >
