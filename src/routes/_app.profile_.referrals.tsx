@@ -150,7 +150,7 @@ function ReferralsPage() {
               <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
                 earned ? "bg-primary/15 text-primary" : "bg-card-foreground/10 text-card-foreground/55"
               }`}>
-                {earned ? <Check className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+                {earned ? <Check className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold">{h.name}</p>
