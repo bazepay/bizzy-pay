@@ -207,13 +207,13 @@ function ProfilePage() {
             icon={<HelpCircle className="w-4 h-4" />}
             label="Help center"
             desc="FAQs and guides"
-            onClick={() => toast.info("Help center — coming soon")}
+            onClick={() => navigate({ to: "/profile/help" })}
           />
           <RowButton
             icon={<FileText className="w-4 h-4" />}
             label="Legal"
             desc="Terms · Privacy"
-            onClick={() => toast.info("Legal — coming soon")}
+            onClick={() => navigate({ to: "/profile/legal" })}
           />
         </div>
 
