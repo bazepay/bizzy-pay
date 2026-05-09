@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminWalletsRouteImport } from './routes/_admin.wallets'
 import { Route as AdminSupportRouteImport } from './routes/_admin.support'
+import { Route as AdminSettingsRouteImport } from './routes/_admin.settings'
 import { Route as AdminReferralsRouteImport } from './routes/_admin.referrals'
 import { Route as AdminPaymentsRouteImport } from './routes/_admin.payments'
 import { Route as AdminPayRouteImport } from './routes/_admin.pay'
@@ -28,6 +29,7 @@ import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.i
 import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
 import { Route as AdminTransactionsIndexRouteImport } from './routes/_admin.transactions.index'
 import { Route as AdminSupportIndexRouteImport } from './routes/_admin.support.index'
+import { Route as AdminSettingsIndexRouteImport } from './routes/_admin.settings.index'
 import { Route as AdminReferralsIndexRouteImport } from './routes/_admin.referrals.index'
 import { Route as AdminPaymentsIndexRouteImport } from './routes/_admin.payments.index'
 import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
@@ -44,6 +46,10 @@ import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets
 import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
+import { Route as AdminSettingsFeatureFlagsRouteImport } from './routes/_admin.settings.feature-flags'
+import { Route as AdminSettingsBrandingRouteImport } from './routes/_admin.settings.branding'
+import { Route as AdminSettingsAuditLogRouteImport } from './routes/_admin.settings.audit-log'
+import { Route as AdminSettingsApiKeysRouteImport } from './routes/_admin.settings.api-keys'
 import { Route as AdminReferralsPromosRouteImport } from './routes/_admin.referrals.promos'
 import { Route as AdminReferralsProgramsRouteImport } from './routes/_admin.referrals.programs'
 import { Route as AdminReferralsNewsletterRouteImport } from './routes/_admin.referrals.newsletter'
@@ -118,6 +124,11 @@ const AdminSupportRoute = AdminSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminReferralsRoute = AdminReferralsRouteImport.update({
   id: '/referrals',
   path: '/referrals',
@@ -187,6 +198,11 @@ const AdminSupportIndexRoute = AdminSupportIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminSupportRoute,
+} as any)
+const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminSettingsRoute,
 } as any)
 const AdminReferralsIndexRoute = AdminReferralsIndexRouteImport.update({
   id: '/',
@@ -267,6 +283,27 @@ const AdminTransactionsIdRoute = AdminTransactionsIdRouteImport.update({
   id: '/transactions/$id',
   path: '/transactions/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsFeatureFlagsRoute =
+  AdminSettingsFeatureFlagsRouteImport.update({
+    id: '/feature-flags',
+    path: '/feature-flags',
+    getParentRoute: () => AdminSettingsRoute,
+  } as any)
+const AdminSettingsBrandingRoute = AdminSettingsBrandingRouteImport.update({
+  id: '/branding',
+  path: '/branding',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
+const AdminSettingsAuditLogRoute = AdminSettingsAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
+const AdminSettingsApiKeysRoute = AdminSettingsApiKeysRouteImport.update({
+  id: '/api-keys',
+  path: '/api-keys',
+  getParentRoute: () => AdminSettingsRoute,
 } as any)
 const AdminReferralsPromosRoute = AdminReferralsPromosRouteImport.update({
   id: '/promos',
@@ -537,6 +574,7 @@ export interface FileRoutesByFullPath {
   '/pay': typeof AdminPayRouteWithChildren
   '/payments': typeof AdminPaymentsRouteWithChildren
   '/referrals': typeof AdminReferralsRouteWithChildren
+  '/settings': typeof AdminSettingsRouteWithChildren
   '/support': typeof AdminSupportRouteWithChildren
   '/wallets': typeof AdminWalletsRouteWithChildren
   '/cards/$id': typeof AdminCardsIdRoute
@@ -573,6 +611,10 @@ export interface FileRoutesByFullPath {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/settings/api-keys': typeof AdminSettingsApiKeysRoute
+  '/settings/audit-log': typeof AdminSettingsAuditLogRoute
+  '/settings/branding': typeof AdminSettingsBrandingRoute
+  '/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -589,6 +631,7 @@ export interface FileRoutesByFullPath {
   '/pay/': typeof AdminPayIndexRoute
   '/payments/': typeof AdminPaymentsIndexRoute
   '/referrals/': typeof AdminReferralsIndexRoute
+  '/settings/': typeof AdminSettingsIndexRoute
   '/support/': typeof AdminSupportIndexRoute
   '/transactions/': typeof AdminTransactionsIndexRoute
   '/users/': typeof AdminUsersIndexRoute
@@ -647,6 +690,10 @@ export interface FileRoutesByTo {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/settings/api-keys': typeof AdminSettingsApiKeysRoute
+  '/settings/audit-log': typeof AdminSettingsAuditLogRoute
+  '/settings/branding': typeof AdminSettingsBrandingRoute
+  '/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
@@ -662,6 +709,7 @@ export interface FileRoutesByTo {
   '/pay': typeof AdminPayIndexRoute
   '/payments': typeof AdminPaymentsIndexRoute
   '/referrals': typeof AdminReferralsIndexRoute
+  '/settings': typeof AdminSettingsIndexRoute
   '/support': typeof AdminSupportIndexRoute
   '/transactions': typeof AdminTransactionsIndexRoute
   '/users': typeof AdminUsersIndexRoute
@@ -697,6 +745,7 @@ export interface FileRoutesById {
   '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/payments': typeof AdminPaymentsRouteWithChildren
   '/_admin/referrals': typeof AdminReferralsRouteWithChildren
+  '/_admin/settings': typeof AdminSettingsRouteWithChildren
   '/_admin/support': typeof AdminSupportRouteWithChildren
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
   '/_admin/cards/$id': typeof AdminCardsIdRoute
@@ -733,6 +782,10 @@ export interface FileRoutesById {
   '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/_admin/referrals/programs': typeof AdminReferralsProgramsRoute
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
+  '/_admin/settings/api-keys': typeof AdminSettingsApiKeysRoute
+  '/_admin/settings/audit-log': typeof AdminSettingsAuditLogRoute
+  '/_admin/settings/branding': typeof AdminSettingsBrandingRoute
+  '/_admin/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
@@ -749,6 +802,7 @@ export interface FileRoutesById {
   '/_admin/pay/': typeof AdminPayIndexRoute
   '/_admin/payments/': typeof AdminPaymentsIndexRoute
   '/_admin/referrals/': typeof AdminReferralsIndexRoute
+  '/_admin/settings/': typeof AdminSettingsIndexRoute
   '/_admin/support/': typeof AdminSupportIndexRoute
   '/_admin/transactions/': typeof AdminTransactionsIndexRoute
   '/_admin/users/': typeof AdminUsersIndexRoute
@@ -784,6 +838,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/payments'
     | '/referrals'
+    | '/settings'
     | '/support'
     | '/wallets'
     | '/cards/$id'
@@ -820,6 +875,10 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/settings/api-keys'
+    | '/settings/audit-log'
+    | '/settings/branding'
+    | '/settings/feature-flags'
     | '/transactions/$id'
     | '/users/$id'
     | '/wallets/fx'
@@ -836,6 +895,7 @@ export interface FileRouteTypes {
     | '/pay/'
     | '/payments/'
     | '/referrals/'
+    | '/settings/'
     | '/support/'
     | '/transactions/'
     | '/users/'
@@ -894,6 +954,10 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/settings/api-keys'
+    | '/settings/audit-log'
+    | '/settings/branding'
+    | '/settings/feature-flags'
     | '/transactions/$id'
     | '/wallets/fx'
     | '/wallets/payouts'
@@ -909,6 +973,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/payments'
     | '/referrals'
+    | '/settings'
     | '/support'
     | '/transactions'
     | '/users'
@@ -943,6 +1008,7 @@ export interface FileRouteTypes {
     | '/_admin/pay'
     | '/_admin/payments'
     | '/_admin/referrals'
+    | '/_admin/settings'
     | '/_admin/support'
     | '/_admin/wallets'
     | '/_admin/cards/$id'
@@ -979,6 +1045,10 @@ export interface FileRouteTypes {
     | '/_admin/referrals/newsletter'
     | '/_admin/referrals/programs'
     | '/_admin/referrals/promos'
+    | '/_admin/settings/api-keys'
+    | '/_admin/settings/audit-log'
+    | '/_admin/settings/branding'
+    | '/_admin/settings/feature-flags'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
     | '/_admin/wallets/fx'
@@ -995,6 +1065,7 @@ export interface FileRouteTypes {
     | '/_admin/pay/'
     | '/_admin/payments/'
     | '/_admin/referrals/'
+    | '/_admin/settings/'
     | '/_admin/support/'
     | '/_admin/transactions/'
     | '/_admin/users/'
@@ -1057,6 +1128,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof AdminSupportRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/settings': {
+      id: '/_admin/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/referrals': {
@@ -1156,6 +1234,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/support/'
       preLoaderRoute: typeof AdminSupportIndexRouteImport
       parentRoute: typeof AdminSupportRoute
+    }
+    '/_admin/settings/': {
+      id: '/_admin/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AdminSettingsIndexRouteImport
+      parentRoute: typeof AdminSettingsRoute
     }
     '/_admin/referrals/': {
       id: '/_admin/referrals/'
@@ -1268,6 +1353,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/transactions/$id'
       preLoaderRoute: typeof AdminTransactionsIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/settings/feature-flags': {
+      id: '/_admin/settings/feature-flags'
+      path: '/feature-flags'
+      fullPath: '/settings/feature-flags'
+      preLoaderRoute: typeof AdminSettingsFeatureFlagsRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/_admin/settings/branding': {
+      id: '/_admin/settings/branding'
+      path: '/branding'
+      fullPath: '/settings/branding'
+      preLoaderRoute: typeof AdminSettingsBrandingRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/_admin/settings/audit-log': {
+      id: '/_admin/settings/audit-log'
+      path: '/audit-log'
+      fullPath: '/settings/audit-log'
+      preLoaderRoute: typeof AdminSettingsAuditLogRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/_admin/settings/api-keys': {
+      id: '/_admin/settings/api-keys'
+      path: '/api-keys'
+      fullPath: '/settings/api-keys'
+      preLoaderRoute: typeof AdminSettingsApiKeysRouteImport
+      parentRoute: typeof AdminSettingsRoute
     }
     '/_admin/referrals/promos': {
       id: '/_admin/referrals/promos'
@@ -1792,6 +1905,26 @@ const AdminReferralsRouteWithChildren = AdminReferralsRoute._addFileChildren(
   AdminReferralsRouteChildren,
 )
 
+interface AdminSettingsRouteChildren {
+  AdminSettingsApiKeysRoute: typeof AdminSettingsApiKeysRoute
+  AdminSettingsAuditLogRoute: typeof AdminSettingsAuditLogRoute
+  AdminSettingsBrandingRoute: typeof AdminSettingsBrandingRoute
+  AdminSettingsFeatureFlagsRoute: typeof AdminSettingsFeatureFlagsRoute
+  AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
+}
+
+const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsApiKeysRoute: AdminSettingsApiKeysRoute,
+  AdminSettingsAuditLogRoute: AdminSettingsAuditLogRoute,
+  AdminSettingsBrandingRoute: AdminSettingsBrandingRoute,
+  AdminSettingsFeatureFlagsRoute: AdminSettingsFeatureFlagsRoute,
+  AdminSettingsIndexRoute: AdminSettingsIndexRoute,
+}
+
+const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
+  AdminSettingsRouteChildren,
+)
+
 interface AdminSupportRouteChildren {
   AdminSupportIndexRoute: typeof AdminSupportIndexRoute
   AdminSupportChatIdRoute: typeof AdminSupportChatIdRoute
@@ -1871,6 +2004,7 @@ interface AdminRouteChildren {
   AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminPaymentsRoute: typeof AdminPaymentsRouteWithChildren
   AdminReferralsRoute: typeof AdminReferralsRouteWithChildren
+  AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminSupportRoute: typeof AdminSupportRouteWithChildren
   AdminWalletsRoute: typeof AdminWalletsRouteWithChildren
   AdminKycIdRoute: typeof AdminKycIdRoute
@@ -1892,6 +2026,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPayRoute: AdminPayRouteWithChildren,
   AdminPaymentsRoute: AdminPaymentsRouteWithChildren,
   AdminReferralsRoute: AdminReferralsRouteWithChildren,
+  AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminSupportRoute: AdminSupportRouteWithChildren,
   AdminWalletsRoute: AdminWalletsRouteWithChildren,
   AdminKycIdRoute: AdminKycIdRoute,
