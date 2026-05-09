@@ -106,7 +106,7 @@ const PROVIDERS: Record<Txn["type"], string> = {
   tv: "DStv",
   betting: "SportyBet",
   card_spend: "Marqeta",
-  esim: "Airalo",
+  esim: "TouristeSim",
   number: "Twilio",
   refund: "System",
   fee: "System",

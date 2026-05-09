@@ -78,7 +78,7 @@ const COUNTRIES: Array<[string, string, string]> = [
   ["SA", "Saudi Arabia", "🇸🇦"],
 ];
 
-const SUPPLIERS = ["Airalo", "eSIM Access", "Bytesim"];
+const SUPPLIERS = ["TouristeSim"];
 
 function seed(i: number) {
   const x = Math.sin(i * 9301 + 49297) * 233280;
@@ -86,9 +86,7 @@ function seed(i: number) {
 }
 
 export const esimSuppliers: EsimSupplier[] = [
-  { id: "sup_airalo", name: "Airalo", health: "healthy", countriesCovered: 198, latencyMs: 312, lastSync: new Date(Date.now() - 4 * 60_000).toISOString() },
-  { id: "sup_esimaccess", name: "eSIM Access", health: "degraded", countriesCovered: 142, latencyMs: 1280, lastSync: new Date(Date.now() - 18 * 60_000).toISOString() },
-  { id: "sup_bytesim", name: "Bytesim", health: "healthy", countriesCovered: 86, latencyMs: 420, lastSync: new Date(Date.now() - 2 * 60_000).toISOString() },
+  { id: "sup_touristesim", name: "TouristeSim", health: "healthy", countriesCovered: 192, latencyMs: 286, lastSync: new Date(Date.now() - 3 * 60_000).toISOString() },
 ];
 
 const PLAN_BUCKETS: Array<{ gb: number; days: number; basePriceNgn: number }> = [
