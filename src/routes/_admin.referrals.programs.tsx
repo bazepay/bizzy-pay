@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Play, Pause, Square, Gift, Users, Wallet, Calendar } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Play, Pause, Square, Gift, Users, Wallet, Calendar, Plus } from "lucide-react";
 import {
   referralPrograms as initial,
   fmtNgn,
@@ -15,6 +17,8 @@ import {
   rewardKindLabel,
   type ReferralProgram,
   type ProgramStatus,
+  type RewardKind,
+  type RewardTrigger,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
 
@@ -22,8 +26,38 @@ export const Route = createFileRoute("/_admin/referrals/programs")({
   component: ProgramsPage,
 });
 
+type Draft = {
+  name: string;
+  trigger: RewardTrigger;
+  referrerKind: RewardKind;
+  referrerAmount: number;
+  refereeKind: RewardKind;
+  refereeAmount: number;
+  minQualifyingNgn: number;
+  budgetNgn: number;
+  cooldownDays: number;
+  maxReferralsPerUser: number;
+  endAt: string;
+};
+
+const emptyDraft: Draft = {
+  name: "",
+  trigger: "first_topup",
+  referrerKind: "cash_ngn",
+  referrerAmount: 1000,
+  refereeKind: "cash_ngn",
+  refereeAmount: 500,
+  minQualifyingNgn: 1000,
+  budgetNgn: 5_000_000,
+  cooldownDays: 30,
+  maxReferralsPerUser: 25,
+  endAt: "",
+};
+
 function ProgramsPage() {
   const [items, setItems] = useState<ReferralProgram[]>(initial);
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState<Draft>(emptyDraft);
 
   const setStatus = (id: string, status: ProgramStatus, msg: string) => {
     setItems((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
@@ -47,9 +81,125 @@ function ProgramsPage() {
     const p = items.find((x) => x.id === id);
     toast.success(`${p?.name ?? "Program"} updated`);
   };
+  const createProgram = () => {
+    if (!draft.name.trim()) { toast.error("Name is required"); return; }
+    const id = `rp_${String(Math.floor(Math.random() * 9000) + 1000)}`;
+    const program: ReferralProgram = {
+      id,
+      name: draft.name.trim(),
+      status: "active",
+      trigger: draft.trigger,
+      referrerReward: { kind: draft.referrerKind, amount: Math.max(0, draft.referrerAmount) },
+      refereeReward: { kind: draft.refereeKind, amount: Math.max(0, draft.refereeAmount) },
+      minQualifyingNgn: Math.max(0, draft.minQualifyingNgn),
+      cooldownDays: Math.max(0, draft.cooldownDays),
+      maxReferralsPerUser: Math.max(1, draft.maxReferralsPerUser),
+      startAt: new Date().toISOString(),
+      endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
+      budgetNgn: Math.max(0, draft.budgetNgn),
+      spentNgn: 0,
+      totalReferrals: 0,
+      qualifiedReferrals: 0,
+    };
+    setItems((prev) => [program, ...prev]);
+    setDraft(emptyDraft);
+    setOpen(false);
+    toast.success(`${program.name} created`);
+  };
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+      <Card className="shadow-card">
+        <CardContent className="p-4 flex items-center justify-between gap-3">
+          <div className="text-xs text-muted-foreground">
+            {items.length} programs · {items.filter((p) => p.status === "active").length} active
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="h-9 gap-1.5">
+                <Plus className="h-3.5 w-3.5" /> New program
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>New referral program</DialogTitle>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2">
+                  <Label className="text-xs">Program name</Label>
+                  <Input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="e.g. Summer Refer & Earn" className="h-9 mt-1" />
+                </div>
+                <div className="col-span-2">
+                  <Label className="text-xs">Qualifying trigger</Label>
+                  <Select value={draft.trigger} onValueChange={(v) => setDraft({ ...draft, trigger: v as RewardTrigger })}>
+                    <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {(Object.keys(rewardTriggerLabel) as RewardTrigger[]).map((k) => (
+                        <SelectItem key={k} value={k}>{rewardTriggerLabel[k]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs">Referrer reward type</Label>
+                  <Select value={draft.referrerKind} onValueChange={(v) => setDraft({ ...draft, referrerKind: v as RewardKind })}>
+                    <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {(Object.keys(rewardKindLabel) as RewardKind[]).map((k) => (
+                        <SelectItem key={k} value={k}>{rewardKindLabel[k]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs">Referrer amount</Label>
+                  <Input type="number" value={draft.referrerAmount} onChange={(e) => setDraft({ ...draft, referrerAmount: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+                </div>
+                <div>
+                  <Label className="text-xs">Referee reward type</Label>
+                  <Select value={draft.refereeKind} onValueChange={(v) => setDraft({ ...draft, refereeKind: v as RewardKind })}>
+                    <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {(Object.keys(rewardKindLabel) as RewardKind[]).map((k) => (
+                        <SelectItem key={k} value={k}>{rewardKindLabel[k]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs">Referee amount</Label>
+                  <Input type="number" value={draft.refereeAmount} onChange={(e) => setDraft({ ...draft, refereeAmount: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+                </div>
+                <div>
+                  <Label className="text-xs">Min qualifying spend (₦)</Label>
+                  <Input type="number" value={draft.minQualifyingNgn} onChange={(e) => setDraft({ ...draft, minQualifyingNgn: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+                </div>
+                <div>
+                  <Label className="text-xs">Budget cap (₦)</Label>
+                  <Input type="number" value={draft.budgetNgn} onChange={(e) => setDraft({ ...draft, budgetNgn: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+                </div>
+                <div>
+                  <Label className="text-xs">Cooldown (days)</Label>
+                  <Input type="number" value={draft.cooldownDays} onChange={(e) => setDraft({ ...draft, cooldownDays: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+                </div>
+                <div>
+                  <Label className="text-xs">Max referrals / user</Label>
+                  <Input type="number" value={draft.maxReferralsPerUser} onChange={(e) => setDraft({ ...draft, maxReferralsPerUser: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+                </div>
+                <div className="col-span-2">
+                  <Label className="text-xs">End date (optional)</Label>
+                  <Input type="date" value={draft.endAt} onChange={(e) => setDraft({ ...draft, endAt: e.target.value })} className="h-9 mt-1" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                <Button onClick={createProgram}>Create program</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {items.map((p) => {
           const pct = p.budgetNgn ? Math.min(100, (p.spentNgn / p.budgetNgn) * 100) : 0;

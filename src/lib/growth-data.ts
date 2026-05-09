@@ -61,6 +61,8 @@ export type Campaign = {
   budgetNgn: number;
   spentNgn: number;
   ctaUrl: string;
+  linkedProgramId?: string | null;
+  linkedPromoCode?: string | null;
 };
 
 export type PromoStatus = "active" | "paused" | "expired" | "scheduled";
@@ -281,6 +283,7 @@ export const campaigns: Campaign[] = [
     budgetNgn: 1_500_000,
     spentNgn: 612_400,
     ctaUrl: "/pay/airtime?promo=PAYDAY5",
+    linkedPromoCode: "PAYDAY5",
   },
   {
     id: "cmp_002",
@@ -299,6 +302,7 @@ export const campaigns: Campaign[] = [
     budgetNgn: 800_000,
     spentNgn: 240_100,
     ctaUrl: "/referrals?utm_src=email-may",
+    linkedProgramId: "rp_001",
   },
   {
     id: "cmp_003",
@@ -317,6 +321,7 @@ export const campaigns: Campaign[] = [
     budgetNgn: 600_000,
     spentNgn: 0,
     ctaUrl: "/cards/order",
+    linkedProgramId: "rp_003",
   },
   {
     id: "cmp_004",
