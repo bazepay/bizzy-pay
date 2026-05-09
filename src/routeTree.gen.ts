@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminWalletsRouteImport } from './routes/_admin.wallets'
+import { Route as AdminPayRouteImport } from './routes/_admin.pay'
 import { Route as AdminNumbersRouteImport } from './routes/_admin.numbers'
 import { Route as AdminEsimRouteImport } from './routes/_admin.esim'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
@@ -20,6 +21,7 @@ import { Route as AdminCardsRouteImport } from './routes/_admin.cards'
 import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
 import { Route as AdminTransactionsIndexRouteImport } from './routes/_admin.transactions.index'
+import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
 import { Route as AdminNumbersIndexRouteImport } from './routes/_admin.numbers.index'
 import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
 import { Route as AdminEsimIndexRouteImport } from './routes/_admin.esim.index'
@@ -30,6 +32,10 @@ import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets
 import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
+import { Route as AdminPayPlansRouteImport } from './routes/_admin.pay.plans'
+import { Route as AdminPayOrdersRouteImport } from './routes/_admin.pay.orders'
+import { Route as AdminPayBillersRouteImport } from './routes/_admin.pay.billers'
+import { Route as AdminPayIdRouteImport } from './routes/_admin.pay.$id'
 import { Route as AdminNumbersPoolRouteImport } from './routes/_admin.numbers.pool'
 import { Route as AdminNumbersLeasesRouteImport } from './routes/_admin.numbers.leases'
 import { Route as AdminNumbersIdRouteImport } from './routes/_admin.numbers.$id'
@@ -70,6 +76,11 @@ const AdminWalletsRoute = AdminWalletsRouteImport.update({
   path: '/wallets',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPayRoute = AdminPayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminNumbersRoute = AdminNumbersRouteImport.update({
   id: '/numbers',
   path: '/numbers',
@@ -104,6 +115,11 @@ const AdminTransactionsIndexRoute = AdminTransactionsIndexRouteImport.update({
   id: '/transactions/',
   path: '/transactions/',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminPayIndexRoute = AdminPayIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminPayRoute,
 } as any)
 const AdminNumbersIndexRoute = AdminNumbersIndexRouteImport.update({
   id: '/',
@@ -154,6 +170,26 @@ const AdminTransactionsIdRoute = AdminTransactionsIdRouteImport.update({
   id: '/transactions/$id',
   path: '/transactions/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminPayPlansRoute = AdminPayPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => AdminPayRoute,
+} as any)
+const AdminPayOrdersRoute = AdminPayOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AdminPayRoute,
+} as any)
+const AdminPayBillersRoute = AdminPayBillersRouteImport.update({
+  id: '/billers',
+  path: '/billers',
+  getParentRoute: () => AdminPayRoute,
+} as any)
+const AdminPayIdRoute = AdminPayIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminPayRoute,
 } as any)
 const AdminNumbersPoolRoute = AdminNumbersPoolRouteImport.update({
   id: '/pool',
@@ -264,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AdminDashboardRoute
   '/esim': typeof AdminEsimRouteWithChildren
   '/numbers': typeof AdminNumbersRouteWithChildren
+  '/pay': typeof AdminPayRouteWithChildren
   '/wallets': typeof AdminWalletsRouteWithChildren
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
@@ -276,6 +313,10 @@ export interface FileRoutesByFullPath {
   '/numbers/$id': typeof AdminNumbersIdRoute
   '/numbers/leases': typeof AdminNumbersLeasesRoute
   '/numbers/pool': typeof AdminNumbersPoolRoute
+  '/pay/$id': typeof AdminPayIdRoute
+  '/pay/billers': typeof AdminPayBillersRoute
+  '/pay/orders': typeof AdminPayOrdersRoute
+  '/pay/plans': typeof AdminPayPlansRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -286,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/esim/': typeof AdminEsimIndexRoute
   '/kyc/': typeof AdminKycIndexRoute
   '/numbers/': typeof AdminNumbersIndexRoute
+  '/pay/': typeof AdminPayIndexRoute
   '/transactions/': typeof AdminTransactionsIndexRoute
   '/users/': typeof AdminUsersIndexRoute
   '/wallets/': typeof AdminWalletsIndexRoute
@@ -314,6 +356,10 @@ export interface FileRoutesByTo {
   '/numbers/$id': typeof AdminNumbersIdRoute
   '/numbers/leases': typeof AdminNumbersLeasesRoute
   '/numbers/pool': typeof AdminNumbersPoolRoute
+  '/pay/$id': typeof AdminPayIdRoute
+  '/pay/billers': typeof AdminPayBillersRoute
+  '/pay/orders': typeof AdminPayOrdersRoute
+  '/pay/plans': typeof AdminPayPlansRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
@@ -323,6 +369,7 @@ export interface FileRoutesByTo {
   '/esim': typeof AdminEsimIndexRoute
   '/kyc': typeof AdminKycIndexRoute
   '/numbers': typeof AdminNumbersIndexRoute
+  '/pay': typeof AdminPayIndexRoute
   '/transactions': typeof AdminTransactionsIndexRoute
   '/users': typeof AdminUsersIndexRoute
   '/wallets': typeof AdminWalletsIndexRoute
@@ -345,6 +392,7 @@ export interface FileRoutesById {
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/esim': typeof AdminEsimRouteWithChildren
   '/_admin/numbers': typeof AdminNumbersRouteWithChildren
+  '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
   '/_admin/cards/$id': typeof AdminCardsIdRoute
   '/_admin/cards/issued': typeof AdminCardsIssuedRoute
@@ -357,6 +405,10 @@ export interface FileRoutesById {
   '/_admin/numbers/$id': typeof AdminNumbersIdRoute
   '/_admin/numbers/leases': typeof AdminNumbersLeasesRoute
   '/_admin/numbers/pool': typeof AdminNumbersPoolRoute
+  '/_admin/pay/$id': typeof AdminPayIdRoute
+  '/_admin/pay/billers': typeof AdminPayBillersRoute
+  '/_admin/pay/orders': typeof AdminPayOrdersRoute
+  '/_admin/pay/plans': typeof AdminPayPlansRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
@@ -367,6 +419,7 @@ export interface FileRoutesById {
   '/_admin/esim/': typeof AdminEsimIndexRoute
   '/_admin/kyc/': typeof AdminKycIndexRoute
   '/_admin/numbers/': typeof AdminNumbersIndexRoute
+  '/_admin/pay/': typeof AdminPayIndexRoute
   '/_admin/transactions/': typeof AdminTransactionsIndexRoute
   '/_admin/users/': typeof AdminUsersIndexRoute
   '/_admin/wallets/': typeof AdminWalletsIndexRoute
@@ -389,6 +442,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/esim'
     | '/numbers'
+    | '/pay'
     | '/wallets'
     | '/cards/$id'
     | '/cards/issued'
@@ -401,6 +455,10 @@ export interface FileRouteTypes {
     | '/numbers/$id'
     | '/numbers/leases'
     | '/numbers/pool'
+    | '/pay/$id'
+    | '/pay/billers'
+    | '/pay/orders'
+    | '/pay/plans'
     | '/transactions/$id'
     | '/users/$id'
     | '/wallets/fx'
@@ -411,6 +469,7 @@ export interface FileRouteTypes {
     | '/esim/'
     | '/kyc/'
     | '/numbers/'
+    | '/pay/'
     | '/transactions/'
     | '/users/'
     | '/wallets/'
@@ -439,6 +498,10 @@ export interface FileRouteTypes {
     | '/numbers/$id'
     | '/numbers/leases'
     | '/numbers/pool'
+    | '/pay/$id'
+    | '/pay/billers'
+    | '/pay/orders'
+    | '/pay/plans'
     | '/transactions/$id'
     | '/wallets/fx'
     | '/wallets/payouts'
@@ -448,6 +511,7 @@ export interface FileRouteTypes {
     | '/esim'
     | '/kyc'
     | '/numbers'
+    | '/pay'
     | '/transactions'
     | '/users'
     | '/wallets'
@@ -469,6 +533,7 @@ export interface FileRouteTypes {
     | '/_admin/dashboard'
     | '/_admin/esim'
     | '/_admin/numbers'
+    | '/_admin/pay'
     | '/_admin/wallets'
     | '/_admin/cards/$id'
     | '/_admin/cards/issued'
@@ -481,6 +546,10 @@ export interface FileRouteTypes {
     | '/_admin/numbers/$id'
     | '/_admin/numbers/leases'
     | '/_admin/numbers/pool'
+    | '/_admin/pay/$id'
+    | '/_admin/pay/billers'
+    | '/_admin/pay/orders'
+    | '/_admin/pay/plans'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
     | '/_admin/wallets/fx'
@@ -491,6 +560,7 @@ export interface FileRouteTypes {
     | '/_admin/esim/'
     | '/_admin/kyc/'
     | '/_admin/numbers/'
+    | '/_admin/pay/'
     | '/_admin/transactions/'
     | '/_admin/users/'
     | '/_admin/wallets/'
@@ -541,6 +611,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminWalletsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/pay': {
+      id: '/_admin/pay'
+      path: '/pay'
+      fullPath: '/pay'
+      preLoaderRoute: typeof AdminPayRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/numbers': {
       id: '/_admin/numbers'
       path: '/numbers'
@@ -589,6 +666,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/transactions/'
       preLoaderRoute: typeof AdminTransactionsIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/pay/': {
+      id: '/_admin/pay/'
+      path: '/'
+      fullPath: '/pay/'
+      preLoaderRoute: typeof AdminPayIndexRouteImport
+      parentRoute: typeof AdminPayRoute
     }
     '/_admin/numbers/': {
       id: '/_admin/numbers/'
@@ -659,6 +743,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/transactions/$id'
       preLoaderRoute: typeof AdminTransactionsIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/pay/plans': {
+      id: '/_admin/pay/plans'
+      path: '/plans'
+      fullPath: '/pay/plans'
+      preLoaderRoute: typeof AdminPayPlansRouteImport
+      parentRoute: typeof AdminPayRoute
+    }
+    '/_admin/pay/orders': {
+      id: '/_admin/pay/orders'
+      path: '/orders'
+      fullPath: '/pay/orders'
+      preLoaderRoute: typeof AdminPayOrdersRouteImport
+      parentRoute: typeof AdminPayRoute
+    }
+    '/_admin/pay/billers': {
+      id: '/_admin/pay/billers'
+      path: '/billers'
+      fullPath: '/pay/billers'
+      preLoaderRoute: typeof AdminPayBillersRouteImport
+      parentRoute: typeof AdminPayRoute
+    }
+    '/_admin/pay/$id': {
+      id: '/_admin/pay/$id'
+      path: '/$id'
+      fullPath: '/pay/$id'
+      preLoaderRoute: typeof AdminPayIdRouteImport
+      parentRoute: typeof AdminPayRoute
     }
     '/_admin/numbers/pool': {
       id: '/_admin/numbers/pool'
@@ -859,6 +971,26 @@ const AdminNumbersRouteWithChildren = AdminNumbersRoute._addFileChildren(
   AdminNumbersRouteChildren,
 )
 
+interface AdminPayRouteChildren {
+  AdminPayIdRoute: typeof AdminPayIdRoute
+  AdminPayBillersRoute: typeof AdminPayBillersRoute
+  AdminPayOrdersRoute: typeof AdminPayOrdersRoute
+  AdminPayPlansRoute: typeof AdminPayPlansRoute
+  AdminPayIndexRoute: typeof AdminPayIndexRoute
+}
+
+const AdminPayRouteChildren: AdminPayRouteChildren = {
+  AdminPayIdRoute: AdminPayIdRoute,
+  AdminPayBillersRoute: AdminPayBillersRoute,
+  AdminPayOrdersRoute: AdminPayOrdersRoute,
+  AdminPayPlansRoute: AdminPayPlansRoute,
+  AdminPayIndexRoute: AdminPayIndexRoute,
+}
+
+const AdminPayRouteWithChildren = AdminPayRoute._addFileChildren(
+  AdminPayRouteChildren,
+)
+
 interface AdminWalletsRouteChildren {
   AdminWalletsFxRoute: typeof AdminWalletsFxRoute
   AdminWalletsPayoutsRoute: typeof AdminWalletsPayoutsRoute
@@ -912,6 +1044,7 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEsimRoute: typeof AdminEsimRouteWithChildren
   AdminNumbersRoute: typeof AdminNumbersRouteWithChildren
+  AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminWalletsRoute: typeof AdminWalletsRouteWithChildren
   AdminKycIdRoute: typeof AdminKycIdRoute
   AdminTransactionsIdRoute: typeof AdminTransactionsIdRoute
@@ -926,6 +1059,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEsimRoute: AdminEsimRouteWithChildren,
   AdminNumbersRoute: AdminNumbersRouteWithChildren,
+  AdminPayRoute: AdminPayRouteWithChildren,
   AdminWalletsRoute: AdminWalletsRouteWithChildren,
   AdminKycIdRoute: AdminKycIdRoute,
   AdminTransactionsIdRoute: AdminTransactionsIdRoute,
