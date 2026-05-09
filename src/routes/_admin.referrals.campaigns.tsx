@@ -435,8 +435,12 @@ function CampaignsPage() {
                     <span className="flex items-center gap-2"><LayoutTemplate className="h-3.5 w-3.5" /> Login banner — pops up on next login</span>
                   </SelectItem>
                 </SelectContent>
-              </Select>
+            </Select>
             </div>
+
+            {draft.channel === "login_banner" && (
+              <BannerConfigSection draft={draft} setDraft={setDraft} />
+            )}
 
             <div className="col-span-2 pt-2 border-t border-border">
               <Label className="text-xs uppercase tracking-wide text-muted-foreground">Message users see</Label>
