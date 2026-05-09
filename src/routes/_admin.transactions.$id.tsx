@@ -50,20 +50,14 @@ function TxnDetail() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<TxnStatus>(initial.status);
   const [flagged, setFlagged] = useState(initial.flagged);
-  const [reason, setReason] = useState("");
 
   const txn = { ...initial, status, flagged };
 
   const StatusIcon = status === "success" ? CheckCircle2 : status === "failed" || status === "reversed" ? XCircle : Clock;
 
   const apply = (next: TxnStatus, label: string) => {
-    if (!reason.trim()) {
-      toast.error("Add an audit reason first.");
-      return;
-    }
     setStatus(next);
     toast.success(`${label} · audit logged`);
-    setReason("");
   };
 
   return (
@@ -191,8 +185,6 @@ function TxnDetail() {
                 trigger={<Button size="sm" variant="outline" className="w-full justify-start"><RotateCcw className="h-3.5 w-3.5 mr-2" /> Reverse transaction</Button>}
                 title="Reverse this transaction?"
                 description="The user will be credited back the gross amount. This action is logged and cannot be undone."
-                reason={reason}
-                setReason={setReason}
                 confirmLabel="Reverse"
                 onConfirm={() => apply("reversed", "Reversal queued")}
               />
@@ -200,8 +192,6 @@ function TxnDetail() {
                 trigger={<Button size="sm" variant="outline" className="w-full justify-start"><ShieldAlert className="h-3.5 w-3.5 mr-2" /> Mark for review</Button>}
                 title="Hold for compliance review?"
                 description="Funds remain held until a compliance officer clears or reverses the transaction."
-                reason={reason}
-                setReason={setReason}
                 confirmLabel="Hold"
                 onConfirm={() => apply("review", "Held for review")}
               />
@@ -209,8 +199,6 @@ function TxnDetail() {
                 trigger={<Button size="sm" variant="outline" className="w-full justify-start"><CheckCircle2 className="h-3.5 w-3.5 mr-2" /> Force success</Button>}
                 title="Force-mark as success?"
                 description="Use only when the provider confirmed settlement out-of-band."
-                reason={reason}
-                setReason={setReason}
                 confirmLabel="Mark success"
                 onConfirm={() => apply("success", "Marked success")}
               />
@@ -273,13 +261,15 @@ function TimelineItem({ at, title, body, tone = "primary" }: { at: string; title
 }
 
 function ActionDialog({
-  trigger, title, description, reason, setReason, confirmLabel, onConfirm,
+  trigger, title, description, confirmLabel, onConfirm,
 }: {
   trigger: React.ReactNode; title: string; description: string;
-  reason: string; setReason: (v: string) => void; confirmLabel: string; onConfirm: () => void;
+  confirmLabel: string; onConfirm: () => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setReason(""); }}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -292,7 +282,20 @@ function ActionDialog({
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>{confirmLabel}</AlertDialogAction>
+          <AlertDialogAction
+            onClick={(e) => {
+              if (!reason.trim()) {
+                e.preventDefault();
+                toast.error("Add an audit reason first.");
+                return;
+              }
+              onConfirm();
+              setOpen(false);
+              setReason("");
+            }}
+          >
+            {confirmLabel}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
