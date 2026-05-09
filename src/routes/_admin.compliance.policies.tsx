@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -22,9 +23,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Search, Plus, FileCheck2, Pencil } from "lucide-react";
+import { Search, Plus, FileCheck2, Pencil, Settings2 } from "lucide-react";
 import { toast } from "sonner";
-import { policies as initialPolicies, fmtRelative, type Policy } from "@/lib/compliance-data";
+import {
+  policies as initialPolicies,
+  fmtRelative,
+  fmtNgn,
+  ruleTypeLabel,
+  ruleActionLabel,
+  type Policy,
+  type RuleType,
+  type RuleAction,
+  type RuleParams,
+  type AlertSeverity,
+} from "@/lib/compliance-data";
 
 export const Route = createFileRoute("/_admin/compliance/policies")({
   component: PoliciesPage,
@@ -43,6 +55,10 @@ type Draft = {
   owner: string;
   description: string;
   version: string;
+  ruleType: RuleType;
+  severity: AlertSeverity;
+  action: RuleAction;
+  params: RuleParams;
 };
 
 const emptyDraft: Draft = {
@@ -52,7 +68,13 @@ const emptyDraft: Draft = {
   owner: "",
   description: "",
   version: "v1.0",
+  ruleType: "none",
+  severity: "medium",
+  action: "flag",
+  params: {},
 };
+
+const SANCTION_LISTS = ["OFAC SDN", "UN Consolidated", "EU Consolidated", "UK HMT", "Internal PEP"] as const;
 
 function PoliciesPage() {
   const [items, setItems] = useState<Policy[]>(initialPolicies);
@@ -76,27 +98,16 @@ function PoliciesPage() {
     });
   }, [items, q, cat]);
 
-  const openCreate = () => {
-    setDraft(emptyDraft);
-    setCreating(true);
-  };
-
+  const openCreate = () => { setDraft(emptyDraft); setCreating(true); };
   const openEdit = (p: Policy) => {
     setEditing(p);
     setDraft({
-      name: p.name,
-      category: p.category,
-      status: p.status,
-      owner: p.owner,
-      description: p.description,
-      version: p.version,
+      name: p.name, category: p.category, status: p.status, owner: p.owner,
+      description: p.description, version: p.version,
+      ruleType: p.ruleType, severity: p.severity, action: p.action, params: { ...p.params },
     });
   };
-
-  const close = () => {
-    setCreating(false);
-    setEditing(null);
-  };
+  const close = () => { setCreating(false); setEditing(null); };
 
   const save = () => {
     if (!draft.name.trim() || !draft.owner.trim() || !draft.description.trim()) {
@@ -104,26 +115,18 @@ function PoliciesPage() {
       return;
     }
     if (editing) {
-      setItems((prev) =>
-        prev.map((p) =>
-          p.id === editing.id
-            ? { ...p, ...draft, updatedAt: new Date().toISOString() }
-            : p,
-        ),
-      );
-      toast.success("Policy updated");
+      setItems((prev) => prev.map((p) => (p.id === editing.id ? { ...p, ...draft, updatedAt: new Date().toISOString() } : p)));
+      toast.success(`Policy updated · new version ${draft.version}`);
     } else {
       const id = `pol_${String(600 + items.length).padStart(4, "0")}`;
-      const next: Policy = {
-        id,
-        ...draft,
-        updatedAt: new Date().toISOString(),
-      };
-      setItems((prev) => [next, ...prev]);
+      setItems((prev) => [{ id, ...draft, updatedAt: new Date().toISOString() }, ...prev]);
       toast.success("Policy created");
     }
     close();
   };
+
+  const setParam = <K extends keyof RuleParams>(key: K, value: RuleParams[K]) =>
+    setDraft((d) => ({ ...d, params: { ...d.params, [key]: value } }));
 
   const open = creating || !!editing;
 
@@ -169,6 +172,15 @@ function PoliciesPage() {
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">{p.description}</p>
+              {p.ruleType !== "none" && (
+                <div className="rounded-md border border-border bg-muted/30 p-2 space-y-1">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="flex items-center gap-1.5 font-medium"><Settings2 className="h-3 w-3" /> {ruleTypeLabel[p.ruleType]}</span>
+                    <span className="text-muted-foreground">{ruleActionLabel[p.action]} · <span className="capitalize">{p.severity}</span></span>
+                  </div>
+                  <div className="text-[11px] font-mono text-muted-foreground">{summarizeParams(p.ruleType, p.params)}</div>
+                </div>
+              )}
               <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1 border-t border-border">
                 <span>Owner: <span className="text-foreground">{p.owner}</span></span>
                 <span>Updated {fmtRelative(p.updatedAt)}</span>
@@ -182,18 +194,20 @@ function PoliciesPage() {
       </div>
 
       <Dialog open={open} onOpenChange={(o) => !o && close()}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editing ? "Edit policy" : "New policy"}</DialogTitle>
             <DialogDescription>
-              {editing ? `Update ${editing.id}` : "Create a new compliance policy. Drafts can be activated later."}
+              {editing ? `Update ${editing.id}. Saving creates a new version for the audit trail.` : "Create a new compliance policy. Drafts can be activated later."}
             </DialogDescription>
           </DialogHeader>
+
           <div className="space-y-3">
             <div className="space-y-1.5">
               <Label htmlFor="pol-name">Name</Label>
               <Input id="pol-name" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="e.g. Tier 3 KYC Requirements" />
             </div>
+
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1.5">
                 <Label>Category</Label>
@@ -224,15 +238,62 @@ function PoliciesPage() {
                 <Input id="pol-version" value={draft.version} onChange={(e) => setDraft({ ...draft, version: e.target.value })} />
               </div>
             </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="pol-owner">Owner</Label>
               <Input id="pol-owner" value={draft.owner} onChange={(e) => setDraft({ ...draft, owner: e.target.value })} placeholder="e.g. Aisha O." />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="pol-desc">Description</Label>
-              <Textarea id="pol-desc" value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} className="min-h-[90px]" />
+              <Textarea id="pol-desc" value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} className="min-h-[70px]" />
+            </div>
+
+            <div className="rounded-md border border-border p-3 space-y-3">
+              <div className="flex items-center gap-2">
+                <Settings2 className="h-4 w-4 text-primary" />
+                <span className="text-sm font-display font-bold">Detection engine</span>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Rule type</Label>
+                  <Select value={draft.ruleType} onValueChange={(v) => setDraft({ ...draft, ruleType: v as RuleType, params: {} })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {(Object.keys(ruleTypeLabel) as RuleType[]).map((k) => (
+                        <SelectItem key={k} value={k}>{ruleTypeLabel[k]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Severity</Label>
+                  <Select value={draft.severity} onValueChange={(v) => setDraft({ ...draft, severity: v as AlertSeverity })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low</SelectItem>
+                      <SelectItem value="medium">Medium</SelectItem>
+                      <SelectItem value="high">High</SelectItem>
+                      <SelectItem value="critical">Critical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Action</Label>
+                  <Select value={draft.action} onValueChange={(v) => setDraft({ ...draft, action: v as RuleAction })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {(Object.keys(ruleActionLabel) as RuleAction[]).map((k) => (
+                        <SelectItem key={k} value={k}>{ruleActionLabel[k]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <RuleParamsEditor type={draft.ruleType} params={draft.params} setParam={setParam} />
             </div>
           </div>
+
           <DialogFooter>
             <Button variant="outline" onClick={close}>Cancel</Button>
             <Button onClick={save}>{editing ? "Save changes" : "Create policy"}</Button>
@@ -241,4 +302,136 @@ function PoliciesPage() {
       </Dialog>
     </motion.div>
   );
+}
+
+function RuleParamsEditor({
+  type, params, setParam,
+}: {
+  type: RuleType;
+  params: RuleParams;
+  setParam: <K extends keyof RuleParams>(key: K, value: RuleParams[K]) => void;
+}) {
+  if (type === "none") {
+    return <p className="text-[11px] text-muted-foreground">This policy is informational and not evaluated by the detection engine.</p>;
+  }
+
+  if (type === "structuring") {
+    return (
+      <div className="grid grid-cols-3 gap-3">
+        <NumField label="Threshold (₦)" value={params.thresholdNgn ?? 5_000_000} onChange={(v) => setParam("thresholdNgn", v)} />
+        <NumField label="Window (hours)" value={params.windowHours ?? 24} onChange={(v) => setParam("windowHours", v)} />
+        <NumField label="Min txn count" value={params.minTxnCount ?? 3} onChange={(v) => setParam("minTxnCount", v)} />
+      </div>
+    );
+  }
+  if (type === "velocity") {
+    return (
+      <div className="grid grid-cols-2 gap-3">
+        <NumField label="Baseline multiplier (×)" value={params.baselineMultiplier ?? 3} onChange={(v) => setParam("baselineMultiplier", v)} step="0.1" />
+        <NumField label="Baseline window (days)" value={params.baselineDays ?? 30} onChange={(v) => setParam("baselineDays", v)} />
+      </div>
+    );
+  }
+  if (type === "sanctions") {
+    const lists = params.lists ?? [];
+    const toggle = (l: typeof SANCTION_LISTS[number]) =>
+      setParam("lists", lists.includes(l) ? lists.filter((x) => x !== l) : [...lists, l]);
+    return (
+      <div className="space-y-2">
+        <NumField label="Min fuzzy match score (%)" value={params.fuzzyScore ?? 85} onChange={(v) => setParam("fuzzyScore", v)} />
+        <div>
+          <Label className="text-[11px] text-muted-foreground">Lists screened</Label>
+          <div className="flex flex-wrap gap-1.5 mt-1.5">
+            {SANCTION_LISTS.map((l) => {
+              const on = lists.includes(l);
+              return (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => toggle(l)}
+                  className={`text-[11px] px-2 py-1 rounded-md border transition-colors ${
+                    on ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {l}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (type === "high_risk_country") {
+    return (
+      <div className="space-y-1.5">
+        <Label htmlFor="hrc">Country codes (ISO-3, comma separated)</Label>
+        <Input
+          id="hrc"
+          value={(params.countries ?? []).join(", ")}
+          onChange={(e) => setParam("countries", e.target.value.split(",").map((s) => s.trim().toUpperCase()).filter(Boolean))}
+          placeholder="IRN, PRK, MMR, SYR"
+        />
+      </div>
+    );
+  }
+  if (type === "rapid_movement") {
+    return (
+      <div className="grid grid-cols-2 gap-3">
+        <NumField label="Out / In ratio (0–1)" value={params.outInRatio ?? 0.95} onChange={(v) => setParam("outInRatio", v)} step="0.01" />
+        <NumField label="Window (hours)" value={params.windowHours ?? 1} onChange={(v) => setParam("windowHours", v)} />
+      </div>
+    );
+  }
+  if (type === "device_anomaly") {
+    return (
+      <div className="space-y-2">
+        <NumField label="Min txn amount (₦)" value={params.minAmountNgn ?? 500_000} onChange={(v) => setParam("minAmountNgn", v)} />
+        <div className="flex items-center justify-between rounded-md border border-border px-3 py-2">
+          <Label htmlFor="newdev" className="text-xs">Require new device</Label>
+          <Switch id="newdev" checked={params.newDevice ?? true} onCheckedChange={(v) => setParam("newDevice", v)} />
+        </div>
+        <div className="flex items-center justify-between rounded-md border border-border px-3 py-2">
+          <Label htmlFor="newgeo" className="text-xs">Require new geography</Label>
+          <Switch id="newgeo" checked={params.newGeo ?? true} onCheckedChange={(v) => setParam("newGeo", v)} />
+        </div>
+      </div>
+    );
+  }
+  if (type === "risk_score") {
+    return (
+      <NumField label="Score threshold (0–100)" value={params.scoreThreshold ?? 75} onChange={(v) => setParam("scoreThreshold", v)} />
+    );
+  }
+  return null;
+}
+
+function NumField({ label, value, onChange, step }: { label: string; value: number; onChange: (n: number) => void; step?: string }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-[11px] text-muted-foreground">{label}</Label>
+      <Input type="number" step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </div>
+  );
+}
+
+function summarizeParams(type: RuleType, p: RuleParams): string {
+  switch (type) {
+    case "structuring":
+      return `≥${p.minTxnCount ?? "?"} txns under ${p.thresholdNgn ? fmtNgn(p.thresholdNgn) : "?"} in ${p.windowHours ?? "?"}h`;
+    case "velocity":
+      return `>${p.baselineMultiplier ?? "?"}× rolling ${p.baselineDays ?? "?"}d baseline`;
+    case "sanctions":
+      return `${(p.lists ?? []).length} list(s), fuzzy ≥${p.fuzzyScore ?? "?"}%`;
+    case "high_risk_country":
+      return (p.countries ?? []).join(", ") || "no countries set";
+    case "rapid_movement":
+      return `out/in ≥${p.outInRatio ?? "?"} within ${p.windowHours ?? "?"}h`;
+    case "device_anomaly":
+      return `${p.newDevice ? "new device" : "any device"} + ${p.newGeo ? "new geo" : "any geo"} ≥ ${p.minAmountNgn ? fmtNgn(p.minAmountNgn) : "?"}`;
+    case "risk_score":
+      return `risk score ≥ ${p.scoreThreshold ?? "?"}`;
+    default:
+      return "";
+  }
 }
