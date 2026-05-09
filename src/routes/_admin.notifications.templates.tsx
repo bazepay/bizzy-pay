@@ -52,9 +52,35 @@ function TemplatesPage() {
 
   const save = () => {
     if (!editing) return;
-    setItems((prev) => prev.map((t) => (t.id === editing.id ? { ...editing, updatedAt: new Date().toISOString() } : t)));
-    toast.success(`Saved ${editing.name}`);
+    const exists = items.some((t) => t.id === editing.id);
+    setItems((prev) =>
+      exists
+        ? prev.map((t) => (t.id === editing.id ? { ...editing, updatedAt: new Date().toISOString() } : t))
+        : [{ ...editing, updatedAt: new Date().toISOString() }, ...prev]
+    );
+    toast.success(`${exists ? "Saved" : "Created"} ${editing.name}`);
     setEditing(null);
+  };
+
+  const startNew = () => {
+    const id = `tpl_${Math.floor(Math.random() * 900000 + 100000)}`;
+    setEditing({
+      id,
+      event: "signup_welcome" as EventKey,
+      name: "Untitled template",
+      channels: ["push"],
+      locales: ["en-NG"],
+      subject: null,
+      pushTitle: "",
+      body: "",
+      variables: [],
+      status: "draft",
+      abVariant: null,
+      updatedAt: new Date().toISOString(),
+      sent30d: 0,
+      openRate: 0,
+      clickRate: 0,
+    });
   };
 
   return (
