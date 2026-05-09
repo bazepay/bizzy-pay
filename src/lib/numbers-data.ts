@@ -125,12 +125,12 @@ export const leases: Lease[] = numberPool
       country: n.country,
       service: n.service,
       supplier: n.supplier,
+      billingPeriod: n.billingPeriod,
       user: u,
       startedAt,
       renewsOn,
       autoRenew: i % 3 !== 0,
       smsCount30d: 4 + (i * 11) % 80,
-      voiceMin30d: (i * 5) % 24,
       priceNgn: n.priceNgn,
       status,
     };
