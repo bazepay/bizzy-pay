@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Download, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-import { revenueSeries, channelMix } from "@/lib/reports-data";
+import { revenueSeries, channelMix, downloadCsv } from "@/lib/reports-data";
 import { fmtNgn, fmtNum } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_admin/reports/financial")({
@@ -23,7 +23,7 @@ function FinancialPage() {
   const [range, setRange] = useState<Range>("30d");
 
   const data = useMemo(() => {
-    const n = range === "7d" ? 7 : range === "30d" ? 30 : 30; // 90d uses same seed truncated
+    const n = range === "7d" ? 7 : range === "30d" ? 30 : 90;
     return revenueSeries.slice(-n);
   }, [range]);
 
@@ -63,7 +63,7 @@ function FinancialPage() {
           <Button variant="outline" size="sm" className="gap-1.5" onClick={() => toast.success("Refreshed")}>
             <RefreshCw className="h-3.5 w-3.5" /> Refresh
           </Button>
-          <Button size="sm" className="gap-1.5" onClick={() => toast.success("Exporting P&L XLSX…")}>
+          <Button size="sm" className="gap-1.5" onClick={() => { downloadCsv(`pnl-${range}`, data); toast.success("P&L exported"); }}>
             <Download className="h-3.5 w-3.5" /> Export
           </Button>
         </div>
@@ -107,7 +107,7 @@ function FinancialPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="font-semibold">Settlement reconciliation</div>
-              <Button size="sm" variant="ghost" onClick={() => toast.success("Exported reconciliation CSV")}>
+              <Button size="sm" variant="ghost" onClick={() => { downloadCsv("settlement-reconciliation", settlement); toast.success("Reconciliation exported"); }}>
                 <Download className="h-3.5 w-3.5 mr-1.5" /> CSV
               </Button>
             </div>
