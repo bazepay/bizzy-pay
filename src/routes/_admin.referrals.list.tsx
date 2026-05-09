@@ -23,6 +23,15 @@ export const Route = createFileRoute("/_admin/referrals/list")({
   component: ReferralsListPage,
 });
 
+const CHANNEL_LABELS: Record<string, string> = {
+  link: "Link",
+  code: "Code",
+  social_x: "X",
+  social_wa: "WhatsApp",
+  social_ig: "Instagram",
+};
+const channelLabel = (c: string) => CHANNEL_LABELS[c] ?? c;
+
 function ReferralsListPage() {
   const [items, setItems] = useState<Referral[]>(initial);
   const [q, setQ] = useState("");
@@ -128,7 +137,8 @@ function ReferralsListPage() {
       </Card>
 
       <Card className="shadow-card overflow-hidden">
-        <Table>
+        <div className="overflow-x-auto">
+        <Table className="min-w-[1200px]">
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
@@ -140,7 +150,7 @@ function ReferralsListPage() {
               <TableHead className="text-right">Qualifying tx</TableHead>
               <TableHead className="text-right">Reward</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead></TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -155,10 +165,10 @@ function ReferralsListPage() {
                   </TableCell>
                   <TableCell className="text-xs truncate max-w-[160px]">{prog?.name}</TableCell>
                   <TableCell className="font-mono text-xs">{r.code}</TableCell>
-                  <TableCell className="text-xs capitalize">{r.channel.replace("social_", "")}</TableCell>
-                  <TableCell className="text-xs">{new Date(r.invitedAt).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-right font-mono text-xs">{r.qualifyingTxNgn ? fmtNgn(r.qualifyingTxNgn) : "—"}</TableCell>
-                  <TableCell className="text-right font-mono text-xs">{r.rewardNgn ? fmtNgn(r.rewardNgn) : "—"}</TableCell>
+                  <TableCell className="text-xs">{channelLabel(r.channel)}</TableCell>
+                  <TableCell className="text-xs whitespace-nowrap">{new Date(r.invitedAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-right font-mono text-xs whitespace-nowrap">{r.qualifyingTxNgn ? fmtNgn(r.qualifyingTxNgn) : "—"}</TableCell>
+                  <TableCell className="text-right font-mono text-xs whitespace-nowrap">{r.rewardNgn ? fmtNgn(r.rewardNgn) : "—"}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className={`text-[10px] capitalize ${referralStatusTone[r.status]}`}>{r.status}</Badge>
                   </TableCell>
@@ -174,6 +184,9 @@ function ReferralsListPage() {
                           <ShieldAlert className="h-3 w-3" /> Flag
                         </Button>
                       )}
+                      {(r.status === "rewarded" || r.status === "fraud") && (
+                        <span className="text-[11px] text-muted-foreground pr-2">—</span>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -188,6 +201,7 @@ function ReferralsListPage() {
             )}
           </TableBody>
         </Table>
+        </div>
         {rows.length > visible && (
           <div className="p-3 flex justify-center border-t border-border">
             <Button variant="outline" size="sm" onClick={() => setVisible((v) => v + 40)}>
