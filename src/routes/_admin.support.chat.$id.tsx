@@ -54,7 +54,7 @@ function ChatDetailPage() {
 
   useEffect(() => {
     if (chat.status !== "waiting") return;
-    const i = setInterval(() => setWaitNow((w) => w + 1), 1000);
+    const i = setInterval(() => setWaitNow((w: number) => w + 1), 1000);
     return () => clearInterval(i);
   }, [chat.status]);
 
