@@ -343,9 +343,47 @@ function CampaignsPage() {
               <Input type="date" value={draft.endAt} onChange={(e) => setDraft({ ...draft, endAt: e.target.value })} className="h-9 mt-1" />
             </div>
             <div className="col-span-2">
-              <Label className="text-xs">CTA URL</Label>
-              <Input value={draft.ctaUrl} onChange={(e) => setDraft({ ...draft, ctaUrl: e.target.value })} placeholder="/pay/airtime?promo=PAYDAY5" className="h-9 mt-1 font-mono" />
+              <Label className="text-xs">CTA destination</Label>
+              <Select value={draft.ctaPath} onValueChange={(v) => setDraft({ ...draft, ctaPath: v })}>
+                <SelectTrigger className="h-9 mt-1"><SelectValue placeholder="Pick a page in the app..." /></SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {(["Wallet", "Bills", "Cards", "eSIM", "Numbers", "Growth", "Account"] as const).map((g) => {
+                    const items = campaignDestinations.filter((d) => d.group === g);
+                    if (!items.length) return null;
+                    return (
+                      <div key={g}>
+                        <div className="px-2 py-1 text-[10px] uppercase tracking-wide text-muted-foreground">{g}</div>
+                        {items.map((d) => (
+                          <SelectItem key={d.path} value={d.path}>
+                            <span className="flex items-center gap-2">
+                              <span>{d.label}</span>
+                              <span className="font-mono text-[10px] text-muted-foreground">{d.path}</span>
+                              {d.acceptsPromo && <span className="text-[9px] text-success">promo</span>}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              <p className="text-[10px] text-muted-foreground mt-1">Pages marked <span className="text-success">promo</span> auto-append the linked promo code as <span className="font-mono">?promo=...</span></p>
             </div>
+            <div className="col-span-2">
+              <Label className="text-xs">UTM source (optional)</Label>
+              <Input value={draft.utmSource} onChange={(e) => setDraft({ ...draft, utmSource: e.target.value })} placeholder="e.g. push-may, email-paydays" className="h-9 mt-1 font-mono" />
+            </div>
+            {draft.ctaPath && (
+              <div className="col-span-2 rounded-md border border-dashed border-border bg-muted/30 px-3 py-2">
+                <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Final CTA URL</div>
+                <div className="font-mono text-xs break-all">
+                  {buildCtaUrl(draft.ctaPath, {
+                    promoCode: draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode,
+                    utmSource: draft.utmSource,
+                  })}
+                </div>
+              </div>
+            )}
             <div>
               <Label className="text-xs">Budget cap (₦)</Label>
               <Input type="number" value={draft.budgetNgn} onChange={(e) => setDraft({ ...draft, budgetNgn: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
