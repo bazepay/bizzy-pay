@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Download, ArrowRight } from "lucide-react";
+import { Search, Download, ArrowRight, Receipt, Coins, TrendingUp, CheckCircle2, XCircle } from "lucide-react";
 import { billOrders, billCategories, providerRoutes, categoryLabel, orderStatusTone, fmtNgn } from "@/lib/pay-data";
 import { toast } from "sonner";
 
