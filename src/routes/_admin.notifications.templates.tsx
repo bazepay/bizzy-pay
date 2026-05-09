@@ -23,6 +23,7 @@ import {
   fmtRelative,
   type Template,
   type Channel,
+  type EventKey,
 } from "@/lib/notifications-data";
 
 export const Route = createFileRoute("/_admin/notifications/templates")({
@@ -51,9 +52,35 @@ function TemplatesPage() {
 
   const save = () => {
     if (!editing) return;
-    setItems((prev) => prev.map((t) => (t.id === editing.id ? { ...editing, updatedAt: new Date().toISOString() } : t)));
-    toast.success(`Saved ${editing.name}`);
+    const exists = items.some((t) => t.id === editing.id);
+    setItems((prev) =>
+      exists
+        ? prev.map((t) => (t.id === editing.id ? { ...editing, updatedAt: new Date().toISOString() } : t))
+        : [{ ...editing, updatedAt: new Date().toISOString() }, ...prev]
+    );
+    toast.success(`${exists ? "Saved" : "Created"} ${editing.name}`);
     setEditing(null);
+  };
+
+  const startNew = () => {
+    const id = `tpl_${Math.floor(Math.random() * 900000 + 100000)}`;
+    setEditing({
+      id,
+      event: "signup_welcome" as EventKey,
+      name: "Untitled template",
+      channels: ["push"],
+      locales: ["en-NG"],
+      subject: null,
+      pushTitle: "",
+      body: "",
+      variables: [],
+      status: "draft",
+      abVariant: null,
+      updatedAt: new Date().toISOString(),
+      sent30d: 0,
+      openRate: 0,
+      clickRate: 0,
+    });
   };
 
   return (
@@ -79,7 +106,7 @@ function TemplatesPage() {
             <SelectItem value="paused">Paused</SelectItem>
           </SelectContent>
         </Select>
-        <Button size="sm" className="gap-2" onClick={() => toast.info("New template — pick an event to start")}>
+        <Button size="sm" className="gap-2" onClick={startNew}>
           <Plus className="h-4 w-4" /> New template
         </Button>
       </div>
@@ -144,6 +171,17 @@ function TemplatesPage() {
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Event trigger</Label>
+                <Select value={editing.event} onValueChange={(v) => setEditing({ ...editing, event: v as EventKey })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {(Object.keys(eventLabel) as EventKey[]).map((k) => (
+                      <SelectItem key={k} value={k}>{eventLabel[k]}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-1.5">
                 <Label>Channels</Label>
