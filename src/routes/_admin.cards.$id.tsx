@@ -19,7 +19,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { getIssuedCard, getProgram, getCardTransactions, cardStatusTone, type CardStatus } from "@/lib/cards-data";
+import { getIssuedCard, getProgram, getCardTransactions, cardStatusTone, type CardStatus, type IssuedCard } from "@/lib/cards-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_admin/cards/$id")({
