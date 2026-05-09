@@ -105,55 +105,46 @@ function HeroKpi({
   const display =
     format === "ngn" ? fmtNgn(value) : format === "pct" ? `${value.toFixed(1)}%` : fmtNum(value);
   const data = series.map((v, i) => ({ i, v }));
-  const gradId = `kpi-grad-${tone}-${label.replace(/\s+/g, "")}`;
 
   return (
-    <Card className="shadow-card overflow-hidden relative group hover:shadow-md transition-shadow">
-      {/* Top accent bar */}
-      <div className={`h-1 w-full ${toneBg[tone]}`}>
-        <div className={`h-full w-1/3 ${toneText[tone].replace("text-", "bg-")}`} />
-      </div>
-      <CardContent className="p-5 pb-0">
-        <div className="flex items-start justify-between gap-3">
-          <div className={`h-9 w-9 rounded-lg flex items-center justify-center ${toneBg[tone]} ${toneText[tone]}`}>
-            <Icon className="h-4.5 w-4.5" />
-          </div>
-          <div
-            className={`inline-flex items-center gap-0.5 text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-              positive ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
-            }`}
-          >
-            {positive ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-            {fmtPct(delta)}
+    <Card className="shadow-card relative overflow-hidden group hover:shadow-md transition-all border-border/60">
+      {/* Left tone rail */}
+      <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${toneText[tone].replace("text-", "bg-")}`} />
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Icon className={`h-3.5 w-3.5 ${toneText[tone]}`} />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              {label}
+            </span>
           </div>
         </div>
-        <div className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-          {label}
-        </div>
-        <div className="mt-0.5 font-display text-[28px] leading-tight font-bold tracking-tight tabular-nums">
-          {display}
+        <div className="mt-4 flex items-end justify-between gap-3">
+          <div>
+            <div className="font-display text-[30px] leading-none font-bold tracking-tight tabular-nums">
+              {display}
+            </div>
+            <div className="mt-2 flex items-center gap-1.5 text-xs">
+              <span
+                className={`inline-flex items-center gap-0.5 font-semibold ${
+                  positive ? "text-success" : "text-destructive"
+                }`}
+              >
+                {positive ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                {fmtPct(delta)}
+              </span>
+              <span className="text-muted-foreground">vs last week</span>
+            </div>
+          </div>
+          <div className="h-12 w-24 shrink-0 opacity-90">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 2, bottom: 0, left: 0, right: 0 }}>
+                <Bar dataKey="v" fill={toneStroke[tone]} radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </CardContent>
-      {/* Sparkline bleeds to bottom edge */}
-      <div className="h-10 -mt-1">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 0, bottom: 0, left: 0, right: 0 }}>
-            <defs>
-              <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={toneStroke[tone]} stopOpacity={0.28} />
-                <stop offset="100%" stopColor={toneStroke[tone]} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <Area
-              type="monotone"
-              dataKey="v"
-              stroke={toneStroke[tone]}
-              strokeWidth={1.75}
-              fill={`url(#${gradId})`}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
     </Card>
   );
 }
