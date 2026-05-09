@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Play, Pause, Send, Megaphone, Bell, LayoutTemplate, Plus, Pencil, Gift, Ticket } from "lucide-react";
+import { Search, Play, Pause, Send, Megaphone, Bell, LayoutTemplate, Plus, Pencil, Gift, Ticket, Upload, Image as ImageIcon, Target, MapPin, Smartphone, X } from "lucide-react";
 import {
   campaigns as initial,
   referralPrograms,
@@ -17,9 +19,16 @@ import {
   campaignDestinations,
   campaignStatusTone,
   campaignChannelLabel,
+  bannerSizes,
+  bannerPlacementLabel,
+  audienceSegmentLabel,
+  NG_STATES,
   type Campaign,
   type CampaignStatus,
   type CampaignChannel,
+  type AudienceSegment,
+  type DevicePlatform,
+  type BannerPlacement,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
 
@@ -42,6 +51,11 @@ const channelIcon: Record<CampaignChannel, typeof Bell> = {
   login_banner: LayoutTemplate,
 };
 
+const ALL_SEGMENTS: AudienceSegment[] = [
+  "all_users","just_signed_up","new_user_7d","kyc_pending","kyc_verified","returning_dormant","power_user","no_card","has_card","wallet_high","wallet_low","no_referrals","international_txn",
+];
+const ALL_DEVICES: DevicePlatform[] = ["ios", "android", "web"];
+
 type Draft = {
   id?: string;
   name: string;
@@ -57,6 +71,20 @@ type Draft = {
   utmSource: string;
   linkedProgramId: string;
   linkedPromoCode: string;
+  // Targeting
+  segments: AudienceSegment[];
+  locations: string[];
+  devices: DevicePlatform[];
+  language: "all" | "en" | "ha" | "ig" | "yo";
+  minAppVersion: string;
+  // Banner config (only used when channel === "login_banner")
+  bannerImageUrl: string;
+  bannerSizeId: string;
+  bannerPlacement: BannerPlacement;
+  displaySeconds: number;
+  maxImpressionsPerUser: number;
+  cooldownHours: number;
+  dismissible: boolean;
 };
 
 const emptyDraft: Draft = {
@@ -73,6 +101,18 @@ const emptyDraft: Draft = {
   utmSource: "",
   linkedProgramId: "none",
   linkedPromoCode: "none",
+  segments: ["all_users"],
+  locations: ["All Nigeria"],
+  devices: [],
+  language: "all",
+  minAppVersion: "",
+  bannerImageUrl: "",
+  bannerSizeId: "hero",
+  bannerPlacement: "login_splash",
+  displaySeconds: 0,
+  maxImpressionsPerUser: 3,
+  cooldownHours: 24,
+  dismissible: true,
 };
 
 function parseCta(url: string): { ctaPath: string; utmSource: string } {
@@ -129,6 +169,7 @@ function CampaignsPage() {
   const openEdit = (c: Campaign) => {
     const parsed = parseCta(c.ctaUrl);
     setDraft({
+      ...emptyDraft,
       id: c.id,
       name: c.name,
       channel: c.channel,
@@ -143,6 +184,18 @@ function CampaignsPage() {
       utmSource: parsed.utmSource,
       linkedProgramId: c.linkedProgramId ?? "none",
       linkedPromoCode: c.linkedPromoCode ?? "none",
+      segments: c.targeting?.segments ?? ["all_users"],
+      locations: c.targeting?.locations ?? ["All Nigeria"],
+      devices: c.targeting?.devices ?? [],
+      language: c.targeting?.language ?? "all",
+      minAppVersion: c.targeting?.minAppVersion ?? "",
+      bannerImageUrl: c.banner?.imageUrl ?? "",
+      bannerSizeId: c.banner?.sizeId ?? "hero",
+      bannerPlacement: c.banner?.placement ?? "login_splash",
+      displaySeconds: c.banner?.displaySeconds ?? 0,
+      maxImpressionsPerUser: c.banner?.maxImpressionsPerUser ?? 3,
+      cooldownHours: c.banner?.cooldownHours ?? 24,
+      dismissible: c.banner?.dismissible ?? true,
     });
     setOpen(true);
   };
@@ -150,17 +203,35 @@ function CampaignsPage() {
     if (!draft.name.trim()) { toast.error("Internal name is required"); return; }
     if (!draft.title.trim()) { toast.error("Title shown to users is required"); return; }
     if (!draft.body.trim()) { toast.error("Body copy is required"); return; }
-    if (!draft.audience.trim()) { toast.error("Audience is required"); return; }
     if (!draft.ctaPath.trim()) { toast.error("Pick a destination for the CTA"); return; }
+    if (draft.segments.length === 0) { toast.error("Select at least one audience segment"); return; }
+    if (draft.channel === "login_banner" && !draft.bannerImageUrl) { toast.error("Upload a banner image"); return; }
     const linkedProgramId = draft.linkedProgramId === "none" ? null : draft.linkedProgramId;
     const linkedPromoCode = draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode;
     const ctaUrl = buildCtaUrl(draft.ctaPath, { promoCode: linkedPromoCode, utmSource: draft.utmSource });
+    const audience = draft.audience.trim() || draft.segments.map((s) => audienceSegmentLabel[s]).join(", ");
+    const targeting = {
+      segments: draft.segments,
+      locations: draft.locations,
+      devices: draft.devices,
+      language: draft.language,
+      minAppVersion: draft.minAppVersion.trim() || undefined,
+    };
+    const banner = draft.channel === "login_banner" ? {
+      imageUrl: draft.bannerImageUrl,
+      sizeId: draft.bannerSizeId,
+      placement: draft.bannerPlacement,
+      displaySeconds: Math.max(0, draft.displaySeconds),
+      maxImpressionsPerUser: Math.max(0, draft.maxImpressionsPerUser),
+      cooldownHours: Math.max(0, draft.cooldownHours),
+      dismissible: draft.dismissible,
+    } : undefined;
     if (draft.id) {
       setItems((prev) => prev.map((c) => c.id === draft.id ? {
         ...c,
         name: draft.name.trim(),
         channel: draft.channel,
-        audience: draft.audience.trim(),
+        audience,
         audienceSize: Math.max(0, draft.audienceSize),
         startAt: draft.startAt ? new Date(draft.startAt).toISOString() : c.startAt,
         endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
@@ -170,6 +241,8 @@ function CampaignsPage() {
         ctaUrl,
         linkedProgramId,
         linkedPromoCode,
+        targeting,
+        banner,
       } : c));
       toast.success(`${draft.name} updated`);
     } else {
@@ -179,7 +252,7 @@ function CampaignsPage() {
         name: draft.name.trim(),
         channel: draft.channel,
         status: "draft",
-        audience: draft.audience.trim(),
+        audience,
         audienceSize: Math.max(0, draft.audienceSize),
         startAt: draft.startAt ? new Date(draft.startAt).toISOString() : new Date().toISOString(),
         endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
@@ -190,6 +263,8 @@ function CampaignsPage() {
         ctaUrl,
         linkedProgramId,
         linkedPromoCode,
+        targeting,
+        banner,
       };
       setItems((prev) => [c, ...prev]);
       toast.success(`${c.name} created as draft`);
@@ -360,8 +435,12 @@ function CampaignsPage() {
                     <span className="flex items-center gap-2"><LayoutTemplate className="h-3.5 w-3.5" /> Login banner — pops up on next login</span>
                   </SelectItem>
                 </SelectContent>
-              </Select>
+            </Select>
             </div>
+
+            {draft.channel === "login_banner" && (
+              <BannerConfigSection draft={draft} setDraft={setDraft} />
+            )}
 
             <div className="col-span-2 pt-2 border-t border-border">
               <Label className="text-xs uppercase tracking-wide text-muted-foreground">Message users see</Label>
@@ -385,9 +464,12 @@ function CampaignsPage() {
               <Input type="number" value={draft.audienceSize} onChange={(e) => setDraft({ ...draft, audienceSize: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
             </div>
             <div className="col-span-2">
-              <Label className="text-xs">Audience description</Label>
-              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="e.g. Wallet >₦50k · no card" className="h-9 mt-1" />
+              <Label className="text-xs">Audience description (optional override)</Label>
+              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="Auto-generated from segments below if blank" className="h-9 mt-1" />
             </div>
+
+            <AudienceTargetingSection draft={draft} setDraft={setDraft} />
+
             <div>
               <Label className="text-xs">Start date</Label>
               <Input type="date" value={draft.startAt} onChange={(e) => setDraft({ ...draft, startAt: e.target.value })} className="h-9 mt-1" />
@@ -506,5 +588,176 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
         </SelectContent>
       </Select>
     </div>
+  );
+}
+
+function BannerConfigSection({ draft, setDraft }: { draft: Draft; setDraft: (d: Draft) => void }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const size = bannerSizes.find((s) => s.id === draft.bannerSizeId) ?? bannerSizes[0];
+  const onPick = (file: File) => {
+    if (file.size > 4 * 1024 * 1024) { toast.error("Image must be under 4MB"); return; }
+    if (!file.type.startsWith("image/")) { toast.error("Please upload an image file"); return; }
+    const reader = new FileReader();
+    reader.onload = () => setDraft({ ...draft, bannerImageUrl: String(reader.result) });
+    reader.readAsDataURL(file);
+  };
+  return (
+    <>
+      <div className="col-span-2 pt-2 border-t border-border">
+        <Label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-1.5"><ImageIcon className="h-3 w-3" /> Banner asset & display</Label>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs">Banner size</Label>
+        <Select value={draft.bannerSizeId} onValueChange={(v) => setDraft({ ...draft, bannerSizeId: v })}>
+          <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {bannerSizes.map((s) => (
+              <SelectItem key={s.id} value={s.id}>
+                <span className="flex items-center gap-2">
+                  <span className="font-medium">{s.label}</span>
+                  <span className="font-mono text-[10px] text-muted-foreground">{s.w}×{s.h} ({s.ratio})</span>
+                  <span className="text-[10px] text-muted-foreground">— {s.use}</span>
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-[10px] text-muted-foreground mt-1">Recommended: {size.w}×{size.h}px ({size.ratio}). PNG or JPG, under 4MB.</p>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs">Banner image</Label>
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onPick(f); }} />
+        {draft.bannerImageUrl ? (
+          <div className="mt-1 relative rounded-lg border border-border overflow-hidden bg-muted/30" style={{ aspectRatio: `${size.w}/${size.h}` }}>
+            <img src={draft.bannerImageUrl} alt="Banner preview" className="w-full h-full object-cover" />
+            <div className="absolute top-2 right-2 flex gap-1.5">
+              <Button type="button" size="sm" variant="secondary" className="h-7 text-[11px] gap-1" onClick={() => fileRef.current?.click()}>
+                <Upload className="h-3 w-3" /> Replace
+              </Button>
+              <Button type="button" size="sm" variant="destructive" className="h-7 w-7 p-0" onClick={() => setDraft({ ...draft, bannerImageUrl: "" })}>
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <button type="button" onClick={() => fileRef.current?.click()} className="mt-1 w-full rounded-lg border-2 border-dashed border-border hover:border-primary/50 hover:bg-muted/30 transition-colors flex flex-col items-center justify-center gap-2 py-8 text-muted-foreground">
+            <Upload className="h-6 w-6" />
+            <span className="text-xs font-medium">Click to upload banner</span>
+            <span className="text-[10px]">{size.w}×{size.h}px recommended</span>
+          </button>
+        )}
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs">Where to show it</Label>
+        <Select value={draft.bannerPlacement} onValueChange={(v) => setDraft({ ...draft, bannerPlacement: v as BannerPlacement })}>
+          <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {(Object.keys(bannerPlacementLabel) as BannerPlacement[]).map((p) => (
+              <SelectItem key={p} value={p}>{bannerPlacementLabel[p]}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label className="text-xs">Auto-dismiss after (seconds)</Label>
+        <Input type="number" value={draft.displaySeconds} onChange={(e) => setDraft({ ...draft, displaySeconds: Number(e.target.value) })} className="h-9 mt-1 font-mono" min={0} />
+        <p className="text-[10px] text-muted-foreground mt-1">0 = stays until user closes it</p>
+      </div>
+      <div>
+        <Label className="text-xs">Max times shown per user</Label>
+        <Input type="number" value={draft.maxImpressionsPerUser} onChange={(e) => setDraft({ ...draft, maxImpressionsPerUser: Number(e.target.value) })} className="h-9 mt-1 font-mono" min={0} />
+        <p className="text-[10px] text-muted-foreground mt-1">0 = unlimited</p>
+      </div>
+      <div>
+        <Label className="text-xs">Cooldown between shows (hours)</Label>
+        <Input type="number" value={draft.cooldownHours} onChange={(e) => setDraft({ ...draft, cooldownHours: Number(e.target.value) })} className="h-9 mt-1 font-mono" min={0} />
+      </div>
+      <div className="flex items-end">
+        <div className="flex items-center justify-between rounded-md border border-border px-3 h-9 w-full">
+          <Label className="text-xs">Allow user to dismiss</Label>
+          <Switch checked={draft.dismissible} onCheckedChange={(v) => setDraft({ ...draft, dismissible: v })} />
+        </div>
+      </div>
+    </>
+  );
+}
+
+function AudienceTargetingSection({ draft, setDraft }: { draft: Draft; setDraft: (d: Draft) => void }) {
+  const toggle = <T,>(arr: T[], v: T): T[] => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+  const toggleSegment = (s: AudienceSegment) => {
+    let next = toggle(draft.segments, s);
+    if (s === "all_users" && next.includes("all_users")) next = ["all_users"];
+    else if (s !== "all_users") next = next.filter((x) => x !== "all_users");
+    if (next.length === 0) next = ["all_users"];
+    setDraft({ ...draft, segments: next });
+  };
+  return (
+    <>
+      <div className="col-span-2 pt-2 border-t border-border">
+        <Label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-1.5"><Target className="h-3 w-3" /> Audience targeting</Label>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs">User segments (any of)</Label>
+        <div className="mt-1 grid grid-cols-2 gap-1.5 rounded-md border border-border p-2 max-h-44 overflow-y-auto">
+          {ALL_SEGMENTS.map((s) => (
+            <label key={s} className="flex items-center gap-2 text-xs cursor-pointer hover:bg-muted/50 rounded px-1.5 py-1">
+              <Checkbox checked={draft.segments.includes(s)} onCheckedChange={() => toggleSegment(s)} />
+              <span>{audienceSegmentLabel[s]}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs flex items-center gap-1"><MapPin className="h-3 w-3" /> Locations (Nigeria states)</Label>
+        <div className="mt-1 grid grid-cols-3 gap-1 rounded-md border border-border p-2 max-h-40 overflow-y-auto">
+          {NG_STATES.map((st) => {
+            const checked = draft.locations.includes(st);
+            return (
+              <label key={st} className="flex items-center gap-1.5 text-[11px] cursor-pointer hover:bg-muted/50 rounded px-1 py-0.5">
+                <Checkbox checked={checked} onCheckedChange={() => {
+                  let next = toggle(draft.locations, st);
+                  if (st === "All Nigeria" && next.includes("All Nigeria")) next = ["All Nigeria"];
+                  else if (st !== "All Nigeria") next = next.filter((x) => x !== "All Nigeria");
+                  if (next.length === 0) next = ["All Nigeria"];
+                  setDraft({ ...draft, locations: next });
+                }} />
+                <span className="truncate">{st}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs flex items-center gap-1"><Smartphone className="h-3 w-3" /> Device platforms</Label>
+        <div className="mt-1 flex gap-2 flex-wrap">
+          {ALL_DEVICES.map((d) => {
+            const active = draft.devices.includes(d);
+            return (
+              <button key={d} type="button" onClick={() => setDraft({ ...draft, devices: toggle(draft.devices, d) })} className={`text-xs px-3 h-8 rounded-md border capitalize ${active ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted/50"}`}>
+                {d}
+              </button>
+            );
+          })}
+          <span className="text-[10px] text-muted-foreground self-center">{draft.devices.length === 0 ? "All platforms" : `${draft.devices.length} selected`}</span>
+        </div>
+      </div>
+      <div>
+        <Label className="text-xs">Language</Label>
+        <Select value={draft.language} onValueChange={(v) => setDraft({ ...draft, language: v as Draft["language"] })}>
+          <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All languages</SelectItem>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="ha">Hausa</SelectItem>
+            <SelectItem value="ig">Igbo</SelectItem>
+            <SelectItem value="yo">Yoruba</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label className="text-xs">Min app version (optional)</Label>
+        <Input value={draft.minAppVersion} onChange={(e) => setDraft({ ...draft, minAppVersion: e.target.value })} placeholder="e.g. 4.2.0" className="h-9 mt-1 font-mono" />
+      </div>
+    </>
   );
 }

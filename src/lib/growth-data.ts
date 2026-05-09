@@ -68,10 +68,105 @@ export type Campaign = {
   ctaUrl: string;
   linkedProgramId?: string | null;
   linkedPromoCode?: string | null;
+  // Targeting (optional on existing records)
+  targeting?: CampaignTargeting;
+  // Banner-only configuration
+  banner?: BannerConfig;
+};
+
+// ---------- Targeting ----------
+export type AudienceSegment =
+  | "all_users"
+  | "just_signed_up"
+  | "new_user_7d"
+  | "kyc_pending"
+  | "kyc_verified"
+  | "returning_dormant"
+  | "power_user"
+  | "no_card"
+  | "has_card"
+  | "wallet_high"
+  | "wallet_low"
+  | "no_referrals"
+  | "international_txn";
+
+export const audienceSegmentLabel: Record<AudienceSegment, string> = {
+  all_users: "All users",
+  just_signed_up: "Just signed up (today)",
+  new_user_7d: "New users (last 7 days)",
+  kyc_pending: "KYC pending",
+  kyc_verified: "KYC verified",
+  returning_dormant: "Returning after 14+ days inactive",
+  power_user: "Power users (high tx volume)",
+  no_card: "No card issued",
+  has_card: "Has at least one card",
+  wallet_high: "Wallet balance > ₦50,000",
+  wallet_low: "Wallet balance < ₦5,000",
+  no_referrals: "Zero referrals sent",
+  international_txn: "Made international txn (last 90d)",
+};
+
+export const NG_STATES = [
+  "All Nigeria","Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno","Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT - Abuja","Gombe","Imo","Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa","Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba","Yobe","Zamfara",
+];
+
+export type DevicePlatform = "ios" | "android" | "web";
+
+export type CampaignTargeting = {
+  segments: AudienceSegment[]; // OR-combined
+  locations: string[];         // NG states; ["All Nigeria"] = no filter
+  devices: DevicePlatform[];   // empty = all
+  minAppVersion?: string;
+  language?: "all" | "en" | "ha" | "ig" | "yo";
+};
+
+// ---------- Banner ----------
+export type BannerSize = { id: string; label: string; w: number; h: number; ratio: string; use: string };
+export const bannerSizes: BannerSize[] = [
+  { id: "hero",   label: "Hero",          w: 1200, h: 600,  ratio: "2:1",   use: "Login splash, home top" },
+  { id: "wide",   label: "Wide strip",    w: 1600, h: 500,  ratio: "16:5",  use: "Home / wallet header" },
+  { id: "square", label: "Square card",   w: 1080, h: 1080, ratio: "1:1",   use: "Carousel card" },
+  { id: "half",   label: "Half panel",    w: 1080, h: 720,  ratio: "3:2",   use: "Sectional banner" },
+  { id: "sticky", label: "Sticky strip",  w: 1080, h: 320,  ratio: "27:8",  use: "Bottom sticky" },
+];
+
+export type BannerPlacement =
+  | "login_splash"
+  | "home_top"
+  | "home_carousel"
+  | "wallet_header"
+  | "bills_header"
+  | "cards_header"
+  | "esim_header"
+  | "profile_banner"
+  | "bottom_sticky";
+
+export const bannerPlacementLabel: Record<BannerPlacement, string> = {
+  login_splash: "Login splash (modal on app open)",
+  home_top: "Home — top of dashboard",
+  home_carousel: "Home — promo carousel",
+  wallet_header: "Wallet page — header",
+  bills_header: "Bills page — header",
+  cards_header: "Cards page — header",
+  esim_header: "eSIM page — header",
+  profile_banner: "Profile / account banner",
+  bottom_sticky: "Bottom sticky strip (any page)",
+};
+
+export type BannerConfig = {
+  imageUrl: string;              // uploaded asset (data URL preview)
+  sizeId: string;                // references bannerSizes[].id
+  placement: BannerPlacement;
+  displaySeconds: number;        // auto-dismiss after N sec; 0 = until closed
+  maxImpressionsPerUser: number; // 0 = no cap
+  cooldownHours: number;         // min hours between impressions to same user
+  dismissible: boolean;
 };
 
 // ---------- Newsletter (email) ----------
 export type NewsletterStatus = "draft" | "scheduled" | "sending" | "sent" | "paused";
+
+export type EmailBodyFormat = "plain" | "html";
 
 export type Newsletter = {
   id: string;
@@ -81,6 +176,11 @@ export type Newsletter = {
   audienceSize: number;
   fromName: string;       // e.g. "BazePay"
   fromEmail: string;      // e.g. "hello@bazepay.com"
+  replyTo?: string;
+  // Email content
+  headerImageUrl?: string;       // optional banner at top of email
+  bodyFormat?: EmailBodyFormat;  // plain or html
+  bodyText?: string;             // raw plain text or HTML markup
   status: NewsletterStatus;
   scheduledAt: string | null;
   sentAt: string | null;
@@ -94,6 +194,8 @@ export type Newsletter = {
   // Optional cross-link
   linkedPromoCode?: string | null;
   ctaUrl?: string;
+  // Targeting (optional on existing records)
+  targeting?: CampaignTargeting;
 };
 
 export type PromoStatus = "active" | "paused" | "expired" | "scheduled";
