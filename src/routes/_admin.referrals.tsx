@@ -1,12 +1,12 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutGrid, Gift, Users, Megaphone, Ticket } from "lucide-react";
+import { LayoutGrid, Gift, Users, Megaphone, Ticket, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/referrals")({
   head: () => ({
     meta: [
       { title: "Growth — BazePay Admin" },
-      { name: "description", content: "Referral programs, campaigns and promo codes." },
+      { name: "description", content: "Referral programs, campaigns, newsletters and promo codes." },
     ],
   }),
   component: GrowthLayout,
@@ -17,6 +17,7 @@ const tabs = [
   { to: "/referrals/programs", label: "Programs", icon: Gift },
   { to: "/referrals/list", label: "Referrals", icon: Users },
   { to: "/referrals/campaigns", label: "Campaigns", icon: Megaphone },
+  { to: "/referrals/newsletter", label: "Newsletter", icon: Mail },
   { to: "/referrals/promos", label: "Promo codes", icon: Ticket },
 ];
 
