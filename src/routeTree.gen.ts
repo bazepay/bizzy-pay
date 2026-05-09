@@ -14,10 +14,12 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminWalletsRouteImport } from './routes/_admin.wallets'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
+import { Route as AdminCardsRouteImport } from './routes/_admin.cards'
 import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
 import { Route as AdminTransactionsIndexRouteImport } from './routes/_admin.transactions.index'
 import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
+import { Route as AdminCardsIndexRouteImport } from './routes/_admin.cards.index'
 import { Route as AdminWalletsUsersRouteImport } from './routes/_admin.wallets.users'
 import { Route as AdminWalletsTopupsRouteImport } from './routes/_admin.wallets.topups'
 import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets.payouts'
@@ -25,6 +27,9 @@ import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
 import { Route as AdminKycIdRouteImport } from './routes/_admin.kyc.$id'
+import { Route as AdminCardsProgramsRouteImport } from './routes/_admin.cards.programs'
+import { Route as AdminCardsIssuedRouteImport } from './routes/_admin.cards.issued'
+import { Route as AdminCardsIdRouteImport } from './routes/_admin.cards.$id'
 import { Route as AdminUsersIdIndexRouteImport } from './routes/_admin.users.$id.index'
 import { Route as AdminUsersIdWalletsRouteImport } from './routes/_admin.users.$id.wallets'
 import { Route as AdminUsersIdTransactionsRouteImport } from './routes/_admin.users.$id.transactions'
@@ -59,6 +64,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCardsRoute = AdminCardsRouteImport.update({
+  id: '/cards',
+  path: '/cards',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminWalletsIndexRoute = AdminWalletsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -78,6 +88,11 @@ const AdminKycIndexRoute = AdminKycIndexRouteImport.update({
   id: '/kyc/',
   path: '/kyc/',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminCardsIndexRoute = AdminCardsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminCardsRoute,
 } as any)
 const AdminWalletsUsersRoute = AdminWalletsUsersRouteImport.update({
   id: '/users',
@@ -113,6 +128,21 @@ const AdminKycIdRoute = AdminKycIdRouteImport.update({
   id: '/kyc/$id',
   path: '/kyc/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminCardsProgramsRoute = AdminCardsProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => AdminCardsRoute,
+} as any)
+const AdminCardsIssuedRoute = AdminCardsIssuedRouteImport.update({
+  id: '/issued',
+  path: '/issued',
+  getParentRoute: () => AdminCardsRoute,
+} as any)
+const AdminCardsIdRoute = AdminCardsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminCardsRoute,
 } as any)
 const AdminUsersIdIndexRoute = AdminUsersIdIndexRouteImport.update({
   id: '/',
@@ -164,8 +194,12 @@ const AdminUsersIdCardsRoute = AdminUsersIdCardsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/cards': typeof AdminCardsRouteWithChildren
   '/dashboard': typeof AdminDashboardRoute
   '/wallets': typeof AdminWalletsRouteWithChildren
+  '/cards/$id': typeof AdminCardsIdRoute
+  '/cards/issued': typeof AdminCardsIssuedRoute
+  '/cards/programs': typeof AdminCardsProgramsRoute
   '/kyc/$id': typeof AdminKycIdRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -173,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
   '/wallets/topups': typeof AdminWalletsTopupsRoute
   '/wallets/users': typeof AdminWalletsUsersRoute
+  '/cards/': typeof AdminCardsIndexRoute
   '/kyc/': typeof AdminKycIndexRoute
   '/transactions/': typeof AdminTransactionsIndexRoute
   '/users/': typeof AdminUsersIndexRoute
@@ -191,12 +226,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/cards/$id': typeof AdminCardsIdRoute
+  '/cards/issued': typeof AdminCardsIssuedRoute
+  '/cards/programs': typeof AdminCardsProgramsRoute
   '/kyc/$id': typeof AdminKycIdRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
   '/wallets/topups': typeof AdminWalletsTopupsRoute
   '/wallets/users': typeof AdminWalletsUsersRoute
+  '/cards': typeof AdminCardsIndexRoute
   '/kyc': typeof AdminKycIndexRoute
   '/transactions': typeof AdminTransactionsIndexRoute
   '/users': typeof AdminUsersIndexRoute
@@ -216,8 +255,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/_admin/cards': typeof AdminCardsRouteWithChildren
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
+  '/_admin/cards/$id': typeof AdminCardsIdRoute
+  '/_admin/cards/issued': typeof AdminCardsIssuedRoute
+  '/_admin/cards/programs': typeof AdminCardsProgramsRoute
   '/_admin/kyc/$id': typeof AdminKycIdRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -225,6 +268,7 @@ export interface FileRoutesById {
   '/_admin/wallets/payouts': typeof AdminWalletsPayoutsRoute
   '/_admin/wallets/topups': typeof AdminWalletsTopupsRoute
   '/_admin/wallets/users': typeof AdminWalletsUsersRoute
+  '/_admin/cards/': typeof AdminCardsIndexRoute
   '/_admin/kyc/': typeof AdminKycIndexRoute
   '/_admin/transactions/': typeof AdminTransactionsIndexRoute
   '/_admin/users/': typeof AdminUsersIndexRoute
@@ -244,8 +288,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/cards'
     | '/dashboard'
     | '/wallets'
+    | '/cards/$id'
+    | '/cards/issued'
+    | '/cards/programs'
     | '/kyc/$id'
     | '/transactions/$id'
     | '/users/$id'
@@ -253,6 +301,7 @@ export interface FileRouteTypes {
     | '/wallets/payouts'
     | '/wallets/topups'
     | '/wallets/users'
+    | '/cards/'
     | '/kyc/'
     | '/transactions/'
     | '/users/'
@@ -271,12 +320,16 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/cards/$id'
+    | '/cards/issued'
+    | '/cards/programs'
     | '/kyc/$id'
     | '/transactions/$id'
     | '/wallets/fx'
     | '/wallets/payouts'
     | '/wallets/topups'
     | '/wallets/users'
+    | '/cards'
     | '/kyc'
     | '/transactions'
     | '/users'
@@ -295,8 +348,12 @@ export interface FileRouteTypes {
     | '/'
     | '/_admin'
     | '/login'
+    | '/_admin/cards'
     | '/_admin/dashboard'
     | '/_admin/wallets'
+    | '/_admin/cards/$id'
+    | '/_admin/cards/issued'
+    | '/_admin/cards/programs'
     | '/_admin/kyc/$id'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
@@ -304,6 +361,7 @@ export interface FileRouteTypes {
     | '/_admin/wallets/payouts'
     | '/_admin/wallets/topups'
     | '/_admin/wallets/users'
+    | '/_admin/cards/'
     | '/_admin/kyc/'
     | '/_admin/transactions/'
     | '/_admin/users/'
@@ -362,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/cards': {
+      id: '/_admin/cards'
+      path: '/cards'
+      fullPath: '/cards'
+      preLoaderRoute: typeof AdminCardsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/wallets/': {
       id: '/_admin/wallets/'
       path: '/'
@@ -389,6 +454,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/kyc/'
       preLoaderRoute: typeof AdminKycIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/cards/': {
+      id: '/_admin/cards/'
+      path: '/'
+      fullPath: '/cards/'
+      preLoaderRoute: typeof AdminCardsIndexRouteImport
+      parentRoute: typeof AdminCardsRoute
     }
     '/_admin/wallets/users': {
       id: '/_admin/wallets/users'
@@ -438,6 +510,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/kyc/$id'
       preLoaderRoute: typeof AdminKycIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/cards/programs': {
+      id: '/_admin/cards/programs'
+      path: '/programs'
+      fullPath: '/cards/programs'
+      preLoaderRoute: typeof AdminCardsProgramsRouteImport
+      parentRoute: typeof AdminCardsRoute
+    }
+    '/_admin/cards/issued': {
+      id: '/_admin/cards/issued'
+      path: '/issued'
+      fullPath: '/cards/issued'
+      preLoaderRoute: typeof AdminCardsIssuedRouteImport
+      parentRoute: typeof AdminCardsRoute
+    }
+    '/_admin/cards/$id': {
+      id: '/_admin/cards/$id'
+      path: '/$id'
+      fullPath: '/cards/$id'
+      preLoaderRoute: typeof AdminCardsIdRouteImport
+      parentRoute: typeof AdminCardsRoute
     }
     '/_admin/users/$id/': {
       id: '/_admin/users/$id/'
@@ -505,6 +598,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminCardsRouteChildren {
+  AdminCardsIdRoute: typeof AdminCardsIdRoute
+  AdminCardsIssuedRoute: typeof AdminCardsIssuedRoute
+  AdminCardsProgramsRoute: typeof AdminCardsProgramsRoute
+  AdminCardsIndexRoute: typeof AdminCardsIndexRoute
+}
+
+const AdminCardsRouteChildren: AdminCardsRouteChildren = {
+  AdminCardsIdRoute: AdminCardsIdRoute,
+  AdminCardsIssuedRoute: AdminCardsIssuedRoute,
+  AdminCardsProgramsRoute: AdminCardsProgramsRoute,
+  AdminCardsIndexRoute: AdminCardsIndexRoute,
+}
+
+const AdminCardsRouteWithChildren = AdminCardsRoute._addFileChildren(
+  AdminCardsRouteChildren,
+)
+
 interface AdminWalletsRouteChildren {
   AdminWalletsFxRoute: typeof AdminWalletsFxRoute
   AdminWalletsPayoutsRoute: typeof AdminWalletsPayoutsRoute
@@ -554,6 +665,7 @@ const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminCardsRoute: typeof AdminCardsRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminWalletsRoute: typeof AdminWalletsRouteWithChildren
   AdminKycIdRoute: typeof AdminKycIdRoute
@@ -565,6 +677,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCardsRoute: AdminCardsRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminWalletsRoute: AdminWalletsRouteWithChildren,
   AdminKycIdRoute: AdminKycIdRoute,
