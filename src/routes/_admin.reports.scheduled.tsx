@@ -18,6 +18,7 @@ import {
   statusTone,
   fmtRelative,
   fmtDate,
+  nextRunFromCadence,
   type ScheduledReport,
 } from "@/lib/reports-data";
 
@@ -55,7 +56,7 @@ function ScheduledPage() {
     const r = catalog.find((c) => c.id === draft.reportId)!;
     const recipients = draft.recipients.split(",").map((s) => s.trim()).filter(Boolean);
     if (recipients.length === 0) { toast.error("Add at least one recipient"); return; }
-    const next = new Date(2026, 4, 10, 6, 0, 0).toISOString();
+    const next = nextRunFromCadence(draft.cadence);
     setItems((p) => [{
       id: `sch_${Math.floor(Math.random() * 9000 + 1000)}`,
       reportId: r.id,
@@ -131,7 +132,7 @@ function ScheduledPage() {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button size="icon" variant="ghost" onClick={() => toast.success(`Running ${i.reportName} now`)} title="Run now">
+                    <Button size="icon" variant="ghost" onClick={() => { setItems((p) => p.map((x) => x.id === i.id ? { ...x, lastStatus: "success", nextRun: nextRunFromCadence(x.cadence) } : x)); toast.success(`${i.reportName} ran — added to Exports`); }} title="Run now">
                       <Play className="h-3.5 w-3.5" />
                     </Button>
                     <Button size="icon" variant="ghost" onClick={() => remove(i.id)} title="Remove">
