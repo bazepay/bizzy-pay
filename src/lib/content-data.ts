@@ -61,6 +61,7 @@ export type LegalDoc = {
   effectiveAt: string;
   updatedAt: string;
   changelog: string;
+  body: string;
 };
 
 const AUTHORS = ["Aisha O.", "Tunde A.", "Kemi B.", "David L.", "Joy E.", "Priya M."];
@@ -232,14 +233,54 @@ export const faqs: Faq[] = [
   { id: "faq_010", question: "How do I close my BazePay account?", answer: "Settings → Account → Close account. Withdraw your balance first. Account closure is permanent and takes 24 hours.", category: "Account", status: "draft", helpful: 0, notHelpful: 0, updatedAt: new Date(Date.now() - 1 * 86400_000).toISOString() },
 ];
 
+const LEGAL_BODIES: Record<LegalDoc["type"], string> = {
+  terms: "1. Acceptance of Terms\nBy creating a BazePay account you agree to these Terms of Service.\n\n2. Eligibility\nYou must be 18+ and a Nigerian resident with a valid BVN.\n\n3. Wallet & Transactions\nAll wallets are denominated in Nigerian Naira (NGN). Transfers settle via NIBSS.\n\n4. Disputes\nDisputes must be raised within 21 days of the transaction. We respond within 5 business days.\n\n5. Termination\nWe may suspend accounts that breach these terms or our Acceptable Use Policy.",
+  privacy: "1. Data we collect\nIdentity (name, BVN, ID), device info, transaction metadata, and support communications.\n\n2. How we use it\nTo provide the service, comply with CBN/NFIU rules, prevent fraud, and improve the product.\n\n3. Retention\nKYC records: 7 years post-closure (regulatory). Device IDs: 24 months rolling.\n\n4. Your rights\nAccess, correction, export, and deletion (subject to regulatory holds).",
+  card_terms: "1. Card Issuance\nThe BazePay Card is a Naira-denominated debit card issued by our partner bank.\n\n2. Limits\nTier-2: ₦5M daily / ₦25M monthly. Tier-1: ₦300K daily.\n\n3. FX\nCross-border auths convert at Visa wholesale + 1.5% markup. Tier-2 gets ₦200K/month FX-free.\n\n4. Liability\nReport lost/stolen cards immediately. Liability is capped at ₦10,000 if reported within 24 hours.",
+  aup: "Prohibited uses include:\n- Money laundering, terrorism financing, sanctions evasion\n- Gambling outside licensed Nigerian operators\n- Adult content, weapons, controlled substances\n- Pyramid schemes, unlicensed investment products\n- Crypto on/off-ramping outside approved partners\n\nViolations result in immediate account suspension and SAR filing where applicable.",
+  fees: "Wallet\n- Bank transfer (out): ₦25 flat\n- Wallet-to-wallet: free\n\nCard\n- Issuance: ₦1,500 (one-time)\n- Local POS/online: free\n- Cross-border FX markup: 1.5% (Tier-2: first ₦200K/month free)\n- ATM withdrawal abroad: ₦1,200 + 1.5%\n\nBill Pay\n- Convenience fee: ₦25 per bill",
+};
+
 export const legalDocs: LegalDoc[] = [
-  { id: "leg_001", name: "Terms of Service", type: "terms", version: "v5.2", status: "active", effectiveAt: new Date(Date.now() - 30 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 30 * 86400_000).toISOString(), changelog: "Clarified dispute resolution timeline (30 → 21 days)." },
-  { id: "leg_002", name: "Terms of Service", type: "terms", version: "v5.1", status: "superseded", effectiveAt: new Date(Date.now() - 120 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 120 * 86400_000).toISOString(), changelog: "Updated arbitration clause." },
-  { id: "leg_003", name: "Privacy Policy", type: "privacy", version: "v3.4", status: "active", effectiveAt: new Date(Date.now() - 45 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 45 * 86400_000).toISOString(), changelog: "Added device-ID retention disclosure." },
-  { id: "leg_004", name: "Card Cardholder Agreement", type: "card_terms", version: "v2.0", status: "active", effectiveAt: new Date(Date.now() - 60 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 60 * 86400_000).toISOString(), changelog: "FX-free monthly allowance for Tier-2." },
-  { id: "leg_005", name: "Acceptable Use Policy", type: "aup", version: "v1.3", status: "active", effectiveAt: new Date(Date.now() - 90 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 90 * 86400_000).toISOString(), changelog: "Expanded list of prohibited merchant categories." },
-  { id: "leg_006", name: "Fees Schedule", type: "fees", version: "v4.0", status: "draft", effectiveAt: new Date(Date.now() + 14 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 2 * 86400_000).toISOString(), changelog: "Reduced bill-pay convenience fee from ₦50 to ₦25." },
+  { id: "leg_001", name: "Terms of Service", type: "terms", version: "v5.2", status: "active", effectiveAt: new Date(Date.now() - 30 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 30 * 86400_000).toISOString(), changelog: "Clarified dispute resolution timeline (30 → 21 days).", body: LEGAL_BODIES.terms },
+  { id: "leg_002", name: "Terms of Service", type: "terms", version: "v5.1", status: "superseded", effectiveAt: new Date(Date.now() - 120 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 120 * 86400_000).toISOString(), changelog: "Updated arbitration clause.", body: LEGAL_BODIES.terms },
+  { id: "leg_003", name: "Privacy Policy", type: "privacy", version: "v3.4", status: "active", effectiveAt: new Date(Date.now() - 45 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 45 * 86400_000).toISOString(), changelog: "Added device-ID retention disclosure.", body: LEGAL_BODIES.privacy },
+  { id: "leg_004", name: "Card Cardholder Agreement", type: "card_terms", version: "v2.0", status: "active", effectiveAt: new Date(Date.now() - 60 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 60 * 86400_000).toISOString(), changelog: "FX-free monthly allowance for Tier-2.", body: LEGAL_BODIES.card_terms },
+  { id: "leg_005", name: "Acceptable Use Policy", type: "aup", version: "v1.3", status: "active", effectiveAt: new Date(Date.now() - 90 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 90 * 86400_000).toISOString(), changelog: "Expanded list of prohibited merchant categories.", body: LEGAL_BODIES.aup },
+  { id: "leg_006", name: "Fees Schedule", type: "fees", version: "v4.0", status: "draft", effectiveAt: new Date(Date.now() + 14 * 86400_000).toISOString(), updatedAt: new Date(Date.now() - 2 * 86400_000).toISOString(), changelog: "Reduced bill-pay convenience fee from ₦50 to ₦25.", body: LEGAL_BODIES.fees },
 ];
+
+// Where each legal doc type is surfaced in the BazePay apps/site.
+export const legalSurfaces: Record<LegalDoc["type"], { label: string; where: string }[]> = {
+  terms: [
+    { label: "Sign-up screen", where: "Mobile app · 'I agree to the Terms' checkbox links here" },
+    { label: "Settings → Legal", where: "Mobile + web app, always shows the active version" },
+    { label: "Marketing site footer", where: "bazepay.ng/legal/terms" },
+    { label: "Re-consent modal", where: "Forced acknowledgment when a new version activates" },
+  ],
+  privacy: [
+    { label: "Sign-up screen", where: "Linked next to the Terms checkbox" },
+    { label: "Settings → Privacy", where: "Mobile + web app" },
+    { label: "Marketing site footer", where: "bazepay.ng/legal/privacy" },
+    { label: "Cookie banner", where: "Web app — link to full policy" },
+  ],
+  card_terms: [
+    { label: "Card activation flow", where: "Shown before user confirms first card issuance" },
+    { label: "Card details screen", where: "Mobile app · 'Cardholder Agreement' link" },
+    { label: "Marketing site", where: "bazepay.ng/cards (footnote link)" },
+  ],
+  aup: [
+    { label: "Settings → Legal", where: "Mobile + web app" },
+    { label: "Suspension notice email", where: "Linked when an account action references a violation" },
+    { label: "Marketing site footer", where: "bazepay.ng/legal/acceptable-use" },
+  ],
+  fees: [
+    { label: "Wallet · Send money screen", where: "Inline fee preview links to full schedule" },
+    { label: "Card details screen", where: "FX markup section links here" },
+    { label: "Settings → Fees", where: "Mobile + web app" },
+    { label: "Marketing site", where: "bazepay.ng/pricing" },
+  ],
+};
 
 // ---- formatters / labels ----
 
