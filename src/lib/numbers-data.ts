@@ -28,8 +28,9 @@ export type PoolNumber = {
   areaCode: string;
   supplier: NumberSupplier;
   service: NumberService;
-  costNgn: number; // monthly supplier cost
-  priceNgn: number; // monthly retail price
+  billingPeriod: BillingPeriod;
+  costNgn: number; // supplier cost for the billing period
+  priceNgn: number; // retail price for the billing period
   status: NumberStatus;
   addedAt: string;
 };
@@ -41,12 +42,12 @@ export type Lease = {
   country: string;
   service: NumberService;
   supplier: NumberSupplier;
+  billingPeriod: BillingPeriod;
   user: { id: string; name: string; email: string };
   startedAt: string;
   renewsOn: string;
   autoRenew: boolean;
   smsCount30d: number;
-  voiceMin30d: number;
   priceNgn: number;
   status: LeaseStatus;
 };
