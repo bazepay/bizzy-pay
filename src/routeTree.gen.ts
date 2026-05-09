@@ -34,6 +34,7 @@ import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets
 import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
+import { Route as AdminPaymentsProvidersRouteImport } from './routes/_admin.payments.providers'
 import { Route as AdminPayPlansRouteImport } from './routes/_admin.pay.plans'
 import { Route as AdminPayOrdersRouteImport } from './routes/_admin.pay.orders'
 import { Route as AdminPayIncidentsRouteImport } from './routes/_admin.pay.incidents'
@@ -183,6 +184,11 @@ const AdminTransactionsIdRoute = AdminTransactionsIdRouteImport.update({
   id: '/transactions/$id',
   path: '/transactions/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminPaymentsProvidersRoute = AdminPaymentsProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => AdminPaymentsRoute,
 } as any)
 const AdminPayPlansRoute = AdminPayPlansRouteImport.update({
   id: '/plans',
@@ -337,6 +343,7 @@ export interface FileRoutesByFullPath {
   '/pay/incidents': typeof AdminPayIncidentsRoute
   '/pay/orders': typeof AdminPayOrdersRoute
   '/pay/plans': typeof AdminPayPlansRoute
+  '/payments/providers': typeof AdminPaymentsProvidersRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -382,6 +389,7 @@ export interface FileRoutesByTo {
   '/pay/incidents': typeof AdminPayIncidentsRoute
   '/pay/orders': typeof AdminPayOrdersRoute
   '/pay/plans': typeof AdminPayPlansRoute
+  '/payments/providers': typeof AdminPaymentsProvidersRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
@@ -434,6 +442,7 @@ export interface FileRoutesById {
   '/_admin/pay/incidents': typeof AdminPayIncidentsRoute
   '/_admin/pay/orders': typeof AdminPayOrdersRoute
   '/_admin/pay/plans': typeof AdminPayPlansRoute
+  '/_admin/payments/providers': typeof AdminPaymentsProvidersRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
@@ -487,6 +496,7 @@ export interface FileRouteTypes {
     | '/pay/incidents'
     | '/pay/orders'
     | '/pay/plans'
+    | '/payments/providers'
     | '/transactions/$id'
     | '/users/$id'
     | '/wallets/fx'
@@ -532,6 +542,7 @@ export interface FileRouteTypes {
     | '/pay/incidents'
     | '/pay/orders'
     | '/pay/plans'
+    | '/payments/providers'
     | '/transactions/$id'
     | '/wallets/fx'
     | '/wallets/payouts'
@@ -583,6 +594,7 @@ export interface FileRouteTypes {
     | '/_admin/pay/incidents'
     | '/_admin/pay/orders'
     | '/_admin/pay/plans'
+    | '/_admin/payments/providers'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
     | '/_admin/wallets/fx'
@@ -791,6 +803,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/transactions/$id'
       preLoaderRoute: typeof AdminTransactionsIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/payments/providers': {
+      id: '/_admin/payments/providers'
+      path: '/providers'
+      fullPath: '/payments/providers'
+      preLoaderRoute: typeof AdminPaymentsProvidersRouteImport
+      parentRoute: typeof AdminPaymentsRoute
     }
     '/_admin/pay/plans': {
       id: '/_admin/pay/plans'
@@ -1049,10 +1068,12 @@ const AdminPayRouteWithChildren = AdminPayRoute._addFileChildren(
 )
 
 interface AdminPaymentsRouteChildren {
+  AdminPaymentsProvidersRoute: typeof AdminPaymentsProvidersRoute
   AdminPaymentsIndexRoute: typeof AdminPaymentsIndexRoute
 }
 
 const AdminPaymentsRouteChildren: AdminPaymentsRouteChildren = {
+  AdminPaymentsProvidersRoute: AdminPaymentsProvidersRoute,
   AdminPaymentsIndexRoute: AdminPaymentsIndexRoute,
 }
 
