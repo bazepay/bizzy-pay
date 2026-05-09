@@ -169,6 +169,7 @@ function CampaignsPage() {
   const openEdit = (c: Campaign) => {
     const parsed = parseCta(c.ctaUrl);
     setDraft({
+      ...emptyDraft,
       id: c.id,
       name: c.name,
       channel: c.channel,
@@ -183,6 +184,18 @@ function CampaignsPage() {
       utmSource: parsed.utmSource,
       linkedProgramId: c.linkedProgramId ?? "none",
       linkedPromoCode: c.linkedPromoCode ?? "none",
+      segments: c.targeting?.segments ?? ["all_users"],
+      locations: c.targeting?.locations ?? ["All Nigeria"],
+      devices: c.targeting?.devices ?? [],
+      language: c.targeting?.language ?? "all",
+      minAppVersion: c.targeting?.minAppVersion ?? "",
+      bannerImageUrl: c.banner?.imageUrl ?? "",
+      bannerSizeId: c.banner?.sizeId ?? "hero",
+      bannerPlacement: c.banner?.placement ?? "login_splash",
+      displaySeconds: c.banner?.displaySeconds ?? 0,
+      maxImpressionsPerUser: c.banner?.maxImpressionsPerUser ?? 3,
+      cooldownHours: c.banner?.cooldownHours ?? 24,
+      dismissible: c.banner?.dismissible ?? true,
     });
     setOpen(true);
   };
@@ -190,17 +203,35 @@ function CampaignsPage() {
     if (!draft.name.trim()) { toast.error("Internal name is required"); return; }
     if (!draft.title.trim()) { toast.error("Title shown to users is required"); return; }
     if (!draft.body.trim()) { toast.error("Body copy is required"); return; }
-    if (!draft.audience.trim()) { toast.error("Audience is required"); return; }
     if (!draft.ctaPath.trim()) { toast.error("Pick a destination for the CTA"); return; }
+    if (draft.segments.length === 0) { toast.error("Select at least one audience segment"); return; }
+    if (draft.channel === "login_banner" && !draft.bannerImageUrl) { toast.error("Upload a banner image"); return; }
     const linkedProgramId = draft.linkedProgramId === "none" ? null : draft.linkedProgramId;
     const linkedPromoCode = draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode;
     const ctaUrl = buildCtaUrl(draft.ctaPath, { promoCode: linkedPromoCode, utmSource: draft.utmSource });
+    const audience = draft.audience.trim() || draft.segments.map((s) => audienceSegmentLabel[s]).join(", ");
+    const targeting = {
+      segments: draft.segments,
+      locations: draft.locations,
+      devices: draft.devices,
+      language: draft.language,
+      minAppVersion: draft.minAppVersion.trim() || undefined,
+    };
+    const banner = draft.channel === "login_banner" ? {
+      imageUrl: draft.bannerImageUrl,
+      sizeId: draft.bannerSizeId,
+      placement: draft.bannerPlacement,
+      displaySeconds: Math.max(0, draft.displaySeconds),
+      maxImpressionsPerUser: Math.max(0, draft.maxImpressionsPerUser),
+      cooldownHours: Math.max(0, draft.cooldownHours),
+      dismissible: draft.dismissible,
+    } : undefined;
     if (draft.id) {
       setItems((prev) => prev.map((c) => c.id === draft.id ? {
         ...c,
         name: draft.name.trim(),
         channel: draft.channel,
-        audience: draft.audience.trim(),
+        audience,
         audienceSize: Math.max(0, draft.audienceSize),
         startAt: draft.startAt ? new Date(draft.startAt).toISOString() : c.startAt,
         endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
@@ -210,6 +241,8 @@ function CampaignsPage() {
         ctaUrl,
         linkedProgramId,
         linkedPromoCode,
+        targeting,
+        banner,
       } : c));
       toast.success(`${draft.name} updated`);
     } else {
@@ -219,7 +252,7 @@ function CampaignsPage() {
         name: draft.name.trim(),
         channel: draft.channel,
         status: "draft",
-        audience: draft.audience.trim(),
+        audience,
         audienceSize: Math.max(0, draft.audienceSize),
         startAt: draft.startAt ? new Date(draft.startAt).toISOString() : new Date().toISOString(),
         endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
@@ -230,6 +263,8 @@ function CampaignsPage() {
         ctaUrl,
         linkedProgramId,
         linkedPromoCode,
+        targeting,
+        banner,
       };
       setItems((prev) => [c, ...prev]);
       toast.success(`${c.name} created as draft`);
