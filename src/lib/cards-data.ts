@@ -1,8 +1,8 @@
-// Mock data for the Cards module.
+// Mock data for the Cards module. NGN-only — BazePay only issues Naira cards.
 
-export type CardBrand = "Visa" | "Mastercard";
+export type CardBrand = "Visa" | "Mastercard" | "Verve";
 export type CardStatus = "active" | "frozen" | "terminated" | "pending";
-export type CardCurrency = "USD" | "NGN";
+export type CardCurrency = "NGN";
 export type ProgramStatus = "live" | "paused" | "draft";
 
 export type CardProgram = {
@@ -11,12 +11,14 @@ export type CardProgram = {
   brand: CardBrand;
   bin: string;
   currency: CardCurrency;
-  issuer: string; // e.g. Marqeta, Sudo
+  issuer: string; // local issuing partner (e.g. Sudo, Flutterwave, Providus)
   status: ProgramStatus;
-  monthlyFeeUsd: number;
+  monthlyFeeNgn: number;
+  // Domestic Naira cards have no FX markup on local spend.
+  // Markup applies only when card is used on international rails (cross-border auths).
   fxMarkupBps: number;
-  dailyLimitUsd: number;
-  monthlyLimitUsd: number;
+  dailyLimitNgn: number;
+  monthlyLimitNgn: number;
   issuedCount: number;
   activeCount: number;
   approvalRate: number; // 0-100
@@ -26,53 +28,53 @@ export type CardProgram = {
 
 export const cardPrograms: CardProgram[] = [
   {
-    id: "prog_usd_visa",
-    name: "BazePay USD Visa",
-    brand: "Visa",
-    bin: "475142",
-    currency: "USD",
-    issuer: "Marqeta",
+    id: "prog_ngn_verve",
+    name: "BazePay Naira Verve",
+    brand: "Verve",
+    bin: "506099",
+    currency: "NGN",
+    issuer: "Sudo",
     status: "live",
-    monthlyFeeUsd: 1.0,
-    fxMarkupBps: 250,
-    dailyLimitUsd: 5000,
-    monthlyLimitUsd: 50000,
+    monthlyFeeNgn: 0,
+    fxMarkupBps: 0,
+    dailyLimitNgn: 500_000,
+    monthlyLimitNgn: 5_000_000,
     issuedCount: 6420,
     activeCount: 5188,
     approvalRate: 94.2,
     declineRate: 5.8,
-    kytRules: ["block_gambling_high_risk", "velocity_10_per_min", "geo_block_OFAC"],
+    kytRules: ["block_gambling_high_risk", "velocity_10_per_min", "geo_restrict_NG_only"],
   },
   {
-    id: "prog_usd_mc",
-    name: "BazePay USD Mastercard",
+    id: "prog_ngn_mc",
+    name: "BazePay Naira Mastercard",
     brand: "Mastercard",
-    bin: "555214",
-    currency: "USD",
-    issuer: "Marqeta",
+    bin: "539923",
+    currency: "NGN",
+    issuer: "Flutterwave",
     status: "live",
-    monthlyFeeUsd: 0.5,
-    fxMarkupBps: 220,
-    dailyLimitUsd: 7500,
-    monthlyLimitUsd: 75000,
+    monthlyFeeNgn: 500,
+    fxMarkupBps: 350,
+    dailyLimitNgn: 1_000_000,
+    monthlyLimitNgn: 10_000_000,
     issuedCount: 2980,
     activeCount: 2461,
     approvalRate: 95.6,
     declineRate: 4.4,
-    kytRules: ["velocity_10_per_min", "geo_block_OFAC"],
+    kytRules: ["velocity_10_per_min", "cross_border_cap_daily"],
   },
   {
     id: "prog_ngn_visa",
     name: "BazePay Naira Visa (Pilot)",
     brand: "Visa",
-    bin: "539423",
+    bin: "418742",
     currency: "NGN",
-    issuer: "Sudo",
+    issuer: "Providus",
     status: "paused",
-    monthlyFeeUsd: 0,
-    fxMarkupBps: 0,
-    dailyLimitUsd: 1000,
-    monthlyLimitUsd: 10000,
+    monthlyFeeNgn: 0,
+    fxMarkupBps: 300,
+    dailyLimitNgn: 250_000,
+    monthlyLimitNgn: 2_500_000,
     issuedCount: 412,
     activeCount: 0,
     approvalRate: 88.1,
@@ -89,10 +91,10 @@ export type IssuedCard = {
   currency: CardCurrency;
   status: CardStatus;
   user: { id: string; name: string; email: string };
-  balanceUsd: number;
-  spend30dUsd: number;
-  dailyLimitUsd: number;
-  monthlyLimitUsd: number;
+  balanceNgn: number;
+  spend30dNgn: number;
+  dailyLimitNgn: number;
+  monthlyLimitNgn: number;
   issuedAt: string;
   lastUsedAt: string;
   riskScore: number;
@@ -115,7 +117,7 @@ function makeCard(i: number): IssuedCard {
   const r = seed(i);
   const r2 = seed(i + 71);
   const r3 = seed(i + 211);
-  const program = cardPrograms[i % 2]; // mostly USD
+  const program = cardPrograms[i % cardPrograms.length];
   const first = FIRST[i % FIRST.length];
   const last = LAST[(i * 5) % LAST.length];
   const status: CardStatus =
@@ -134,10 +136,10 @@ function makeCard(i: number): IssuedCard {
       name: `${first} ${last}`,
       email: `${first}.${last}`.toLowerCase() + "@mail.com",
     },
-    balanceUsd: Math.round(50 + r * 4500),
-    spend30dUsd: Math.round(r2 * 6500),
-    dailyLimitUsd: program.dailyLimitUsd,
-    monthlyLimitUsd: program.monthlyLimitUsd,
+    balanceNgn: Math.round((50 + r * 4500) * 1500),
+    spend30dNgn: Math.round(r2 * 6500 * 1500),
+    dailyLimitNgn: program.dailyLimitNgn,
+    monthlyLimitNgn: program.monthlyLimitNgn,
     issuedAt: new Date(Date.now() - issuedDays * 86_400_000).toISOString(),
     lastUsedAt: new Date(Date.now() - Math.floor(r3 * 30) * 86_400_000).toISOString(),
     riskScore: Math.round(r3 * 95) + 5,
@@ -167,19 +169,23 @@ export const programStatusTone: Record<ProgramStatus, string> = {
   draft: "bg-muted text-muted-foreground border-border",
 };
 
+// Format Naira with ₦ symbol and thousands separators.
+export const fmtNgn = (n: number) =>
+  `₦${Math.round(n).toLocaleString("en-NG")}`;
+
 export type CardTxn = {
   id: string;
   at: string;
   merchant: string;
   mcc: string;
   category: string;
-  amountUsd: number;
+  amountNgn: number;
   status: "approved" | "declined" | "reversed";
   reason?: string;
 };
 
-const MERCHANTS = ["Amazon", "Netflix", "Spotify", "Apple", "Uber", "Airbnb", "Steam", "Booking.com", "Shopify", "ChatGPT", "Figma", "Notion"];
-const CATEGORIES = ["Retail", "Streaming", "Streaming", "Digital", "Travel", "Travel", "Gaming", "Travel", "Software", "Software", "Software", "Software"];
+const MERCHANTS = ["Jumia", "Netflix", "Spotify", "Apple", "Bolt", "Booking.com", "Steam", "Uber", "Shopify", "ChatGPT", "Figma", "Notion"];
+const CATEGORIES = ["Retail", "Streaming", "Streaming", "Digital", "Transport", "Travel", "Gaming", "Transport", "Software", "Software", "Software", "Software"];
 
 export function getCardTransactions(cardId: string, count = 14): CardTxn[] {
   return Array.from({ length: count }, (_, i) => {
@@ -192,7 +198,7 @@ export function getCardTransactions(cardId: string, count = 14): CardTxn[] {
       merchant: MERCHANTS[idx],
       mcc: ["5942", "4899", "4899", "5732", "4121", "7011", "5816", "7011", "5734", "5734", "5734", "5734"][idx],
       category: CATEGORIES[idx],
-      amountUsd: Math.round((1 + r * 240) * 100) / 100,
+      amountNgn: Math.round((1 + r * 240) * 1500),
       status,
       reason: status === "declined" ? "INSUFFICIENT_FUNDS" : undefined,
     };
