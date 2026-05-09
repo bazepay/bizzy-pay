@@ -46,6 +46,7 @@ import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets
 import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
+import { Route as AdminSettingsAuditLogRouteImport } from './routes/_admin.settings.audit-log'
 import { Route as AdminReferralsPromosRouteImport } from './routes/_admin.referrals.promos'
 import { Route as AdminReferralsProgramsRouteImport } from './routes/_admin.referrals.programs'
 import { Route as AdminReferralsNewsletterRouteImport } from './routes/_admin.referrals.newsletter'
@@ -279,6 +280,11 @@ const AdminTransactionsIdRoute = AdminTransactionsIdRouteImport.update({
   id: '/transactions/$id',
   path: '/transactions/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsAuditLogRoute = AdminSettingsAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => AdminSettingsRoute,
 } as any)
 const AdminReferralsPromosRoute = AdminReferralsPromosRouteImport.update({
   id: '/promos',
@@ -586,6 +592,7 @@ export interface FileRoutesByFullPath {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -661,6 +668,7 @@ export interface FileRoutesByTo {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
@@ -749,6 +757,7 @@ export interface FileRoutesById {
   '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/_admin/referrals/programs': typeof AdminReferralsProgramsRoute
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
+  '/_admin/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
@@ -838,6 +847,7 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/settings/audit-log'
     | '/transactions/$id'
     | '/users/$id'
     | '/wallets/fx'
@@ -913,6 +923,7 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/settings/audit-log'
     | '/transactions/$id'
     | '/wallets/fx'
     | '/wallets/payouts'
@@ -1000,6 +1011,7 @@ export interface FileRouteTypes {
     | '/_admin/referrals/newsletter'
     | '/_admin/referrals/programs'
     | '/_admin/referrals/promos'
+    | '/_admin/settings/audit-log'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
     | '/_admin/wallets/fx'
@@ -1304,6 +1316,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/transactions/$id'
       preLoaderRoute: typeof AdminTransactionsIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/settings/audit-log': {
+      id: '/_admin/settings/audit-log'
+      path: '/audit-log'
+      fullPath: '/settings/audit-log'
+      preLoaderRoute: typeof AdminSettingsAuditLogRouteImport
+      parentRoute: typeof AdminSettingsRoute
     }
     '/_admin/referrals/promos': {
       id: '/_admin/referrals/promos'
@@ -1829,10 +1848,12 @@ const AdminReferralsRouteWithChildren = AdminReferralsRoute._addFileChildren(
 )
 
 interface AdminSettingsRouteChildren {
+  AdminSettingsAuditLogRoute: typeof AdminSettingsAuditLogRoute
   AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
 }
 
 const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsAuditLogRoute: AdminSettingsAuditLogRoute,
   AdminSettingsIndexRoute: AdminSettingsIndexRoute,
 }
 
