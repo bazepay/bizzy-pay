@@ -14,8 +14,6 @@ export const Route = createFileRoute("/_admin/content")({
 
 const tabs = [
   { to: "/content", label: "Overview", icon: LayoutGrid, exact: true },
-  { to: "/content/articles", label: "Articles", icon: FileText },
-  { to: "/content/banners", label: "Banners", icon: Megaphone },
   { to: "/content/faq", label: "FAQ", icon: HelpCircle },
   { to: "/content/legal", label: "Legal", icon: Scale },
 ];
