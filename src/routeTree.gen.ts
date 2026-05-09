@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminWalletsRouteImport } from './routes/_admin.wallets'
 import { Route as AdminSupportRouteImport } from './routes/_admin.support'
 import { Route as AdminSettingsRouteImport } from './routes/_admin.settings'
+import { Route as AdminReportsRouteImport } from './routes/_admin.reports'
 import { Route as AdminReferralsRouteImport } from './routes/_admin.referrals'
 import { Route as AdminPaymentsRouteImport } from './routes/_admin.payments'
 import { Route as AdminPayRouteImport } from './routes/_admin.pay'
@@ -127,6 +128,11 @@ const AdminSupportRoute = AdminSupportRouteImport.update({
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminReferralsRoute = AdminReferralsRouteImport.update({
@@ -574,6 +580,7 @@ export interface FileRoutesByFullPath {
   '/pay': typeof AdminPayRouteWithChildren
   '/payments': typeof AdminPaymentsRouteWithChildren
   '/referrals': typeof AdminReferralsRouteWithChildren
+  '/reports': typeof AdminReportsRoute
   '/settings': typeof AdminSettingsRouteWithChildren
   '/support': typeof AdminSupportRouteWithChildren
   '/wallets': typeof AdminWalletsRouteWithChildren
@@ -656,6 +663,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/reports': typeof AdminReportsRoute
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
@@ -745,6 +753,7 @@ export interface FileRoutesById {
   '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/payments': typeof AdminPaymentsRouteWithChildren
   '/_admin/referrals': typeof AdminReferralsRouteWithChildren
+  '/_admin/reports': typeof AdminReportsRoute
   '/_admin/settings': typeof AdminSettingsRouteWithChildren
   '/_admin/support': typeof AdminSupportRouteWithChildren
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
@@ -838,6 +847,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/payments'
     | '/referrals'
+    | '/reports'
     | '/settings'
     | '/support'
     | '/wallets'
@@ -920,6 +930,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/reports'
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
@@ -1008,6 +1019,7 @@ export interface FileRouteTypes {
     | '/_admin/pay'
     | '/_admin/payments'
     | '/_admin/referrals'
+    | '/_admin/reports'
     | '/_admin/settings'
     | '/_admin/support'
     | '/_admin/wallets'
@@ -1135,6 +1147,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/reports': {
+      id: '/_admin/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/referrals': {
@@ -2004,6 +2023,7 @@ interface AdminRouteChildren {
   AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminPaymentsRoute: typeof AdminPaymentsRouteWithChildren
   AdminReferralsRoute: typeof AdminReferralsRouteWithChildren
+  AdminReportsRoute: typeof AdminReportsRoute
   AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminSupportRoute: typeof AdminSupportRouteWithChildren
   AdminWalletsRoute: typeof AdminWalletsRouteWithChildren
@@ -2026,6 +2046,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPayRoute: AdminPayRouteWithChildren,
   AdminPaymentsRoute: AdminPaymentsRouteWithChildren,
   AdminReferralsRoute: AdminReferralsRouteWithChildren,
+  AdminReportsRoute: AdminReportsRoute,
   AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminSupportRoute: AdminSupportRouteWithChildren,
   AdminWalletsRoute: AdminWalletsRouteWithChildren,
