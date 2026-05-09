@@ -166,7 +166,17 @@ function EditPlanDialog({ plan, onSave }: { plan: EsimPlan; onSave: (patch: Part
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{plan.flag} {plan.country} · {plan.dataGb}GB / {plan.validityDays}d</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <img
+              src={`https://flagcdn.com/w40/${plan.countryCode.toLowerCase()}.png`}
+              srcSet={`https://flagcdn.com/w80/${plan.countryCode.toLowerCase()}.png 2x`}
+              width={24}
+              height={18}
+              alt=""
+              className="rounded-sm shadow-sm"
+            />
+            <span>{plan.country} · {plan.dataGb}GB / {plan.validityDays}d</span>
+          </DialogTitle>
           <DialogDescription>Adjust pricing and visibility. Changes log to audit trail.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
