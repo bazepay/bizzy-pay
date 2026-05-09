@@ -13,6 +13,7 @@ import {
   campaigns as initial,
   referralPrograms,
   promoCodes,
+  campaignDestinations,
   fmtNgn,
   campaignStatusTone,
   campaignChannelLabel,
@@ -21,6 +22,17 @@ import {
   type CampaignChannel,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
+
+// Build a CTA URL from a chosen destination + optional promo code + optional UTM source.
+function buildCtaUrl(path: string, opts: { promoCode?: string | null; utmSource?: string }) {
+  if (!path) return "";
+  const dest = campaignDestinations.find((d) => d.path === path);
+  const params = new URLSearchParams();
+  if (opts.promoCode && dest?.acceptsPromo) params.set("promo", opts.promoCode);
+  if (opts.utmSource?.trim()) params.set("utm_source", opts.utmSource.trim());
+  const qs = params.toString();
+  return qs ? `${path}?${qs}` : path;
+}
 
 export const Route = createFileRoute("/_admin/referrals/campaigns")({
   component: CampaignsPage,
@@ -42,7 +54,8 @@ type Draft = {
   startAt: string;
   endAt: string;
   budgetNgn: number;
-  ctaUrl: string;
+  ctaPath: string;     // chosen destination path
+  utmSource: string;   // optional, appended as ?utm_source=
   linkedProgramId: string;
   linkedPromoCode: string;
 };
@@ -55,10 +68,21 @@ const emptyDraft: Draft = {
   startAt: "",
   endAt: "",
   budgetNgn: 500_000,
-  ctaUrl: "",
+  ctaPath: "",
+  utmSource: "",
   linkedProgramId: "none",
   linkedPromoCode: "none",
 };
+
+// Split a stored ctaUrl ("/path?promo=X&utm_source=Y") back into picker fields.
+function parseCta(url: string): { ctaPath: string; utmSource: string } {
+  if (!url) return { ctaPath: "", utmSource: "" };
+  const [path, qs] = url.split("?");
+  const params = new URLSearchParams(qs ?? "");
+  // Match against catalog if possible; otherwise fall back to raw path.
+  const match = campaignDestinations.find((d) => d.path === path);
+  return { ctaPath: match ? match.path : path, utmSource: params.get("utm_source") ?? "" };
+}
 
 function CampaignsPage() {
   const [items, setItems] = useState<Campaign[]>(initial);
@@ -95,6 +119,7 @@ function CampaignsPage() {
 
   const openNew = () => { setDraft(emptyDraft); setOpen(true); };
   const openEdit = (c: Campaign) => {
+    const parsed = parseCta(c.ctaUrl);
     setDraft({
       id: c.id,
       name: c.name,
@@ -104,7 +129,8 @@ function CampaignsPage() {
       startAt: c.startAt ? c.startAt.slice(0, 10) : "",
       endAt: c.endAt ? c.endAt.slice(0, 10) : "",
       budgetNgn: c.budgetNgn,
-      ctaUrl: c.ctaUrl,
+      ctaPath: parsed.ctaPath,
+      utmSource: parsed.utmSource,
       linkedProgramId: c.linkedProgramId ?? "none",
       linkedPromoCode: c.linkedPromoCode ?? "none",
     });
@@ -113,9 +139,10 @@ function CampaignsPage() {
   const saveDraft = () => {
     if (!draft.name.trim()) { toast.error("Name is required"); return; }
     if (!draft.audience.trim()) { toast.error("Audience is required"); return; }
-    if (!draft.ctaUrl.trim()) { toast.error("CTA URL is required"); return; }
+    if (!draft.ctaPath.trim()) { toast.error("Pick a destination for the CTA"); return; }
     const linkedProgramId = draft.linkedProgramId === "none" ? null : draft.linkedProgramId;
     const linkedPromoCode = draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode;
+    const ctaUrl = buildCtaUrl(draft.ctaPath, { promoCode: linkedPromoCode, utmSource: draft.utmSource });
     if (draft.id) {
       setItems((prev) => prev.map((c) => c.id === draft.id ? {
         ...c,
@@ -126,7 +153,7 @@ function CampaignsPage() {
         startAt: draft.startAt ? new Date(draft.startAt).toISOString() : c.startAt,
         endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
         budgetNgn: Math.max(0, draft.budgetNgn),
-        ctaUrl: draft.ctaUrl.trim(),
+        ctaUrl,
         linkedProgramId,
         linkedPromoCode,
       } : c));
@@ -145,7 +172,7 @@ function CampaignsPage() {
         sent: 0, delivered: 0, opened: 0, clicked: 0, converted: 0,
         budgetNgn: Math.max(0, draft.budgetNgn),
         spentNgn: 0,
-        ctaUrl: draft.ctaUrl.trim(),
+        ctaUrl,
         linkedProgramId,
         linkedPromoCode,
       };
@@ -316,9 +343,47 @@ function CampaignsPage() {
               <Input type="date" value={draft.endAt} onChange={(e) => setDraft({ ...draft, endAt: e.target.value })} className="h-9 mt-1" />
             </div>
             <div className="col-span-2">
-              <Label className="text-xs">CTA URL</Label>
-              <Input value={draft.ctaUrl} onChange={(e) => setDraft({ ...draft, ctaUrl: e.target.value })} placeholder="/pay/airtime?promo=PAYDAY5" className="h-9 mt-1 font-mono" />
+              <Label className="text-xs">CTA destination</Label>
+              <Select value={draft.ctaPath} onValueChange={(v) => setDraft({ ...draft, ctaPath: v })}>
+                <SelectTrigger className="h-9 mt-1"><SelectValue placeholder="Pick a page in the app..." /></SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {(["Wallet", "Bills", "Cards", "eSIM", "Numbers", "Growth", "Account"] as const).map((g) => {
+                    const items = campaignDestinations.filter((d) => d.group === g);
+                    if (!items.length) return null;
+                    return (
+                      <div key={g}>
+                        <div className="px-2 py-1 text-[10px] uppercase tracking-wide text-muted-foreground">{g}</div>
+                        {items.map((d) => (
+                          <SelectItem key={d.path} value={d.path}>
+                            <span className="flex items-center gap-2">
+                              <span>{d.label}</span>
+                              <span className="font-mono text-[10px] text-muted-foreground">{d.path}</span>
+                              {d.acceptsPromo && <span className="text-[9px] text-success">promo</span>}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              <p className="text-[10px] text-muted-foreground mt-1">Pages marked <span className="text-success">promo</span> auto-append the linked promo code as <span className="font-mono">?promo=...</span></p>
             </div>
+            <div className="col-span-2">
+              <Label className="text-xs">UTM source (optional)</Label>
+              <Input value={draft.utmSource} onChange={(e) => setDraft({ ...draft, utmSource: e.target.value })} placeholder="e.g. push-may, email-paydays" className="h-9 mt-1 font-mono" />
+            </div>
+            {draft.ctaPath && (
+              <div className="col-span-2 rounded-md border border-dashed border-border bg-muted/30 px-3 py-2">
+                <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Final CTA URL</div>
+                <div className="font-mono text-xs break-all">
+                  {buildCtaUrl(draft.ctaPath, {
+                    promoCode: draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode,
+                    utmSource: draft.utmSource,
+                  })}
+                </div>
+              </div>
+            )}
             <div>
               <Label className="text-xs">Budget cap (₦)</Label>
               <Input type="number" value={draft.budgetNgn} onChange={(e) => setDraft({ ...draft, budgetNgn: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
