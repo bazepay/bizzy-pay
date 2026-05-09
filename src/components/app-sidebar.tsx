@@ -17,6 +17,7 @@ import {
   Bell,
   BarChart3,
   Settings,
+  Coins,
 } from "lucide-react";
 import {
   Sidebar,
@@ -63,6 +64,7 @@ const business: Item[] = [
 ];
 
 const settings: Item[] = [
+  { title: "Rates & Fees", url: "/rates", icon: Coins },
   { title: "Reports", url: "/reports", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
