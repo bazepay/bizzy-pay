@@ -23,6 +23,15 @@ export const Route = createFileRoute("/_admin/referrals/list")({
   component: ReferralsListPage,
 });
 
+const CHANNEL_LABELS: Record<string, string> = {
+  link: "Link",
+  code: "Code",
+  social_x: "X",
+  social_wa: "WhatsApp",
+  social_ig: "Instagram",
+};
+const channelLabel = (c: string) => CHANNEL_LABELS[c] ?? c;
+
 function ReferralsListPage() {
   const [items, setItems] = useState<Referral[]>(initial);
   const [q, setQ] = useState("");
