@@ -18,7 +18,7 @@ function LeaseDetail() {
   const navigate = useNavigate();
   const initial = getLease(id);
   const [lease, setLease] = useState<Lease | undefined>(initial);
-  const sms = getSms(id);
+  const [sms, setSms] = useState(() => getSms(id));
 
   if (!lease) {
     return (
