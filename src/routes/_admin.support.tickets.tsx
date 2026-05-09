@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Download, Inbox, Clock, AlertTriangle, CheckCircle2, UserCheck, ShieldCheck } from "lucide-react";
+import { Search, Download, Inbox, AlertTriangle, CheckCircle2, UserCheck, ShieldCheck, RotateCcw, Eye } from "lucide-react";
 import {
   tickets as initial,
   ticketStatusTone,
