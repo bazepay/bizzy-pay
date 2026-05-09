@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Download, ArrowRight } from "lucide-react";
+import { Search, Download, ArrowRight, Receipt, Coins, TrendingUp, CheckCircle2, XCircle, Activity } from "lucide-react";
 import { billOrders, billCategories, providerRoutes, categoryLabel, orderStatusTone, fmtNgn } from "@/lib/pay-data";
 import { toast } from "sonner";
 
@@ -42,6 +42,17 @@ function OrdersPage() {
     }).sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
   }, [q, status, category, route]);
 
+  const stats = useMemo(() => {
+    const total = rows.length;
+    const value = rows.reduce((s, o) => s + o.amountNgn, 0);
+    const fees = rows.reduce((s, o) => s + o.feeNgn, 0);
+    const delivered = rows.filter((o) => o.status === "delivered").length;
+    const failed = rows.filter((o) => o.status === "failed").length;
+    const successRate = total ? (delivered / total) * 100 : 0;
+    const avgValue = total ? value / total : 0;
+    return { total, value, fees, delivered, failed, successRate, avgValue };
+  }, [rows]);
+
   const exportCsv = () => {
     const headers = ["order_id", "created_at", "user", "email", "category", "biller", "account", "amount_ngn", "fee_ngn", "route", "provider_ref", "response_ms", "retries", "status", "failure_reason"];
     const lines = [headers.join(",")];
@@ -58,6 +69,15 @@ function OrdersPage() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <StatCard label="Total transactions" value={stats.total.toLocaleString()} sub={`Avg ${fmtNgn(stats.avgValue)}`} icon={Receipt} />
+        <StatCard label="Total value" value={fmtNgn(stats.value)} sub="Gross GMV" icon={TrendingUp} />
+        <StatCard label="Total fees" value={fmtNgn(stats.fees)} sub="Service revenue" icon={Coins} tone="success" />
+        <StatCard label="Delivered" value={stats.delivered.toLocaleString()} sub={`${stats.successRate.toFixed(1)}% success`} icon={CheckCircle2} tone="success" />
+        <StatCard label="Failed" value={stats.failed.toLocaleString()} sub="Auto-retry running" icon={XCircle} tone={stats.failed > 0 ? "danger" : undefined} />
+        <StatCard label="Filtered view" value={`${stats.total.toLocaleString()} / ${billOrders.length.toLocaleString()}`} sub="Of all orders" icon={Activity} />
+      </div>
+
       <Card className="shadow-card">
         <CardContent className="p-4 flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[220px]">
@@ -147,5 +167,21 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
         </SelectContent>
       </Select>
     </div>
+  );
+}
+
+function StatCard({ label, value, sub, icon: Icon, tone }: { label: string; value: string; sub: string; icon: typeof Receipt; tone?: "success" | "danger" | "warning" }) {
+  const toneClass = tone === "success" ? "text-success" : tone === "danger" ? "text-destructive" : tone === "warning" ? "text-warning" : "text-muted-foreground";
+  return (
+    <Card className="shadow-card">
+      <CardContent className="p-3">
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{label}</div>
+          <Icon className={`h-3.5 w-3.5 ${toneClass}`} />
+        </div>
+        <div className="text-lg font-display font-bold leading-tight">{value}</div>
+        <div className="text-[11px] text-muted-foreground mt-0.5 truncate">{sub}</div>
+      </CardContent>
+    </Card>
   );
 }
