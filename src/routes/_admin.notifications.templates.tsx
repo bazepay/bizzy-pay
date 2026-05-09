@@ -106,7 +106,7 @@ function TemplatesPage() {
             <SelectItem value="paused">Paused</SelectItem>
           </SelectContent>
         </Select>
-        <Button size="sm" className="gap-2" onClick={() => toast.info("New template — pick an event to start")}>
+        <Button size="sm" className="gap-2" onClick={startNew}>
           <Plus className="h-4 w-4" /> New template
         </Button>
       </div>
