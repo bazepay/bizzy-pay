@@ -108,27 +108,6 @@ export const fmtRelative = (iso: string) => {
 
 export const fmtNum = (n: number) => n.toLocaleString();
 
-export const articleStatusTone: Record<ArticleStatus, string> = {
-  draft: "border-muted-foreground/30 text-muted-foreground",
-  scheduled: "border-warning/40 text-warning",
-  published: "border-success/40 text-success",
-  archived: "border-destructive/40 text-destructive",
-};
-
-export const bannerStatusTone: Record<BannerStatus, string> = {
-  draft: "border-muted-foreground/30 text-muted-foreground",
-  scheduled: "border-warning/40 text-warning",
-  live: "border-success/40 text-success",
-  ended: "border-muted-foreground/30 text-muted-foreground/70",
-};
-
-export const bannerToneStyle: Record<BannerTone, string> = {
-  info: "bg-primary/10 border-primary/30 text-primary",
-  success: "bg-success/10 border-success/30 text-success",
-  warning: "bg-warning/10 border-warning/30 text-warning",
-  promo: "bg-gradient-to-r from-primary/15 to-warning/15 border-primary/30 text-foreground",
-  critical: "bg-destructive/10 border-destructive/30 text-destructive",
-};
 
 export const legalStatusTone: Record<LegalDoc["status"], string> = {
   active: "border-success/40 text-success",
