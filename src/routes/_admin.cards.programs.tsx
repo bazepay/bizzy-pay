@@ -11,7 +11,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { Pause, Play, Settings2, Shield } from "lucide-react";
-import { cardPrograms, programStatusTone, type CardProgram, type ProgramStatus } from "@/lib/cards-data";
+import { cardPrograms, programStatusTone, fmtNgn, type CardProgram, type ProgramStatus } from "@/lib/cards-data";
 import { fmtNum } from "@/lib/mock-data";
 import { toast } from "sonner";
 
@@ -69,10 +69,10 @@ function ProgramsPage() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <Stat label="Daily limit" value={`$${fmtNum(p.dailyLimitUsd)}`} />
-              <Stat label="Monthly limit" value={`$${fmtNum(p.monthlyLimitUsd)}`} />
-              <Stat label="FX markup" value={`${(p.fxMarkupBps / 100).toFixed(2)}%`} />
-              <Stat label="Monthly fee" value={`$${p.monthlyFeeUsd.toFixed(2)}`} />
+              <Stat label="Daily limit" value={fmtNgn(p.dailyLimitNgn)} />
+              <Stat label="Monthly limit" value={fmtNgn(p.monthlyLimitNgn)} />
+              <Stat label="Cross-border markup" value={p.fxMarkupBps === 0 ? "—" : `${(p.fxMarkupBps / 100).toFixed(2)}%`} />
+              <Stat label="Monthly fee" value={p.monthlyFeeNgn === 0 ? "Free" : fmtNgn(p.monthlyFeeNgn)} />
             </div>
 
             <div>
@@ -103,20 +103,20 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: "wa
 
 function EditProgramDialog({ program, onSave }: { program: CardProgram; onSave: (patch: Partial<CardProgram>) => void }) {
   const [open, setOpen] = useState(false);
-  const [daily, setDaily] = useState(String(program.dailyLimitUsd));
-  const [monthly, setMonthly] = useState(String(program.monthlyLimitUsd));
+  const [daily, setDaily] = useState(String(program.dailyLimitNgn));
+  const [monthly, setMonthly] = useState(String(program.monthlyLimitNgn));
   const [markup, setMarkup] = useState(String(program.fxMarkupBps));
-  const [fee, setFee] = useState(String(program.monthlyFeeUsd));
+  const [fee, setFee] = useState(String(program.monthlyFeeNgn));
   const [enrollDual, setEnrollDual] = useState(true);
 
   return (
     <Dialog open={open} onOpenChange={(o) => {
       setOpen(o);
       if (o) {
-        setDaily(String(program.dailyLimitUsd));
-        setMonthly(String(program.monthlyLimitUsd));
+        setDaily(String(program.dailyLimitNgn));
+        setMonthly(String(program.monthlyLimitNgn));
         setMarkup(String(program.fxMarkupBps));
-        setFee(String(program.monthlyFeeUsd));
+        setFee(String(program.monthlyFeeNgn));
       }
     }}>
       <DialogTrigger asChild>
@@ -132,20 +132,20 @@ function EditProgramDialog({ program, onSave }: { program: CardProgram; onSave: 
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Daily limit (USD)</Label>
+              <Label>Daily limit (NGN)</Label>
               <Input type="number" value={daily} onChange={(e) => setDaily(e.target.value)} />
             </div>
             <div>
-              <Label>Monthly limit (USD)</Label>
+              <Label>Monthly limit (NGN)</Label>
               <Input type="number" value={monthly} onChange={(e) => setMonthly(e.target.value)} />
             </div>
             <div>
-              <Label>FX markup (bps)</Label>
+              <Label>Cross-border markup (bps)</Label>
               <Input type="number" value={markup} onChange={(e) => setMarkup(e.target.value)} />
             </div>
             <div>
-              <Label>Monthly fee (USD)</Label>
-              <Input type="number" step="0.01" value={fee} onChange={(e) => setFee(e.target.value)} />
+              <Label>Monthly fee (NGN)</Label>
+              <Input type="number" step="1" value={fee} onChange={(e) => setFee(e.target.value)} />
             </div>
           </div>
           <div className="flex items-center justify-between rounded-md border p-3">
@@ -168,7 +168,7 @@ function EditProgramDialog({ program, onSave }: { program: CardProgram; onSave: 
               toast.error("Monthly limit must be ≥ daily limit");
               return;
             }
-            onSave({ dailyLimitUsd: d, monthlyLimitUsd: m, fxMarkupBps: bps, monthlyFeeUsd: f });
+            onSave({ dailyLimitNgn: d, monthlyLimitNgn: m, fxMarkupBps: bps, monthlyFeeNgn: f });
             setOpen(false);
           }}>Save changes</Button>
         </DialogFooter>

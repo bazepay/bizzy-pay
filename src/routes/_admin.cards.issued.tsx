@@ -12,7 +12,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { issuedCards, cardPrograms, cardStatusTone, type CardStatus } from "@/lib/cards-data";
+import { issuedCards, cardPrograms, cardStatusTone, fmtNgn, type CardStatus } from "@/lib/cards-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_admin/cards/issued")({
@@ -43,10 +43,10 @@ function IssuedCardsPage() {
   }, [q, statusF, programF, riskF]);
 
   const exportCsv = () => {
-    const header = ["card_id", "program", "brand", "last4", "user_id", "user_name", "status", "balance_usd", "spend_30d_usd", "risk_score", "issued_at"];
+    const header = ["card_id", "program", "brand", "last4", "user_id", "user_name", "status", "balance_ngn", "spend_30d_ngn", "risk_score", "issued_at"];
     const lines = rows.map((c) => [
       c.id, c.programId, c.brand, c.last4, c.user.id, `"${c.user.name}"`, c.status,
-      c.balanceUsd, c.spend30dUsd, c.riskScore, c.issuedAt,
+      c.balanceNgn, c.spend30dNgn, c.riskScore, c.issuedAt,
     ].join(","));
     const blob = new Blob([header.join(",") + "\n" + lines.join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -130,8 +130,8 @@ function IssuedCardsPage() {
                     <TableCell>
                       <Badge variant="outline" className={`text-xs capitalize ${cardStatusTone[c.status]}`}>{c.status}</Badge>
                     </TableCell>
-                    <TableCell className="text-right font-mono">${c.balanceUsd.toLocaleString()}</TableCell>
-                    <TableCell className="text-right font-mono text-sm">${c.spend30dUsd.toLocaleString()}</TableCell>
+                    <TableCell className="text-right font-mono">{fmtNgn(c.balanceNgn)}</TableCell>
+                    <TableCell className="text-right font-mono text-sm">{fmtNgn(c.spend30dNgn)}</TableCell>
                     <TableCell className={`text-right font-mono text-sm font-semibold ${c.riskScore >= 70 ? "text-destructive" : c.riskScore >= 40 ? "text-warning" : "text-success"}`}>{c.riskScore}</TableCell>
                     <TableCell className="text-xs text-muted-foreground">{new Date(c.issuedAt).toLocaleDateString()}</TableCell>
                     <TableCell>
