@@ -74,6 +74,8 @@ import { Route as AdminUsersIdKycRouteImport } from './routes/_admin.users.$id.k
 import { Route as AdminUsersIdEsimsRouteImport } from './routes/_admin.users.$id.esims'
 import { Route as AdminUsersIdDevicesRouteImport } from './routes/_admin.users.$id.devices'
 import { Route as AdminUsersIdCardsRouteImport } from './routes/_admin.users.$id.cards'
+import { Route as AdminSupportTicketsIdRouteImport } from './routes/_admin.support.tickets.$id'
+import { Route as AdminSupportChatIdRouteImport } from './routes/_admin.support.chat.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -402,6 +404,16 @@ const AdminUsersIdCardsRoute = AdminUsersIdCardsRouteImport.update({
   path: '/cards',
   getParentRoute: () => AdminUsersIdRoute,
 } as any)
+const AdminSupportTicketsIdRoute = AdminSupportTicketsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminSupportTicketsRoute,
+} as any)
+const AdminSupportChatIdRoute = AdminSupportChatIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminSupportChatRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -440,8 +452,8 @@ export interface FileRoutesByFullPath {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
-  '/support/chat': typeof AdminSupportChatRoute
-  '/support/tickets': typeof AdminSupportTicketsRoute
+  '/support/chat': typeof AdminSupportChatRouteWithChildren
+  '/support/tickets': typeof AdminSupportTicketsRouteWithChildren
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -459,6 +471,8 @@ export interface FileRoutesByFullPath {
   '/transactions/': typeof AdminTransactionsIndexRoute
   '/users/': typeof AdminUsersIndexRoute
   '/wallets/': typeof AdminWalletsIndexRoute
+  '/support/chat/$id': typeof AdminSupportChatIdRoute
+  '/support/tickets/$id': typeof AdminSupportTicketsIdRoute
   '/users/$id/cards': typeof AdminUsersIdCardsRoute
   '/users/$id/devices': typeof AdminUsersIdDevicesRoute
   '/users/$id/esims': typeof AdminUsersIdEsimsRoute
@@ -498,8 +512,8 @@ export interface FileRoutesByTo {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
-  '/support/chat': typeof AdminSupportChatRoute
-  '/support/tickets': typeof AdminSupportTicketsRoute
+  '/support/chat': typeof AdminSupportChatRouteWithChildren
+  '/support/tickets': typeof AdminSupportTicketsRouteWithChildren
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
@@ -516,6 +530,8 @@ export interface FileRoutesByTo {
   '/transactions': typeof AdminTransactionsIndexRoute
   '/users': typeof AdminUsersIndexRoute
   '/wallets': typeof AdminWalletsIndexRoute
+  '/support/chat/$id': typeof AdminSupportChatIdRoute
+  '/support/tickets/$id': typeof AdminSupportTicketsIdRoute
   '/users/$id/cards': typeof AdminUsersIdCardsRoute
   '/users/$id/devices': typeof AdminUsersIdDevicesRoute
   '/users/$id/esims': typeof AdminUsersIdEsimsRoute
@@ -565,8 +581,8 @@ export interface FileRoutesById {
   '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/_admin/referrals/programs': typeof AdminReferralsProgramsRoute
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
-  '/_admin/support/chat': typeof AdminSupportChatRoute
-  '/_admin/support/tickets': typeof AdminSupportTicketsRoute
+  '/_admin/support/chat': typeof AdminSupportChatRouteWithChildren
+  '/_admin/support/tickets': typeof AdminSupportTicketsRouteWithChildren
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
@@ -584,6 +600,8 @@ export interface FileRoutesById {
   '/_admin/transactions/': typeof AdminTransactionsIndexRoute
   '/_admin/users/': typeof AdminUsersIndexRoute
   '/_admin/wallets/': typeof AdminWalletsIndexRoute
+  '/_admin/support/chat/$id': typeof AdminSupportChatIdRoute
+  '/_admin/support/tickets/$id': typeof AdminSupportTicketsIdRoute
   '/_admin/users/$id/cards': typeof AdminUsersIdCardsRoute
   '/_admin/users/$id/devices': typeof AdminUsersIdDevicesRoute
   '/_admin/users/$id/esims': typeof AdminUsersIdEsimsRoute
@@ -652,6 +670,8 @@ export interface FileRouteTypes {
     | '/transactions/'
     | '/users/'
     | '/wallets/'
+    | '/support/chat/$id'
+    | '/support/tickets/$id'
     | '/users/$id/cards'
     | '/users/$id/devices'
     | '/users/$id/esims'
@@ -709,6 +729,8 @@ export interface FileRouteTypes {
     | '/transactions'
     | '/users'
     | '/wallets'
+    | '/support/chat/$id'
+    | '/support/tickets/$id'
     | '/users/$id/cards'
     | '/users/$id/devices'
     | '/users/$id/esims'
@@ -776,6 +798,8 @@ export interface FileRouteTypes {
     | '/_admin/transactions/'
     | '/_admin/users/'
     | '/_admin/wallets/'
+    | '/_admin/support/chat/$id'
+    | '/_admin/support/tickets/$id'
     | '/_admin/users/$id/cards'
     | '/_admin/users/$id/devices'
     | '/_admin/users/$id/esims'
@@ -1250,6 +1274,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersIdCardsRouteImport
       parentRoute: typeof AdminUsersIdRoute
     }
+    '/_admin/support/tickets/$id': {
+      id: '/_admin/support/tickets/$id'
+      path: '/$id'
+      fullPath: '/support/tickets/$id'
+      preLoaderRoute: typeof AdminSupportTicketsIdRouteImport
+      parentRoute: typeof AdminSupportTicketsRoute
+    }
+    '/_admin/support/chat/$id': {
+      id: '/_admin/support/chat/$id'
+      path: '/$id'
+      fullPath: '/support/chat/$id'
+      preLoaderRoute: typeof AdminSupportChatIdRouteImport
+      parentRoute: typeof AdminSupportChatRoute
+    }
   }
 }
 
@@ -1373,15 +1411,37 @@ const AdminReferralsRouteWithChildren = AdminReferralsRoute._addFileChildren(
   AdminReferralsRouteChildren,
 )
 
+interface AdminSupportChatRouteChildren {
+  AdminSupportChatIdRoute: typeof AdminSupportChatIdRoute
+}
+
+const AdminSupportChatRouteChildren: AdminSupportChatRouteChildren = {
+  AdminSupportChatIdRoute: AdminSupportChatIdRoute,
+}
+
+const AdminSupportChatRouteWithChildren =
+  AdminSupportChatRoute._addFileChildren(AdminSupportChatRouteChildren)
+
+interface AdminSupportTicketsRouteChildren {
+  AdminSupportTicketsIdRoute: typeof AdminSupportTicketsIdRoute
+}
+
+const AdminSupportTicketsRouteChildren: AdminSupportTicketsRouteChildren = {
+  AdminSupportTicketsIdRoute: AdminSupportTicketsIdRoute,
+}
+
+const AdminSupportTicketsRouteWithChildren =
+  AdminSupportTicketsRoute._addFileChildren(AdminSupportTicketsRouteChildren)
+
 interface AdminSupportRouteChildren {
-  AdminSupportChatRoute: typeof AdminSupportChatRoute
-  AdminSupportTicketsRoute: typeof AdminSupportTicketsRoute
+  AdminSupportChatRoute: typeof AdminSupportChatRouteWithChildren
+  AdminSupportTicketsRoute: typeof AdminSupportTicketsRouteWithChildren
   AdminSupportIndexRoute: typeof AdminSupportIndexRoute
 }
 
 const AdminSupportRouteChildren: AdminSupportRouteChildren = {
-  AdminSupportChatRoute: AdminSupportChatRoute,
-  AdminSupportTicketsRoute: AdminSupportTicketsRoute,
+  AdminSupportChatRoute: AdminSupportChatRouteWithChildren,
+  AdminSupportTicketsRoute: AdminSupportTicketsRouteWithChildren,
   AdminSupportIndexRoute: AdminSupportIndexRoute,
 }
 

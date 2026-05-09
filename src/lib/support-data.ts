@@ -3,6 +3,15 @@ import { fmtNgn } from "./mock-data";
 
 export { fmtNgn };
 
+export type ThreadMessage = {
+  id: string;
+  author: string;
+  authorRole: "customer" | "agent" | "system";
+  body: string;
+  at: string;
+  internal?: boolean;
+};
+
 export type TicketChannel = "email" | "chat" | "whatsapp" | "twitter" | "in_app" | "phone";
 export type TicketStatus = "new" | "open" | "pending" | "on_hold" | "resolved" | "closed";
 export type TicketPriority = "low" | "normal" | "high" | "urgent";
@@ -240,3 +249,151 @@ export const fmtRelative = (iso: string): string => {
   if (h < 24) return `${h}h ago`;
   return `${Math.floor(h / 24)}d ago`;
 };
+
+const AGENT_REPLIES = [
+  "Thanks for reaching out — I can see your account. Looking into this now.",
+  "I've checked our logs and confirmed the transaction. Processing a manual reversal.",
+  "Could you confirm the last 4 digits of the destination account so I can verify?",
+  "I've escalated this to our payments team. You should hear back within 30 minutes.",
+  "Apologies for the inconvenience — I've credited the amount back to your wallet.",
+  "Can you try logging out and back in? We've pushed a fix for this.",
+];
+
+const CUSTOMER_FOLLOWUPS = [
+  "Okay, thank you. How long will it take?",
+  "Still nothing on my end, please hurry.",
+  "Sure — last 4 are 4521.",
+  "I confirm I see the credit now, thanks!",
+  "It's still not working. Same error.",
+  "Appreciate the quick response.",
+];
+
+const NOTES = [
+  "Customer is high-value (₦5M+ monthly volume). Prioritise.",
+  "Verified BVN matches. Looks legit.",
+  "Possible duplicate of tkt_939842. Cross-check.",
+  "Approved manual refund per policy 4.2.",
+];
+
+function pickFrom<T>(arr: T[], seed: number): T {
+  return arr[Math.abs(seed) % arr.length];
+}
+
+export function buildTicketThread(t: Ticket): ThreadMessage[] {
+  const created = new Date(t.createdAt).getTime();
+  const seed = parseInt(t.id.replace(/\D/g, "")) || 1;
+  const msgs: ThreadMessage[] = [];
+
+  msgs.push({
+    id: `m_${t.id}_0`,
+    author: t.customerName,
+    authorRole: "customer",
+    body: t.lastMessagePreview + "\n\nPlease help me resolve this as soon as possible. Order/ref: " + t.id.toUpperCase().replace("TKT_", "REF") + ".",
+    at: new Date(created).toISOString(),
+  });
+
+  if (t.firstResponseMins != null) {
+    msgs.push({
+      id: `m_${t.id}_1`,
+      author: t.assigneeName ?? "Bola I.",
+      authorRole: "agent",
+      body: pickFrom(AGENT_REPLIES, seed),
+      at: new Date(created + t.firstResponseMins * 60_000).toISOString(),
+    });
+  }
+
+  const extra = Math.min(Math.max(0, t.messages - 2), 4);
+  for (let i = 0; i < extra; i++) {
+    const isCustomer = i % 2 === 0;
+    const offset = (t.firstResponseMins ?? 5) + (i + 1) * 7;
+    msgs.push({
+      id: `m_${t.id}_${i + 2}`,
+      author: isCustomer ? t.customerName : (t.assigneeName ?? "Bola I."),
+      authorRole: isCustomer ? "customer" : "agent",
+      body: isCustomer ? pickFrom(CUSTOMER_FOLLOWUPS, seed + i) : pickFrom(AGENT_REPLIES, seed + i + 3),
+      at: new Date(created + offset * 60_000).toISOString(),
+    });
+  }
+
+  if (seed % 3 === 0) {
+    msgs.push({
+      id: `m_${t.id}_note`,
+      author: t.assigneeName ?? "Bola I.",
+      authorRole: "agent",
+      body: pickFrom(NOTES, seed),
+      at: new Date(created + ((t.firstResponseMins ?? 10) + 2) * 60_000).toISOString(),
+      internal: true,
+    });
+  }
+
+  if (t.status === "resolved" || t.status === "closed") {
+    msgs.push({
+      id: `m_${t.id}_sys`,
+      author: "System",
+      authorRole: "system",
+      body: `Ticket marked as ${t.status} by ${t.assigneeName ?? "agent"}.`,
+      at: t.updatedAt,
+    });
+  }
+
+  return msgs.sort((a, b) => +new Date(a.at) - +new Date(b.at));
+}
+
+export function buildChatThread(c: ChatSession): ThreadMessage[] {
+  const start = new Date(c.startedAt).getTime();
+  const seed = parseInt(c.id.replace(/\D/g, "")) || 1;
+  const msgs: ThreadMessage[] = [];
+
+  msgs.push({
+    id: `cm_${c.id}_0`,
+    author: c.customerName,
+    authorRole: "customer",
+    body: c.preview,
+    at: new Date(start).toISOString(),
+  });
+
+  if (c.status === "waiting") return msgs;
+
+  msgs.push({
+    id: `cm_${c.id}_1`,
+    author: c.agentName ?? "Agent",
+    authorRole: "agent",
+    body: `Hi ${c.customerName.split(" ")[0]}, thanks for reaching out. I'm looking into this now.`,
+    at: new Date(start + Math.max(10, c.waitSeconds) * 1000).toISOString(),
+  });
+
+  const extra = Math.min(Math.max(0, c.messages - 2), 5);
+  for (let i = 0; i < extra; i++) {
+    const isCustomer = i % 2 === 0;
+    msgs.push({
+      id: `cm_${c.id}_${i + 2}`,
+      author: isCustomer ? c.customerName : (c.agentName ?? "Agent"),
+      authorRole: isCustomer ? "customer" : "agent",
+      body: isCustomer ? pickFrom(CUSTOMER_FOLLOWUPS, seed + i) : pickFrom(AGENT_REPLIES, seed + i),
+      at: new Date(start + (Math.max(10, c.waitSeconds) + (i + 1) * 25) * 1000).toISOString(),
+    });
+  }
+
+  if (c.status === "resolved") {
+    msgs.push({
+      id: `cm_${c.id}_sys`,
+      author: "System",
+      authorRole: "system",
+      body: `Chat resolved by ${c.agentName ?? "agent"}.`,
+      at: c.lastMessageAt,
+    });
+  } else if (c.status === "abandoned") {
+    msgs.push({
+      id: `cm_${c.id}_sys`,
+      author: "System",
+      authorRole: "system",
+      body: "Customer left the chat.",
+      at: c.lastMessageAt,
+    });
+  }
+
+  return msgs;
+}
+
+export const fmtTime = (iso: string): string =>
+  new Date(iso).toLocaleString("en-GB", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" });

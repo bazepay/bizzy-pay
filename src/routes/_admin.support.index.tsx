@@ -97,7 +97,7 @@ function SupportOverview() {
             </div>
             <div className="divide-y divide-border">
               {recent.map((t) => (
-                <div key={t.id} className="py-2.5 flex items-start gap-3">
+                <Link key={t.id} to="/support/tickets/$id" params={{ id: t.id }} className="py-2.5 flex items-start gap-3 hover:bg-muted/40 -mx-2 px-2 rounded transition-colors">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-mono text-[11px] text-muted-foreground">{t.id}</span>
@@ -109,7 +109,7 @@ function SupportOverview() {
                       {t.customerName} · {channelLabel[t.channel]} · {fmtRelative(t.createdAt)}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </CardContent>
