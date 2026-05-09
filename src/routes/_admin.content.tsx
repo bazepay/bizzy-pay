@@ -26,7 +26,7 @@ function ContentLayout() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-display text-3xl font-bold">Content</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Manage marketing articles, in-app banners, customer FAQ and versioned legal documents.
+          Manage customer FAQ and versioned legal documents.
         </p>
       </motion.div>
 
