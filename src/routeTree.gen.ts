@@ -32,6 +32,7 @@ import { Route as AdminReferralsIndexRouteImport } from './routes/_admin.referra
 import { Route as AdminPaymentsIndexRouteImport } from './routes/_admin.payments.index'
 import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
 import { Route as AdminNumbersIndexRouteImport } from './routes/_admin.numbers.index'
+import { Route as AdminNotificationsIndexRouteImport } from './routes/_admin.notifications.index'
 import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
 import { Route as AdminEsimIndexRouteImport } from './routes/_admin.esim.index'
 import { Route as AdminContentIndexRouteImport } from './routes/_admin.content.index'
@@ -202,6 +203,11 @@ const AdminNumbersIndexRoute = AdminNumbersIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminNumbersRoute,
+} as any)
+const AdminNotificationsIndexRoute = AdminNotificationsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminNotificationsRoute,
 } as any)
 const AdminKycIndexRoute = AdminKycIndexRouteImport.update({
   id: '/kyc/',
@@ -498,7 +504,7 @@ export interface FileRoutesByFullPath {
   '/content': typeof AdminContentRouteWithChildren
   '/dashboard': typeof AdminDashboardRoute
   '/esim': typeof AdminEsimRouteWithChildren
-  '/notifications': typeof AdminNotificationsRoute
+  '/notifications': typeof AdminNotificationsRouteWithChildren
   '/numbers': typeof AdminNumbersRouteWithChildren
   '/pay': typeof AdminPayRouteWithChildren
   '/payments': typeof AdminPaymentsRouteWithChildren
@@ -546,6 +552,7 @@ export interface FileRoutesByFullPath {
   '/content/': typeof AdminContentIndexRoute
   '/esim/': typeof AdminEsimIndexRoute
   '/kyc/': typeof AdminKycIndexRoute
+  '/notifications/': typeof AdminNotificationsIndexRoute
   '/numbers/': typeof AdminNumbersIndexRoute
   '/pay/': typeof AdminPayIndexRoute
   '/payments/': typeof AdminPaymentsIndexRoute
@@ -574,7 +581,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
-  '/notifications': typeof AdminNotificationsRoute
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
@@ -615,6 +621,7 @@ export interface FileRoutesByTo {
   '/content': typeof AdminContentIndexRoute
   '/esim': typeof AdminEsimIndexRoute
   '/kyc': typeof AdminKycIndexRoute
+  '/notifications': typeof AdminNotificationsIndexRoute
   '/numbers': typeof AdminNumbersIndexRoute
   '/pay': typeof AdminPayIndexRoute
   '/payments': typeof AdminPaymentsIndexRoute
@@ -649,7 +656,7 @@ export interface FileRoutesById {
   '/_admin/content': typeof AdminContentRouteWithChildren
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/esim': typeof AdminEsimRouteWithChildren
-  '/_admin/notifications': typeof AdminNotificationsRoute
+  '/_admin/notifications': typeof AdminNotificationsRouteWithChildren
   '/_admin/numbers': typeof AdminNumbersRouteWithChildren
   '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/payments': typeof AdminPaymentsRouteWithChildren
@@ -697,6 +704,7 @@ export interface FileRoutesById {
   '/_admin/content/': typeof AdminContentIndexRoute
   '/_admin/esim/': typeof AdminEsimIndexRoute
   '/_admin/kyc/': typeof AdminKycIndexRoute
+  '/_admin/notifications/': typeof AdminNotificationsIndexRoute
   '/_admin/numbers/': typeof AdminNumbersIndexRoute
   '/_admin/pay/': typeof AdminPayIndexRoute
   '/_admin/payments/': typeof AdminPaymentsIndexRoute
@@ -779,6 +787,7 @@ export interface FileRouteTypes {
     | '/content/'
     | '/esim/'
     | '/kyc/'
+    | '/notifications/'
     | '/numbers/'
     | '/pay/'
     | '/payments/'
@@ -807,7 +816,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
-    | '/notifications'
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
@@ -848,6 +856,7 @@ export interface FileRouteTypes {
     | '/content'
     | '/esim'
     | '/kyc'
+    | '/notifications'
     | '/numbers'
     | '/pay'
     | '/payments'
@@ -929,6 +938,7 @@ export interface FileRouteTypes {
     | '/_admin/content/'
     | '/_admin/esim/'
     | '/_admin/kyc/'
+    | '/_admin/notifications/'
     | '/_admin/numbers/'
     | '/_admin/pay/'
     | '/_admin/payments/'
@@ -1122,6 +1132,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/numbers/'
       preLoaderRoute: typeof AdminNumbersIndexRouteImport
       parentRoute: typeof AdminNumbersRoute
+    }
+    '/_admin/notifications/': {
+      id: '/_admin/notifications/'
+      path: '/'
+      fullPath: '/notifications/'
+      preLoaderRoute: typeof AdminNotificationsIndexRouteImport
+      parentRoute: typeof AdminNotificationsRoute
     }
     '/_admin/kyc/': {
       id: '/_admin/kyc/'
@@ -1594,6 +1611,17 @@ const AdminEsimRouteWithChildren = AdminEsimRoute._addFileChildren(
   AdminEsimRouteChildren,
 )
 
+interface AdminNotificationsRouteChildren {
+  AdminNotificationsIndexRoute: typeof AdminNotificationsIndexRoute
+}
+
+const AdminNotificationsRouteChildren: AdminNotificationsRouteChildren = {
+  AdminNotificationsIndexRoute: AdminNotificationsIndexRoute,
+}
+
+const AdminNotificationsRouteWithChildren =
+  AdminNotificationsRoute._addFileChildren(AdminNotificationsRouteChildren)
+
 interface AdminNumbersRouteChildren {
   AdminNumbersIdRoute: typeof AdminNumbersIdRoute
   AdminNumbersLeasesRoute: typeof AdminNumbersLeasesRoute
@@ -1750,7 +1778,7 @@ interface AdminRouteChildren {
   AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEsimRoute: typeof AdminEsimRouteWithChildren
-  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRouteWithChildren
   AdminNumbersRoute: typeof AdminNumbersRouteWithChildren
   AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminPaymentsRoute: typeof AdminPaymentsRouteWithChildren
@@ -1771,7 +1799,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminContentRoute: AdminContentRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEsimRoute: AdminEsimRouteWithChildren,
-  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminNotificationsRoute: AdminNotificationsRouteWithChildren,
   AdminNumbersRoute: AdminNumbersRouteWithChildren,
   AdminPayRoute: AdminPayRouteWithChildren,
   AdminPaymentsRoute: AdminPaymentsRouteWithChildren,
