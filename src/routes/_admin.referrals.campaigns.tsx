@@ -119,6 +119,7 @@ function CampaignsPage() {
 
   const openNew = () => { setDraft(emptyDraft); setOpen(true); };
   const openEdit = (c: Campaign) => {
+    const parsed = parseCta(c.ctaUrl);
     setDraft({
       id: c.id,
       name: c.name,
@@ -128,7 +129,8 @@ function CampaignsPage() {
       startAt: c.startAt ? c.startAt.slice(0, 10) : "",
       endAt: c.endAt ? c.endAt.slice(0, 10) : "",
       budgetNgn: c.budgetNgn,
-      ctaUrl: c.ctaUrl,
+      ctaPath: parsed.ctaPath,
+      utmSource: parsed.utmSource,
       linkedProgramId: c.linkedProgramId ?? "none",
       linkedPromoCode: c.linkedPromoCode ?? "none",
     });
@@ -137,9 +139,10 @@ function CampaignsPage() {
   const saveDraft = () => {
     if (!draft.name.trim()) { toast.error("Name is required"); return; }
     if (!draft.audience.trim()) { toast.error("Audience is required"); return; }
-    if (!draft.ctaUrl.trim()) { toast.error("CTA URL is required"); return; }
+    if (!draft.ctaPath.trim()) { toast.error("Pick a destination for the CTA"); return; }
     const linkedProgramId = draft.linkedProgramId === "none" ? null : draft.linkedProgramId;
     const linkedPromoCode = draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode;
+    const ctaUrl = buildCtaUrl(draft.ctaPath, { promoCode: linkedPromoCode, utmSource: draft.utmSource });
     if (draft.id) {
       setItems((prev) => prev.map((c) => c.id === draft.id ? {
         ...c,
@@ -150,7 +153,7 @@ function CampaignsPage() {
         startAt: draft.startAt ? new Date(draft.startAt).toISOString() : c.startAt,
         endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
         budgetNgn: Math.max(0, draft.budgetNgn),
-        ctaUrl: draft.ctaUrl.trim(),
+        ctaUrl,
         linkedProgramId,
         linkedPromoCode,
       } : c));
@@ -169,7 +172,7 @@ function CampaignsPage() {
         sent: 0, delivered: 0, opened: 0, clicked: 0, converted: 0,
         budgetNgn: Math.max(0, draft.budgetNgn),
         spentNgn: 0,
-        ctaUrl: draft.ctaUrl.trim(),
+        ctaUrl,
         linkedProgramId,
         linkedPromoCode,
       };
