@@ -38,6 +38,7 @@ import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
 import { Route as AdminReferralsPromosRouteImport } from './routes/_admin.referrals.promos'
 import { Route as AdminReferralsProgramsRouteImport } from './routes/_admin.referrals.programs'
+import { Route as AdminReferralsNewsletterRouteImport } from './routes/_admin.referrals.newsletter'
 import { Route as AdminReferralsListRouteImport } from './routes/_admin.referrals.list'
 import { Route as AdminReferralsCampaignsRouteImport } from './routes/_admin.referrals.campaigns'
 import { Route as AdminPaymentsWebhooksRouteImport } from './routes/_admin.payments.webhooks'
@@ -214,6 +215,12 @@ const AdminReferralsProgramsRoute = AdminReferralsProgramsRouteImport.update({
   path: '/programs',
   getParentRoute: () => AdminReferralsRoute,
 } as any)
+const AdminReferralsNewsletterRoute =
+  AdminReferralsNewsletterRouteImport.update({
+    id: '/newsletter',
+    path: '/newsletter',
+    getParentRoute: () => AdminReferralsRoute,
+  } as any)
 const AdminReferralsListRoute = AdminReferralsListRouteImport.update({
   id: '/list',
   path: '/list',
@@ -405,6 +412,7 @@ export interface FileRoutesByFullPath {
   '/payments/webhooks': typeof AdminPaymentsWebhooksRoute
   '/referrals/campaigns': typeof AdminReferralsCampaignsRoute
   '/referrals/list': typeof AdminReferralsListRoute
+  '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -459,6 +467,7 @@ export interface FileRoutesByTo {
   '/payments/webhooks': typeof AdminPaymentsWebhooksRoute
   '/referrals/campaigns': typeof AdminReferralsCampaignsRoute
   '/referrals/list': typeof AdminReferralsListRoute
+  '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -521,6 +530,7 @@ export interface FileRoutesById {
   '/_admin/payments/webhooks': typeof AdminPaymentsWebhooksRoute
   '/_admin/referrals/campaigns': typeof AdminReferralsCampaignsRoute
   '/_admin/referrals/list': typeof AdminReferralsListRoute
+  '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/_admin/referrals/programs': typeof AdminReferralsProgramsRoute
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
@@ -584,6 +594,7 @@ export interface FileRouteTypes {
     | '/payments/webhooks'
     | '/referrals/campaigns'
     | '/referrals/list'
+    | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
     | '/transactions/$id'
@@ -638,6 +649,7 @@ export interface FileRouteTypes {
     | '/payments/webhooks'
     | '/referrals/campaigns'
     | '/referrals/list'
+    | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
     | '/transactions/$id'
@@ -699,6 +711,7 @@ export interface FileRouteTypes {
     | '/_admin/payments/webhooks'
     | '/_admin/referrals/campaigns'
     | '/_admin/referrals/list'
+    | '/_admin/referrals/newsletter'
     | '/_admin/referrals/programs'
     | '/_admin/referrals/promos'
     | '/_admin/transactions/$id'
@@ -937,6 +950,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/referrals/programs'
       preLoaderRoute: typeof AdminReferralsProgramsRouteImport
+      parentRoute: typeof AdminReferralsRoute
+    }
+    '/_admin/referrals/newsletter': {
+      id: '/_admin/referrals/newsletter'
+      path: '/newsletter'
+      fullPath: '/referrals/newsletter'
+      preLoaderRoute: typeof AdminReferralsNewsletterRouteImport
       parentRoute: typeof AdminReferralsRoute
     }
     '/_admin/referrals/list': {
@@ -1260,6 +1280,7 @@ const AdminPaymentsRouteWithChildren = AdminPaymentsRoute._addFileChildren(
 interface AdminReferralsRouteChildren {
   AdminReferralsCampaignsRoute: typeof AdminReferralsCampaignsRoute
   AdminReferralsListRoute: typeof AdminReferralsListRoute
+  AdminReferralsNewsletterRoute: typeof AdminReferralsNewsletterRoute
   AdminReferralsProgramsRoute: typeof AdminReferralsProgramsRoute
   AdminReferralsPromosRoute: typeof AdminReferralsPromosRoute
   AdminReferralsIndexRoute: typeof AdminReferralsIndexRoute
@@ -1268,6 +1289,7 @@ interface AdminReferralsRouteChildren {
 const AdminReferralsRouteChildren: AdminReferralsRouteChildren = {
   AdminReferralsCampaignsRoute: AdminReferralsCampaignsRoute,
   AdminReferralsListRoute: AdminReferralsListRoute,
+  AdminReferralsNewsletterRoute: AdminReferralsNewsletterRoute,
   AdminReferralsProgramsRoute: AdminReferralsProgramsRoute,
   AdminReferralsPromosRoute: AdminReferralsPromosRoute,
   AdminReferralsIndexRoute: AdminReferralsIndexRoute,
