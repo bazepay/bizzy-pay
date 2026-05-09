@@ -61,6 +61,8 @@ export type Campaign = {
   budgetNgn: number;
   spentNgn: number;
   ctaUrl: string;
+  linkedProgramId?: string | null;
+  linkedPromoCode?: string | null;
 };
 
 export type PromoStatus = "active" | "paused" | "expired" | "scheduled";
