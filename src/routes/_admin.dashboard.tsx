@@ -136,11 +136,17 @@ function HeroKpi({
               <span className="text-muted-foreground">vs last week</span>
             </div>
           </div>
-          <div className="h-12 w-24 shrink-0 opacity-90">
+          <div className="h-12 w-24 shrink-0">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data} margin={{ top: 2, bottom: 0, left: 0, right: 0 }}>
-                <Bar dataKey="v" fill={toneStroke[tone]} radius={[2, 2, 0, 0]} />
-              </BarChart>
+              <LineChart data={data} margin={{ top: 4, bottom: 2, left: 0, right: 0 }}>
+                <Line
+                  type="monotone"
+                  dataKey="v"
+                  stroke={toneStroke[tone]}
+                  strokeWidth={1.75}
+                  dot={false}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
