@@ -48,6 +48,7 @@ import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
 import { Route as AdminSettingsFeatureFlagsRouteImport } from './routes/_admin.settings.feature-flags'
 import { Route as AdminSettingsAuditLogRouteImport } from './routes/_admin.settings.audit-log'
+import { Route as AdminSettingsApiKeysRouteImport } from './routes/_admin.settings.api-keys'
 import { Route as AdminReferralsPromosRouteImport } from './routes/_admin.referrals.promos'
 import { Route as AdminReferralsProgramsRouteImport } from './routes/_admin.referrals.programs'
 import { Route as AdminReferralsNewsletterRouteImport } from './routes/_admin.referrals.newsletter'
@@ -291,6 +292,11 @@ const AdminSettingsFeatureFlagsRoute =
 const AdminSettingsAuditLogRoute = AdminSettingsAuditLogRouteImport.update({
   id: '/audit-log',
   path: '/audit-log',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
+const AdminSettingsApiKeysRoute = AdminSettingsApiKeysRouteImport.update({
+  id: '/api-keys',
+  path: '/api-keys',
   getParentRoute: () => AdminSettingsRoute,
 } as any)
 const AdminReferralsPromosRoute = AdminReferralsPromosRouteImport.update({
@@ -599,6 +605,7 @@ export interface FileRoutesByFullPath {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -676,6 +683,7 @@ export interface FileRoutesByTo {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -766,6 +774,7 @@ export interface FileRoutesById {
   '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/_admin/referrals/programs': typeof AdminReferralsProgramsRoute
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
+  '/_admin/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/_admin/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/_admin/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
@@ -857,6 +866,7 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/settings/api-keys'
     | '/settings/audit-log'
     | '/settings/feature-flags'
     | '/transactions/$id'
@@ -934,6 +944,7 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/settings/api-keys'
     | '/settings/audit-log'
     | '/settings/feature-flags'
     | '/transactions/$id'
@@ -1023,6 +1034,7 @@ export interface FileRouteTypes {
     | '/_admin/referrals/newsletter'
     | '/_admin/referrals/programs'
     | '/_admin/referrals/promos'
+    | '/_admin/settings/api-keys'
     | '/_admin/settings/audit-log'
     | '/_admin/settings/feature-flags'
     | '/_admin/transactions/$id'
@@ -1342,6 +1354,13 @@ declare module '@tanstack/react-router' {
       path: '/audit-log'
       fullPath: '/settings/audit-log'
       preLoaderRoute: typeof AdminSettingsAuditLogRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/_admin/settings/api-keys': {
+      id: '/_admin/settings/api-keys'
+      path: '/api-keys'
+      fullPath: '/settings/api-keys'
+      preLoaderRoute: typeof AdminSettingsApiKeysRouteImport
       parentRoute: typeof AdminSettingsRoute
     }
     '/_admin/referrals/promos': {
@@ -1868,12 +1887,14 @@ const AdminReferralsRouteWithChildren = AdminReferralsRoute._addFileChildren(
 )
 
 interface AdminSettingsRouteChildren {
+  AdminSettingsApiKeysRoute: typeof AdminSettingsApiKeysRoute
   AdminSettingsAuditLogRoute: typeof AdminSettingsAuditLogRoute
   AdminSettingsFeatureFlagsRoute: typeof AdminSettingsFeatureFlagsRoute
   AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
 }
 
 const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsApiKeysRoute: AdminSettingsApiKeysRoute,
   AdminSettingsAuditLogRoute: AdminSettingsAuditLogRoute,
   AdminSettingsFeatureFlagsRoute: AdminSettingsFeatureFlagsRoute,
   AdminSettingsIndexRoute: AdminSettingsIndexRoute,
