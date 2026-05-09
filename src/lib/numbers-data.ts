@@ -2,8 +2,9 @@
 
 export type NumberStatus = "available" | "leased" | "quarantined" | "released";
 export type LeaseStatus = "active" | "expiring" | "expired" | "cancelled";
-export type NumberSupplier = "Twilio" | "Vonage" | "Telnyx" | "Plivo";
-export type NumberService = "WhatsApp" | "Telegram" | "SMS" | "Voice" | "Generic";
+export type NumberSupplier = "TouristeSim";
+export type NumberService = "WhatsApp" | "Telegram" | "SMS" | "Generic";
+export type BillingPeriod = "daily" | "weekly" | "monthly" | "annual";
 
 export type NumberCountry = {
   code: string; // ISO-2
@@ -11,15 +12,12 @@ export type NumberCountry = {
   dial: string;
 };
 
+// TouristeSim live coverage: Canada, Netherlands, UK, USA (4 countries, 30 plans).
 export const numberCountries: NumberCountry[] = [
   { code: "us", name: "United States", dial: "+1" },
-  { code: "gb", name: "United Kingdom", dial: "+44" },
   { code: "ca", name: "Canada", dial: "+1" },
-  { code: "ng", name: "Nigeria", dial: "+234" },
-  { code: "de", name: "Germany", dial: "+49" },
-  { code: "fr", name: "France", dial: "+33" },
-  { code: "in", name: "India", dial: "+91" },
-  { code: "ph", name: "Philippines", dial: "+63" },
+  { code: "gb", name: "United Kingdom", dial: "+44" },
+  { code: "nl", name: "Netherlands", dial: "+31" },
 ];
 
 export type PoolNumber = {
@@ -30,8 +28,9 @@ export type PoolNumber = {
   areaCode: string;
   supplier: NumberSupplier;
   service: NumberService;
-  costNgn: number; // monthly supplier cost
-  priceNgn: number; // monthly retail price
+  billingPeriod: BillingPeriod;
+  costNgn: number; // supplier cost for the billing period
+  priceNgn: number; // retail price for the billing period
   status: NumberStatus;
   addedAt: string;
 };
@@ -43,12 +42,12 @@ export type Lease = {
   country: string;
   service: NumberService;
   supplier: NumberSupplier;
+  billingPeriod: BillingPeriod;
   user: { id: string; name: string; email: string };
   startedAt: string;
   renewsOn: string;
   autoRenew: boolean;
   smsCount30d: number;
-  voiceMin30d: number;
   priceNgn: number;
   status: LeaseStatus;
 };
@@ -60,14 +59,12 @@ export type SmsEvent = {
   text: string;
 };
 
-export const numberSuppliers: { id: string; name: NumberSupplier; health: "healthy" | "degraded" | "down"; latencyMs: number; countries: number; lastSync: string }[] = [
-  { id: "sup_twilio", name: "Twilio", health: "healthy", latencyMs: 142, countries: 88, lastSync: new Date(Date.now() - 2 * 60_000).toISOString() },
-  { id: "sup_vonage", name: "Vonage", health: "healthy", latencyMs: 198, countries: 64, lastSync: new Date(Date.now() - 5 * 60_000).toISOString() },
-  { id: "sup_telnyx", name: "Telnyx", health: "degraded", latencyMs: 412, countries: 52, lastSync: new Date(Date.now() - 11 * 60_000).toISOString() },
+export const numberSuppliers: { id: string; name: NumberSupplier; health: "healthy" | "degraded" | "down"; latencyMs: number; countries: number; plans: number; lastSync: string }[] = [
+  { id: "sup_touristesim", name: "TouristeSim", health: "healthy", latencyMs: 168, countries: 4, plans: 30, lastSync: new Date(Date.now() - 3 * 60_000).toISOString() },
 ];
 
-const services: NumberService[] = ["WhatsApp", "Telegram", "SMS", "Voice", "Generic"];
-const suppliers: NumberSupplier[] = ["Twilio", "Vonage", "Telnyx"];
+const services: NumberService[] = ["WhatsApp", "Telegram", "SMS", "Generic"];
+const billingPeriods: BillingPeriod[] = ["daily", "weekly", "monthly", "annual"];
 const statuses: NumberStatus[] = ["available", "available", "available", "leased", "leased", "quarantined"];
 
 function pad(n: number, w = 4) { return String(n).padStart(w, "0"); }
@@ -80,11 +77,13 @@ function formatNumber(dial: string, area: string, sub: string) {
 
 export const numberPool: PoolNumber[] = Array.from({ length: 64 }, (_, i) => {
   const c = numberCountries[i % numberCountries.length];
-  const supplier = suppliers[i % suppliers.length];
   const service = services[i % services.length];
+  const billingPeriod = billingPeriods[i % billingPeriods.length];
   const area = ["415", "212", "646", "718", "207", "330", "808"][i % 7];
   const sub = pad(1000 + i * 7);
-  const cost = 1500 + (i % 8) * 250;
+  const baseMonthly = 1500 + (i % 8) * 250;
+  const periodMult = billingPeriod === "daily" ? 0.08 : billingPeriod === "weekly" ? 0.3 : billingPeriod === "annual" ? 10 : 1;
+  const cost = Math.round(baseMonthly * periodMult);
   const price = Math.round(cost * 1.6);
   return {
     id: `vn_${1000 + i}`,
@@ -92,8 +91,9 @@ export const numberPool: PoolNumber[] = Array.from({ length: 64 }, (_, i) => {
     countryCode: c.code,
     country: c.name,
     areaCode: area,
-    supplier,
+    supplier: "TouristeSim" as const,
     service,
+    billingPeriod,
     costNgn: cost,
     priceNgn: price,
     status: statuses[i % statuses.length],
@@ -125,12 +125,12 @@ export const leases: Lease[] = numberPool
       country: n.country,
       service: n.service,
       supplier: n.supplier,
+      billingPeriod: n.billingPeriod,
       user: u,
       startedAt,
       renewsOn,
       autoRenew: i % 3 !== 0,
       smsCount30d: 4 + (i * 11) % 80,
-      voiceMin30d: (i * 5) % 24,
       priceNgn: n.priceNgn,
       status,
     };

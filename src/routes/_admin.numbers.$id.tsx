@@ -81,9 +81,9 @@ function LeaseDetail() {
             <Field label="Supplier">{lease.supplier}</Field>
             <Field label="Started">{new Date(lease.startedAt).toLocaleDateString()}</Field>
             <Field label="Renews on">{new Date(lease.renewsOn).toLocaleDateString()}</Field>
-            <Field label="Monthly price">{fmtNgn(lease.priceNgn)}</Field>
+            <Field label="Billing">{lease.billingPeriod}</Field>
+            <Field label="Price / period">{fmtNgn(lease.priceNgn)}</Field>
             <Field label="SMS (30d)">{lease.smsCount30d}</Field>
-            <Field label="Voice min (30d)">{lease.voiceMin30d}</Field>
             <div>
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Auto-renew</div>
               <div className="mt-1 flex items-center gap-2">

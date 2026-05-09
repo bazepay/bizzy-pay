@@ -37,10 +37,10 @@ function LeasesPage() {
   }, [q, status, autoRenew]);
 
   const exportCsv = () => {
-    const headers = ["lease_id", "number", "country", "service", "supplier", "user", "email", "started_at", "renews_on", "auto_renew", "sms_30d", "voice_min_30d", "price_ngn", "status"];
+    const headers = ["lease_id", "number", "country", "service", "supplier", "billing", "user", "email", "started_at", "renews_on", "auto_renew", "sms_30d", "price_ngn", "status"];
     const lines = [headers.join(",")];
     for (const l of rows) {
-      lines.push([l.id, l.number, l.country, l.service, l.supplier, `"${l.user.name}"`, l.user.email, l.startedAt, l.renewsOn, l.autoRenew, l.smsCount30d, l.voiceMin30d, l.priceNgn, l.status].join(","));
+      lines.push([l.id, l.number, l.country, l.service, l.supplier, l.billingPeriod, `"${l.user.name}"`, l.user.email, l.startedAt, l.renewsOn, l.autoRenew, l.smsCount30d, l.priceNgn, l.status].join(","));
     }
     const blob = new Blob([lines.join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
