@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, Plus, ShieldOff, Trash2, RefreshCw } from "lucide-react";
-import { numberPool, numberStatusTone, fmtNgn, type PoolNumber, type NumberStatus } from "@/lib/numbers-data";
+import { numberPool, numberCountries, numberStatusTone, fmtNgn, type PoolNumber, type NumberStatus } from "@/lib/numbers-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_admin/numbers/pool")({
@@ -100,7 +100,21 @@ function PoolPage() {
               </SelectContent>
             </Select>
           </div>
-          <Button size="sm" onClick={() => toast.success("Provisioning new numbers from supplier…")}>
+          <Button size="sm" onClick={() => {
+            const c = numberCountries[Math.floor(Math.random() * numberCountries.length)];
+            const area = ["415", "212", "646", "718", "207", "330", "808"][Math.floor(Math.random() * 7)];
+            const sub = String(1000 + Math.floor(Math.random() * 8999));
+            const num = c.dial === "+1" ? `${c.dial} (${area}) 555-${sub}` : c.dial === "+44" ? `${c.dial} ${area} 9${sub.padStart(5, "0")}` : `${c.dial} ${area} ${sub}`;
+            const newId = `vn_${Date.now()}`;
+            const cost = 1500 + Math.floor(Math.random() * 8) * 250;
+            setItems((prev) => [{
+              id: newId, number: num, countryCode: c.code, country: c.name, areaCode: area,
+              supplier: "TouristeSim", service: "Generic", billingPeriod: "monthly",
+              costNgn: cost, priceNgn: Math.round(cost * 1.6), status: "available",
+              addedAt: new Date().toISOString(),
+            }, ...prev]);
+            toast.success(`Provisioned ${num} from TouristeSim.`);
+          }}>
             <Plus className="h-3.5 w-3.5 mr-1.5" /> Provision
           </Button>
         </CardContent>
