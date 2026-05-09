@@ -89,7 +89,7 @@ function CardDetailPage() {
                   </div>
                   <div>
                     <div className="text-[10px] opacity-70 uppercase">CVV</div>
-                    <div className="text-xs font-mono">{revealed ? "•••" : "•••"}</div>
+                    <div className="text-xs font-mono">{revealed ? String(100 + (card.id.charCodeAt(3) * 7 + card.id.charCodeAt(4) * 13) % 900) : "•••"}</div>
                   </div>
                 </div>
               </div>

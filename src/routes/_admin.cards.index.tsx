@@ -47,7 +47,7 @@ function CardsOverview() {
                 <Field label="Issued">{fmtNum(p.issuedCount)}</Field>
                 <Field label="Active">{fmtNum(p.activeCount)}</Field>
                 <Field label="Approval rate">{p.approvalRate.toFixed(1)}%</Field>
-                <Field label="FX markup">{(p.fxMarkupBps / 100).toFixed(2)}%</Field>
+                <Field label="Cross-border markup">{p.fxMarkupBps === 0 ? "—" : `${(p.fxMarkupBps / 100).toFixed(2)}%`}</Field>
               </div>
               <Link to="/cards/programs" className="block">
                 <Button variant="outline" size="sm" className="w-full">
