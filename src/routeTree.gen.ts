@@ -63,6 +63,7 @@ import { Route as AdminNumbersLeasesRouteImport } from './routes/_admin.numbers.
 import { Route as AdminNumbersIdRouteImport } from './routes/_admin.numbers.$id'
 import { Route as AdminNotificationsTemplatesRouteImport } from './routes/_admin.notifications.templates'
 import { Route as AdminNotificationsDeliveryRouteImport } from './routes/_admin.notifications.delivery'
+import { Route as AdminNotificationsChannelsRouteImport } from './routes/_admin.notifications.channels'
 import { Route as AdminNotificationsBroadcastsRouteImport } from './routes/_admin.notifications.broadcasts'
 import { Route as AdminKycIdRouteImport } from './routes/_admin.kyc.$id'
 import { Route as AdminEsimPlansRouteImport } from './routes/_admin.esim.plans'
@@ -366,6 +367,12 @@ const AdminNotificationsDeliveryRoute =
     path: '/delivery',
     getParentRoute: () => AdminNotificationsRoute,
   } as any)
+const AdminNotificationsChannelsRoute =
+  AdminNotificationsChannelsRouteImport.update({
+    id: '/channels',
+    path: '/channels',
+    getParentRoute: () => AdminNotificationsRoute,
+  } as any)
 const AdminNotificationsBroadcastsRoute =
   AdminNotificationsBroadcastsRouteImport.update({
     id: '/broadcasts',
@@ -546,6 +553,7 @@ export interface FileRoutesByFullPath {
   '/esim/plans': typeof AdminEsimPlansRoute
   '/kyc/$id': typeof AdminKycIdRoute
   '/notifications/broadcasts': typeof AdminNotificationsBroadcastsRoute
+  '/notifications/channels': typeof AdminNotificationsChannelsRoute
   '/notifications/delivery': typeof AdminNotificationsDeliveryRoute
   '/notifications/templates': typeof AdminNotificationsTemplatesRoute
   '/numbers/$id': typeof AdminNumbersIdRoute
@@ -619,6 +627,7 @@ export interface FileRoutesByTo {
   '/esim/plans': typeof AdminEsimPlansRoute
   '/kyc/$id': typeof AdminKycIdRoute
   '/notifications/broadcasts': typeof AdminNotificationsBroadcastsRoute
+  '/notifications/channels': typeof AdminNotificationsChannelsRoute
   '/notifications/delivery': typeof AdminNotificationsDeliveryRoute
   '/notifications/templates': typeof AdminNotificationsTemplatesRoute
   '/numbers/$id': typeof AdminNumbersIdRoute
@@ -704,6 +713,7 @@ export interface FileRoutesById {
   '/_admin/esim/plans': typeof AdminEsimPlansRoute
   '/_admin/kyc/$id': typeof AdminKycIdRoute
   '/_admin/notifications/broadcasts': typeof AdminNotificationsBroadcastsRoute
+  '/_admin/notifications/channels': typeof AdminNotificationsChannelsRoute
   '/_admin/notifications/delivery': typeof AdminNotificationsDeliveryRoute
   '/_admin/notifications/templates': typeof AdminNotificationsTemplatesRoute
   '/_admin/numbers/$id': typeof AdminNumbersIdRoute
@@ -790,6 +800,7 @@ export interface FileRouteTypes {
     | '/esim/plans'
     | '/kyc/$id'
     | '/notifications/broadcasts'
+    | '/notifications/channels'
     | '/notifications/delivery'
     | '/notifications/templates'
     | '/numbers/$id'
@@ -863,6 +874,7 @@ export interface FileRouteTypes {
     | '/esim/plans'
     | '/kyc/$id'
     | '/notifications/broadcasts'
+    | '/notifications/channels'
     | '/notifications/delivery'
     | '/notifications/templates'
     | '/numbers/$id'
@@ -947,6 +959,7 @@ export interface FileRouteTypes {
     | '/_admin/esim/plans'
     | '/_admin/kyc/$id'
     | '/_admin/notifications/broadcasts'
+    | '/_admin/notifications/channels'
     | '/_admin/notifications/delivery'
     | '/_admin/notifications/templates'
     | '/_admin/numbers/$id'
@@ -1389,6 +1402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminNotificationsDeliveryRouteImport
       parentRoute: typeof AdminNotificationsRoute
     }
+    '/_admin/notifications/channels': {
+      id: '/_admin/notifications/channels'
+      path: '/channels'
+      fullPath: '/notifications/channels'
+      preLoaderRoute: typeof AdminNotificationsChannelsRouteImport
+      parentRoute: typeof AdminNotificationsRoute
+    }
     '/_admin/notifications/broadcasts': {
       id: '/_admin/notifications/broadcasts'
       path: '/broadcasts'
@@ -1673,6 +1693,7 @@ const AdminEsimRouteWithChildren = AdminEsimRoute._addFileChildren(
 
 interface AdminNotificationsRouteChildren {
   AdminNotificationsBroadcastsRoute: typeof AdminNotificationsBroadcastsRoute
+  AdminNotificationsChannelsRoute: typeof AdminNotificationsChannelsRoute
   AdminNotificationsDeliveryRoute: typeof AdminNotificationsDeliveryRoute
   AdminNotificationsTemplatesRoute: typeof AdminNotificationsTemplatesRoute
   AdminNotificationsIndexRoute: typeof AdminNotificationsIndexRoute
@@ -1680,6 +1701,7 @@ interface AdminNotificationsRouteChildren {
 
 const AdminNotificationsRouteChildren: AdminNotificationsRouteChildren = {
   AdminNotificationsBroadcastsRoute: AdminNotificationsBroadcastsRoute,
+  AdminNotificationsChannelsRoute: AdminNotificationsChannelsRoute,
   AdminNotificationsDeliveryRoute: AdminNotificationsDeliveryRoute,
   AdminNotificationsTemplatesRoute: AdminNotificationsTemplatesRoute,
   AdminNotificationsIndexRoute: AdminNotificationsIndexRoute,
