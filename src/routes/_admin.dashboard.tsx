@@ -14,6 +14,10 @@ import {
   CircleDot,
   XCircle,
   Download,
+  BarChart3,
+  Banknote,
+  UserCheck,
+  ShieldQuestion,
 } from "lucide-react";
 import {
   Area,
@@ -87,6 +91,7 @@ function HeroKpi({
   series,
   tone,
   format = "num",
+  icon: Icon,
 }: {
   label: string;
   value: number;
@@ -94,43 +99,61 @@ function HeroKpi({
   series: number[];
   tone: Tone;
   format?: "num" | "ngn" | "pct";
+  icon: React.ComponentType<{ className?: string }>;
 }) {
   const positive = delta >= 0;
   const display =
     format === "ngn" ? fmtNgn(value) : format === "pct" ? `${value.toFixed(1)}%` : fmtNum(value);
   const data = series.map((v, i) => ({ i, v }));
+  const gradId = `kpi-grad-${tone}-${label.replace(/\s+/g, "")}`;
 
   return (
-    <Card className="shadow-card overflow-hidden">
-      <CardContent className="p-5">
-        <div className="flex items-center justify-between">
-          <span className={`text-xs font-medium uppercase tracking-wider ${toneText[tone]}`}>
-            {label}
-          </span>
+    <Card className="shadow-card overflow-hidden relative group hover:shadow-md transition-shadow">
+      {/* Top accent bar */}
+      <div className={`h-1 w-full ${toneBg[tone]}`}>
+        <div className={`h-full w-1/3 ${toneText[tone].replace("text-", "bg-")}`} />
+      </div>
+      <CardContent className="p-5 pb-0">
+        <div className="flex items-start justify-between gap-3">
+          <div className={`h-9 w-9 rounded-lg flex items-center justify-center ${toneBg[tone]} ${toneText[tone]}`}>
+            <Icon className="h-4.5 w-4.5" />
+          </div>
           <div
-            className={`flex items-center gap-0.5 text-xs font-semibold ${
-              positive ? "text-success" : "text-destructive"
+            className={`inline-flex items-center gap-0.5 text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+              positive ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
             }`}
           >
             {positive ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
             {fmtPct(delta)}
           </div>
         </div>
-        <div className="mt-2 font-display text-3xl font-bold tracking-tight">{display}</div>
-        <div className="h-12 -mx-2 mt-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 4, bottom: 0, left: 0, right: 0 }}>
-              <Line
-                type="monotone"
-                dataKey="v"
-                stroke={toneStroke[tone]}
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+          {label}
+        </div>
+        <div className="mt-0.5 font-display text-[28px] leading-tight font-bold tracking-tight tabular-nums">
+          {display}
         </div>
       </CardContent>
+      {/* Sparkline bleeds to bottom edge */}
+      <div className="h-10 -mt-1">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 0, bottom: 0, left: 0, right: 0 }}>
+            <defs>
+              <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={toneStroke[tone]} stopOpacity={0.28} />
+                <stop offset="100%" stopColor={toneStroke[tone]} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <Area
+              type="monotone"
+              dataKey="v"
+              stroke={toneStroke[tone]}
+              strokeWidth={1.75}
+              fill={`url(#${gradId})`}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </Card>
   );
 }
@@ -178,6 +201,7 @@ function DashboardPage() {
           series={spark.volume}
           tone="primary"
           format="ngn"
+          icon={BarChart3}
         />
         <HeroKpi
           label="Net revenue (7d)"
@@ -186,6 +210,7 @@ function DashboardPage() {
           series={spark.revenue}
           tone="gold"
           format="ngn"
+          icon={Banknote}
         />
         <HeroKpi
           label="Active users"
@@ -193,6 +218,7 @@ function DashboardPage() {
           delta={kpis.activeUsers.delta}
           series={spark.users}
           tone="success"
+          icon={UserCheck}
         />
         <HeroKpi
           label="KYC conversion"
@@ -201,6 +227,7 @@ function DashboardPage() {
           series={spark.kyc}
           tone="primary"
           format="pct"
+          icon={ShieldQuestion}
         />
       </div>
 
