@@ -38,6 +38,12 @@ function BillersPage() {
     toast.success(msg);
   };
 
+  const resync = (id: string) => {
+    setItems((prev) => prev.map((b) => (b.id === id ? { ...b, lastSync: new Date().toISOString() } : b)));
+    const name = items.find((b) => b.id === id)?.name ?? "Biller";
+    toast.success(`${name} resync triggered`);
+  };
+
   const updateRoute = (id: string, r: string) => {
     setItems((prev) => prev.map((b) => (b.id === id ? { ...b, route: r as Biller["route"] } : b)));
     toast.success(`Route updated to ${r}`);
