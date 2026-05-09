@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,22 +7,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Send, Mail, Plus, Pencil, Pause, Play, Ticket } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Search, Send, Mail, Plus, Pencil, Pause, Play, Ticket, Upload, Image as ImageIcon, X, Target, MapPin, Smartphone, Code, Type } from "lucide-react";
 import {
   newsletters as initial,
   promoCodes,
   campaignDestinations,
   newsletterStatusTone,
+  audienceSegmentLabel,
+  NG_STATES,
   type Newsletter,
   type NewsletterStatus,
+  type EmailBodyFormat,
+  type AudienceSegment,
+  type DevicePlatform,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_admin/referrals/newsletter")({
   component: NewsletterPage,
 });
+
+const ALL_SEGMENTS: AudienceSegment[] = [
+  "all_users","just_signed_up","new_user_7d","kyc_pending","kyc_verified","returning_dormant","power_user","no_card","has_card","wallet_high","wallet_low","no_referrals","international_txn",
+];
+const ALL_DEVICES: DevicePlatform[] = ["ios", "android", "web"];
 
 type Draft = {
   id?: string;
@@ -32,9 +44,17 @@ type Draft = {
   audienceSize: number;
   fromName: string;
   fromEmail: string;
+  replyTo: string;
+  headerImageUrl: string;
+  bodyFormat: EmailBodyFormat;
+  bodyText: string;
   scheduledAt: string;
   ctaPath: string;
   linkedPromoCode: string;
+  segments: AudienceSegment[];
+  locations: string[];
+  devices: DevicePlatform[];
+  language: "all" | "en" | "ha" | "ig" | "yo";
 };
 
 const emptyDraft: Draft = {
@@ -44,9 +64,17 @@ const emptyDraft: Draft = {
   audienceSize: 10000,
   fromName: "BazePay",
   fromEmail: "hello@bazepay.com",
+  replyTo: "",
+  headerImageUrl: "",
+  bodyFormat: "plain",
+  bodyText: "",
   scheduledAt: "",
   ctaPath: "",
   linkedPromoCode: "none",
+  segments: ["all_users"],
+  locations: ["All Nigeria"],
+  devices: [],
+  language: "all",
 };
 
 function NewsletterPage() {
