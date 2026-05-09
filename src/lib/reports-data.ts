@@ -63,8 +63,8 @@ const seeded = (seed: number) => {
 
 export const revenueSeries = (() => {
   const rng = seeded(7);
-  return days(30).map(({ d }, i) => {
-    const base = 18_500_000 + i * 320_000;
+  return days(90).map(({ d }, i) => {
+    const base = 18_500_000 + i * 110_000;
     const noise = (rng() - 0.5) * 4_000_000;
     const gross = Math.max(8_000_000, base + noise);
     const fees = gross * (0.018 + rng() * 0.006);
