@@ -120,7 +120,7 @@ function BillersPage() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => setStatusFor(b.id, "active", `${b.name} resync triggered`)} title="Resync">
+                    <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => resync(b.id)} title="Resync">
                       <RefreshCw className="h-3.5 w-3.5" />
                     </Button>
                     {b.status === "disabled" ? (
