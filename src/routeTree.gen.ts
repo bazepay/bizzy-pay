@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminWalletsRouteImport } from './routes/_admin.wallets'
+import { Route as AdminEsimRouteImport } from './routes/_admin.esim'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
 import { Route as AdminCardsRouteImport } from './routes/_admin.cards'
 import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.index'
@@ -57,6 +58,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminWalletsRoute = AdminWalletsRouteImport.update({
   id: '/wallets',
   path: '/wallets',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEsimRoute = AdminEsimRouteImport.update({
+  id: '/esim',
+  path: '/esim',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/cards': typeof AdminCardsRouteWithChildren
   '/dashboard': typeof AdminDashboardRoute
+  '/esim': typeof AdminEsimRoute
   '/wallets': typeof AdminWalletsRouteWithChildren
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/esim': typeof AdminEsimRoute
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_admin/cards': typeof AdminCardsRouteWithChildren
   '/_admin/dashboard': typeof AdminDashboardRoute
+  '/_admin/esim': typeof AdminEsimRoute
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
   '/_admin/cards/$id': typeof AdminCardsIdRoute
   '/_admin/cards/issued': typeof AdminCardsIssuedRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/cards'
     | '/dashboard'
+    | '/esim'
     | '/wallets'
     | '/cards/$id'
     | '/cards/issued'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/esim'
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_admin/cards'
     | '/_admin/dashboard'
+    | '/_admin/esim'
     | '/_admin/wallets'
     | '/_admin/cards/$id'
     | '/_admin/cards/issued'
@@ -411,6 +423,13 @@ declare module '@tanstack/react-router' {
       path: '/wallets'
       fullPath: '/wallets'
       preLoaderRoute: typeof AdminWalletsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/esim': {
+      id: '/_admin/esim'
+      path: '/esim'
+      fullPath: '/esim'
+      preLoaderRoute: typeof AdminEsimRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/dashboard': {
@@ -667,6 +686,7 @@ const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminCardsRoute: typeof AdminCardsRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminEsimRoute: typeof AdminEsimRoute
   AdminWalletsRoute: typeof AdminWalletsRouteWithChildren
   AdminKycIdRoute: typeof AdminKycIdRoute
   AdminTransactionsIdRoute: typeof AdminTransactionsIdRoute
@@ -679,6 +699,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCardsRoute: AdminCardsRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminEsimRoute: AdminEsimRoute,
   AdminWalletsRoute: AdminWalletsRouteWithChildren,
   AdminKycIdRoute: AdminKycIdRoute,
   AdminTransactionsIdRoute: AdminTransactionsIdRoute,
