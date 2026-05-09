@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutGrid, FileText, Megaphone, HelpCircle, Scale } from "lucide-react";
+import { LayoutGrid, HelpCircle, Scale } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/content")({
   head: () => ({
@@ -14,8 +14,6 @@ export const Route = createFileRoute("/_admin/content")({
 
 const tabs = [
   { to: "/content", label: "Overview", icon: LayoutGrid, exact: true },
-  { to: "/content/articles", label: "Articles", icon: FileText },
-  { to: "/content/banners", label: "Banners", icon: Megaphone },
   { to: "/content/faq", label: "FAQ", icon: HelpCircle },
   { to: "/content/legal", label: "Legal", icon: Scale },
 ];
@@ -28,7 +26,7 @@ function ContentLayout() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-display text-3xl font-bold">Content</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Manage marketing articles, in-app banners, customer FAQ and versioned legal documents.
+          Manage customer FAQ and versioned legal documents.
         </p>
       </motion.div>
 
