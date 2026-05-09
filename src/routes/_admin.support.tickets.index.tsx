@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_admin/support/tickets/")({
 });
 
 function TicketsPage() {
+  const navigate = useNavigate();
   const [items, setItems] = useState<Ticket[]>(initial);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
@@ -156,7 +157,7 @@ function TicketsPage() {
                   // Avoid navigating when clicking interactive children (buttons, links)
                   const tgt = e.target as HTMLElement;
                   if (tgt.closest("button, a")) return;
-                  window.location.assign(`/support/tickets/${t.id}`);
+                   navigate({ to: "/support/tickets/$id", params: { id: t.id } });
                 }}>
                   <TableCell className="max-w-[280px]">
                     <Link to="/support/tickets/$id" params={{ id: t.id }} className="text-sm font-medium truncate block hover:text-primary hover:underline">{t.subject}</Link>
