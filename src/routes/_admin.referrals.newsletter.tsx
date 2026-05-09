@@ -383,17 +383,31 @@ function NewsletterPage() {
               <Input value={draft.fromEmail} onChange={(e) => setDraft({ ...draft, fromEmail: e.target.value })} className="h-9 mt-1 font-mono" />
             </div>
             <div>
-              <Label className="text-xs">Reach (audience size)</Label>
-              <Input type="number" value={draft.audienceSize} onChange={(e) => setDraft({ ...draft, audienceSize: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+              <Label className="text-xs">Reply-to (optional)</Label>
+              <Input value={draft.replyTo} onChange={(e) => setDraft({ ...draft, replyTo: e.target.value })} placeholder="support@bazepay.com" className="h-9 mt-1 font-mono" />
             </div>
             <div>
               <Label className="text-xs">Schedule send (optional)</Label>
               <Input type="datetime-local" value={draft.scheduledAt} onChange={(e) => setDraft({ ...draft, scheduledAt: e.target.value })} className="h-9 mt-1" />
             </div>
-            <div className="col-span-2">
-              <Label className="text-xs">Audience description</Label>
-              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="e.g. Verified users · 0 referrals" className="h-9 mt-1" />
+
+            <EmailHeaderImageSection draft={draft} setDraft={setDraft} />
+            <EmailBodySection draft={draft} setDraft={setDraft} />
+
+            <div className="col-span-2 pt-2 border-t border-border">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground">Audience</Label>
             </div>
+            <div className="col-span-2">
+              <Label className="text-xs">Audience description (optional override)</Label>
+              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="Auto-generated from segments below if blank" className="h-9 mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">Reach (audience size)</Label>
+              <Input type="number" value={draft.audienceSize} onChange={(e) => setDraft({ ...draft, audienceSize: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+            </div>
+            <div className="hidden md:block" />
+            <NewsletterTargetingSection draft={draft} setDraft={setDraft} />
+
             <div className="col-span-2 pt-2 border-t border-border">
               <Label className="text-xs">CTA destination (optional)</Label>
               <Select value={draft.ctaPath} onValueChange={(v) => setDraft({ ...draft, ctaPath: v })}>
