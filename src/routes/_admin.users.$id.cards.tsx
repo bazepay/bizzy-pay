@@ -45,7 +45,7 @@ function CardsTab() {
               </div>
             </div>
             <div className="flex items-center gap-2 pt-1">
-              <Button size="sm" variant="outline" className="flex-1" disabled={c.status === "terminated"}
+              <Button size="sm" variant="outline" className="flex-1" disabled={c.status === "closed"}
                 onClick={() => {
                   const next = c.status === "frozen" ? "active" : "frozen";
                   setCards((prev) => prev.map((x) => x.id === c.id ? { ...x, status: next } : x));
@@ -54,9 +54,9 @@ function CardsTab() {
                 <Snowflake className="h-3.5 w-3.5 mr-1.5" />
                 {c.status === "frozen" ? "Unfreeze" : "Freeze"}
               </Button>
-              <Button size="sm" variant="outline" className="flex-1 text-destructive" disabled={c.status === "terminated"}
+              <Button size="sm" variant="outline" className="flex-1 text-destructive" disabled={c.status === "closed"}
                 onClick={() => {
-                  setCards((prev) => prev.map((x) => x.id === c.id ? { ...x, status: "terminated" } : x));
+                  setCards((prev) => prev.map((x) => x.id === c.id ? { ...x, status: "closed" } : x));
                   toast.success(`Card ${c.last4} terminated.`);
                 }}>
                 <XCircle className="h-3.5 w-3.5 mr-1.5" />
