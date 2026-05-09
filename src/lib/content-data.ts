@@ -1,46 +1,6 @@
 // Mock content data for the admin Content module.
 // Deterministic for stable SSR. NGN-only context.
 
-export type ArticleStatus = "draft" | "scheduled" | "published" | "archived";
-export type ArticleCategory = "Product" | "Announcements" | "Education" | "Compliance" | "Engineering";
-
-export type Article = {
-  id: string;
-  title: string;
-  slug: string;
-  category: ArticleCategory;
-  status: ArticleStatus;
-  author: string;
-  excerpt: string;
-  body: string;
-  coverColor: string; // tailwind gradient classes
-  tags: string[];
-  views: number;
-  publishedAt: string | null;
-  updatedAt: string;
-};
-
-export type BannerPlacement = "home" | "wallet" | "cards" | "transactions" | "global";
-export type BannerStatus = "draft" | "scheduled" | "live" | "ended";
-export type BannerTone = "info" | "success" | "warning" | "promo" | "critical";
-
-export type Banner = {
-  id: string;
-  title: string;
-  message: string;
-  ctaLabel: string | null;
-  ctaUrl: string | null;
-  placement: BannerPlacement;
-  audience: "all" | "tier1" | "tier2" | "tier2_plus" | "card_holders";
-  tone: BannerTone;
-  status: BannerStatus;
-  startsAt: string;
-  endsAt: string | null;
-  impressions: number;
-  clicks: number;
-  updatedAt: string;
-};
-
 export type Faq = {
   id: string;
   question: string;
