@@ -74,7 +74,20 @@ function DeliveryLogPage() {
             <SelectItem value="failed">Failed</SelectItem>
           </SelectContent>
         </Select>
-        <Button size="sm" variant="outline" className="gap-2" onClick={() => toast.success("Exported CSV")}>
+        <Button size="sm" variant="outline" className="gap-2" onClick={() => {
+          const header = ["id", "ts", "userId", "userName", "channel", "event", "status", "provider", "latencyMs", "error"];
+          const csv = [
+            header.join(","),
+            ...rows.map((d) => [d.id, d.ts, d.userId, `"${d.userName}"`, d.channel, d.event, d.status, d.provider, d.latencyMs, `"${d.error ?? ""}"`].join(",")),
+          ].join("\n");
+          const blob = new Blob([csv], { type: "text/csv" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = `delivery-log-${new Date().toISOString().slice(0, 10)}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+          toast.success(`Exported ${rows.length} rows`);
+        }}>
           <Download className="h-4 w-4" /> Export
         </Button>
       </div>
