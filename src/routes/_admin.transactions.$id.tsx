@@ -261,13 +261,15 @@ function TimelineItem({ at, title, body, tone = "primary" }: { at: string; title
 }
 
 function ActionDialog({
-  trigger, title, description, reason, setReason, confirmLabel, onConfirm,
+  trigger, title, description, confirmLabel, onConfirm,
 }: {
   trigger: React.ReactNode; title: string; description: string;
-  reason: string; setReason: (v: string) => void; confirmLabel: string; onConfirm: () => void;
+  confirmLabel: string; onConfirm: () => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setReason(""); }}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -280,7 +282,20 @@ function ActionDialog({
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>{confirmLabel}</AlertDialogAction>
+          <AlertDialogAction
+            onClick={(e) => {
+              if (!reason.trim()) {
+                e.preventDefault();
+                toast.error("Add an audit reason first.");
+                return;
+              }
+              onConfirm();
+              setOpen(false);
+              setReason("");
+            }}
+          >
+            {confirmLabel}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
