@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Wallet, ArrowLeftRight, Banknote, Download } from "lucide-react";
+import { Wallet, ArrowLeftRight, Banknote, Download, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/wallets")({
   head: () => ({
