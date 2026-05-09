@@ -42,7 +42,12 @@ function PlansPage() {
   }, [items, q, category, billerId]);
 
   const toggleVisible = (id: string) => {
-    setItems((prev) => prev.map((p) => (p.id === id ? { ...p, visible: !p.visible } : p)));
+    setItems((prev) => {
+      const next = prev.map((p) => (p.id === id ? { ...p, visible: !p.visible } : p));
+      const t = next.find((p) => p.id === id);
+      if (t) toast.success(`${t.name} ${t.visible ? "shown" : "hidden"}`);
+      return next;
+    });
   };
 
   const updatePrice = (id: string, price: number) => {
