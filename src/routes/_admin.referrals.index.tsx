@@ -143,7 +143,7 @@ function GrowthOverview() {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <div className="font-display text-lg font-bold">Live campaigns</div>
-                <div className="text-xs text-muted-foreground">{liveCampaigns.length} running · {fmtNgn(campaigns.reduce((s, c) => s + c.spentNgn, 0))} spent</div>
+                <div className="text-xs text-muted-foreground">{liveCampaigns.length} running · {campaigns.reduce((s, c) => s + c.converted, 0).toLocaleString()} conversions</div>
               </div>
               <Link to="/referrals/campaigns" className="text-xs text-primary inline-flex items-center gap-1">
                 All <ArrowRight className="h-3 w-3" />

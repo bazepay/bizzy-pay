@@ -42,7 +42,9 @@ export type Referral = {
 };
 
 export type CampaignStatus = "draft" | "scheduled" | "live" | "ended";
-export type CampaignChannel = "push" | "email" | "sms" | "in_app";
+// Campaigns are in-app only: a system notification in the bell tray, or a
+// banner that pops up on login. Email lives in the Newsletter module.
+export type CampaignChannel = "in_app_notification" | "login_banner";
 
 export type Campaign = {
   id: string;
@@ -53,16 +55,45 @@ export type Campaign = {
   audienceSize: number;
   startAt: string;
   endAt: string | null;
+  // Banner-only copy
+  title: string;          // headline (banner title or notification title)
+  body: string;           // supporting line / notification body
+  ctaLabel: string;       // button label, e.g. "Top up now"
+  // Funnel
+  sent: number;
+  delivered: number;
+  opened: number;        // banner shown / notification opened
+  clicked: number;
+  converted: number;
+  ctaUrl: string;
+  linkedProgramId?: string | null;
+  linkedPromoCode?: string | null;
+};
+
+// ---------- Newsletter (email) ----------
+export type NewsletterStatus = "draft" | "scheduled" | "sending" | "sent" | "paused";
+
+export type Newsletter = {
+  id: string;
+  subject: string;
+  preheader: string;
+  audience: string;
+  audienceSize: number;
+  fromName: string;       // e.g. "BazePay"
+  fromEmail: string;      // e.g. "hello@bazepay.com"
+  status: NewsletterStatus;
+  scheduledAt: string | null;
+  sentAt: string | null;
+  // Funnel
   sent: number;
   delivered: number;
   opened: number;
   clicked: number;
-  converted: number;
-  budgetNgn: number;
-  spentNgn: number;
-  ctaUrl: string;
-  linkedProgramId?: string | null;
+  unsubscribed: number;
+  bounced: number;
+  // Optional cross-link
   linkedPromoCode?: string | null;
+  ctaUrl?: string;
 };
 
 export type PromoStatus = "active" | "paused" | "expired" | "scheduled";
@@ -182,10 +213,16 @@ export const promoKindLabel: Record<PromoKind, string> = {
 };
 
 export const campaignChannelLabel: Record<CampaignChannel, string> = {
-  push: "Push notification",
-  email: "Email",
-  sms: "SMS",
-  in_app: "In-app banner",
+  in_app_notification: "In-app notification",
+  login_banner: "Login banner",
+};
+
+export const newsletterStatusTone: Record<NewsletterStatus, string> = {
+  draft: "bg-muted text-muted-foreground border-border",
+  scheduled: "bg-primary/15 text-primary border-primary/30",
+  sending: "bg-primary/15 text-primary border-primary/30",
+  sent: "bg-success/15 text-success border-success/30",
+  paused: "bg-warning/15 text-warning border-warning/30",
 };
 
 export const referralPrograms: ReferralProgram[] = [
@@ -311,114 +348,182 @@ export const referrals: Referral[] = (() => {
 export const campaigns: Campaign[] = [
   {
     id: "cmp_001",
-    name: "May payday push — Bills 5% off",
-    channel: "push",
+    name: "May payday — Bills 5% off",
+    channel: "in_app_notification",
     status: "live",
     audience: "Active wallet users · last 30d",
     audienceSize: 184_200,
     startAt: "2026-05-07T08:00:00Z",
     endAt: "2026-05-12T23:59:59Z",
+    title: "Payday week is here 🎉",
+    body: "Get 5% off all bill payment fees with code PAYDAY5. Limited to ₦12k cashback.",
+    ctaLabel: "Pay a bill",
     sent: 184_200,
     delivered: 178_410,
     opened: 92_104,
     clicked: 24_812,
     converted: 6_402,
-    budgetNgn: 1_500_000,
-    spentNgn: 612_400,
     ctaUrl: "/pay/airtime?promo=PAYDAY5",
     linkedPromoCode: "PAYDAY5",
   },
   {
     id: "cmp_002",
-    name: "Refer-3-friends email blast",
-    channel: "email",
-    status: "live",
-    audience: "Verified users · 0 referrals",
-    audienceSize: 96_400,
-    startAt: "2026-05-05T09:00:00Z",
-    endAt: null,
-    sent: 96_400,
-    delivered: 94_120,
-    opened: 38_412,
-    clicked: 9_024,
-    converted: 2_104,
-    budgetNgn: 800_000,
-    spentNgn: 240_100,
-    ctaUrl: "/referrals?utm_src=email-may",
-    linkedProgramId: "rp_001",
-  },
-  {
-    id: "cmp_003",
-    name: "Card upgrade SMS",
-    channel: "sms",
+    name: "Card upgrade nudge",
+    channel: "login_banner",
     status: "scheduled",
     audience: "Wallet >₦50k · no card",
     audienceSize: 42_180,
     startAt: "2026-05-12T10:00:00Z",
     endAt: "2026-05-14T23:59:59Z",
+    title: "Your wallet deserves a card",
+    body: "Order a Naira virtual card in 60 seconds and start spending anywhere online.",
+    ctaLabel: "Order a card",
     sent: 0,
     delivered: 0,
     opened: 0,
     clicked: 0,
     converted: 0,
-    budgetNgn: 600_000,
-    spentNgn: 0,
     ctaUrl: "/cards/order",
     linkedProgramId: "rp_003",
   },
   {
-    id: "cmp_004",
+    id: "cmp_003",
     name: "eSIM travel banner — Lagos→London",
-    channel: "in_app",
+    channel: "login_banner",
     status: "live",
     audience: "International txn last 90d",
     audienceSize: 28_900,
     startAt: "2026-04-20T00:00:00Z",
     endAt: "2026-06-30T23:59:59Z",
+    title: "Heading to the UK?",
+    body: "Skip roaming bills — grab a UK eSIM bundle from ₦4,200.",
+    ctaLabel: "See bundles",
     sent: 28_900,
     delivered: 28_900,
     opened: 14_201,
     clicked: 5_812,
     converted: 1_412,
-    budgetNgn: 400_000,
-    spentNgn: 184_000,
     ctaUrl: "/esim/uk-roaming",
   },
   {
-    id: "cmp_005",
+    id: "cmp_004",
     name: "Easter weekend free airtime",
-    channel: "push",
+    channel: "in_app_notification",
     status: "ended",
     audience: "All active users",
     audienceSize: 312_400,
     startAt: "2026-04-04T08:00:00Z",
     endAt: "2026-04-07T23:59:59Z",
+    title: "Free ₦200 airtime this weekend",
+    body: "Use code EASTER on any airtime purchase ₦500+.",
+    ctaLabel: "Buy airtime",
     sent: 312_400,
     delivered: 304_812,
     opened: 142_104,
     clicked: 41_204,
     converted: 12_802,
-    budgetNgn: 2_000_000,
-    spentNgn: 1_980_000,
     ctaUrl: "/pay/airtime?promo=EASTER",
   },
   {
-    id: "cmp_006",
-    name: "Reactivation — 60d dormant",
-    channel: "email",
+    id: "cmp_005",
+    name: "Refer 3 friends — login banner",
+    channel: "login_banner",
     status: "draft",
-    audience: "No login 60+ days",
-    audienceSize: 58_120,
+    audience: "Verified users · 0 referrals",
+    audienceSize: 96_400,
     startAt: "2026-05-15T09:00:00Z",
     endAt: null,
+    title: "Earn ₦1,500 per friend",
+    body: "Share your code, get rewarded each time a friend tops up.",
+    ctaLabel: "Invite friends",
     sent: 0,
     delivered: 0,
     opened: 0,
     clicked: 0,
     converted: 0,
-    budgetNgn: 500_000,
-    spentNgn: 0,
-    ctaUrl: "/?utm_src=reactivation",
+    ctaUrl: "/referrals",
+    linkedProgramId: "rp_001",
+  },
+];
+
+export const newsletters: Newsletter[] = [
+  {
+    id: "nl_001",
+    subject: "Payday week — 5% off every bill 💸",
+    preheader: "Use code PAYDAY5 on airtime, data, electricity and more.",
+    audience: "All verified users",
+    audienceSize: 184_200,
+    fromName: "BazePay",
+    fromEmail: "hello@bazepay.com",
+    status: "sent",
+    scheduledAt: "2026-05-07T08:00:00Z",
+    sentAt: "2026-05-07T08:02:14Z",
+    sent: 184_200,
+    delivered: 181_310,
+    opened: 78_412,
+    clicked: 14_802,
+    unsubscribed: 412,
+    bounced: 2_890,
+    linkedPromoCode: "PAYDAY5",
+    ctaUrl: "/pay?promo=PAYDAY5",
+  },
+  {
+    id: "nl_002",
+    subject: "Refer 3 friends, earn ₦4,500",
+    preheader: "Your invite link is one tap away.",
+    audience: "Verified users · 0 referrals",
+    audienceSize: 96_400,
+    fromName: "BazePay",
+    fromEmail: "rewards@bazepay.com",
+    status: "sending",
+    scheduledAt: "2026-05-09T09:00:00Z",
+    sentAt: null,
+    sent: 38_120,
+    delivered: 37_402,
+    opened: 9_840,
+    clicked: 2_104,
+    unsubscribed: 84,
+    bounced: 612,
+    ctaUrl: "/referrals",
+  },
+  {
+    id: "nl_003",
+    subject: "We miss you — here's ₦1,000 to come back",
+    preheader: "Reactivation credit, expires in 7 days.",
+    audience: "No login 60+ days",
+    audienceSize: 58_120,
+    fromName: "BazePay",
+    fromEmail: "hello@bazepay.com",
+    status: "scheduled",
+    scheduledAt: "2026-05-15T09:00:00Z",
+    sentAt: null,
+    sent: 0,
+    delivered: 0,
+    opened: 0,
+    clicked: 0,
+    unsubscribed: 0,
+    bounced: 0,
+    linkedPromoCode: "WELCOME1K",
+    ctaUrl: "/wallet/topup?promo=WELCOME1K",
+  },
+  {
+    id: "nl_004",
+    subject: "May product update — new eSIM bundles",
+    preheader: "UK, US and EU bundles starting from ₦4,200.",
+    audience: "All users",
+    audienceSize: 312_400,
+    fromName: "BazePay Product",
+    fromEmail: "product@bazepay.com",
+    status: "draft",
+    scheduledAt: null,
+    sentAt: null,
+    sent: 0,
+    delivered: 0,
+    opened: 0,
+    clicked: 0,
+    unsubscribed: 0,
+    bounced: 0,
+    ctaUrl: "/esim",
   },
 ];
 
