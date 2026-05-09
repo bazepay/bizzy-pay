@@ -19,7 +19,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { getIssuedCard, getProgram, getCardTransactions, cardStatusTone, type CardStatus, type IssuedCard } from "@/lib/cards-data";
+import { getIssuedCard, getProgram, getCardTransactions, cardStatusTone, fmtNgn, type CardStatus, type IssuedCard } from "@/lib/cards-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_admin/cards/$id")({
@@ -42,8 +42,8 @@ function CardDetailPage() {
   const router = useRouter();
   const [card, setCard] = useState<IssuedCard>(initial as IssuedCard);
   const [revealed, setRevealed] = useState(false);
-  const [daily, setDaily] = useState(card.dailyLimitUsd);
-  const [monthly, setMonthly] = useState(card.monthlyLimitUsd);
+  const [daily, setDaily] = useState(card.dailyLimitNgn);
+  const [monthly, setMonthly] = useState(card.monthlyLimitNgn);
   const program = getProgram(card.programId);
   const txns = getCardTransactions(card.id);
 
@@ -134,8 +134,8 @@ function CardDetailPage() {
         {/* Right: details, limits, txns */}
         <div className="lg:col-span-2 space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Stat label="Balance" value={`$${card.balanceUsd.toLocaleString()}`} />
-            <Stat label="30-day spend" value={`$${card.spend30dUsd.toLocaleString()}`} />
+            <Stat label="Balance" value={fmtNgn(card.balanceNgn)} />
+            <Stat label="30-day spend" value={fmtNgn(card.spend30dNgn)} />
             <Stat label="Risk score" value={String(card.riskScore)} tone={card.riskScore >= 70 ? "danger" : card.riskScore >= 40 ? "warn" : "success"} />
             <Stat label="3DS enrolled" value={card.threeDsEnrolled ? "Yes" : "No"} />
           </div>
@@ -149,8 +149,8 @@ function CardDetailPage() {
               />
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4 text-sm">
-              <Field label="Daily limit"><span className="font-mono font-semibold">${daily.toLocaleString()}</span></Field>
-              <Field label="Monthly limit"><span className="font-mono font-semibold">${monthly.toLocaleString()}</span></Field>
+              <Field label="Daily limit"><span className="font-mono font-semibold">{fmtNgn(daily)}</span></Field>
+              <Field label="Monthly limit"><span className="font-mono font-semibold">{fmtNgn(monthly)}</span></Field>
               <Field label="Program">{program?.name ?? "—"}</Field>
               <Field label="BIN"><span className="font-mono">{program?.bin}</span></Field>
             </CardContent>
@@ -192,7 +192,7 @@ function CardDetailPage() {
                           <div className="text-xs text-muted-foreground">{t.category}</div>
                         </TableCell>
                         <TableCell className="font-mono text-xs">{t.mcc}</TableCell>
-                        <TableCell className="text-right font-mono">${t.amountUsd.toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-mono">{fmtNgn(t.amountNgn)}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className={`text-xs capitalize ${
                             t.status === "approved" ? "bg-success/15 text-success border-success/30"
@@ -324,11 +324,11 @@ function LimitsDialog({ daily, monthly, onSave }: { daily: number; monthly: numb
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <Label>Daily limit (USD)</Label>
+            <Label>Daily limit (NGN)</Label>
             <Input type="number" value={d} onChange={(e) => setD(e.target.value)} />
           </div>
           <div>
-            <Label>Monthly limit (USD)</Label>
+            <Label>Monthly limit (NGN)</Label>
             <Input type="number" value={m} onChange={(e) => setM(e.target.value)} />
           </div>
         </div>

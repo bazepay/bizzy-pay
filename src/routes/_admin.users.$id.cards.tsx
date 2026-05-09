@@ -36,11 +36,11 @@ function CardsTab() {
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <div className="text-xs text-muted-foreground">Balance</div>
-                <div className="font-mono">${c.balanceUsd.toLocaleString()}</div>
+                <div className="font-mono">₦{c.balanceNgn.toLocaleString("en-NG")}</div>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground">Spend (30d)</div>
-                <div className="font-mono">${c.spendUsd.toLocaleString()}</div>
+                <div className="font-mono">₦{c.spendNgn.toLocaleString("en-NG")}</div>
               </div>
             </div>
             <div className="flex items-center gap-2 pt-1">

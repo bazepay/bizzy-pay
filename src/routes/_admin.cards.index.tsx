@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Snowflake, AlertTriangle, TrendingUp, ArrowRight } from "lucide-react";
-import { cardPrograms, issuedCards, programStatusTone } from "@/lib/cards-data";
+import { cardPrograms, issuedCards, programStatusTone, fmtNgn } from "@/lib/cards-data";
 import { fmtNum } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_admin/cards/")({
@@ -15,8 +15,8 @@ function CardsOverview() {
   const totalIssued = issuedCards.length;
   const totalActive = issuedCards.filter((c) => c.status === "active").length;
   const totalFrozen = issuedCards.filter((c) => c.status === "frozen").length;
-  const totalSpend = issuedCards.reduce((s, c) => s + c.spend30dUsd, 0);
-  const totalBalance = issuedCards.reduce((s, c) => s + c.balanceUsd, 0);
+  const totalSpend = issuedCards.reduce((s, c) => s + c.spend30dNgn, 0);
+  const totalBalance = issuedCards.reduce((s, c) => s + c.balanceNgn, 0);
   const avgRisk = Math.round(issuedCards.reduce((s, c) => s + c.riskScore, 0) / issuedCards.length);
   const recent = [...issuedCards].sort((a, b) => +new Date(b.issuedAt) - +new Date(a.issuedAt)).slice(0, 6);
 
@@ -25,7 +25,7 @@ function CardsOverview() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Kpi label="Total issued" value={fmtNum(totalIssued)} sub={`${fmtNum(totalActive)} active`} icon={CreditCard} />
         <Kpi label="Frozen" value={fmtNum(totalFrozen)} sub="Manual / risk holds" icon={Snowflake} />
-        <Kpi label="30-day spend" value={`$${fmtNum(totalSpend)}`} sub="Across all programs" icon={TrendingUp} />
+        <Kpi label="30-day spend" value={fmtNgn(totalSpend)} sub="Across all programs" icon={TrendingUp} />
         <Kpi label="Avg risk score" value={String(avgRisk)} sub={avgRisk >= 70 ? "Elevated" : avgRisk >= 40 ? "Moderate" : "Low"} icon={AlertTriangle} tone={avgRisk >= 70 ? "danger" : undefined} />
       </div>
 
@@ -85,7 +85,7 @@ function CardsOverview() {
               </div>
               <div className="text-right shrink-0">
                 <div className="text-xs text-muted-foreground">{new Date(c.issuedAt).toLocaleDateString()}</div>
-                <div className="text-xs font-mono">${c.balanceUsd.toLocaleString()}</div>
+                <div className="text-xs font-mono">{fmtNgn(c.balanceNgn)}</div>
               </div>
             </Link>
           ))}
@@ -93,7 +93,7 @@ function CardsOverview() {
       </Card>
 
       <div className="text-xs text-muted-foreground text-right">
-        Total card balances: <span className="font-mono font-semibold">${fmtNum(totalBalance)}</span> across {totalIssued} cards
+        Total card balances: <span className="font-mono font-semibold">{fmtNgn(totalBalance)}</span> across {totalIssued} cards
       </div>
     </motion.div>
   );
