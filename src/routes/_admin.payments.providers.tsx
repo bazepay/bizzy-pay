@@ -50,6 +50,14 @@ function ProvidersPage() {
     setItems((prev) => prev.map((p) => (p.id === id ? { ...p, lastCallback: new Date().toISOString() } : p)));
     toast.success(`${name} ping OK`);
   };
+  const runTest = (id: string) => {
+    const p = items.find((x) => x.id === id);
+    if (!p) return;
+    const ref = `tst_${Math.random().toString(36).slice(2, 8)}`;
+    const ms = 200 + Math.floor(Math.random() * 600);
+    setItems((prev) => prev.map((x) => (x.id === id ? { ...x, lastCallback: new Date().toISOString() } : x)));
+    toast.success(`${p.name} test charge ${ref} OK · ${ms}ms`);
+  };
   const copy = async (text: string, label: string) => {
     try { await navigator.clipboard.writeText(text); toast.success(`${label} copied`); } catch { toast.error("Copy failed"); }
   };
@@ -125,7 +133,7 @@ function ProvidersPage() {
                   <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={() => ping(p.id)}>
                     <RefreshCw className="h-3.5 w-3.5" /> Ping
                   </Button>
-                  <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={() => updateStatus(p.id, "sandbox", `${p.name} switched to sandbox`)}>
+                  <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={() => runTest(p.id)}>
                     <Beaker className="h-3.5 w-3.5" /> Test
                   </Button>
                   {p.status === "disabled" ? (
