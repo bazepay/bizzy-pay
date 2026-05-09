@@ -33,6 +33,13 @@ function ChatQueuePage() {
   const [items, setItems] = useState<ChatSession[]>(initial);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
+  const [tick, setTick] = useState(0);
+
+  // Live-tick wait timers every second
+  useEffect(() => {
+    const i = setInterval(() => setTick((t: number) => t + 1), 1000);
+    return () => clearInterval(i);
+  }, []);
 
   const rows = useMemo(() => {
     return items
