@@ -20,6 +20,7 @@ import { Route as AdminPayRouteImport } from './routes/_admin.pay'
 import { Route as AdminNumbersRouteImport } from './routes/_admin.numbers'
 import { Route as AdminEsimRouteImport } from './routes/_admin.esim'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
+import { Route as AdminComplianceRouteImport } from './routes/_admin.compliance'
 import { Route as AdminCardsRouteImport } from './routes/_admin.cards'
 import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
@@ -31,6 +32,7 @@ import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
 import { Route as AdminNumbersIndexRouteImport } from './routes/_admin.numbers.index'
 import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
 import { Route as AdminEsimIndexRouteImport } from './routes/_admin.esim.index'
+import { Route as AdminComplianceIndexRouteImport } from './routes/_admin.compliance.index'
 import { Route as AdminCardsIndexRouteImport } from './routes/_admin.cards.index'
 import { Route as AdminWalletsUsersRouteImport } from './routes/_admin.wallets.users'
 import { Route as AdminWalletsTopupsRouteImport } from './routes/_admin.wallets.topups'
@@ -131,6 +133,11 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminComplianceRoute = AdminComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCardsRoute = AdminCardsRouteImport.update({
   id: '/cards',
   path: '/cards',
@@ -185,6 +192,11 @@ const AdminEsimIndexRoute = AdminEsimIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminEsimRoute,
+} as any)
+const AdminComplianceIndexRoute = AdminComplianceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminComplianceRoute,
 } as any)
 const AdminCardsIndexRoute = AdminCardsIndexRouteImport.update({
   id: '/',
@@ -420,6 +432,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/cards': typeof AdminCardsRouteWithChildren
+  '/compliance': typeof AdminComplianceRouteWithChildren
   '/dashboard': typeof AdminDashboardRoute
   '/esim': typeof AdminEsimRouteWithChildren
   '/numbers': typeof AdminNumbersRouteWithChildren
@@ -460,6 +473,7 @@ export interface FileRoutesByFullPath {
   '/wallets/topups': typeof AdminWalletsTopupsRoute
   '/wallets/users': typeof AdminWalletsUsersRoute
   '/cards/': typeof AdminCardsIndexRoute
+  '/compliance/': typeof AdminComplianceIndexRoute
   '/esim/': typeof AdminEsimIndexRoute
   '/kyc/': typeof AdminKycIndexRoute
   '/numbers/': typeof AdminNumbersIndexRoute
@@ -519,6 +533,7 @@ export interface FileRoutesByTo {
   '/wallets/topups': typeof AdminWalletsTopupsRoute
   '/wallets/users': typeof AdminWalletsUsersRoute
   '/cards': typeof AdminCardsIndexRoute
+  '/compliance': typeof AdminComplianceIndexRoute
   '/esim': typeof AdminEsimIndexRoute
   '/kyc': typeof AdminKycIndexRoute
   '/numbers': typeof AdminNumbersIndexRoute
@@ -549,6 +564,7 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/_admin/cards': typeof AdminCardsRouteWithChildren
+  '/_admin/compliance': typeof AdminComplianceRouteWithChildren
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/esim': typeof AdminEsimRouteWithChildren
   '/_admin/numbers': typeof AdminNumbersRouteWithChildren
@@ -589,6 +605,7 @@ export interface FileRoutesById {
   '/_admin/wallets/topups': typeof AdminWalletsTopupsRoute
   '/_admin/wallets/users': typeof AdminWalletsUsersRoute
   '/_admin/cards/': typeof AdminCardsIndexRoute
+  '/_admin/compliance/': typeof AdminComplianceIndexRoute
   '/_admin/esim/': typeof AdminEsimIndexRoute
   '/_admin/kyc/': typeof AdminKycIndexRoute
   '/_admin/numbers/': typeof AdminNumbersIndexRoute
@@ -619,6 +636,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/cards'
+    | '/compliance'
     | '/dashboard'
     | '/esim'
     | '/numbers'
@@ -659,6 +677,7 @@ export interface FileRouteTypes {
     | '/wallets/topups'
     | '/wallets/users'
     | '/cards/'
+    | '/compliance/'
     | '/esim/'
     | '/kyc/'
     | '/numbers/'
@@ -718,6 +737,7 @@ export interface FileRouteTypes {
     | '/wallets/topups'
     | '/wallets/users'
     | '/cards'
+    | '/compliance'
     | '/esim'
     | '/kyc'
     | '/numbers'
@@ -747,6 +767,7 @@ export interface FileRouteTypes {
     | '/_admin'
     | '/login'
     | '/_admin/cards'
+    | '/_admin/compliance'
     | '/_admin/dashboard'
     | '/_admin/esim'
     | '/_admin/numbers'
@@ -787,6 +808,7 @@ export interface FileRouteTypes {
     | '/_admin/wallets/topups'
     | '/_admin/wallets/users'
     | '/_admin/cards/'
+    | '/_admin/compliance/'
     | '/_admin/esim/'
     | '/_admin/kyc/'
     | '/_admin/numbers/'
@@ -897,6 +919,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/compliance': {
+      id: '/_admin/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof AdminComplianceRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/cards': {
       id: '/_admin/cards'
       path: '/cards'
@@ -973,6 +1002,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/esim/'
       preLoaderRoute: typeof AdminEsimIndexRouteImport
       parentRoute: typeof AdminEsimRoute
+    }
+    '/_admin/compliance/': {
+      id: '/_admin/compliance/'
+      path: '/'
+      fullPath: '/compliance/'
+      preLoaderRoute: typeof AdminComplianceIndexRouteImport
+      parentRoute: typeof AdminComplianceRoute
     }
     '/_admin/cards/': {
       id: '/_admin/cards/'
@@ -1310,6 +1346,18 @@ const AdminCardsRouteWithChildren = AdminCardsRoute._addFileChildren(
   AdminCardsRouteChildren,
 )
 
+interface AdminComplianceRouteChildren {
+  AdminComplianceIndexRoute: typeof AdminComplianceIndexRoute
+}
+
+const AdminComplianceRouteChildren: AdminComplianceRouteChildren = {
+  AdminComplianceIndexRoute: AdminComplianceIndexRoute,
+}
+
+const AdminComplianceRouteWithChildren = AdminComplianceRoute._addFileChildren(
+  AdminComplianceRouteChildren,
+)
+
 interface AdminEsimRouteChildren {
   AdminEsimIdRoute: typeof AdminEsimIdRoute
   AdminEsimInventoryRoute: typeof AdminEsimInventoryRoute
@@ -1482,6 +1530,7 @@ const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminCardsRoute: typeof AdminCardsRouteWithChildren
+  AdminComplianceRoute: typeof AdminComplianceRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEsimRoute: typeof AdminEsimRouteWithChildren
   AdminNumbersRoute: typeof AdminNumbersRouteWithChildren
@@ -1500,6 +1549,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCardsRoute: AdminCardsRouteWithChildren,
+  AdminComplianceRoute: AdminComplianceRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEsimRoute: AdminEsimRouteWithChildren,
   AdminNumbersRoute: AdminNumbersRouteWithChildren,
