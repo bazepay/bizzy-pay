@@ -66,7 +66,23 @@ function OrderDetailPage() {
     toast.success(`Refunded ₦${order.priceNgn.toLocaleString("en-NG")} · ${reason.slice(0, 40)}`);
   };
 
-  const setStatus = (next: EsimOrderStatus) => setOrder({ ...order, status: next });
+  const setStatus = (next: EsimOrderStatus) => {
+    const now = new Date().toISOString();
+    setOrder((o) => {
+      const steps = o.steps.map((s) => ({ ...s }));
+      const ensureOk = (key: typeof steps[number]["step"]) => {
+        const step = steps.find((s) => s.step === key);
+        if (step && step.status !== "ok") { step.status = "ok"; step.at = step.at ?? now; step.note = undefined; }
+      };
+      if (next === "delivered") {
+        ["payment_captured", "supplier_order", "qr_generated", "qr_delivered"].forEach((k) => ensureOk(k as typeof steps[number]["step"]));
+      }
+      if (next === "activated") {
+        ["payment_captured", "supplier_order", "qr_generated", "qr_delivered", "device_activated"].forEach((k) => ensureOk(k as typeof steps[number]["step"]));
+      }
+      return { ...o, status: next, failureReason: undefined, steps };
+    });
+  };
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="p-6 max-w-[1400px] mx-auto space-y-5">
