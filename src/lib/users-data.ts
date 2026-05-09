@@ -90,7 +90,7 @@ export type Txn = {
   at: string;
   counterparty?: string;
 };
-export type Card = { id: string; brand: "Visa" | "Mastercard"; last4: string; status: "active" | "frozen" | "closed"; balanceUsd: number; spendUsd: number; issuedAt: string };
+export type Card = { id: string; brand: "Visa" | "Mastercard" | "Verve"; last4: string; status: "active" | "frozen" | "closed"; balanceNgn: number; spendNgn: number; issuedAt: string };
 export type Esim = { id: string; country: string; plan: string; dataGb: number; usedGb: number; status: "active" | "expired" | "pending"; activatedAt: string };
 export type VNumber = { id: string; number: string; country: string; service: string; status: "active" | "expired"; leasedAt: string };
 export type Device = { id: string; name: string; os: string; ip: string; geo: string; lastActive: string; current: boolean };
@@ -142,8 +142,8 @@ export function getTransactions(userId: string, count = 18): Txn[] {
 export function getCards(userId: string): Card[] {
   const r = seeded(userId.charCodeAt(2) + 5);
   return [
-    { id: "vc_4421", brand: "Visa", last4: "4421", status: "active", balanceUsd: Math.round(200 + r * 2000), spendUsd: Math.round(r * 3500), issuedAt: "2024-08-12" },
-    { id: "vc_8809", brand: "Mastercard", last4: "8809", status: r > 0.7 ? "frozen" : "active", balanceUsd: Math.round(50 + r * 800), spendUsd: Math.round(r * 1200), issuedAt: "2025-01-05" },
+    { id: "vc_4421", brand: "Verve", last4: "4421", status: "active", balanceNgn: Math.round((200 + r * 2000) * 1500), spendNgn: Math.round(r * 3500 * 1500), issuedAt: "2024-08-12" },
+    { id: "vc_8809", brand: "Mastercard", last4: "8809", status: r > 0.7 ? "frozen" : "active", balanceNgn: Math.round((50 + r * 800) * 1500), spendNgn: Math.round(r * 1200 * 1500), issuedAt: "2025-01-05" },
   ];
 }
 
