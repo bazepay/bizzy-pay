@@ -70,8 +70,8 @@ function PayOverview() {
                 <div className="font-display text-lg font-bold">Biller incidents</div>
                 <div className="text-xs text-muted-foreground">Degraded or down providers</div>
               </div>
-              <Link to="/pay/billers" className="text-xs text-primary inline-flex items-center gap-1">
-                All billers <ArrowRight className="h-3 w-3" />
+              <Link to="/pay/incidents" className="text-xs text-primary inline-flex items-center gap-1">
+                View all <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
             {incidents.length === 0 ? (

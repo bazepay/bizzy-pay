@@ -34,6 +34,7 @@ import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
 import { Route as AdminPayPlansRouteImport } from './routes/_admin.pay.plans'
 import { Route as AdminPayOrdersRouteImport } from './routes/_admin.pay.orders'
+import { Route as AdminPayIncidentsRouteImport } from './routes/_admin.pay.incidents'
 import { Route as AdminPayBillersRouteImport } from './routes/_admin.pay.billers'
 import { Route as AdminPayIdRouteImport } from './routes/_admin.pay.$id'
 import { Route as AdminNumbersPoolRouteImport } from './routes/_admin.numbers.pool'
@@ -181,6 +182,11 @@ const AdminPayOrdersRoute = AdminPayOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AdminPayRoute,
 } as any)
+const AdminPayIncidentsRoute = AdminPayIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => AdminPayRoute,
+} as any)
 const AdminPayBillersRoute = AdminPayBillersRouteImport.update({
   id: '/billers',
   path: '/billers',
@@ -315,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/numbers/pool': typeof AdminNumbersPoolRoute
   '/pay/$id': typeof AdminPayIdRoute
   '/pay/billers': typeof AdminPayBillersRoute
+  '/pay/incidents': typeof AdminPayIncidentsRoute
   '/pay/orders': typeof AdminPayOrdersRoute
   '/pay/plans': typeof AdminPayPlansRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -358,6 +365,7 @@ export interface FileRoutesByTo {
   '/numbers/pool': typeof AdminNumbersPoolRoute
   '/pay/$id': typeof AdminPayIdRoute
   '/pay/billers': typeof AdminPayBillersRoute
+  '/pay/incidents': typeof AdminPayIncidentsRoute
   '/pay/orders': typeof AdminPayOrdersRoute
   '/pay/plans': typeof AdminPayPlansRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -407,6 +415,7 @@ export interface FileRoutesById {
   '/_admin/numbers/pool': typeof AdminNumbersPoolRoute
   '/_admin/pay/$id': typeof AdminPayIdRoute
   '/_admin/pay/billers': typeof AdminPayBillersRoute
+  '/_admin/pay/incidents': typeof AdminPayIncidentsRoute
   '/_admin/pay/orders': typeof AdminPayOrdersRoute
   '/_admin/pay/plans': typeof AdminPayPlansRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
@@ -457,6 +466,7 @@ export interface FileRouteTypes {
     | '/numbers/pool'
     | '/pay/$id'
     | '/pay/billers'
+    | '/pay/incidents'
     | '/pay/orders'
     | '/pay/plans'
     | '/transactions/$id'
@@ -500,6 +510,7 @@ export interface FileRouteTypes {
     | '/numbers/pool'
     | '/pay/$id'
     | '/pay/billers'
+    | '/pay/incidents'
     | '/pay/orders'
     | '/pay/plans'
     | '/transactions/$id'
@@ -548,6 +559,7 @@ export interface FileRouteTypes {
     | '/_admin/numbers/pool'
     | '/_admin/pay/$id'
     | '/_admin/pay/billers'
+    | '/_admin/pay/incidents'
     | '/_admin/pay/orders'
     | '/_admin/pay/plans'
     | '/_admin/transactions/$id'
@@ -756,6 +768,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/pay/orders'
       preLoaderRoute: typeof AdminPayOrdersRouteImport
+      parentRoute: typeof AdminPayRoute
+    }
+    '/_admin/pay/incidents': {
+      id: '/_admin/pay/incidents'
+      path: '/incidents'
+      fullPath: '/pay/incidents'
+      preLoaderRoute: typeof AdminPayIncidentsRouteImport
       parentRoute: typeof AdminPayRoute
     }
     '/_admin/pay/billers': {
@@ -974,6 +993,7 @@ const AdminNumbersRouteWithChildren = AdminNumbersRoute._addFileChildren(
 interface AdminPayRouteChildren {
   AdminPayIdRoute: typeof AdminPayIdRoute
   AdminPayBillersRoute: typeof AdminPayBillersRoute
+  AdminPayIncidentsRoute: typeof AdminPayIncidentsRoute
   AdminPayOrdersRoute: typeof AdminPayOrdersRoute
   AdminPayPlansRoute: typeof AdminPayPlansRoute
   AdminPayIndexRoute: typeof AdminPayIndexRoute
@@ -982,6 +1002,7 @@ interface AdminPayRouteChildren {
 const AdminPayRouteChildren: AdminPayRouteChildren = {
   AdminPayIdRoute: AdminPayIdRoute,
   AdminPayBillersRoute: AdminPayBillersRoute,
+  AdminPayIncidentsRoute: AdminPayIncidentsRoute,
   AdminPayOrdersRoute: AdminPayOrdersRoute,
   AdminPayPlansRoute: AdminPayPlansRoute,
   AdminPayIndexRoute: AdminPayIndexRoute,

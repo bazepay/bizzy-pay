@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutGrid, Building2, Layers, ShoppingCart } from "lucide-react";
+import { LayoutGrid, Building2, Layers, ShoppingCart, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/pay")({
   head: () => ({
@@ -17,11 +17,12 @@ const tabs = [
   { to: "/pay/billers", label: "Billers", icon: Building2 },
   { to: "/pay/plans", label: "Plans", icon: Layers },
   { to: "/pay/orders", label: "Orders", icon: ShoppingCart },
+  { to: "/pay/incidents", label: "Incidents", icon: ShieldAlert },
 ];
 
 function PayLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const onDetail = /^\/pay\/(?!billers$|plans$|orders$)/.test(pathname);
+  const onDetail = /^\/pay\/(?!billers$|plans$|orders$|incidents$)/.test(pathname);
 
   return (
     <div className="p-6 max-w-[1400px] mx-auto space-y-5">
