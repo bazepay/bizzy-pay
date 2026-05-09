@@ -17,6 +17,7 @@ const tabs = [
   { to: "/pay/billers", label: "Billers", icon: Building2 },
   { to: "/pay/plans", label: "Plans", icon: Layers },
   { to: "/pay/orders", label: "Orders", icon: ShoppingCart },
+  { to: "/pay/incidents", label: "Incidents", icon: ShieldAlert },
 ];
 
 function PayLayout() {
