@@ -115,7 +115,13 @@ function LeaseDetail() {
       <Card className="shadow-card">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2"><MessageSquare className="h-4 w-4 text-primary" /> Recent SMS</CardTitle>
-          <Button size="sm" variant="ghost" onClick={() => toast.success("SMS log refreshed.")}>
+          <Button size="sm" variant="ghost" onClick={() => {
+            const senders = ["WhatsApp", "Telegram", "Google", "OpenAI", "Discord", "Uber", "Booking.com"];
+            const sender = senders[Math.floor(Math.random() * senders.length)];
+            const code = String(Math.floor(100000 + Math.random() * 899999));
+            setSms((prev) => [{ id: `sm_${Date.now()}`, at: new Date().toISOString(), from: sender, text: `Your ${sender} verification code: ${code}` }, ...prev]);
+            toast.success("New SMS received.");
+          }}>
             <RefreshCw className="h-3.5 w-3.5 mr-1.5" /> Refresh
           </Button>
         </CardHeader>
