@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutGrid, Building2, Layers, ShoppingCart } from "lucide-react";
+import { LayoutGrid, Building2, Layers, ShoppingCart, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/pay")({
   head: () => ({
