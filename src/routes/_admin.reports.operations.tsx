@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
-import { txVolumeSeries, productMix } from "@/lib/reports-data";
+import { txVolumeSeries, productMix, downloadCsv } from "@/lib/reports-data";
 import { fmtNgn, fmtNum, fmtPct } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_admin/reports/operations")({
@@ -50,7 +50,7 @@ function OperationsPage() {
               <SelectItem value="30d">Last 30d</SelectItem>
             </SelectContent>
           </Select>
-          <Button size="sm" className="gap-1.5" onClick={() => toast.success("Exporting operations report…")}>
+          <Button size="sm" className="gap-1.5" onClick={() => { downloadCsv(`operations-${range}`, data); toast.success("Operations exported"); }}>
             <Download className="h-3.5 w-3.5" /> Export
           </Button>
         </div>

@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Download, FileWarning } from "lucide-react";
 import { toast } from "sonner";
-import { kycFunnel } from "@/lib/reports-data";
+import { kycFunnel, downloadCsv } from "@/lib/reports-data";
 import { fmtNum } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_admin/reports/compliance")({
@@ -40,7 +40,7 @@ function CompliancePage() {
           <h2 className="font-display text-xl font-semibold">Compliance reporting</h2>
           <p className="text-sm text-muted-foreground">KYC conversion, AML alert dispositions and sanctions screening.</p>
         </div>
-        <Button size="sm" className="gap-1.5" onClick={() => toast.success("Exporting compliance pack (PDF)…")}>
+        <Button size="sm" className="gap-1.5" onClick={() => { downloadCsv("compliance-pack", [...kycFunnel.map(k => ({ section: "kyc", ...k })), ...aml.map(a => ({ section: "aml", ...a })), ...sanctions.map(s => ({ section: "sanctions", ...s }))]); toast.success("Compliance pack exported"); }}>
           <Download className="h-3.5 w-3.5" /> Compliance pack
         </Button>
       </div>
@@ -79,7 +79,7 @@ function CompliancePage() {
               <div className="font-semibold flex items-center gap-2">
                 <FileWarning className="h-4 w-4 text-amber-600" /> AML alerts
               </div>
-              <Button size="sm" variant="ghost" onClick={() => toast.success("Exported AML CSV")}>
+              <Button size="sm" variant="ghost" onClick={() => { downloadCsv("aml-alerts", aml); toast.success("AML CSV exported"); }}>
                 <Download className="h-3.5 w-3.5 mr-1.5" /> CSV
               </Button>
             </div>
@@ -112,7 +112,7 @@ function CompliancePage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="font-semibold">Sanctions & PEP screening</div>
-              <Button size="sm" variant="ghost" onClick={() => toast.success("Exported screening report")}>
+              <Button size="sm" variant="ghost" onClick={() => { downloadCsv("sanctions-screening", sanctions); toast.success("Screening CSV exported"); }}>
                 <Download className="h-3.5 w-3.5 mr-1.5" /> CSV
               </Button>
             </div>

@@ -63,8 +63,8 @@ const seeded = (seed: number) => {
 
 export const revenueSeries = (() => {
   const rng = seeded(7);
-  return days(30).map(({ d }, i) => {
-    const base = 18_500_000 + i * 320_000;
+  return days(90).map(({ d }, i) => {
+    const base = 18_500_000 + i * 110_000;
     const noise = (rng() - 0.5) * 4_000_000;
     const gross = Math.max(8_000_000, base + noise);
     const fees = gross * (0.018 + rng() * 0.006);
@@ -495,3 +495,31 @@ export const fmtBytes = (kb: number) => {
 
 export const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-NG", { year: "numeric", month: "short", day: "numeric" });
+
+// Generate a downloadable CSV from rows of objects.
+export const downloadCsv = (filename: string, rows: Record<string, string | number>[]) => {
+  if (rows.length === 0) return;
+  const headers = Object.keys(rows[0]);
+  const escape = (v: string | number) => {
+    const s = String(v ?? "");
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const csv = [headers.join(","), ...rows.map((r) => headers.map((h) => escape(r[h])).join(","))].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename.endsWith(".csv") ? filename : `${filename}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// Compute next run from cadence relative to a base date.
+export const nextRunFromCadence = (cadence: ScheduledReport["cadence"], from = new Date(2026, 4, 9, 6, 0, 0)) => {
+  const d = new Date(from);
+  if (cadence === "daily") d.setDate(d.getDate() + 1);
+  else if (cadence === "weekly") d.setDate(d.getDate() + 7);
+  else if (cadence === "monthly") d.setMonth(d.getMonth() + 1);
+  else d.setMonth(d.getMonth() + 3);
+  return d.toISOString();
+};
+
