@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Play, Pause, Send, Megaphone, Bell, LayoutTemplate, Plus, Pencil, Gift, Ticket } from "lucide-react";
+import { Search, Play, Pause, Send, Megaphone, Bell, LayoutTemplate, Plus, Pencil, Gift, Ticket, Upload, Image as ImageIcon, Target, MapPin, Smartphone, X } from "lucide-react";
 import {
   campaigns as initial,
   referralPrograms,
@@ -17,9 +19,16 @@ import {
   campaignDestinations,
   campaignStatusTone,
   campaignChannelLabel,
+  bannerSizes,
+  bannerPlacementLabel,
+  audienceSegmentLabel,
+  NG_STATES,
   type Campaign,
   type CampaignStatus,
   type CampaignChannel,
+  type AudienceSegment,
+  type DevicePlatform,
+  type BannerPlacement,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
 
@@ -42,6 +51,11 @@ const channelIcon: Record<CampaignChannel, typeof Bell> = {
   login_banner: LayoutTemplate,
 };
 
+const ALL_SEGMENTS: AudienceSegment[] = [
+  "all_users","just_signed_up","new_user_7d","kyc_pending","kyc_verified","returning_dormant","power_user","no_card","has_card","wallet_high","wallet_low","no_referrals","international_txn",
+];
+const ALL_DEVICES: DevicePlatform[] = ["ios", "android", "web"];
+
 type Draft = {
   id?: string;
   name: string;
@@ -57,6 +71,20 @@ type Draft = {
   utmSource: string;
   linkedProgramId: string;
   linkedPromoCode: string;
+  // Targeting
+  segments: AudienceSegment[];
+  locations: string[];
+  devices: DevicePlatform[];
+  language: "all" | "en" | "ha" | "ig" | "yo";
+  minAppVersion: string;
+  // Banner config (only used when channel === "login_banner")
+  bannerImageUrl: string;
+  bannerSizeId: string;
+  bannerPlacement: BannerPlacement;
+  displaySeconds: number;
+  maxImpressionsPerUser: number;
+  cooldownHours: number;
+  dismissible: boolean;
 };
 
 const emptyDraft: Draft = {
@@ -73,6 +101,18 @@ const emptyDraft: Draft = {
   utmSource: "",
   linkedProgramId: "none",
   linkedPromoCode: "none",
+  segments: ["all_users"],
+  locations: ["All Nigeria"],
+  devices: [],
+  language: "all",
+  minAppVersion: "",
+  bannerImageUrl: "",
+  bannerSizeId: "hero",
+  bannerPlacement: "login_splash",
+  displaySeconds: 0,
+  maxImpressionsPerUser: 3,
+  cooldownHours: 24,
+  dismissible: true,
 };
 
 function parseCta(url: string): { ctaPath: string; utmSource: string } {
