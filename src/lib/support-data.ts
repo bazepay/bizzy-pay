@@ -3,6 +3,15 @@ import { fmtNgn } from "./mock-data";
 
 export { fmtNgn };
 
+export type ThreadMessage = {
+  id: string;
+  author: string;
+  authorRole: "customer" | "agent" | "system";
+  body: string;
+  at: string;
+  internal?: boolean;
+};
+
 export type TicketChannel = "email" | "chat" | "whatsapp" | "twitter" | "in_app" | "phone";
 export type TicketStatus = "new" | "open" | "pending" | "on_hold" | "resolved" | "closed";
 export type TicketPriority = "low" | "normal" | "high" | "urgent";
