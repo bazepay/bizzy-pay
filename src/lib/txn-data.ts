@@ -55,7 +55,7 @@ const PROVIDERS: Record<TxnType, string> = {
   tv: "DStv",
   betting: "SportyBet",
   card_spend: "Marqeta",
-  esim: "Airalo",
+  esim: "TouristeSim",
   number: "Twilio",
   refund: "System",
   fee: "System",

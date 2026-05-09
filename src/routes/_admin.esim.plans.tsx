@@ -224,7 +224,7 @@ function NewPlanDialog({ onCreate }: { onCreate: (p: EsimPlan) => void }) {
   const [days, setDays] = useState("7");
   const [price, setPrice] = useState("");
   const [cost, setCost] = useState("");
-  const [supplier, setSupplier] = useState("Airalo");
+  const [supplier, setSupplier] = useState("TouristeSim");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -270,9 +270,7 @@ function NewPlanDialog({ onCreate }: { onCreate: (p: EsimPlan) => void }) {
             <Select value={supplier} onValueChange={setSupplier}>
               <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Airalo">Airalo</SelectItem>
-                <SelectItem value="eSIM Access">eSIM Access</SelectItem>
-                <SelectItem value="Bytesim">Bytesim</SelectItem>
+                <SelectItem value="TouristeSim">TouristeSim</SelectItem>
               </SelectContent>
             </Select>
           </div>
