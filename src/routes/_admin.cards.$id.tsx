@@ -253,24 +253,35 @@ function CopyRow({ label, value, onCopy }: { label: string; value: string; onCop
 }
 
 function RevealDialog({ children, onConfirm }: { children: React.ReactNode; onConfirm: () => void }) {
-  const [reason, setReason] = useState("");
+  const [password, setPassword] = useState("");
   const [open, setOpen] = useState(false);
   return (
-    <AlertDialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setReason(""); }}>
+    <AlertDialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setPassword(""); }}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2"><ShieldAlert className="h-4 w-4 text-warning" /> Reveal full PAN</AlertDialogTitle>
           <AlertDialogDescription>
-            This action is logged. The cardholder may be notified per program policy. Provide a reason.
+            Re-enter your admin password to reveal the full card number. This action is logged.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <Textarea rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Verifying card with cardholder over support call (ticket #1234)…" />
+        <div className="space-y-1.5">
+          <Label htmlFor="reveal-pwd">Admin password</Label>
+          <Input
+            id="reveal-pwd"
+            type="password"
+            autoFocus
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your admin password"
+          />
+        </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={(e) => {
-            if (reason.trim().length < 8) { e.preventDefault(); toast.error("Reason must be at least 8 characters"); return; }
-            onConfirm(); setOpen(false); setReason("");
+            if (password.length < 1) { e.preventDefault(); toast.error("Password required"); return; }
+            onConfirm(); setOpen(false); setPassword("");
           }}>Reveal for 30s</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
