@@ -85,6 +85,49 @@ export type PromoCode = {
   totalCreditedNgn: number;
 };
 
+// Curated catalog of in-app destinations a campaign CTA can deep-link to.
+// These are user-app routes (not admin), grouped for the picker.
+export type CampaignDestination = {
+  path: string;          // base path (no query)
+  label: string;         // human label shown in picker
+  group: "Wallet" | "Bills" | "Cards" | "eSIM" | "Numbers" | "Growth" | "Account";
+  acceptsPromo?: boolean; // if true, ?promo=CODE is appended when a promo is linked
+};
+
+export const campaignDestinations: CampaignDestination[] = [
+  // Wallet
+  { path: "/", label: "Home / Dashboard", group: "Wallet" },
+  { path: "/wallet", label: "Wallet overview", group: "Wallet" },
+  { path: "/wallet/topup", label: "Top up wallet", group: "Wallet", acceptsPromo: true },
+  { path: "/wallet/send", label: "Send money", group: "Wallet" },
+  { path: "/wallet/history", label: "Transaction history", group: "Wallet" },
+  // Bills
+  { path: "/pay", label: "Pay bills (hub)", group: "Bills", acceptsPromo: true },
+  { path: "/pay/airtime", label: "Buy airtime", group: "Bills", acceptsPromo: true },
+  { path: "/pay/data", label: "Buy data", group: "Bills", acceptsPromo: true },
+  { path: "/pay/electricity", label: "Pay electricity", group: "Bills", acceptsPromo: true },
+  { path: "/pay/cable", label: "Pay cable / TV", group: "Bills", acceptsPromo: true },
+  { path: "/pay/betting", label: "Fund betting wallet", group: "Bills", acceptsPromo: true },
+  // Cards
+  { path: "/cards", label: "My cards", group: "Cards" },
+  { path: "/cards/order", label: "Order a new card", group: "Cards", acceptsPromo: true },
+  { path: "/cards/fund", label: "Fund a card", group: "Cards" },
+  // eSIM
+  { path: "/esim", label: "eSIM marketplace", group: "eSIM" },
+  { path: "/esim/uk-roaming", label: "eSIM — UK roaming bundle", group: "eSIM", acceptsPromo: true },
+  { path: "/esim/us-roaming", label: "eSIM — US roaming bundle", group: "eSIM", acceptsPromo: true },
+  { path: "/esim/eu-roaming", label: "eSIM — EU roaming bundle", group: "eSIM", acceptsPromo: true },
+  // Numbers
+  { path: "/numbers", label: "Virtual numbers", group: "Numbers" },
+  { path: "/numbers/new", label: "Lease a new number", group: "Numbers", acceptsPromo: true },
+  // Growth
+  { path: "/referrals", label: "Refer & earn", group: "Growth" },
+  { path: "/promos", label: "Promos & offers", group: "Growth" },
+  // Account
+  { path: "/kyc", label: "Complete KYC", group: "Account" },
+  { path: "/profile", label: "Profile & settings", group: "Account" },
+];
+
 export const fmtNgn = (n: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(n);
 
