@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Users, Shield, Flag, KeyRound, Palette } from "lucide-react";
+import { Users, Shield, Flag, KeyRound } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/settings")({
   head: () => ({
@@ -17,7 +17,6 @@ const tabs = [
   { to: "/settings/audit-log", label: "Audit log", icon: Shield },
   { to: "/settings/feature-flags", label: "Feature flags", icon: Flag },
   { to: "/settings/api-keys", label: "API keys", icon: KeyRound },
-  { to: "/settings/branding", label: "Branding", icon: Palette },
 ];
 
 function SettingsLayout() {
