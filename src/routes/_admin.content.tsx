@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutGrid, FileText, Megaphone, HelpCircle, Scale } from "lucide-react";
+import { LayoutGrid, HelpCircle, Scale } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/content")({
   head: () => ({
