@@ -30,6 +30,8 @@ import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
 import { Route as AdminKycIdRouteImport } from './routes/_admin.kyc.$id'
 import { Route as AdminEsimPlansRouteImport } from './routes/_admin.esim.plans'
+import { Route as AdminEsimOrdersRouteImport } from './routes/_admin.esim.orders'
+import { Route as AdminEsimInventoryRouteImport } from './routes/_admin.esim.inventory'
 import { Route as AdminCardsProgramsRouteImport } from './routes/_admin.cards.programs'
 import { Route as AdminCardsIssuedRouteImport } from './routes/_admin.cards.issued'
 import { Route as AdminCardsIdRouteImport } from './routes/_admin.cards.$id'
@@ -147,6 +149,16 @@ const AdminEsimPlansRoute = AdminEsimPlansRouteImport.update({
   path: '/plans',
   getParentRoute: () => AdminEsimRoute,
 } as any)
+const AdminEsimOrdersRoute = AdminEsimOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AdminEsimRoute,
+} as any)
+const AdminEsimInventoryRoute = AdminEsimInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AdminEsimRoute,
+} as any)
 const AdminCardsProgramsRoute = AdminCardsProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
@@ -219,6 +231,8 @@ export interface FileRoutesByFullPath {
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
+  '/esim/inventory': typeof AdminEsimInventoryRoute
+  '/esim/orders': typeof AdminEsimOrdersRoute
   '/esim/plans': typeof AdminEsimPlansRoute
   '/kyc/$id': typeof AdminKycIdRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -250,6 +264,8 @@ export interface FileRoutesByTo {
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
+  '/esim/inventory': typeof AdminEsimInventoryRoute
+  '/esim/orders': typeof AdminEsimOrdersRoute
   '/esim/plans': typeof AdminEsimPlansRoute
   '/kyc/$id': typeof AdminKycIdRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
@@ -285,6 +301,8 @@ export interface FileRoutesById {
   '/_admin/cards/$id': typeof AdminCardsIdRoute
   '/_admin/cards/issued': typeof AdminCardsIssuedRoute
   '/_admin/cards/programs': typeof AdminCardsProgramsRoute
+  '/_admin/esim/inventory': typeof AdminEsimInventoryRoute
+  '/_admin/esim/orders': typeof AdminEsimOrdersRoute
   '/_admin/esim/plans': typeof AdminEsimPlansRoute
   '/_admin/kyc/$id': typeof AdminKycIdRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
@@ -321,6 +339,8 @@ export interface FileRouteTypes {
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
+    | '/esim/inventory'
+    | '/esim/orders'
     | '/esim/plans'
     | '/kyc/$id'
     | '/transactions/$id'
@@ -352,6 +372,8 @@ export interface FileRouteTypes {
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
+    | '/esim/inventory'
+    | '/esim/orders'
     | '/esim/plans'
     | '/kyc/$id'
     | '/transactions/$id'
@@ -386,6 +408,8 @@ export interface FileRouteTypes {
     | '/_admin/cards/$id'
     | '/_admin/cards/issued'
     | '/_admin/cards/programs'
+    | '/_admin/esim/inventory'
+    | '/_admin/esim/orders'
     | '/_admin/esim/plans'
     | '/_admin/kyc/$id'
     | '/_admin/transactions/$id'
@@ -566,6 +590,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEsimPlansRouteImport
       parentRoute: typeof AdminEsimRoute
     }
+    '/_admin/esim/orders': {
+      id: '/_admin/esim/orders'
+      path: '/orders'
+      fullPath: '/esim/orders'
+      preLoaderRoute: typeof AdminEsimOrdersRouteImport
+      parentRoute: typeof AdminEsimRoute
+    }
+    '/_admin/esim/inventory': {
+      id: '/_admin/esim/inventory'
+      path: '/inventory'
+      fullPath: '/esim/inventory'
+      preLoaderRoute: typeof AdminEsimInventoryRouteImport
+      parentRoute: typeof AdminEsimRoute
+    }
     '/_admin/cards/programs': {
       id: '/_admin/cards/programs'
       path: '/programs'
@@ -672,11 +710,15 @@ const AdminCardsRouteWithChildren = AdminCardsRoute._addFileChildren(
 )
 
 interface AdminEsimRouteChildren {
+  AdminEsimInventoryRoute: typeof AdminEsimInventoryRoute
+  AdminEsimOrdersRoute: typeof AdminEsimOrdersRoute
   AdminEsimPlansRoute: typeof AdminEsimPlansRoute
   AdminEsimIndexRoute: typeof AdminEsimIndexRoute
 }
 
 const AdminEsimRouteChildren: AdminEsimRouteChildren = {
+  AdminEsimInventoryRoute: AdminEsimInventoryRoute,
+  AdminEsimOrdersRoute: AdminEsimOrdersRoute,
   AdminEsimPlansRoute: AdminEsimPlansRoute,
   AdminEsimIndexRoute: AdminEsimIndexRoute,
 }
@@ -769,3 +811,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
