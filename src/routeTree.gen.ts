@@ -17,6 +17,7 @@ import { Route as AdminSupportRouteImport } from './routes/_admin.support'
 import { Route as AdminSettingsRouteImport } from './routes/_admin.settings'
 import { Route as AdminReportsRouteImport } from './routes/_admin.reports'
 import { Route as AdminReferralsRouteImport } from './routes/_admin.referrals'
+import { Route as AdminRatesRouteImport } from './routes/_admin.rates'
 import { Route as AdminPaymentsRouteImport } from './routes/_admin.payments'
 import { Route as AdminPayRouteImport } from './routes/_admin.pay'
 import { Route as AdminNumbersRouteImport } from './routes/_admin.numbers'
@@ -33,6 +34,7 @@ import { Route as AdminSupportIndexRouteImport } from './routes/_admin.support.i
 import { Route as AdminSettingsIndexRouteImport } from './routes/_admin.settings.index'
 import { Route as AdminReportsIndexRouteImport } from './routes/_admin.reports.index'
 import { Route as AdminReferralsIndexRouteImport } from './routes/_admin.referrals.index'
+import { Route as AdminRatesIndexRouteImport } from './routes/_admin.rates.index'
 import { Route as AdminPaymentsIndexRouteImport } from './routes/_admin.payments.index'
 import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
 import { Route as AdminNumbersIndexRouteImport } from './routes/_admin.numbers.index'
@@ -61,6 +63,8 @@ import { Route as AdminReferralsProgramsRouteImport } from './routes/_admin.refe
 import { Route as AdminReferralsNewsletterRouteImport } from './routes/_admin.referrals.newsletter'
 import { Route as AdminReferralsListRouteImport } from './routes/_admin.referrals.list'
 import { Route as AdminReferralsCampaignsRouteImport } from './routes/_admin.referrals.campaigns'
+import { Route as AdminRatesTransactionsRouteImport } from './routes/_admin.rates.transactions'
+import { Route as AdminRatesServicesRouteImport } from './routes/_admin.rates.services'
 import { Route as AdminPaymentsWebhooksRouteImport } from './routes/_admin.payments.webhooks'
 import { Route as AdminPaymentsSettlementsRouteImport } from './routes/_admin.payments.settlements'
 import { Route as AdminPaymentsRoutingRouteImport } from './routes/_admin.payments.routing'
@@ -145,6 +149,11 @@ const AdminReferralsRoute = AdminReferralsRouteImport.update({
   path: '/referrals',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRatesRoute = AdminRatesRouteImport.update({
+  id: '/rates',
+  path: '/rates',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -224,6 +233,11 @@ const AdminReferralsIndexRoute = AdminReferralsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminReferralsRoute,
+} as any)
+const AdminRatesIndexRoute = AdminRatesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRatesRoute,
 } as any)
 const AdminPaymentsIndexRoute = AdminPaymentsIndexRouteImport.update({
   id: '/',
@@ -366,6 +380,16 @@ const AdminReferralsCampaignsRoute = AdminReferralsCampaignsRouteImport.update({
   id: '/campaigns',
   path: '/campaigns',
   getParentRoute: () => AdminReferralsRoute,
+} as any)
+const AdminRatesTransactionsRoute = AdminRatesTransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AdminRatesRoute,
+} as any)
+const AdminRatesServicesRoute = AdminRatesServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AdminRatesRoute,
 } as any)
 const AdminPaymentsWebhooksRoute = AdminPaymentsWebhooksRouteImport.update({
   id: '/webhooks',
@@ -609,6 +633,7 @@ export interface FileRoutesByFullPath {
   '/numbers': typeof AdminNumbersRouteWithChildren
   '/pay': typeof AdminPayRouteWithChildren
   '/payments': typeof AdminPaymentsRouteWithChildren
+  '/rates': typeof AdminRatesRouteWithChildren
   '/referrals': typeof AdminReferralsRouteWithChildren
   '/reports': typeof AdminReportsRouteWithChildren
   '/settings': typeof AdminSettingsRouteWithChildren
@@ -643,6 +668,8 @@ export interface FileRoutesByFullPath {
   '/payments/routing': typeof AdminPaymentsRoutingRoute
   '/payments/settlements': typeof AdminPaymentsSettlementsRoute
   '/payments/webhooks': typeof AdminPaymentsWebhooksRoute
+  '/rates/services': typeof AdminRatesServicesRoute
+  '/rates/transactions': typeof AdminRatesTransactionsRoute
   '/referrals/campaigns': typeof AdminReferralsCampaignsRoute
   '/referrals/list': typeof AdminReferralsListRoute
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
@@ -671,6 +698,7 @@ export interface FileRoutesByFullPath {
   '/numbers/': typeof AdminNumbersIndexRoute
   '/pay/': typeof AdminPayIndexRoute
   '/payments/': typeof AdminPaymentsIndexRoute
+  '/rates/': typeof AdminRatesIndexRoute
   '/referrals/': typeof AdminReferralsIndexRoute
   '/reports/': typeof AdminReportsIndexRoute
   '/settings/': typeof AdminSettingsIndexRoute
@@ -727,6 +755,8 @@ export interface FileRoutesByTo {
   '/payments/routing': typeof AdminPaymentsRoutingRoute
   '/payments/settlements': typeof AdminPaymentsSettlementsRoute
   '/payments/webhooks': typeof AdminPaymentsWebhooksRoute
+  '/rates/services': typeof AdminRatesServicesRoute
+  '/rates/transactions': typeof AdminRatesTransactionsRoute
   '/referrals/campaigns': typeof AdminReferralsCampaignsRoute
   '/referrals/list': typeof AdminReferralsListRoute
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
@@ -754,6 +784,7 @@ export interface FileRoutesByTo {
   '/numbers': typeof AdminNumbersIndexRoute
   '/pay': typeof AdminPayIndexRoute
   '/payments': typeof AdminPaymentsIndexRoute
+  '/rates': typeof AdminRatesIndexRoute
   '/referrals': typeof AdminReferralsIndexRoute
   '/reports': typeof AdminReportsIndexRoute
   '/settings': typeof AdminSettingsIndexRoute
@@ -791,6 +822,7 @@ export interface FileRoutesById {
   '/_admin/numbers': typeof AdminNumbersRouteWithChildren
   '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/payments': typeof AdminPaymentsRouteWithChildren
+  '/_admin/rates': typeof AdminRatesRouteWithChildren
   '/_admin/referrals': typeof AdminReferralsRouteWithChildren
   '/_admin/reports': typeof AdminReportsRouteWithChildren
   '/_admin/settings': typeof AdminSettingsRouteWithChildren
@@ -825,6 +857,8 @@ export interface FileRoutesById {
   '/_admin/payments/routing': typeof AdminPaymentsRoutingRoute
   '/_admin/payments/settlements': typeof AdminPaymentsSettlementsRoute
   '/_admin/payments/webhooks': typeof AdminPaymentsWebhooksRoute
+  '/_admin/rates/services': typeof AdminRatesServicesRoute
+  '/_admin/rates/transactions': typeof AdminRatesTransactionsRoute
   '/_admin/referrals/campaigns': typeof AdminReferralsCampaignsRoute
   '/_admin/referrals/list': typeof AdminReferralsListRoute
   '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
@@ -853,6 +887,7 @@ export interface FileRoutesById {
   '/_admin/numbers/': typeof AdminNumbersIndexRoute
   '/_admin/pay/': typeof AdminPayIndexRoute
   '/_admin/payments/': typeof AdminPaymentsIndexRoute
+  '/_admin/rates/': typeof AdminRatesIndexRoute
   '/_admin/referrals/': typeof AdminReferralsIndexRoute
   '/_admin/reports/': typeof AdminReportsIndexRoute
   '/_admin/settings/': typeof AdminSettingsIndexRoute
@@ -890,6 +925,7 @@ export interface FileRouteTypes {
     | '/numbers'
     | '/pay'
     | '/payments'
+    | '/rates'
     | '/referrals'
     | '/reports'
     | '/settings'
@@ -924,6 +960,8 @@ export interface FileRouteTypes {
     | '/payments/routing'
     | '/payments/settlements'
     | '/payments/webhooks'
+    | '/rates/services'
+    | '/rates/transactions'
     | '/referrals/campaigns'
     | '/referrals/list'
     | '/referrals/newsletter'
@@ -952,6 +990,7 @@ export interface FileRouteTypes {
     | '/numbers/'
     | '/pay/'
     | '/payments/'
+    | '/rates/'
     | '/referrals/'
     | '/reports/'
     | '/settings/'
@@ -1008,6 +1047,8 @@ export interface FileRouteTypes {
     | '/payments/routing'
     | '/payments/settlements'
     | '/payments/webhooks'
+    | '/rates/services'
+    | '/rates/transactions'
     | '/referrals/campaigns'
     | '/referrals/list'
     | '/referrals/newsletter'
@@ -1035,6 +1076,7 @@ export interface FileRouteTypes {
     | '/numbers'
     | '/pay'
     | '/payments'
+    | '/rates'
     | '/referrals'
     | '/reports'
     | '/settings'
@@ -1071,6 +1113,7 @@ export interface FileRouteTypes {
     | '/_admin/numbers'
     | '/_admin/pay'
     | '/_admin/payments'
+    | '/_admin/rates'
     | '/_admin/referrals'
     | '/_admin/reports'
     | '/_admin/settings'
@@ -1105,6 +1148,8 @@ export interface FileRouteTypes {
     | '/_admin/payments/routing'
     | '/_admin/payments/settlements'
     | '/_admin/payments/webhooks'
+    | '/_admin/rates/services'
+    | '/_admin/rates/transactions'
     | '/_admin/referrals/campaigns'
     | '/_admin/referrals/list'
     | '/_admin/referrals/newsletter'
@@ -1133,6 +1178,7 @@ export interface FileRouteTypes {
     | '/_admin/numbers/'
     | '/_admin/pay/'
     | '/_admin/payments/'
+    | '/_admin/rates/'
     | '/_admin/referrals/'
     | '/_admin/reports/'
     | '/_admin/settings/'
@@ -1219,6 +1265,13 @@ declare module '@tanstack/react-router' {
       path: '/referrals'
       fullPath: '/referrals'
       preLoaderRoute: typeof AdminReferralsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/rates': {
+      id: '/_admin/rates'
+      path: '/rates'
+      fullPath: '/rates'
+      preLoaderRoute: typeof AdminRatesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/payments': {
@@ -1332,6 +1385,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/referrals/'
       preLoaderRoute: typeof AdminReferralsIndexRouteImport
       parentRoute: typeof AdminReferralsRoute
+    }
+    '/_admin/rates/': {
+      id: '/_admin/rates/'
+      path: '/'
+      fullPath: '/rates/'
+      preLoaderRoute: typeof AdminRatesIndexRouteImport
+      parentRoute: typeof AdminRatesRoute
     }
     '/_admin/payments/': {
       id: '/_admin/payments/'
@@ -1528,6 +1588,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/referrals/campaigns'
       preLoaderRoute: typeof AdminReferralsCampaignsRouteImport
       parentRoute: typeof AdminReferralsRoute
+    }
+    '/_admin/rates/transactions': {
+      id: '/_admin/rates/transactions'
+      path: '/transactions'
+      fullPath: '/rates/transactions'
+      preLoaderRoute: typeof AdminRatesTransactionsRouteImport
+      parentRoute: typeof AdminRatesRoute
+    }
+    '/_admin/rates/services': {
+      id: '/_admin/rates/services'
+      path: '/services'
+      fullPath: '/rates/services'
+      preLoaderRoute: typeof AdminRatesServicesRouteImport
+      parentRoute: typeof AdminRatesRoute
     }
     '/_admin/payments/webhooks': {
       id: '/_admin/payments/webhooks'
@@ -1995,6 +2069,22 @@ const AdminPaymentsRouteWithChildren = AdminPaymentsRoute._addFileChildren(
   AdminPaymentsRouteChildren,
 )
 
+interface AdminRatesRouteChildren {
+  AdminRatesServicesRoute: typeof AdminRatesServicesRoute
+  AdminRatesTransactionsRoute: typeof AdminRatesTransactionsRoute
+  AdminRatesIndexRoute: typeof AdminRatesIndexRoute
+}
+
+const AdminRatesRouteChildren: AdminRatesRouteChildren = {
+  AdminRatesServicesRoute: AdminRatesServicesRoute,
+  AdminRatesTransactionsRoute: AdminRatesTransactionsRoute,
+  AdminRatesIndexRoute: AdminRatesIndexRoute,
+}
+
+const AdminRatesRouteWithChildren = AdminRatesRoute._addFileChildren(
+  AdminRatesRouteChildren,
+)
+
 interface AdminReferralsRouteChildren {
   AdminReferralsCampaignsRoute: typeof AdminReferralsCampaignsRoute
   AdminReferralsListRoute: typeof AdminReferralsListRoute
@@ -2135,6 +2225,7 @@ interface AdminRouteChildren {
   AdminNumbersRoute: typeof AdminNumbersRouteWithChildren
   AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminPaymentsRoute: typeof AdminPaymentsRouteWithChildren
+  AdminRatesRoute: typeof AdminRatesRouteWithChildren
   AdminReferralsRoute: typeof AdminReferralsRouteWithChildren
   AdminReportsRoute: typeof AdminReportsRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
@@ -2158,6 +2249,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminNumbersRoute: AdminNumbersRouteWithChildren,
   AdminPayRoute: AdminPayRouteWithChildren,
   AdminPaymentsRoute: AdminPaymentsRouteWithChildren,
+  AdminRatesRoute: AdminRatesRouteWithChildren,
   AdminReferralsRoute: AdminReferralsRouteWithChildren,
   AdminReportsRoute: AdminReportsRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRouteWithChildren,
