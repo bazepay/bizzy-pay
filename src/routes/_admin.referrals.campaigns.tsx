@@ -54,7 +54,8 @@ type Draft = {
   startAt: string;
   endAt: string;
   budgetNgn: number;
-  ctaUrl: string;
+  ctaPath: string;     // chosen destination path
+  utmSource: string;   // optional, appended as ?utm_source=
   linkedProgramId: string;
   linkedPromoCode: string;
 };
@@ -67,10 +68,21 @@ const emptyDraft: Draft = {
   startAt: "",
   endAt: "",
   budgetNgn: 500_000,
-  ctaUrl: "",
+  ctaPath: "",
+  utmSource: "",
   linkedProgramId: "none",
   linkedPromoCode: "none",
 };
+
+// Split a stored ctaUrl ("/path?promo=X&utm_source=Y") back into picker fields.
+function parseCta(url: string): { ctaPath: string; utmSource: string } {
+  if (!url) return { ctaPath: "", utmSource: "" };
+  const [path, qs] = url.split("?");
+  const params = new URLSearchParams(qs ?? "");
+  // Match against catalog if possible; otherwise fall back to raw path.
+  const match = campaignDestinations.find((d) => d.path === path);
+  return { ctaPath: match ? match.path : path, utmSource: params.get("utm_source") ?? "" };
+}
 
 function CampaignsPage() {
   const [items, setItems] = useState<Campaign[]>(initial);
