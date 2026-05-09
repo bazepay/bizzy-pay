@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, Plus, ShieldOff, Trash2, RefreshCw } from "lucide-react";
-import { numberPool, numberStatusTone, fmtNgn, type PoolNumber, type NumberStatus } from "@/lib/numbers-data";
+import { numberPool, numberCountries, numberStatusTone, fmtNgn, type PoolNumber, type NumberStatus } from "@/lib/numbers-data";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_admin/numbers/pool")({
