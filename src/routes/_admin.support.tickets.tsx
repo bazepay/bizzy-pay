@@ -80,8 +80,10 @@ function TicketsPage() {
     setItems((prev) => prev.map((t) => t.id === id ? { ...t, status: "resolved" as TicketStatus, updatedAt: new Date().toISOString(), resolutionMins: t.resolutionMins ?? 60 } : t));
     toast.success(`${id} resolved`);
   };
-
-  const exportCsv = () => {
+  const reopenTicket = (id: string) => {
+    setItems((prev) => prev.map((t) => t.id === id ? { ...t, status: "open" as TicketStatus, updatedAt: new Date().toISOString() } : t));
+    toast.success(`${id} reopened`);
+  };
     const headers = ["id", "subject", "customer", "email", "channel", "category", "priority", "status", "assignee", "created_at", "first_response_mins", "resolution_mins", "amount_ngn"];
     const lines = [headers.join(",")];
     rows.forEach((t) => lines.push([
