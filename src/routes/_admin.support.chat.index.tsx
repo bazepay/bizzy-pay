@@ -16,7 +16,7 @@ import {
 } from "@/lib/support-data";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_admin/support/chat")({
+export const Route = createFileRoute("/_admin/support/chat/")({
   component: ChatQueuePage,
 });
 

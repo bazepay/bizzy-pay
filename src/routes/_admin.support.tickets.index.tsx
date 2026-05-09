@@ -23,7 +23,7 @@ import {
 } from "@/lib/support-data";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_admin/support/tickets")({
+export const Route = createFileRoute("/_admin/support/tickets/")({
   component: TicketsPage,
 });
 
