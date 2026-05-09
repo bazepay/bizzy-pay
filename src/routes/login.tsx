@@ -22,7 +22,7 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const session = useSession();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("Admin@bazepay.com");
+  const [email, setEmail] = useState("ada.okafor@bazepay.com");
   const [password, setPassword] = useState("admin123");
   const [code, setCode] = useState("");
   const [step, setStep] = useState<"creds" | "totp">("creds");

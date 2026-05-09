@@ -90,7 +90,7 @@ export const adminStatusTone: Record<Admin["status"], string> = {
 };
 
 export const admins: Admin[] = [
-  { id: "adm_001", name: "Aisha Okeke", email: "aisha@bazepay.ng", role: "owner", status: "active", twoFA: true, lastLoginAt: new Date(Date.now() - 30 * 60_000).toISOString(), createdAt: new Date(Date.now() - 480 * 86400_000).toISOString() },
+  { id: "adm_001", name: "Super Admin", email: "Admin@bazepay.com", role: "owner", status: "active", twoFA: true, lastLoginAt: new Date(Date.now() - 30 * 60_000).toISOString(), createdAt: new Date(Date.now() - 480 * 86400_000).toISOString() },
   { id: "adm_002", name: "Tunde Adeyemi", email: "tunde@bazepay.ng", role: "admin", status: "active", twoFA: true, lastLoginAt: new Date(Date.now() - 4 * 3600_000).toISOString(), createdAt: new Date(Date.now() - 380 * 86400_000).toISOString() },
   { id: "adm_003", name: "Kemi Balogun", email: "kemi@bazepay.ng", role: "compliance", status: "active", twoFA: true, lastLoginAt: new Date(Date.now() - 6 * 3600_000).toISOString(), createdAt: new Date(Date.now() - 220 * 86400_000).toISOString() },
   { id: "adm_004", name: "David Lawal", email: "david@bazepay.ng", role: "ops", status: "active", twoFA: true, lastLoginAt: new Date(Date.now() - 18 * 3600_000).toISOString(), createdAt: new Date(Date.now() - 200 * 86400_000).toISOString() },
