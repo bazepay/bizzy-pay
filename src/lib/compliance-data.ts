@@ -73,6 +73,44 @@ export type AuditEntry = {
   meta?: string;
 };
 
+// Rule-engine types. Each AML/Risk policy has a typed `params` object the
+// detection engine reads at evaluation time. Compliance can tune these from
+// the Policies UI without a code deploy.
+export type RuleType =
+  | "structuring"
+  | "velocity"
+  | "sanctions"
+  | "high_risk_country"
+  | "rapid_movement"
+  | "device_anomaly"
+  | "risk_score"
+  | "none"; // for non-engine policies (KYC docs, authorization rules)
+
+export type RuleAction = "flag" | "review" | "auto_freeze" | "block_txn";
+
+export type RuleParams = {
+  // structuring
+  thresholdNgn?: number;
+  windowHours?: number;
+  minTxnCount?: number;
+  // velocity
+  baselineMultiplier?: number;
+  baselineDays?: number;
+  // sanctions
+  lists?: ("OFAC SDN" | "UN Consolidated" | "EU Consolidated" | "UK HMT" | "Internal PEP")[];
+  fuzzyScore?: number; // 0-100
+  // high_risk_country
+  countries?: string[];
+  // rapid_movement
+  outInRatio?: number; // 0-1
+  // device_anomaly
+  newDevice?: boolean;
+  newGeo?: boolean;
+  minAmountNgn?: number;
+  // risk_score
+  scoreThreshold?: number; // 0-100
+};
+
 export type Policy = {
   id: string;
   name: string;
@@ -82,7 +120,30 @@ export type Policy = {
   owner: string;
   updatedAt: string;
   description: string;
+  ruleType: RuleType;
+  severity: AlertSeverity;
+  action: RuleAction;
+  params: RuleParams;
 };
+
+export const ruleTypeLabel: Record<RuleType, string> = {
+  structuring: "Structuring",
+  velocity: "Velocity",
+  sanctions: "Sanctions screening",
+  high_risk_country: "High-risk country",
+  rapid_movement: "Rapid movement",
+  device_anomaly: "Device anomaly",
+  risk_score: "Risk score",
+  none: "Non-engine policy",
+};
+
+export const ruleActionLabel: Record<RuleAction, string> = {
+  flag: "Flag for review",
+  review: "Manual review",
+  auto_freeze: "Auto-freeze wallet",
+  block_txn: "Block transaction",
+};
+
 
 const NAMES = [
   "Adaeze Okafor","Tunde Bakare","Chiamaka Eze","Ibrahim Musa","Ngozi Obi","Femi Adeyemi",
@@ -195,15 +256,18 @@ export const auditLog: AuditEntry[] = Array.from({ length: 60 }, (_, i) => {
 });
 
 export const policies: Policy[] = [
-  { id: "pol_0101", name: "Tier 1 KYC Requirements", category: "KYC", version: "v3.2", status: "active", owner: "Aisha O.", updatedAt: new Date(Date.now() - 6 * 86400_000).toISOString(), description: "BVN + phone verification. ₦300,000 daily limit, ₦2,000,000 cumulative." },
-  { id: "pol_0102", name: "Tier 2 KYC Requirements", category: "KYC", version: "v2.8", status: "active", owner: "Aisha O.", updatedAt: new Date(Date.now() - 14 * 86400_000).toISOString(), description: "Government ID + utility bill + selfie liveness. ₦5M daily / ₦25M monthly." },
-  { id: "pol_0103", name: "Enhanced Due Diligence", category: "KYC", version: "v1.4", status: "active", owner: "Tunde A.", updatedAt: new Date(Date.now() - 22 * 86400_000).toISOString(), description: "Source of funds, PEP screening, beneficial ownership for accounts >₦25M throughput." },
-  { id: "pol_0201", name: "Structuring Detection", category: "AML", version: "v4.1", status: "active", owner: "Priya M.", updatedAt: new Date(Date.now() - 3 * 86400_000).toISOString(), description: "Detects splitting of deposits below ₦5M reporting threshold within rolling 24h window." },
-  { id: "pol_0202", name: "Velocity Monitoring", category: "AML", version: "v2.0", status: "active", owner: "Priya M.", updatedAt: new Date(Date.now() - 11 * 86400_000).toISOString(), description: "Flags accounts exceeding 3× rolling 30-day baseline on outbound transactions." },
-  { id: "pol_0203", name: "Sanctions Screening", category: "AML", version: "v5.0", status: "active", owner: "Tunde A.", updatedAt: new Date(Date.now() - 1 * 86400_000).toISOString(), description: "Real-time screening against OFAC, UN, EU, UK HMT and internal PEP lists." },
-  { id: "pol_0301", name: "Card Issuance Eligibility", category: "Card", version: "v1.2", status: "active", owner: "Kemi B.", updatedAt: new Date(Date.now() - 30 * 86400_000).toISOString(), description: "Tier 2+ KYC, no open AML alerts, no chargeback history within 90 days." },
-  { id: "pol_0401", name: "Wallet Freeze Authorization", category: "Wallet", version: "v2.3", status: "active", owner: "David L.", updatedAt: new Date(Date.now() - 9 * 86400_000).toISOString(), description: "Requires senior_agent or above. Auto-freeze on critical AML alerts pending review." },
-  { id: "pol_0501", name: "Transaction Risk Scoring", category: "Risk", version: "v3.0", status: "draft", owner: "Joy E.", updatedAt: new Date(Date.now() - 2 * 86400_000).toISOString(), description: "ML-based real-time risk score blending device, geo, behaviour and counterparty signals." },
+  { id: "pol_0101", name: "Tier 1 KYC Requirements", category: "KYC", version: "v3.2", status: "active", owner: "Aisha O.", updatedAt: new Date(Date.now() - 6 * 86400_000).toISOString(), description: "BVN + phone verification. ₦300,000 daily limit, ₦2,000,000 cumulative.", ruleType: "none", severity: "low", action: "review", params: {} },
+  { id: "pol_0102", name: "Tier 2 KYC Requirements", category: "KYC", version: "v2.8", status: "active", owner: "Aisha O.", updatedAt: new Date(Date.now() - 14 * 86400_000).toISOString(), description: "Government ID + utility bill + selfie liveness. ₦5M daily / ₦25M monthly.", ruleType: "none", severity: "low", action: "review", params: {} },
+  { id: "pol_0103", name: "Enhanced Due Diligence", category: "KYC", version: "v1.4", status: "active", owner: "Tunde A.", updatedAt: new Date(Date.now() - 22 * 86400_000).toISOString(), description: "Source of funds, PEP screening, beneficial ownership for accounts >₦25M throughput.", ruleType: "none", severity: "medium", action: "review", params: {} },
+  { id: "pol_0201", name: "Structuring Detection", category: "AML", version: "v4.1", status: "active", owner: "Priya M.", updatedAt: new Date(Date.now() - 3 * 86400_000).toISOString(), description: "Detects splitting of deposits below ₦5M reporting threshold within rolling 24h window.", ruleType: "structuring", severity: "high", action: "flag", params: { thresholdNgn: 5_000_000, windowHours: 24, minTxnCount: 3 } },
+  { id: "pol_0202", name: "Velocity Monitoring", category: "AML", version: "v2.0", status: "active", owner: "Priya M.", updatedAt: new Date(Date.now() - 11 * 86400_000).toISOString(), description: "Flags accounts exceeding 3× rolling 30-day baseline on outbound transactions.", ruleType: "velocity", severity: "medium", action: "flag", params: { baselineMultiplier: 3, baselineDays: 30 } },
+  { id: "pol_0203", name: "Sanctions Screening", category: "AML", version: "v5.0", status: "active", owner: "Tunde A.", updatedAt: new Date(Date.now() - 1 * 86400_000).toISOString(), description: "Real-time screening against OFAC, UN, EU, UK HMT and internal PEP lists.", ruleType: "sanctions", severity: "critical", action: "block_txn", params: { lists: ["OFAC SDN", "UN Consolidated", "EU Consolidated", "UK HMT", "Internal PEP"], fuzzyScore: 85 } },
+  { id: "pol_0204", name: "Rapid Cash-Out", category: "AML", version: "v1.1", status: "active", owner: "Priya M.", updatedAt: new Date(Date.now() - 5 * 86400_000).toISOString(), description: "Flags when ≥95% of inbound is moved out within 1 hour.", ruleType: "rapid_movement", severity: "high", action: "auto_freeze", params: { outInRatio: 0.95, windowHours: 1 } },
+  { id: "pol_0205", name: "High-Risk Corridor", category: "AML", version: "v2.2", status: "active", owner: "Tunde A.", updatedAt: new Date(Date.now() - 8 * 86400_000).toISOString(), description: "Inbound from FATF grey-listed jurisdictions.", ruleType: "high_risk_country", severity: "high", action: "flag", params: { countries: ["IRN", "PRK", "MMR", "SYR"] } },
+  { id: "pol_0301", name: "Card Issuance Eligibility", category: "Card", version: "v1.2", status: "active", owner: "Kemi B.", updatedAt: new Date(Date.now() - 30 * 86400_000).toISOString(), description: "Tier 2+ KYC, no open AML alerts, no chargeback history within 90 days.", ruleType: "none", severity: "low", action: "review", params: {} },
+  { id: "pol_0401", name: "Wallet Freeze Authorization", category: "Wallet", version: "v2.3", status: "active", owner: "David L.", updatedAt: new Date(Date.now() - 9 * 86400_000).toISOString(), description: "Requires senior_agent or above. Auto-freeze on critical AML alerts pending review.", ruleType: "none", severity: "high", action: "auto_freeze", params: {} },
+  { id: "pol_0402", name: "Device + Geo Anomaly", category: "Wallet", version: "v1.0", status: "active", owner: "David L.", updatedAt: new Date(Date.now() - 4 * 86400_000).toISOString(), description: "New device + new geography on high-value transaction.", ruleType: "device_anomaly", severity: "low", action: "flag", params: { newDevice: true, newGeo: true, minAmountNgn: 500_000 } },
+  { id: "pol_0501", name: "Transaction Risk Scoring", category: "Risk", version: "v3.0", status: "draft", owner: "Joy E.", updatedAt: new Date(Date.now() - 2 * 86400_000).toISOString(), description: "ML-based real-time risk score blending device, geo, behaviour and counterparty signals.", ruleType: "risk_score", severity: "medium", action: "review", params: { scoreThreshold: 75 } },
 ];
 
 // ---- formatters / labels ----
