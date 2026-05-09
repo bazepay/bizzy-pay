@@ -50,20 +50,14 @@ function TxnDetail() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<TxnStatus>(initial.status);
   const [flagged, setFlagged] = useState(initial.flagged);
-  const [reason, setReason] = useState("");
 
   const txn = { ...initial, status, flagged };
 
   const StatusIcon = status === "success" ? CheckCircle2 : status === "failed" || status === "reversed" ? XCircle : Clock;
 
   const apply = (next: TxnStatus, label: string) => {
-    if (!reason.trim()) {
-      toast.error("Add an audit reason first.");
-      return;
-    }
     setStatus(next);
     toast.success(`${label} · audit logged`);
-    setReason("");
   };
 
   return (
