@@ -148,13 +148,18 @@ function TicketsPage() {
               const breaching = t.status !== "resolved" && t.status !== "closed" && ageMins > t.slaTargetMins;
               const slaPct = Math.min(100, (ageMins / t.slaTargetMins) * 100);
               return (
-                <TableRow key={t.id}>
+                <TableRow key={t.id} className="cursor-pointer hover:bg-muted/40" onClick={(e) => {
+                  // Avoid navigating when clicking interactive children (buttons, links)
+                  const tgt = e.target as HTMLElement;
+                  if (tgt.closest("button, a")) return;
+                  window.location.assign(`/support/tickets/${t.id}`);
+                }}>
                   <TableCell className="max-w-[280px]">
-                    <div className="text-sm font-medium truncate">{t.subject}</div>
+                    <Link to="/support/tickets/$id" params={{ id: t.id }} className="text-sm font-medium truncate block hover:text-primary hover:underline">{t.subject}</Link>
                     <div className="text-[11px] text-muted-foreground font-mono">{t.id}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm truncate max-w-[160px]">{t.customerName}</div>
+                    <Link to="/users/$id" params={{ id: t.customerId }} className="text-sm truncate max-w-[160px] block hover:text-primary hover:underline">{t.customerName}</Link>
                     <div className="text-[10px] text-muted-foreground font-mono truncate max-w-[160px]">{t.customerId}</div>
                   </TableCell>
                   <TableCell className="text-xs whitespace-nowrap">{channelLabel[t.channel]}</TableCell>
@@ -172,6 +177,9 @@ function TicketsPage() {
                   <TableCell><Badge variant="outline" className={`text-[10px] capitalize ${ticketStatusTone[t.status]}`}>{t.status.replace("_", " ")}</Badge></TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center gap-1 justify-end">
+                      <Button asChild size="sm" variant="ghost" className="h-7 px-2 text-xs gap-1">
+                        <Link to="/support/tickets/$id" params={{ id: t.id }}><Eye className="h-3 w-3" /> View</Link>
+                      </Button>
                       {!t.assigneeName && (
                         <Button size="sm" variant="ghost" className="h-7 px-2 text-xs gap-1" onClick={() => assignSelf(t.id)}>
                           <UserCheck className="h-3 w-3" /> Assign
@@ -180,6 +188,11 @@ function TicketsPage() {
                       {t.status !== "resolved" && t.status !== "closed" && (
                         <Button size="sm" variant="ghost" className="h-7 px-2 text-xs gap-1 text-success" onClick={() => resolveTicket(t.id)}>
                           <CheckCircle2 className="h-3 w-3" /> Resolve
+                        </Button>
+                      )}
+                      {(t.status === "resolved" || t.status === "closed") && (
+                        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs gap-1" onClick={() => reopenTicket(t.id)}>
+                          <RotateCcw className="h-3 w-3" /> Reopen
                         </Button>
                       )}
                     </div>
