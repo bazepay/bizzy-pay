@@ -58,14 +58,12 @@ export type SmsEvent = {
   text: string;
 };
 
-export const numberSuppliers: { id: string; name: NumberSupplier; health: "healthy" | "degraded" | "down"; latencyMs: number; countries: number; lastSync: string }[] = [
-  { id: "sup_twilio", name: "Twilio", health: "healthy", latencyMs: 142, countries: 88, lastSync: new Date(Date.now() - 2 * 60_000).toISOString() },
-  { id: "sup_vonage", name: "Vonage", health: "healthy", latencyMs: 198, countries: 64, lastSync: new Date(Date.now() - 5 * 60_000).toISOString() },
-  { id: "sup_telnyx", name: "Telnyx", health: "degraded", latencyMs: 412, countries: 52, lastSync: new Date(Date.now() - 11 * 60_000).toISOString() },
+export const numberSuppliers: { id: string; name: NumberSupplier; health: "healthy" | "degraded" | "down"; latencyMs: number; countries: number; plans: number; lastSync: string }[] = [
+  { id: "sup_touristesim", name: "TouristeSim", health: "healthy", latencyMs: 168, countries: 4, plans: 30, lastSync: new Date(Date.now() - 3 * 60_000).toISOString() },
 ];
 
-const services: NumberService[] = ["WhatsApp", "Telegram", "SMS", "Voice", "Generic"];
-const suppliers: NumberSupplier[] = ["Twilio", "Vonage", "Telnyx"];
+const services: NumberService[] = ["WhatsApp", "Telegram", "SMS", "Generic"];
+const billingPeriods: BillingPeriod[] = ["daily", "weekly", "monthly", "annual"];
 const statuses: NumberStatus[] = ["available", "available", "available", "leased", "leased", "quarantined"];
 
 function pad(n: number, w = 4) { return String(n).padStart(w, "0"); }
