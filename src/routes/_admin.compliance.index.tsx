@@ -156,6 +156,31 @@ function ComplianceOverview() {
         </Card>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Card className="shadow-card">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-display font-bold">Sanctions screening</h2>
+              <p className="text-xs text-muted-foreground">{stats.pendingScreens} hit{stats.pendingScreens === 1 ? "" : "s"} pending review</p>
+            </div>
+            <Button asChild variant="outline" size="sm" className="gap-1">
+              <Link to="/compliance/sanctions">Open <ArrowRight className="h-3.5 w-3.5" /></Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card className="shadow-card">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-display font-bold">Policy library</h2>
+              <p className="text-xs text-muted-foreground">KYC, AML, Card, Wallet & Risk policies</p>
+            </div>
+            <Button asChild variant="outline" size="sm" className="gap-1">
+              <Link to="/compliance/policies">Open <ArrowRight className="h-3.5 w-3.5" /></Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card className="shadow-card">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-3">

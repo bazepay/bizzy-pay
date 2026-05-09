@@ -52,6 +52,10 @@ function AlertDetailPage() {
 
   const setAlertStatus = (next: AlertStatus, label: string) => {
     setStatus(next);
+    setNotes((prev) => [
+      ...prev,
+      { author: "You", at: new Date().toISOString(), text: `Status changed → ${alertStatusLabel[next]} (${label}).` },
+    ]);
     toast.success(`Alert ${label.toLowerCase()}`);
   };
 
