@@ -185,8 +185,6 @@ function TxnDetail() {
                 trigger={<Button size="sm" variant="outline" className="w-full justify-start"><RotateCcw className="h-3.5 w-3.5 mr-2" /> Reverse transaction</Button>}
                 title="Reverse this transaction?"
                 description="The user will be credited back the gross amount. This action is logged and cannot be undone."
-                reason={reason}
-                setReason={setReason}
                 confirmLabel="Reverse"
                 onConfirm={() => apply("reversed", "Reversal queued")}
               />
@@ -194,8 +192,6 @@ function TxnDetail() {
                 trigger={<Button size="sm" variant="outline" className="w-full justify-start"><ShieldAlert className="h-3.5 w-3.5 mr-2" /> Mark for review</Button>}
                 title="Hold for compliance review?"
                 description="Funds remain held until a compliance officer clears or reverses the transaction."
-                reason={reason}
-                setReason={setReason}
                 confirmLabel="Hold"
                 onConfirm={() => apply("review", "Held for review")}
               />
@@ -203,8 +199,6 @@ function TxnDetail() {
                 trigger={<Button size="sm" variant="outline" className="w-full justify-start"><CheckCircle2 className="h-3.5 w-3.5 mr-2" /> Force success</Button>}
                 title="Force-mark as success?"
                 description="Use only when the provider confirmed settlement out-of-band."
-                reason={reason}
-                setReason={setReason}
                 confirmLabel="Mark success"
                 onConfirm={() => apply("success", "Marked success")}
               />
