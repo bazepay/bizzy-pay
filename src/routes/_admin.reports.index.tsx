@@ -15,6 +15,7 @@ import {
   categoryLabel,
   categoryTone,
   fmtRelative,
+  downloadCsv,
   type ReportCategory,
 } from "@/lib/reports-data";
 import { fmtNgn, fmtNum } from "@/lib/mock-data";
@@ -138,7 +139,7 @@ function ReportsOverview() {
                 <Button size="sm" onClick={() => runNow(r.name)} className="gap-1.5">
                   <Play className="h-3.5 w-3.5" /> Run now
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => toast.success(`Downloaded ${r.formats[0].toUpperCase()}`)} className="gap-1.5">
+                <Button size="sm" variant="outline" onClick={() => { downloadCsv(r.id, [{ id: r.id, name: r.name, category: r.category, owner: r.owner, lastRun: r.lastRun, rows: r.rowsLastRun }]); toast.success(`${r.formats[0].toUpperCase()} downloaded`); }} className="gap-1.5">
                   <Download className="h-3.5 w-3.5" /> {r.formats[0].toUpperCase()}
                 </Button>
                 <div className="ml-auto text-xs text-muted-foreground">{r.owner}</div>
