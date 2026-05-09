@@ -29,7 +29,7 @@ function PayOverview() {
     };
   });
 
-  const recent = [...billOrders].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)).slice(0, 8);
+  const recent = [...billOrders].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)).slice(0, 4);
   const incidents = billers.filter((b) => b.status === "down" || b.status === "degraded").slice(0, 6);
 
   return (
