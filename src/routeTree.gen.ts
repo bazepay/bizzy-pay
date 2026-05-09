@@ -31,6 +31,7 @@ import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index
 import { Route as AdminTransactionsIndexRouteImport } from './routes/_admin.transactions.index'
 import { Route as AdminSupportIndexRouteImport } from './routes/_admin.support.index'
 import { Route as AdminSettingsIndexRouteImport } from './routes/_admin.settings.index'
+import { Route as AdminReportsIndexRouteImport } from './routes/_admin.reports.index'
 import { Route as AdminReferralsIndexRouteImport } from './routes/_admin.referrals.index'
 import { Route as AdminPaymentsIndexRouteImport } from './routes/_admin.payments.index'
 import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
@@ -51,6 +52,11 @@ import { Route as AdminSettingsFeatureFlagsRouteImport } from './routes/_admin.s
 import { Route as AdminSettingsBrandingRouteImport } from './routes/_admin.settings.branding'
 import { Route as AdminSettingsAuditLogRouteImport } from './routes/_admin.settings.audit-log'
 import { Route as AdminSettingsApiKeysRouteImport } from './routes/_admin.settings.api-keys'
+import { Route as AdminReportsScheduledRouteImport } from './routes/_admin.reports.scheduled'
+import { Route as AdminReportsOperationsRouteImport } from './routes/_admin.reports.operations'
+import { Route as AdminReportsFinancialRouteImport } from './routes/_admin.reports.financial'
+import { Route as AdminReportsExportsRouteImport } from './routes/_admin.reports.exports'
+import { Route as AdminReportsComplianceRouteImport } from './routes/_admin.reports.compliance'
 import { Route as AdminReferralsPromosRouteImport } from './routes/_admin.referrals.promos'
 import { Route as AdminReferralsProgramsRouteImport } from './routes/_admin.referrals.programs'
 import { Route as AdminReferralsNewsletterRouteImport } from './routes/_admin.referrals.newsletter'
@@ -210,6 +216,11 @@ const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminSettingsRoute,
 } as any)
+const AdminReportsIndexRoute = AdminReportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminReportsRoute,
+} as any)
 const AdminReferralsIndexRoute = AdminReferralsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -310,6 +321,31 @@ const AdminSettingsApiKeysRoute = AdminSettingsApiKeysRouteImport.update({
   id: '/api-keys',
   path: '/api-keys',
   getParentRoute: () => AdminSettingsRoute,
+} as any)
+const AdminReportsScheduledRoute = AdminReportsScheduledRouteImport.update({
+  id: '/scheduled',
+  path: '/scheduled',
+  getParentRoute: () => AdminReportsRoute,
+} as any)
+const AdminReportsOperationsRoute = AdminReportsOperationsRouteImport.update({
+  id: '/operations',
+  path: '/operations',
+  getParentRoute: () => AdminReportsRoute,
+} as any)
+const AdminReportsFinancialRoute = AdminReportsFinancialRouteImport.update({
+  id: '/financial',
+  path: '/financial',
+  getParentRoute: () => AdminReportsRoute,
+} as any)
+const AdminReportsExportsRoute = AdminReportsExportsRouteImport.update({
+  id: '/exports',
+  path: '/exports',
+  getParentRoute: () => AdminReportsRoute,
+} as any)
+const AdminReportsComplianceRoute = AdminReportsComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => AdminReportsRoute,
 } as any)
 const AdminReferralsPromosRoute = AdminReferralsPromosRouteImport.update({
   id: '/promos',
@@ -580,7 +616,7 @@ export interface FileRoutesByFullPath {
   '/pay': typeof AdminPayRouteWithChildren
   '/payments': typeof AdminPaymentsRouteWithChildren
   '/referrals': typeof AdminReferralsRouteWithChildren
-  '/reports': typeof AdminReportsRoute
+  '/reports': typeof AdminReportsRouteWithChildren
   '/settings': typeof AdminSettingsRouteWithChildren
   '/support': typeof AdminSupportRouteWithChildren
   '/wallets': typeof AdminWalletsRouteWithChildren
@@ -618,6 +654,11 @@ export interface FileRoutesByFullPath {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/reports/compliance': typeof AdminReportsComplianceRoute
+  '/reports/exports': typeof AdminReportsExportsRoute
+  '/reports/financial': typeof AdminReportsFinancialRoute
+  '/reports/operations': typeof AdminReportsOperationsRoute
+  '/reports/scheduled': typeof AdminReportsScheduledRoute
   '/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/settings/branding': typeof AdminSettingsBrandingRoute
@@ -638,6 +679,7 @@ export interface FileRoutesByFullPath {
   '/pay/': typeof AdminPayIndexRoute
   '/payments/': typeof AdminPaymentsIndexRoute
   '/referrals/': typeof AdminReferralsIndexRoute
+  '/reports/': typeof AdminReportsIndexRoute
   '/settings/': typeof AdminSettingsIndexRoute
   '/support/': typeof AdminSupportIndexRoute
   '/transactions/': typeof AdminTransactionsIndexRoute
@@ -663,7 +705,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
-  '/reports': typeof AdminReportsRoute
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
@@ -698,6 +739,11 @@ export interface FileRoutesByTo {
   '/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/referrals/programs': typeof AdminReferralsProgramsRoute
   '/referrals/promos': typeof AdminReferralsPromosRoute
+  '/reports/compliance': typeof AdminReportsComplianceRoute
+  '/reports/exports': typeof AdminReportsExportsRoute
+  '/reports/financial': typeof AdminReportsFinancialRoute
+  '/reports/operations': typeof AdminReportsOperationsRoute
+  '/reports/scheduled': typeof AdminReportsScheduledRoute
   '/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/settings/branding': typeof AdminSettingsBrandingRoute
@@ -717,6 +763,7 @@ export interface FileRoutesByTo {
   '/pay': typeof AdminPayIndexRoute
   '/payments': typeof AdminPaymentsIndexRoute
   '/referrals': typeof AdminReferralsIndexRoute
+  '/reports': typeof AdminReportsIndexRoute
   '/settings': typeof AdminSettingsIndexRoute
   '/support': typeof AdminSupportIndexRoute
   '/transactions': typeof AdminTransactionsIndexRoute
@@ -753,7 +800,7 @@ export interface FileRoutesById {
   '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/payments': typeof AdminPaymentsRouteWithChildren
   '/_admin/referrals': typeof AdminReferralsRouteWithChildren
-  '/_admin/reports': typeof AdminReportsRoute
+  '/_admin/reports': typeof AdminReportsRouteWithChildren
   '/_admin/settings': typeof AdminSettingsRouteWithChildren
   '/_admin/support': typeof AdminSupportRouteWithChildren
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
@@ -791,6 +838,11 @@ export interface FileRoutesById {
   '/_admin/referrals/newsletter': typeof AdminReferralsNewsletterRoute
   '/_admin/referrals/programs': typeof AdminReferralsProgramsRoute
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
+  '/_admin/reports/compliance': typeof AdminReportsComplianceRoute
+  '/_admin/reports/exports': typeof AdminReportsExportsRoute
+  '/_admin/reports/financial': typeof AdminReportsFinancialRoute
+  '/_admin/reports/operations': typeof AdminReportsOperationsRoute
+  '/_admin/reports/scheduled': typeof AdminReportsScheduledRoute
   '/_admin/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/_admin/settings/audit-log': typeof AdminSettingsAuditLogRoute
   '/_admin/settings/branding': typeof AdminSettingsBrandingRoute
@@ -811,6 +863,7 @@ export interface FileRoutesById {
   '/_admin/pay/': typeof AdminPayIndexRoute
   '/_admin/payments/': typeof AdminPaymentsIndexRoute
   '/_admin/referrals/': typeof AdminReferralsIndexRoute
+  '/_admin/reports/': typeof AdminReportsIndexRoute
   '/_admin/settings/': typeof AdminSettingsIndexRoute
   '/_admin/support/': typeof AdminSupportIndexRoute
   '/_admin/transactions/': typeof AdminTransactionsIndexRoute
@@ -885,6 +938,11 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/reports/compliance'
+    | '/reports/exports'
+    | '/reports/financial'
+    | '/reports/operations'
+    | '/reports/scheduled'
     | '/settings/api-keys'
     | '/settings/audit-log'
     | '/settings/branding'
@@ -905,6 +963,7 @@ export interface FileRouteTypes {
     | '/pay/'
     | '/payments/'
     | '/referrals/'
+    | '/reports/'
     | '/settings/'
     | '/support/'
     | '/transactions/'
@@ -930,7 +989,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
-    | '/reports'
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
@@ -965,6 +1023,11 @@ export interface FileRouteTypes {
     | '/referrals/newsletter'
     | '/referrals/programs'
     | '/referrals/promos'
+    | '/reports/compliance'
+    | '/reports/exports'
+    | '/reports/financial'
+    | '/reports/operations'
+    | '/reports/scheduled'
     | '/settings/api-keys'
     | '/settings/audit-log'
     | '/settings/branding'
@@ -984,6 +1047,7 @@ export interface FileRouteTypes {
     | '/pay'
     | '/payments'
     | '/referrals'
+    | '/reports'
     | '/settings'
     | '/support'
     | '/transactions'
@@ -1057,6 +1121,11 @@ export interface FileRouteTypes {
     | '/_admin/referrals/newsletter'
     | '/_admin/referrals/programs'
     | '/_admin/referrals/promos'
+    | '/_admin/reports/compliance'
+    | '/_admin/reports/exports'
+    | '/_admin/reports/financial'
+    | '/_admin/reports/operations'
+    | '/_admin/reports/scheduled'
     | '/_admin/settings/api-keys'
     | '/_admin/settings/audit-log'
     | '/_admin/settings/branding'
@@ -1077,6 +1146,7 @@ export interface FileRouteTypes {
     | '/_admin/pay/'
     | '/_admin/payments/'
     | '/_admin/referrals/'
+    | '/_admin/reports/'
     | '/_admin/settings/'
     | '/_admin/support/'
     | '/_admin/transactions/'
@@ -1261,6 +1331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsIndexRouteImport
       parentRoute: typeof AdminSettingsRoute
     }
+    '/_admin/reports/': {
+      id: '/_admin/reports/'
+      path: '/'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof AdminReportsIndexRouteImport
+      parentRoute: typeof AdminReportsRoute
+    }
     '/_admin/referrals/': {
       id: '/_admin/referrals/'
       path: '/'
@@ -1400,6 +1477,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/api-keys'
       preLoaderRoute: typeof AdminSettingsApiKeysRouteImport
       parentRoute: typeof AdminSettingsRoute
+    }
+    '/_admin/reports/scheduled': {
+      id: '/_admin/reports/scheduled'
+      path: '/scheduled'
+      fullPath: '/reports/scheduled'
+      preLoaderRoute: typeof AdminReportsScheduledRouteImport
+      parentRoute: typeof AdminReportsRoute
+    }
+    '/_admin/reports/operations': {
+      id: '/_admin/reports/operations'
+      path: '/operations'
+      fullPath: '/reports/operations'
+      preLoaderRoute: typeof AdminReportsOperationsRouteImport
+      parentRoute: typeof AdminReportsRoute
+    }
+    '/_admin/reports/financial': {
+      id: '/_admin/reports/financial'
+      path: '/financial'
+      fullPath: '/reports/financial'
+      preLoaderRoute: typeof AdminReportsFinancialRouteImport
+      parentRoute: typeof AdminReportsRoute
+    }
+    '/_admin/reports/exports': {
+      id: '/_admin/reports/exports'
+      path: '/exports'
+      fullPath: '/reports/exports'
+      preLoaderRoute: typeof AdminReportsExportsRouteImport
+      parentRoute: typeof AdminReportsRoute
+    }
+    '/_admin/reports/compliance': {
+      id: '/_admin/reports/compliance'
+      path: '/compliance'
+      fullPath: '/reports/compliance'
+      preLoaderRoute: typeof AdminReportsComplianceRouteImport
+      parentRoute: typeof AdminReportsRoute
     }
     '/_admin/referrals/promos': {
       id: '/_admin/referrals/promos'
@@ -1924,6 +2036,28 @@ const AdminReferralsRouteWithChildren = AdminReferralsRoute._addFileChildren(
   AdminReferralsRouteChildren,
 )
 
+interface AdminReportsRouteChildren {
+  AdminReportsComplianceRoute: typeof AdminReportsComplianceRoute
+  AdminReportsExportsRoute: typeof AdminReportsExportsRoute
+  AdminReportsFinancialRoute: typeof AdminReportsFinancialRoute
+  AdminReportsOperationsRoute: typeof AdminReportsOperationsRoute
+  AdminReportsScheduledRoute: typeof AdminReportsScheduledRoute
+  AdminReportsIndexRoute: typeof AdminReportsIndexRoute
+}
+
+const AdminReportsRouteChildren: AdminReportsRouteChildren = {
+  AdminReportsComplianceRoute: AdminReportsComplianceRoute,
+  AdminReportsExportsRoute: AdminReportsExportsRoute,
+  AdminReportsFinancialRoute: AdminReportsFinancialRoute,
+  AdminReportsOperationsRoute: AdminReportsOperationsRoute,
+  AdminReportsScheduledRoute: AdminReportsScheduledRoute,
+  AdminReportsIndexRoute: AdminReportsIndexRoute,
+}
+
+const AdminReportsRouteWithChildren = AdminReportsRoute._addFileChildren(
+  AdminReportsRouteChildren,
+)
+
 interface AdminSettingsRouteChildren {
   AdminSettingsApiKeysRoute: typeof AdminSettingsApiKeysRoute
   AdminSettingsAuditLogRoute: typeof AdminSettingsAuditLogRoute
@@ -2023,7 +2157,7 @@ interface AdminRouteChildren {
   AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminPaymentsRoute: typeof AdminPaymentsRouteWithChildren
   AdminReferralsRoute: typeof AdminReferralsRouteWithChildren
-  AdminReportsRoute: typeof AdminReportsRoute
+  AdminReportsRoute: typeof AdminReportsRouteWithChildren
   AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminSupportRoute: typeof AdminSupportRouteWithChildren
   AdminWalletsRoute: typeof AdminWalletsRouteWithChildren
@@ -2046,7 +2180,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPayRoute: AdminPayRouteWithChildren,
   AdminPaymentsRoute: AdminPaymentsRouteWithChildren,
   AdminReferralsRoute: AdminReferralsRouteWithChildren,
-  AdminReportsRoute: AdminReportsRoute,
+  AdminReportsRoute: AdminReportsRouteWithChildren,
   AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminSupportRoute: AdminSupportRouteWithChildren,
   AdminWalletsRoute: AdminWalletsRouteWithChildren,

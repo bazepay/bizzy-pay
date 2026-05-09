@@ -128,12 +128,6 @@ function ReportsOverview() {
                   </Badge>
                   <div className="font-semibold">{r.name}</div>
                 </div>
-                <Link
-                  to="/reports/$category" as any
-                  params={{ category: r.category } as any}
-                  className="hidden"
-                  aria-hidden
-                />
               </div>
               <p className="text-sm text-muted-foreground line-clamp-2 min-h-10">{r.description}</p>
               <div className="flex items-center justify-between text-xs text-muted-foreground">
