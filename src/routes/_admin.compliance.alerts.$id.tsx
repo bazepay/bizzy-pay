@@ -17,7 +17,10 @@ import {
   fmtNgn,
   fmtRelative,
   type AlertStatus,
+  type AmlAlert,
 } from "@/lib/compliance-data";
+
+type Note = AmlAlert["notes"][number];
 
 export const Route = createFileRoute("/_admin/compliance/alerts/$id")({
   loader: ({ params }) => {
@@ -39,11 +42,11 @@ export const Route = createFileRoute("/_admin/compliance/alerts/$id")({
 });
 
 function AlertDetailPage() {
-  const { alert: initial } = Route.useLoaderData();
+  const { alert: initial } = Route.useLoaderData() as { alert: AmlAlert };
   const navigate = useNavigate();
   const [status, setStatus] = useState<AlertStatus>(initial.status);
   const [note, setNote] = useState("");
-  const [notes, setNotes] = useState(initial.notes);
+  const [notes, setNotes] = useState<Note[]>(initial.notes);
 
   const ageMins = useMemo(() => Math.round((Date.now() - new Date(initial.createdAt).getTime()) / 60_000), []);
 
