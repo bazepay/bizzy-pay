@@ -107,8 +107,16 @@ function PlansPage() {
                   return (
                     <TableRow key={p.id}>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">{p.flag}</span>
+                        <div className="flex items-center gap-2.5">
+                          <img
+                            src={`https://flagcdn.com/w40/${p.countryCode.toLowerCase()}.png`}
+                            srcSet={`https://flagcdn.com/w80/${p.countryCode.toLowerCase()}.png 2x`}
+                            width={24}
+                            height={18}
+                            alt={`${p.country} flag`}
+                            loading="lazy"
+                            className="rounded-sm shadow-sm shrink-0 object-cover"
+                          />
                           <div>
                             <div className="text-sm font-medium">{p.country}</div>
                             <div className="text-[10px] text-muted-foreground font-mono">{p.id}</div>
