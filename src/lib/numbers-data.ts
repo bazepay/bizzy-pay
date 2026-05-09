@@ -2,8 +2,9 @@
 
 export type NumberStatus = "available" | "leased" | "quarantined" | "released";
 export type LeaseStatus = "active" | "expiring" | "expired" | "cancelled";
-export type NumberSupplier = "Twilio" | "Vonage" | "Telnyx" | "Plivo";
-export type NumberService = "WhatsApp" | "Telegram" | "SMS" | "Voice" | "Generic";
+export type NumberSupplier = "TouristeSim";
+export type NumberService = "WhatsApp" | "Telegram" | "SMS" | "Generic";
+export type BillingPeriod = "daily" | "weekly" | "monthly" | "annual";
 
 export type NumberCountry = {
   code: string; // ISO-2
@@ -11,15 +12,12 @@ export type NumberCountry = {
   dial: string;
 };
 
+// TouristeSim live coverage: Canada, Netherlands, UK, USA (4 countries, 30 plans).
 export const numberCountries: NumberCountry[] = [
   { code: "us", name: "United States", dial: "+1" },
-  { code: "gb", name: "United Kingdom", dial: "+44" },
   { code: "ca", name: "Canada", dial: "+1" },
-  { code: "ng", name: "Nigeria", dial: "+234" },
-  { code: "de", name: "Germany", dial: "+49" },
-  { code: "fr", name: "France", dial: "+33" },
-  { code: "in", name: "India", dial: "+91" },
-  { code: "ph", name: "Philippines", dial: "+63" },
+  { code: "gb", name: "United Kingdom", dial: "+44" },
+  { code: "nl", name: "Netherlands", dial: "+31" },
 ];
 
 export type PoolNumber = {
