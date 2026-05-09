@@ -42,7 +42,9 @@ export type Referral = {
 };
 
 export type CampaignStatus = "draft" | "scheduled" | "live" | "ended";
-export type CampaignChannel = "push" | "email" | "sms" | "in_app";
+// Campaigns are in-app only: a system notification in the bell tray, or a
+// banner that pops up on login. Email lives in the Newsletter module.
+export type CampaignChannel = "in_app_notification" | "login_banner";
 
 export type Campaign = {
   id: string;
@@ -53,16 +55,45 @@ export type Campaign = {
   audienceSize: number;
   startAt: string;
   endAt: string | null;
+  // Banner-only copy
+  title: string;          // headline (banner title or notification title)
+  body: string;           // supporting line / notification body
+  ctaLabel: string;       // button label, e.g. "Top up now"
+  // Funnel
+  sent: number;
+  delivered: number;
+  opened: number;        // banner shown / notification opened
+  clicked: number;
+  converted: number;
+  ctaUrl: string;
+  linkedProgramId?: string | null;
+  linkedPromoCode?: string | null;
+};
+
+// ---------- Newsletter (email) ----------
+export type NewsletterStatus = "draft" | "scheduled" | "sending" | "sent" | "paused";
+
+export type Newsletter = {
+  id: string;
+  subject: string;
+  preheader: string;
+  audience: string;
+  audienceSize: number;
+  fromName: string;       // e.g. "BazePay"
+  fromEmail: string;      // e.g. "hello@bazepay.com"
+  status: NewsletterStatus;
+  scheduledAt: string | null;
+  sentAt: string | null;
+  // Funnel
   sent: number;
   delivered: number;
   opened: number;
   clicked: number;
-  converted: number;
-  budgetNgn: number;
-  spentNgn: number;
-  ctaUrl: string;
-  linkedProgramId?: string | null;
+  unsubscribed: number;
+  bounced: number;
+  // Optional cross-link
   linkedPromoCode?: string | null;
+  ctaUrl?: string;
 };
 
 export type PromoStatus = "active" | "paused" | "expired" | "scheduled";
