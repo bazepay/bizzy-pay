@@ -213,10 +213,16 @@ export const promoKindLabel: Record<PromoKind, string> = {
 };
 
 export const campaignChannelLabel: Record<CampaignChannel, string> = {
-  push: "Push notification",
-  email: "Email",
-  sms: "SMS",
-  in_app: "In-app banner",
+  in_app_notification: "In-app notification",
+  login_banner: "Login banner",
+};
+
+export const newsletterStatusTone: Record<NewsletterStatus, string> = {
+  draft: "bg-muted text-muted-foreground border-border",
+  scheduled: "bg-primary/15 text-primary border-primary/30",
+  sending: "bg-primary/15 text-primary border-primary/30",
+  sent: "bg-success/15 text-success border-success/30",
+  paused: "bg-warning/15 text-warning border-warning/30",
 };
 
 export const referralPrograms: ReferralProgram[] = [
