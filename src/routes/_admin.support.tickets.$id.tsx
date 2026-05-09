@@ -243,7 +243,7 @@ function TicketDetailPage() {
             <CardContent className="p-4 space-y-3">
               <div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Assignee</div>
-                <Select value={ticket.assigneeName ?? ""} onValueChange={updateAssignee}>
+                <Select value={ticket.assigneeName ?? undefined} onValueChange={updateAssignee}>
                   <SelectTrigger className="h-9"><SelectValue placeholder="Unassigned" /></SelectTrigger>
                   <SelectContent>
                     {AGENTS.map((a) => <SelectItem key={a} value={a}>{a}</SelectItem>)}
