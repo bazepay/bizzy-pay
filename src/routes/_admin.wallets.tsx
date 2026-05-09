@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_admin/wallets")({
 
 const tabs = [
   { to: "/wallets", label: "Float", icon: Wallet, exact: true },
+  { to: "/wallets/users", label: "User wallets", icon: Users },
   { to: "/wallets/fx", label: "FX", icon: ArrowLeftRight },
   { to: "/wallets/payouts", label: "Payouts", icon: Banknote },
   { to: "/wallets/topups", label: "Top-ups", icon: Download },
