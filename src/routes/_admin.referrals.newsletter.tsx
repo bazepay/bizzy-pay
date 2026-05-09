@@ -486,3 +486,154 @@ function Kpi({ label, value, sub, tone }: { label: string; value: string; sub: s
     </Card>
   );
 }
+
+function EmailHeaderImageSection({ draft, setDraft }: { draft: Draft; setDraft: (d: Draft) => void }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const onPick = (file: File) => {
+    if (file.size > 4 * 1024 * 1024) { toast.error("Image must be under 4MB"); return; }
+    if (!file.type.startsWith("image/")) { toast.error("Please upload an image file"); return; }
+    const reader = new FileReader();
+    reader.onload = () => setDraft({ ...draft, headerImageUrl: String(reader.result) });
+    reader.readAsDataURL(file);
+  };
+  return (
+    <>
+      <div className="col-span-2 pt-2 border-t border-border">
+        <Label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-1.5"><ImageIcon className="h-3 w-3" /> Email header image (optional)</Label>
+      </div>
+      <div className="col-span-2">
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) onPick(f); }} />
+        {draft.headerImageUrl ? (
+          <div className="relative rounded-lg border border-border overflow-hidden bg-muted/30">
+            <img src={draft.headerImageUrl} alt="Header" className="w-full h-32 object-cover" />
+            <div className="absolute top-2 right-2 flex gap-1.5">
+              <Button type="button" size="sm" variant="secondary" className="h-7 text-[11px] gap-1" onClick={() => fileRef.current?.click()}>
+                <Upload className="h-3 w-3" /> Replace
+              </Button>
+              <Button type="button" size="sm" variant="destructive" className="h-7 w-7 p-0" onClick={() => setDraft({ ...draft, headerImageUrl: "" })}>
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <button type="button" onClick={() => fileRef.current?.click()} className="w-full rounded-lg border-2 border-dashed border-border hover:border-primary/50 hover:bg-muted/30 transition-colors flex flex-col items-center justify-center gap-2 py-6 text-muted-foreground">
+            <Upload className="h-5 w-5" />
+            <span className="text-xs">Click to upload (recommended 1200×400)</span>
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
+
+function EmailBodySection({ draft, setDraft }: { draft: Draft; setDraft: (d: Draft) => void }) {
+  return (
+    <>
+      <div className="col-span-2 pt-2 border-t border-border">
+        <Label className="text-xs uppercase tracking-wide text-muted-foreground">Email body</Label>
+      </div>
+      <div className="col-span-2">
+        <Tabs value={draft.bodyFormat} onValueChange={(v) => setDraft({ ...draft, bodyFormat: v as EmailBodyFormat })}>
+          <TabsList className="h-9">
+            <TabsTrigger value="plain" className="text-xs gap-1.5"><Type className="h-3 w-3" /> Plain text</TabsTrigger>
+            <TabsTrigger value="html" className="text-xs gap-1.5"><Code className="h-3 w-3" /> HTML</TabsTrigger>
+          </TabsList>
+          <TabsContent value="plain" className="mt-2">
+            <Textarea
+              value={draft.bodyText}
+              onChange={(e) => setDraft({ ...draft, bodyText: e.target.value })}
+              placeholder={"Hi {{name}},\n\nWe just dropped 5% off all bill payments this week...\n\nCheers,\nThe BazePay team"}
+              className="min-h-[200px] font-mono text-xs"
+            />
+            <p className="text-[10px] text-muted-foreground mt-1">Use plain prose. Line breaks preserved. Supports merge tags like {"{{name}}"}.</p>
+          </TabsContent>
+          <TabsContent value="html" className="mt-2 space-y-2">
+            <Textarea
+              value={draft.bodyText}
+              onChange={(e) => setDraft({ ...draft, bodyText: e.target.value })}
+              placeholder={"<h1>Payday week 🎉</h1>\n<p>Use code <strong>PAYDAY5</strong> for 5% off bills.</p>\n<a href=\"{{ctaUrl}}\">Pay a bill</a>"}
+              className="min-h-[200px] font-mono text-xs"
+            />
+            <details className="rounded-md border border-border bg-muted/20">
+              <summary className="cursor-pointer text-xs px-3 py-2 select-none">Live HTML preview</summary>
+              <div className="p-3 bg-white text-black border-t border-border max-h-64 overflow-auto" dangerouslySetInnerHTML={{ __html: draft.bodyText }} />
+            </details>
+            <p className="text-[10px] text-muted-foreground">Sanitize on send. Inline CSS recommended for client compatibility.</p>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
+  );
+}
+
+function NewsletterTargetingSection({ draft, setDraft }: { draft: Draft; setDraft: (d: Draft) => void }) {
+  const toggle = <T,>(arr: T[], v: T): T[] => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+  return (
+    <>
+      <div className="col-span-2 pt-2 border-t border-border">
+        <Label className="text-xs uppercase tracking-wide text-muted-foreground flex items-center gap-1.5"><Target className="h-3 w-3" /> Targeting</Label>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs">User segments (any of)</Label>
+        <div className="mt-1 grid grid-cols-2 gap-1.5 rounded-md border border-border p-2 max-h-44 overflow-y-auto">
+          {ALL_SEGMENTS.map((s) => (
+            <label key={s} className="flex items-center gap-2 text-xs cursor-pointer hover:bg-muted/50 rounded px-1.5 py-1">
+              <Checkbox checked={draft.segments.includes(s)} onCheckedChange={() => {
+                let next = toggle(draft.segments, s);
+                if (s === "all_users" && next.includes("all_users")) next = ["all_users"];
+                else if (s !== "all_users") next = next.filter((x) => x !== "all_users");
+                if (next.length === 0) next = ["all_users"];
+                setDraft({ ...draft, segments: next });
+              }} />
+              <span>{audienceSegmentLabel[s]}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs flex items-center gap-1"><MapPin className="h-3 w-3" /> Locations (Nigeria states)</Label>
+        <div className="mt-1 grid grid-cols-3 gap-1 rounded-md border border-border p-2 max-h-40 overflow-y-auto">
+          {NG_STATES.map((st) => (
+            <label key={st} className="flex items-center gap-1.5 text-[11px] cursor-pointer hover:bg-muted/50 rounded px-1 py-0.5">
+              <Checkbox checked={draft.locations.includes(st)} onCheckedChange={() => {
+                let next = toggle(draft.locations, st);
+                if (st === "All Nigeria" && next.includes("All Nigeria")) next = ["All Nigeria"];
+                else if (st !== "All Nigeria") next = next.filter((x) => x !== "All Nigeria");
+                if (next.length === 0) next = ["All Nigeria"];
+                setDraft({ ...draft, locations: next });
+              }} />
+              <span className="truncate">{st}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs flex items-center gap-1"><Smartphone className="h-3 w-3" /> Device platforms</Label>
+        <div className="mt-1 flex gap-2 flex-wrap">
+          {ALL_DEVICES.map((d) => {
+            const active = draft.devices.includes(d);
+            return (
+              <button key={d} type="button" onClick={() => setDraft({ ...draft, devices: toggle(draft.devices, d) })} className={`text-xs px-3 h-8 rounded-md border capitalize ${active ? "bg-primary text-primary-foreground border-primary" : "border-border hover:bg-muted/50"}`}>
+                {d}
+              </button>
+            );
+          })}
+          <span className="text-[10px] text-muted-foreground self-center">{draft.devices.length === 0 ? "All platforms" : `${draft.devices.length} selected`}</span>
+        </div>
+      </div>
+      <div className="col-span-2">
+        <Label className="text-xs">Language</Label>
+        <Select value={draft.language} onValueChange={(v) => setDraft({ ...draft, language: v as Draft["language"] })}>
+          <SelectTrigger className="h-9 mt-1 w-[200px]"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All languages</SelectItem>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="ha">Hausa</SelectItem>
+            <SelectItem value="ig">Igbo</SelectItem>
+            <SelectItem value="yo">Yoruba</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+}
