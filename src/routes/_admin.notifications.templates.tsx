@@ -173,6 +173,17 @@ function TemplatesPage() {
                 </div>
               </div>
               <div className="space-y-1.5">
+                <Label>Event trigger</Label>
+                <Select value={editing.event} onValueChange={(v) => setEditing({ ...editing, event: v as EventKey })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {(Object.keys(eventLabel) as EventKey[]).map((k) => (
+                      <SelectItem key={k} value={k}>{eventLabel[k]}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
                 <Label>Channels</Label>
                 <div className="flex gap-3 flex-wrap">
                   {ALL_CHANNELS.map((c) => (
