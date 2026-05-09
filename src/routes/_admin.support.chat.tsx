@@ -110,18 +110,26 @@ function ChatQueuePage() {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        {rows.map((c) => (
-          <Card key={c.id} className="shadow-card">
+        {rows.map((c) => {
+          const liveWait = c.status === "waiting" ? c.waitSeconds + tick : c.waitSeconds;
+          const isMine = c.agentName === "You";
+          return (
+          <Card key={c.id} className={`shadow-card transition-colors ${isMine ? "border-primary/50 bg-primary/[0.03]" : ""}`}>
             <CardContent className="p-4 space-y-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate">{c.customerName}</div>
+                  <Link to="/support/chat/$id" params={{ id: c.id }} className="text-sm font-semibold truncate block hover:text-primary hover:underline">
+                    {c.customerName}
+                  </Link>
                   <div className="text-[11px] text-muted-foreground font-mono truncate">{c.id} · {c.customerId}</div>
                 </div>
-                <Badge variant="outline" className={`text-[10px] capitalize ${statusTone[c.status]}`}>{c.status}</Badge>
+                <div className="flex flex-col items-end gap-1">
+                  <Badge variant="outline" className={`text-[10px] capitalize ${statusTone[c.status]}`}>{c.status}</Badge>
+                  {isMine && <Badge variant="outline" className="text-[9px] bg-primary/10 text-primary border-primary/30">Yours</Badge>}
+                </div>
               </div>
 
-              <div className="text-xs text-muted-foreground line-clamp-2 italic">"{c.preview}"</div>
+              <Link to="/support/chat/$id" params={{ id: c.id }} className="block text-xs text-muted-foreground line-clamp-2 italic hover:text-foreground">"{c.preview}"</Link>
 
               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>{categoryLabel[c.topic]}</span>
@@ -131,8 +139,8 @@ function ChatQueuePage() {
               <div className="flex items-center justify-between text-[11px] pt-2 border-t border-border">
                 <div>
                   <div className="text-muted-foreground">{c.status === "waiting" ? "Waiting" : "Started"}</div>
-                  <div className={`font-mono ${c.status === "waiting" && c.waitSeconds > 300 ? "text-destructive font-semibold" : ""}`}>
-                    {c.status === "waiting" ? fmtSecs(c.waitSeconds) : fmtRelative(c.startedAt)}
+                  <div className={`font-mono ${c.status === "waiting" && liveWait > 300 ? "text-destructive font-semibold" : ""}`}>
+                    {c.status === "waiting" ? fmtSecs(liveWait) : fmtRelative(c.startedAt)}
                   </div>
                 </div>
                 <div className="text-right">
@@ -142,6 +150,9 @@ function ChatQueuePage() {
               </div>
 
               <div className="flex items-center gap-2 pt-1">
+                <Button asChild size="sm" variant="ghost" className="h-8 px-2.5 text-xs">
+                  <Link to="/support/chat/$id" params={{ id: c.id }}>Open</Link>
+                </Button>
                 {c.status === "waiting" && (
                   <Button size="sm" className="h-8 flex-1 gap-1.5" onClick={() => accept(c.id)}>
                     <PlayCircle className="h-3.5 w-3.5" /> Accept chat
@@ -160,7 +171,8 @@ function ChatQueuePage() {
               </div>
             </CardContent>
           </Card>
-        ))}
+          );
+        })}
         {rows.length === 0 && (
           <Card className="md:col-span-2 lg:col-span-3 shadow-card">
             <CardContent className="p-10 text-center text-sm text-muted-foreground">No chat sessions match.</CardContent>
