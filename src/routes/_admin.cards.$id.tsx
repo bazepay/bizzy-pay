@@ -40,7 +40,7 @@ export const Route = createFileRoute("/_admin/cards/$id")({
 function CardDetailPage() {
   const initial = Route.useLoaderData();
   const router = useRouter();
-  const [card, setCard] = useState(initial);
+  const [card, setCard] = useState<typeof initial & { status: CardStatus }>(initial as typeof initial & { status: CardStatus });
   const [revealed, setRevealed] = useState(false);
   const [daily, setDaily] = useState(card.dailyLimitUsd);
   const [monthly, setMonthly] = useState(card.monthlyLimitUsd);
