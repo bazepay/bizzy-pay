@@ -75,9 +75,10 @@ function ApiKeysPage() {
   const rotate = (k: ApiKey) => {
     const secret = genSecret(k.env);
     setItems((prev) => prev.map((x) => (x.id === k.id
-      ? { ...x, masked: `${secret.slice(0, 8)}••••${secret.slice(-4).toUpperCase()}`, rotatedAt: new Date().toISOString() }
+      ? { ...x, masked: `${secret.slice(0, 8)}••••${secret.slice(-4).toUpperCase()}`, rotatedAt: new Date().toISOString(), lastUsedAt: null }
       : x)));
     setRevealed({ name: k.name, secret });
+    toast.success(`Rotated ${k.name}`);
   };
 
   const remove = (k: ApiKey) => {

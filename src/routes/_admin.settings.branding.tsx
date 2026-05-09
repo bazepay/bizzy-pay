@@ -14,14 +14,29 @@ export const Route = createFileRoute("/_admin/settings/branding")({
   component: BrandingPage,
 });
 
+const STORAGE_KEY = "bz_brand_tokens";
+
 function BrandingPage() {
-  const [brand, setBrand] = useState<BrandTokens>(initialBrand);
+  const [brand, setBrand] = useState<BrandTokens>(() => {
+    if (typeof window === "undefined") return initialBrand;
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      return raw ? { ...initialBrand, ...JSON.parse(raw) } : initialBrand;
+    } catch { return initialBrand; }
+  });
 
   const update = <K extends keyof BrandTokens>(key: K, value: BrandTokens[K]) =>
     setBrand((b) => ({ ...b, [key]: value }));
 
-  const save = () => toast.success("Brand tokens saved · will roll out to mobile shell on next launch");
-  const reset = () => { setBrand(initialBrand); toast.success("Reverted to defaults"); };
+  const save = () => {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(brand)); } catch {}
+    toast.success("Brand tokens saved · will roll out to mobile shell on next launch");
+  };
+  const reset = () => {
+    setBrand(initialBrand);
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch {}
+    toast.success("Reverted to defaults");
+  };
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
