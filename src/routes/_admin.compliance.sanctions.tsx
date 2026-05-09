@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -131,6 +131,9 @@ function SanctionsPage() {
                   <TableCell className="text-right text-xs text-muted-foreground">{fmtRelative(h.screenedAt)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
+                      <Button asChild size="sm" variant="ghost" className="h-7 text-xs">
+                        <Link to="/users/$id" params={{ id: h.userId }}>View</Link>
+                      </Button>
                       <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => updateStatus(h.id, "cleared", "cleared")}>Clear</Button>
                       <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => updateStatus(h.id, "false_positive", "false positive")}>FP</Button>
                     </div>
