@@ -464,9 +464,12 @@ function CampaignsPage() {
               <Input type="number" value={draft.audienceSize} onChange={(e) => setDraft({ ...draft, audienceSize: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
             </div>
             <div className="col-span-2">
-              <Label className="text-xs">Audience description</Label>
-              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="e.g. Wallet >₦50k · no card" className="h-9 mt-1" />
+              <Label className="text-xs">Audience description (optional override)</Label>
+              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="Auto-generated from segments below if blank" className="h-9 mt-1" />
             </div>
+
+            <AudienceTargetingSection draft={draft} setDraft={setDraft} />
+
             <div>
               <Label className="text-xs">Start date</Label>
               <Input type="date" value={draft.startAt} onChange={(e) => setDraft({ ...draft, startAt: e.target.value })} className="h-9 mt-1" />
