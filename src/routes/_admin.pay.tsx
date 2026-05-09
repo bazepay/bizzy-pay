@@ -22,7 +22,7 @@ const tabs = [
 
 function PayLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const onDetail = /^\/pay\/(?!billers$|plans$|orders$)/.test(pathname);
+  const onDetail = /^\/pay\/(?!billers$|plans$|orders$|incidents$)/.test(pathname);
 
   return (
     <div className="p-6 max-w-[1400px] mx-auto space-y-5">
