@@ -154,7 +154,7 @@ function BroadcastsPage() {
                       </Button>
                     )}
                     {b.status === "draft" && (
-                      <Button size="sm" variant="ghost" className="h-7 text-xs gap-1" onClick={() => toast.success("Sent now")}>
+                      <Button size="sm" variant="ghost" className="h-7 text-xs gap-1" onClick={() => sendNow(b.id)}>
                         <Send className="h-3 w-3" /> Send
                       </Button>
                     )}
