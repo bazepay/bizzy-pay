@@ -20,6 +20,7 @@ import { Route as AdminPayRouteImport } from './routes/_admin.pay'
 import { Route as AdminNumbersRouteImport } from './routes/_admin.numbers'
 import { Route as AdminEsimRouteImport } from './routes/_admin.esim'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
+import { Route as AdminContentRouteImport } from './routes/_admin.content'
 import { Route as AdminComplianceRouteImport } from './routes/_admin.compliance'
 import { Route as AdminCardsRouteImport } from './routes/_admin.cards'
 import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.index'
@@ -32,6 +33,7 @@ import { Route as AdminPayIndexRouteImport } from './routes/_admin.pay.index'
 import { Route as AdminNumbersIndexRouteImport } from './routes/_admin.numbers.index'
 import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
 import { Route as AdminEsimIndexRouteImport } from './routes/_admin.esim.index'
+import { Route as AdminContentIndexRouteImport } from './routes/_admin.content.index'
 import { Route as AdminComplianceIndexRouteImport } from './routes/_admin.compliance.index'
 import { Route as AdminCardsIndexRouteImport } from './routes/_admin.cards.index'
 import { Route as AdminWalletsUsersRouteImport } from './routes/_admin.wallets.users'
@@ -62,6 +64,9 @@ import { Route as AdminEsimPlansRouteImport } from './routes/_admin.esim.plans'
 import { Route as AdminEsimOrdersRouteImport } from './routes/_admin.esim.orders'
 import { Route as AdminEsimInventoryRouteImport } from './routes/_admin.esim.inventory'
 import { Route as AdminEsimIdRouteImport } from './routes/_admin.esim.$id'
+import { Route as AdminContentLegalRouteImport } from './routes/_admin.content.legal'
+import { Route as AdminContentFaqRouteImport } from './routes/_admin.content.faq'
+import { Route as AdminContentBannersRouteImport } from './routes/_admin.content.banners'
 import { Route as AdminComplianceSanctionsRouteImport } from './routes/_admin.compliance.sanctions'
 import { Route as AdminCompliancePoliciesRouteImport } from './routes/_admin.compliance.policies'
 import { Route as AdminComplianceAuditRouteImport } from './routes/_admin.compliance.audit'
@@ -71,6 +76,7 @@ import { Route as AdminCardsIdRouteImport } from './routes/_admin.cards.$id'
 import { Route as AdminUsersIdIndexRouteImport } from './routes/_admin.users.$id.index'
 import { Route as AdminSupportTicketsIndexRouteImport } from './routes/_admin.support.tickets.index'
 import { Route as AdminSupportChatIndexRouteImport } from './routes/_admin.support.chat.index'
+import { Route as AdminContentArticlesIndexRouteImport } from './routes/_admin.content.articles.index'
 import { Route as AdminComplianceAlertsIndexRouteImport } from './routes/_admin.compliance.alerts.index'
 import { Route as AdminUsersIdWalletsRouteImport } from './routes/_admin.users.$id.wallets'
 import { Route as AdminUsersIdTransactionsRouteImport } from './routes/_admin.users.$id.transactions'
@@ -82,6 +88,7 @@ import { Route as AdminUsersIdDevicesRouteImport } from './routes/_admin.users.$
 import { Route as AdminUsersIdCardsRouteImport } from './routes/_admin.users.$id.cards'
 import { Route as AdminSupportTicketsIdRouteImport } from './routes/_admin.support.tickets.$id'
 import { Route as AdminSupportChatIdRouteImport } from './routes/_admin.support.chat.$id'
+import { Route as AdminContentArticlesIdRouteImport } from './routes/_admin.content.articles.$id'
 import { Route as AdminComplianceAlertsIdRouteImport } from './routes/_admin.compliance.alerts.$id'
 
 const LoginRoute = LoginRouteImport.update({
@@ -136,6 +143,11 @@ const AdminEsimRoute = AdminEsimRouteImport.update({
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/content',
+  path: '/content',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminComplianceRoute = AdminComplianceRouteImport.update({
@@ -197,6 +209,11 @@ const AdminEsimIndexRoute = AdminEsimIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminEsimRoute,
+} as any)
+const AdminContentIndexRoute = AdminContentIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminContentRoute,
 } as any)
 const AdminComplianceIndexRoute = AdminComplianceIndexRouteImport.update({
   id: '/',
@@ -350,6 +367,21 @@ const AdminEsimIdRoute = AdminEsimIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminEsimRoute,
 } as any)
+const AdminContentLegalRoute = AdminContentLegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => AdminContentRoute,
+} as any)
+const AdminContentFaqRoute = AdminContentFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AdminContentRoute,
+} as any)
+const AdminContentBannersRoute = AdminContentBannersRouteImport.update({
+  id: '/banners',
+  path: '/banners',
+  getParentRoute: () => AdminContentRoute,
+} as any)
 const AdminComplianceSanctionsRoute =
   AdminComplianceSanctionsRouteImport.update({
     id: '/sanctions',
@@ -397,6 +429,12 @@ const AdminSupportChatIndexRoute = AdminSupportChatIndexRouteImport.update({
   path: '/chat/',
   getParentRoute: () => AdminSupportRoute,
 } as any)
+const AdminContentArticlesIndexRoute =
+  AdminContentArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
+    getParentRoute: () => AdminContentRoute,
+  } as any)
 const AdminComplianceAlertsIndexRoute =
   AdminComplianceAlertsIndexRouteImport.update({
     id: '/alerts/',
@@ -454,6 +492,11 @@ const AdminSupportChatIdRoute = AdminSupportChatIdRouteImport.update({
   path: '/chat/$id',
   getParentRoute: () => AdminSupportRoute,
 } as any)
+const AdminContentArticlesIdRoute = AdminContentArticlesIdRouteImport.update({
+  id: '/articles/$id',
+  path: '/articles/$id',
+  getParentRoute: () => AdminContentRoute,
+} as any)
 const AdminComplianceAlertsIdRoute = AdminComplianceAlertsIdRouteImport.update({
   id: '/alerts/$id',
   path: '/alerts/$id',
@@ -465,6 +508,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/cards': typeof AdminCardsRouteWithChildren
   '/compliance': typeof AdminComplianceRouteWithChildren
+  '/content': typeof AdminContentRouteWithChildren
   '/dashboard': typeof AdminDashboardRoute
   '/esim': typeof AdminEsimRouteWithChildren
   '/numbers': typeof AdminNumbersRouteWithChildren
@@ -479,6 +523,9 @@ export interface FileRoutesByFullPath {
   '/compliance/audit': typeof AdminComplianceAuditRoute
   '/compliance/policies': typeof AdminCompliancePoliciesRoute
   '/compliance/sanctions': typeof AdminComplianceSanctionsRoute
+  '/content/banners': typeof AdminContentBannersRoute
+  '/content/faq': typeof AdminContentFaqRoute
+  '/content/legal': typeof AdminContentLegalRoute
   '/esim/$id': typeof AdminEsimIdRoute
   '/esim/inventory': typeof AdminEsimInventoryRoute
   '/esim/orders': typeof AdminEsimOrdersRoute
@@ -509,6 +556,7 @@ export interface FileRoutesByFullPath {
   '/wallets/users': typeof AdminWalletsUsersRoute
   '/cards/': typeof AdminCardsIndexRoute
   '/compliance/': typeof AdminComplianceIndexRoute
+  '/content/': typeof AdminContentIndexRoute
   '/esim/': typeof AdminEsimIndexRoute
   '/kyc/': typeof AdminKycIndexRoute
   '/numbers/': typeof AdminNumbersIndexRoute
@@ -520,6 +568,7 @@ export interface FileRoutesByFullPath {
   '/users/': typeof AdminUsersIndexRoute
   '/wallets/': typeof AdminWalletsIndexRoute
   '/compliance/alerts/$id': typeof AdminComplianceAlertsIdRoute
+  '/content/articles/$id': typeof AdminContentArticlesIdRoute
   '/support/chat/$id': typeof AdminSupportChatIdRoute
   '/support/tickets/$id': typeof AdminSupportTicketsIdRoute
   '/users/$id/cards': typeof AdminUsersIdCardsRoute
@@ -531,6 +580,7 @@ export interface FileRoutesByFullPath {
   '/users/$id/transactions': typeof AdminUsersIdTransactionsRoute
   '/users/$id/wallets': typeof AdminUsersIdWalletsRoute
   '/compliance/alerts/': typeof AdminComplianceAlertsIndexRoute
+  '/content/articles/': typeof AdminContentArticlesIndexRoute
   '/support/chat/': typeof AdminSupportChatIndexRoute
   '/support/tickets/': typeof AdminSupportTicketsIndexRoute
   '/users/$id/': typeof AdminUsersIdIndexRoute
@@ -545,6 +595,9 @@ export interface FileRoutesByTo {
   '/compliance/audit': typeof AdminComplianceAuditRoute
   '/compliance/policies': typeof AdminCompliancePoliciesRoute
   '/compliance/sanctions': typeof AdminComplianceSanctionsRoute
+  '/content/banners': typeof AdminContentBannersRoute
+  '/content/faq': typeof AdminContentFaqRoute
+  '/content/legal': typeof AdminContentLegalRoute
   '/esim/$id': typeof AdminEsimIdRoute
   '/esim/inventory': typeof AdminEsimInventoryRoute
   '/esim/orders': typeof AdminEsimOrdersRoute
@@ -574,6 +627,7 @@ export interface FileRoutesByTo {
   '/wallets/users': typeof AdminWalletsUsersRoute
   '/cards': typeof AdminCardsIndexRoute
   '/compliance': typeof AdminComplianceIndexRoute
+  '/content': typeof AdminContentIndexRoute
   '/esim': typeof AdminEsimIndexRoute
   '/kyc': typeof AdminKycIndexRoute
   '/numbers': typeof AdminNumbersIndexRoute
@@ -585,6 +639,7 @@ export interface FileRoutesByTo {
   '/users': typeof AdminUsersIndexRoute
   '/wallets': typeof AdminWalletsIndexRoute
   '/compliance/alerts/$id': typeof AdminComplianceAlertsIdRoute
+  '/content/articles/$id': typeof AdminContentArticlesIdRoute
   '/support/chat/$id': typeof AdminSupportChatIdRoute
   '/support/tickets/$id': typeof AdminSupportTicketsIdRoute
   '/users/$id/cards': typeof AdminUsersIdCardsRoute
@@ -596,6 +651,7 @@ export interface FileRoutesByTo {
   '/users/$id/transactions': typeof AdminUsersIdTransactionsRoute
   '/users/$id/wallets': typeof AdminUsersIdWalletsRoute
   '/compliance/alerts': typeof AdminComplianceAlertsIndexRoute
+  '/content/articles': typeof AdminContentArticlesIndexRoute
   '/support/chat': typeof AdminSupportChatIndexRoute
   '/support/tickets': typeof AdminSupportTicketsIndexRoute
   '/users/$id': typeof AdminUsersIdIndexRoute
@@ -607,6 +663,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_admin/cards': typeof AdminCardsRouteWithChildren
   '/_admin/compliance': typeof AdminComplianceRouteWithChildren
+  '/_admin/content': typeof AdminContentRouteWithChildren
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/esim': typeof AdminEsimRouteWithChildren
   '/_admin/numbers': typeof AdminNumbersRouteWithChildren
@@ -621,6 +678,9 @@ export interface FileRoutesById {
   '/_admin/compliance/audit': typeof AdminComplianceAuditRoute
   '/_admin/compliance/policies': typeof AdminCompliancePoliciesRoute
   '/_admin/compliance/sanctions': typeof AdminComplianceSanctionsRoute
+  '/_admin/content/banners': typeof AdminContentBannersRoute
+  '/_admin/content/faq': typeof AdminContentFaqRoute
+  '/_admin/content/legal': typeof AdminContentLegalRoute
   '/_admin/esim/$id': typeof AdminEsimIdRoute
   '/_admin/esim/inventory': typeof AdminEsimInventoryRoute
   '/_admin/esim/orders': typeof AdminEsimOrdersRoute
@@ -651,6 +711,7 @@ export interface FileRoutesById {
   '/_admin/wallets/users': typeof AdminWalletsUsersRoute
   '/_admin/cards/': typeof AdminCardsIndexRoute
   '/_admin/compliance/': typeof AdminComplianceIndexRoute
+  '/_admin/content/': typeof AdminContentIndexRoute
   '/_admin/esim/': typeof AdminEsimIndexRoute
   '/_admin/kyc/': typeof AdminKycIndexRoute
   '/_admin/numbers/': typeof AdminNumbersIndexRoute
@@ -662,6 +723,7 @@ export interface FileRoutesById {
   '/_admin/users/': typeof AdminUsersIndexRoute
   '/_admin/wallets/': typeof AdminWalletsIndexRoute
   '/_admin/compliance/alerts/$id': typeof AdminComplianceAlertsIdRoute
+  '/_admin/content/articles/$id': typeof AdminContentArticlesIdRoute
   '/_admin/support/chat/$id': typeof AdminSupportChatIdRoute
   '/_admin/support/tickets/$id': typeof AdminSupportTicketsIdRoute
   '/_admin/users/$id/cards': typeof AdminUsersIdCardsRoute
@@ -673,6 +735,7 @@ export interface FileRoutesById {
   '/_admin/users/$id/transactions': typeof AdminUsersIdTransactionsRoute
   '/_admin/users/$id/wallets': typeof AdminUsersIdWalletsRoute
   '/_admin/compliance/alerts/': typeof AdminComplianceAlertsIndexRoute
+  '/_admin/content/articles/': typeof AdminContentArticlesIndexRoute
   '/_admin/support/chat/': typeof AdminSupportChatIndexRoute
   '/_admin/support/tickets/': typeof AdminSupportTicketsIndexRoute
   '/_admin/users/$id/': typeof AdminUsersIdIndexRoute
@@ -684,6 +747,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/cards'
     | '/compliance'
+    | '/content'
     | '/dashboard'
     | '/esim'
     | '/numbers'
@@ -698,6 +762,9 @@ export interface FileRouteTypes {
     | '/compliance/audit'
     | '/compliance/policies'
     | '/compliance/sanctions'
+    | '/content/banners'
+    | '/content/faq'
+    | '/content/legal'
     | '/esim/$id'
     | '/esim/inventory'
     | '/esim/orders'
@@ -728,6 +795,7 @@ export interface FileRouteTypes {
     | '/wallets/users'
     | '/cards/'
     | '/compliance/'
+    | '/content/'
     | '/esim/'
     | '/kyc/'
     | '/numbers/'
@@ -739,6 +807,7 @@ export interface FileRouteTypes {
     | '/users/'
     | '/wallets/'
     | '/compliance/alerts/$id'
+    | '/content/articles/$id'
     | '/support/chat/$id'
     | '/support/tickets/$id'
     | '/users/$id/cards'
@@ -750,6 +819,7 @@ export interface FileRouteTypes {
     | '/users/$id/transactions'
     | '/users/$id/wallets'
     | '/compliance/alerts/'
+    | '/content/articles/'
     | '/support/chat/'
     | '/support/tickets/'
     | '/users/$id/'
@@ -764,6 +834,9 @@ export interface FileRouteTypes {
     | '/compliance/audit'
     | '/compliance/policies'
     | '/compliance/sanctions'
+    | '/content/banners'
+    | '/content/faq'
+    | '/content/legal'
     | '/esim/$id'
     | '/esim/inventory'
     | '/esim/orders'
@@ -793,6 +866,7 @@ export interface FileRouteTypes {
     | '/wallets/users'
     | '/cards'
     | '/compliance'
+    | '/content'
     | '/esim'
     | '/kyc'
     | '/numbers'
@@ -804,6 +878,7 @@ export interface FileRouteTypes {
     | '/users'
     | '/wallets'
     | '/compliance/alerts/$id'
+    | '/content/articles/$id'
     | '/support/chat/$id'
     | '/support/tickets/$id'
     | '/users/$id/cards'
@@ -815,6 +890,7 @@ export interface FileRouteTypes {
     | '/users/$id/transactions'
     | '/users/$id/wallets'
     | '/compliance/alerts'
+    | '/content/articles'
     | '/support/chat'
     | '/support/tickets'
     | '/users/$id'
@@ -825,6 +901,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_admin/cards'
     | '/_admin/compliance'
+    | '/_admin/content'
     | '/_admin/dashboard'
     | '/_admin/esim'
     | '/_admin/numbers'
@@ -839,6 +916,9 @@ export interface FileRouteTypes {
     | '/_admin/compliance/audit'
     | '/_admin/compliance/policies'
     | '/_admin/compliance/sanctions'
+    | '/_admin/content/banners'
+    | '/_admin/content/faq'
+    | '/_admin/content/legal'
     | '/_admin/esim/$id'
     | '/_admin/esim/inventory'
     | '/_admin/esim/orders'
@@ -869,6 +949,7 @@ export interface FileRouteTypes {
     | '/_admin/wallets/users'
     | '/_admin/cards/'
     | '/_admin/compliance/'
+    | '/_admin/content/'
     | '/_admin/esim/'
     | '/_admin/kyc/'
     | '/_admin/numbers/'
@@ -880,6 +961,7 @@ export interface FileRouteTypes {
     | '/_admin/users/'
     | '/_admin/wallets/'
     | '/_admin/compliance/alerts/$id'
+    | '/_admin/content/articles/$id'
     | '/_admin/support/chat/$id'
     | '/_admin/support/tickets/$id'
     | '/_admin/users/$id/cards'
@@ -891,6 +973,7 @@ export interface FileRouteTypes {
     | '/_admin/users/$id/transactions'
     | '/_admin/users/$id/wallets'
     | '/_admin/compliance/alerts/'
+    | '/_admin/content/articles/'
     | '/_admin/support/chat/'
     | '/_admin/support/tickets/'
     | '/_admin/users/$id/'
@@ -981,6 +1064,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/content': {
+      id: '/_admin/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/compliance': {
       id: '/_admin/compliance'
       path: '/compliance'
@@ -1064,6 +1154,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/esim/'
       preLoaderRoute: typeof AdminEsimIndexRouteImport
       parentRoute: typeof AdminEsimRoute
+    }
+    '/_admin/content/': {
+      id: '/_admin/content/'
+      path: '/'
+      fullPath: '/content/'
+      preLoaderRoute: typeof AdminContentIndexRouteImport
+      parentRoute: typeof AdminContentRoute
     }
     '/_admin/compliance/': {
       id: '/_admin/compliance/'
@@ -1275,6 +1372,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEsimIdRouteImport
       parentRoute: typeof AdminEsimRoute
     }
+    '/_admin/content/legal': {
+      id: '/_admin/content/legal'
+      path: '/legal'
+      fullPath: '/content/legal'
+      preLoaderRoute: typeof AdminContentLegalRouteImport
+      parentRoute: typeof AdminContentRoute
+    }
+    '/_admin/content/faq': {
+      id: '/_admin/content/faq'
+      path: '/faq'
+      fullPath: '/content/faq'
+      preLoaderRoute: typeof AdminContentFaqRouteImport
+      parentRoute: typeof AdminContentRoute
+    }
+    '/_admin/content/banners': {
+      id: '/_admin/content/banners'
+      path: '/banners'
+      fullPath: '/content/banners'
+      preLoaderRoute: typeof AdminContentBannersRouteImport
+      parentRoute: typeof AdminContentRoute
+    }
     '/_admin/compliance/sanctions': {
       id: '/_admin/compliance/sanctions'
       path: '/sanctions'
@@ -1337,6 +1455,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/support/chat/'
       preLoaderRoute: typeof AdminSupportChatIndexRouteImport
       parentRoute: typeof AdminSupportRoute
+    }
+    '/_admin/content/articles/': {
+      id: '/_admin/content/articles/'
+      path: '/articles'
+      fullPath: '/content/articles/'
+      preLoaderRoute: typeof AdminContentArticlesIndexRouteImport
+      parentRoute: typeof AdminContentRoute
     }
     '/_admin/compliance/alerts/': {
       id: '/_admin/compliance/alerts/'
@@ -1415,6 +1540,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSupportChatIdRouteImport
       parentRoute: typeof AdminSupportRoute
     }
+    '/_admin/content/articles/$id': {
+      id: '/_admin/content/articles/$id'
+      path: '/articles/$id'
+      fullPath: '/content/articles/$id'
+      preLoaderRoute: typeof AdminContentArticlesIdRouteImport
+      parentRoute: typeof AdminContentRoute
+    }
     '/_admin/compliance/alerts/$id': {
       id: '/_admin/compliance/alerts/$id'
       path: '/alerts/$id'
@@ -1463,6 +1595,28 @@ const AdminComplianceRouteChildren: AdminComplianceRouteChildren = {
 
 const AdminComplianceRouteWithChildren = AdminComplianceRoute._addFileChildren(
   AdminComplianceRouteChildren,
+)
+
+interface AdminContentRouteChildren {
+  AdminContentBannersRoute: typeof AdminContentBannersRoute
+  AdminContentFaqRoute: typeof AdminContentFaqRoute
+  AdminContentLegalRoute: typeof AdminContentLegalRoute
+  AdminContentIndexRoute: typeof AdminContentIndexRoute
+  AdminContentArticlesIdRoute: typeof AdminContentArticlesIdRoute
+  AdminContentArticlesIndexRoute: typeof AdminContentArticlesIndexRoute
+}
+
+const AdminContentRouteChildren: AdminContentRouteChildren = {
+  AdminContentBannersRoute: AdminContentBannersRoute,
+  AdminContentFaqRoute: AdminContentFaqRoute,
+  AdminContentLegalRoute: AdminContentLegalRoute,
+  AdminContentIndexRoute: AdminContentIndexRoute,
+  AdminContentArticlesIdRoute: AdminContentArticlesIdRoute,
+  AdminContentArticlesIndexRoute: AdminContentArticlesIndexRoute,
+}
+
+const AdminContentRouteWithChildren = AdminContentRoute._addFileChildren(
+  AdminContentRouteChildren,
 )
 
 interface AdminEsimRouteChildren {
@@ -1638,6 +1792,7 @@ const AdminUsersIdRouteWithChildren = AdminUsersIdRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminCardsRoute: typeof AdminCardsRouteWithChildren
   AdminComplianceRoute: typeof AdminComplianceRouteWithChildren
+  AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEsimRoute: typeof AdminEsimRouteWithChildren
   AdminNumbersRoute: typeof AdminNumbersRouteWithChildren
@@ -1657,6 +1812,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCardsRoute: AdminCardsRouteWithChildren,
   AdminComplianceRoute: AdminComplianceRouteWithChildren,
+  AdminContentRoute: AdminContentRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEsimRoute: AdminEsimRouteWithChildren,
   AdminNumbersRoute: AdminNumbersRouteWithChildren,
