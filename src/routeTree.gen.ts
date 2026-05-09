@@ -18,6 +18,7 @@ import { Route as AdminWalletsIndexRouteImport } from './routes/_admin.wallets.i
 import { Route as AdminUsersIndexRouteImport } from './routes/_admin.users.index'
 import { Route as AdminTransactionsIndexRouteImport } from './routes/_admin.transactions.index'
 import { Route as AdminKycIndexRouteImport } from './routes/_admin.kyc.index'
+import { Route as AdminWalletsUsersRouteImport } from './routes/_admin.wallets.users'
 import { Route as AdminWalletsTopupsRouteImport } from './routes/_admin.wallets.topups'
 import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets.payouts'
 import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
@@ -77,6 +78,11 @@ const AdminKycIndexRoute = AdminKycIndexRouteImport.update({
   id: '/kyc/',
   path: '/kyc/',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminWalletsUsersRoute = AdminWalletsUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminWalletsRoute,
 } as any)
 const AdminWalletsTopupsRoute = AdminWalletsTopupsRouteImport.update({
   id: '/topups',
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
   '/wallets/topups': typeof AdminWalletsTopupsRoute
+  '/wallets/users': typeof AdminWalletsUsersRoute
   '/kyc/': typeof AdminKycIndexRoute
   '/transactions/': typeof AdminTransactionsIndexRoute
   '/users/': typeof AdminUsersIndexRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
   '/wallets/topups': typeof AdminWalletsTopupsRoute
+  '/wallets/users': typeof AdminWalletsUsersRoute
   '/kyc': typeof AdminKycIndexRoute
   '/transactions': typeof AdminTransactionsIndexRoute
   '/users': typeof AdminUsersIndexRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
   '/_admin/wallets/payouts': typeof AdminWalletsPayoutsRoute
   '/_admin/wallets/topups': typeof AdminWalletsTopupsRoute
+  '/_admin/wallets/users': typeof AdminWalletsUsersRoute
   '/_admin/kyc/': typeof AdminKycIndexRoute
   '/_admin/transactions/': typeof AdminTransactionsIndexRoute
   '/_admin/users/': typeof AdminUsersIndexRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/wallets/fx'
     | '/wallets/payouts'
     | '/wallets/topups'
+    | '/wallets/users'
     | '/kyc/'
     | '/transactions/'
     | '/users/'
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/wallets/fx'
     | '/wallets/payouts'
     | '/wallets/topups'
+    | '/wallets/users'
     | '/kyc'
     | '/transactions'
     | '/users'
@@ -292,6 +303,7 @@ export interface FileRouteTypes {
     | '/_admin/wallets/fx'
     | '/_admin/wallets/payouts'
     | '/_admin/wallets/topups'
+    | '/_admin/wallets/users'
     | '/_admin/kyc/'
     | '/_admin/transactions/'
     | '/_admin/users/'
@@ -377,6 +389,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/kyc/'
       preLoaderRoute: typeof AdminKycIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/wallets/users': {
+      id: '/_admin/wallets/users'
+      path: '/users'
+      fullPath: '/wallets/users'
+      preLoaderRoute: typeof AdminWalletsUsersRouteImport
+      parentRoute: typeof AdminWalletsRoute
     }
     '/_admin/wallets/topups': {
       id: '/_admin/wallets/topups'
@@ -490,6 +509,7 @@ interface AdminWalletsRouteChildren {
   AdminWalletsFxRoute: typeof AdminWalletsFxRoute
   AdminWalletsPayoutsRoute: typeof AdminWalletsPayoutsRoute
   AdminWalletsTopupsRoute: typeof AdminWalletsTopupsRoute
+  AdminWalletsUsersRoute: typeof AdminWalletsUsersRoute
   AdminWalletsIndexRoute: typeof AdminWalletsIndexRoute
 }
 
@@ -497,6 +517,7 @@ const AdminWalletsRouteChildren: AdminWalletsRouteChildren = {
   AdminWalletsFxRoute: AdminWalletsFxRoute,
   AdminWalletsPayoutsRoute: AdminWalletsPayoutsRoute,
   AdminWalletsTopupsRoute: AdminWalletsTopupsRoute,
+  AdminWalletsUsersRoute: AdminWalletsUsersRoute,
   AdminWalletsIndexRoute: AdminWalletsIndexRoute,
 }
 

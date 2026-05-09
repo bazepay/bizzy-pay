@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Wallet, ArrowLeftRight, Banknote, Download } from "lucide-react";
+import { Wallet, ArrowLeftRight, Banknote, Download, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/wallets")({
   head: () => ({
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_admin/wallets")({
 
 const tabs = [
   { to: "/wallets", label: "Float", icon: Wallet, exact: true },
+  { to: "/wallets/users", label: "User wallets", icon: Users },
   { to: "/wallets/fx", label: "FX", icon: ArrowLeftRight },
   { to: "/wallets/payouts", label: "Payouts", icon: Banknote },
   { to: "/wallets/topups", label: "Top-ups", icon: Download },
