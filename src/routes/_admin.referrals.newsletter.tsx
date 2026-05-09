@@ -131,6 +131,7 @@ function NewsletterPage() {
   const openEdit = (n: Newsletter) => {
     const path = n.ctaUrl ? n.ctaUrl.split("?")[0] : "";
     setDraft({
+      ...emptyDraft,
       id: n.id,
       subject: n.subject,
       preheader: n.preheader,
@@ -138,9 +139,17 @@ function NewsletterPage() {
       audienceSize: n.audienceSize,
       fromName: n.fromName,
       fromEmail: n.fromEmail,
+      replyTo: n.replyTo ?? "",
+      headerImageUrl: n.headerImageUrl ?? "",
+      bodyFormat: n.bodyFormat ?? "plain",
+      bodyText: n.bodyText ?? "",
       scheduledAt: n.scheduledAt ? n.scheduledAt.slice(0, 16) : "",
       ctaPath: path,
       linkedPromoCode: n.linkedPromoCode ?? "none",
+      segments: n.targeting?.segments ?? ["all_users"],
+      locations: n.targeting?.locations ?? ["All Nigeria"],
+      devices: n.targeting?.devices ?? [],
+      language: n.targeting?.language ?? "all",
     });
     setOpen(true);
   };
@@ -154,22 +163,35 @@ function NewsletterPage() {
 
   const saveDraft = () => {
     if (!draft.subject.trim()) { toast.error("Subject is required"); return; }
-    if (!draft.audience.trim()) { toast.error("Audience is required"); return; }
     if (!draft.fromEmail.trim()) { toast.error("From email is required"); return; }
+    if (!draft.bodyText.trim()) { toast.error("Email body is required"); return; }
+    if (draft.segments.length === 0) { toast.error("Select at least one audience segment"); return; }
     const linkedPromoCode = draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode;
     const ctaUrl = buildUrl(draft.ctaPath, linkedPromoCode);
+    const audience = draft.audience.trim() || draft.segments.map((s) => audienceSegmentLabel[s]).join(", ");
+    const targeting = {
+      segments: draft.segments,
+      locations: draft.locations,
+      devices: draft.devices,
+      language: draft.language,
+    };
     if (draft.id) {
       setItems((prev) => prev.map((n) => n.id === draft.id ? {
         ...n,
         subject: draft.subject.trim(),
         preheader: draft.preheader.trim(),
-        audience: draft.audience.trim(),
+        audience,
         audienceSize: Math.max(0, draft.audienceSize),
         fromName: draft.fromName.trim(),
         fromEmail: draft.fromEmail.trim(),
+        replyTo: draft.replyTo.trim() || undefined,
+        headerImageUrl: draft.headerImageUrl || undefined,
+        bodyFormat: draft.bodyFormat,
+        bodyText: draft.bodyText,
         scheduledAt: draft.scheduledAt ? new Date(draft.scheduledAt).toISOString() : n.scheduledAt,
         linkedPromoCode,
         ctaUrl,
+        targeting,
       } : n));
       toast.success(`${draft.subject} updated`);
     } else {
@@ -178,16 +200,21 @@ function NewsletterPage() {
         id,
         subject: draft.subject.trim(),
         preheader: draft.preheader.trim(),
-        audience: draft.audience.trim(),
+        audience,
         audienceSize: Math.max(0, draft.audienceSize),
         fromName: draft.fromName.trim(),
         fromEmail: draft.fromEmail.trim(),
+        replyTo: draft.replyTo.trim() || undefined,
+        headerImageUrl: draft.headerImageUrl || undefined,
+        bodyFormat: draft.bodyFormat,
+        bodyText: draft.bodyText,
         status: draft.scheduledAt ? "scheduled" : "draft",
         scheduledAt: draft.scheduledAt ? new Date(draft.scheduledAt).toISOString() : null,
         sentAt: null,
         sent: 0, delivered: 0, opened: 0, clicked: 0, unsubscribed: 0, bounced: 0,
         linkedPromoCode,
         ctaUrl,
+        targeting,
       };
       setItems((prev) => [n, ...prev]);
       toast.success(`${n.subject} created`);
