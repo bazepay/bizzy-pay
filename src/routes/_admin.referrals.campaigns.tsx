@@ -7,14 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Play, Pause, Send, Megaphone, Mail, MessageSquare, Bell, Smartphone } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Search, Play, Pause, Send, Megaphone, Mail, MessageSquare, Bell, Smartphone, Plus, Pencil, Gift, Ticket } from "lucide-react";
 import {
   campaigns as initial,
+  referralPrograms,
+  promoCodes,
   fmtNgn,
   campaignStatusTone,
   campaignChannelLabel,
   type Campaign,
   type CampaignStatus,
+  type CampaignChannel,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
 
@@ -29,11 +33,40 @@ const channelIcon = {
   in_app: Smartphone,
 };
 
+type Draft = {
+  id?: string;
+  name: string;
+  channel: CampaignChannel;
+  audience: string;
+  audienceSize: number;
+  startAt: string;
+  endAt: string;
+  budgetNgn: number;
+  ctaUrl: string;
+  linkedProgramId: string;
+  linkedPromoCode: string;
+};
+
+const emptyDraft: Draft = {
+  name: "",
+  channel: "push",
+  audience: "",
+  audienceSize: 10000,
+  startAt: "",
+  endAt: "",
+  budgetNgn: 500_000,
+  ctaUrl: "",
+  linkedProgramId: "none",
+  linkedPromoCode: "none",
+};
+
 function CampaignsPage() {
   const [items, setItems] = useState<Campaign[]>(initial);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
   const [channel, setChannel] = useState("all");
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState<Draft>(emptyDraft);
 
   const rows = useMemo(() => {
     return items.filter((c) => {
@@ -60,6 +93,68 @@ function CampaignsPage() {
     toast.success("Campaign launched");
   };
 
+  const openNew = () => { setDraft(emptyDraft); setOpen(true); };
+  const openEdit = (c: Campaign) => {
+    setDraft({
+      id: c.id,
+      name: c.name,
+      channel: c.channel,
+      audience: c.audience,
+      audienceSize: c.audienceSize,
+      startAt: c.startAt ? c.startAt.slice(0, 10) : "",
+      endAt: c.endAt ? c.endAt.slice(0, 10) : "",
+      budgetNgn: c.budgetNgn,
+      ctaUrl: c.ctaUrl,
+      linkedProgramId: c.linkedProgramId ?? "none",
+      linkedPromoCode: c.linkedPromoCode ?? "none",
+    });
+    setOpen(true);
+  };
+  const saveDraft = () => {
+    if (!draft.name.trim()) { toast.error("Name is required"); return; }
+    if (!draft.audience.trim()) { toast.error("Audience is required"); return; }
+    if (!draft.ctaUrl.trim()) { toast.error("CTA URL is required"); return; }
+    const linkedProgramId = draft.linkedProgramId === "none" ? null : draft.linkedProgramId;
+    const linkedPromoCode = draft.linkedPromoCode === "none" ? null : draft.linkedPromoCode;
+    if (draft.id) {
+      setItems((prev) => prev.map((c) => c.id === draft.id ? {
+        ...c,
+        name: draft.name.trim(),
+        channel: draft.channel,
+        audience: draft.audience.trim(),
+        audienceSize: Math.max(0, draft.audienceSize),
+        startAt: draft.startAt ? new Date(draft.startAt).toISOString() : c.startAt,
+        endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
+        budgetNgn: Math.max(0, draft.budgetNgn),
+        ctaUrl: draft.ctaUrl.trim(),
+        linkedProgramId,
+        linkedPromoCode,
+      } : c));
+      toast.success(`${draft.name} updated`);
+    } else {
+      const id = `cmp_${String(Math.floor(Math.random() * 9000) + 1000)}`;
+      const c: Campaign = {
+        id,
+        name: draft.name.trim(),
+        channel: draft.channel,
+        status: "draft",
+        audience: draft.audience.trim(),
+        audienceSize: Math.max(0, draft.audienceSize),
+        startAt: draft.startAt ? new Date(draft.startAt).toISOString() : new Date().toISOString(),
+        endAt: draft.endAt ? new Date(draft.endAt).toISOString() : null,
+        sent: 0, delivered: 0, opened: 0, clicked: 0, converted: 0,
+        budgetNgn: Math.max(0, draft.budgetNgn),
+        spentNgn: 0,
+        ctaUrl: draft.ctaUrl.trim(),
+        linkedProgramId,
+        linkedPromoCode,
+      };
+      setItems((prev) => [c, ...prev]);
+      toast.success(`${c.name} created as draft`);
+    }
+    setOpen(false);
+  };
+
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
       <Card className="shadow-card">
@@ -73,7 +168,10 @@ function CampaignsPage() {
           </div>
           <FilterSelect label="Status" value={status} onChange={setStatus} options={[["all", "All"], ["draft", "Draft"], ["scheduled", "Scheduled"], ["live", "Live"], ["ended", "Ended"]]} />
           <FilterSelect label="Channel" value={channel} onChange={setChannel} options={[["all", "All"], ["push", "Push"], ["email", "Email"], ["sms", "SMS"], ["in_app", "In-app"]]} />
-          <div className="text-xs text-muted-foreground ml-auto">{rows.length} campaigns</div>
+          <div className="text-xs text-muted-foreground">{rows.length} campaigns</div>
+          <Button size="sm" className="h-9 gap-1.5 ml-auto" onClick={openNew}>
+            <Plus className="h-3.5 w-3.5" /> New campaign
+          </Button>
         </CardContent>
       </Card>
 
@@ -85,6 +183,7 @@ function CampaignsPage() {
           const deliveryRate = c.sent ? (c.delivered / c.sent) * 100 : 0;
           const openRate = c.delivered ? (c.opened / c.delivered) * 100 : 0;
           const cpa = c.converted ? c.spentNgn / c.converted : 0;
+          const linkedProgram = c.linkedProgramId ? referralPrograms.find((p) => p.id === c.linkedProgramId) : null;
           return (
             <Card key={c.id} className="shadow-card">
               <CardContent className="p-5 space-y-4">
@@ -98,7 +197,12 @@ function CampaignsPage() {
                       <div className="text-[11px] text-muted-foreground">{campaignChannelLabel[c.channel]} · {c.id}</div>
                     </div>
                   </div>
-                  <Badge variant="outline" className={`text-[10px] capitalize shrink-0 ${campaignStatusTone[c.status]}`}>{c.status}</Badge>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <Badge variant="outline" className={`text-[10px] capitalize ${campaignStatusTone[c.status]}`}>{c.status}</Badge>
+                    <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={() => openEdit(c)}>
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="text-xs space-y-1.5">
@@ -106,6 +210,22 @@ function CampaignsPage() {
                   <Row k="Reach" v={<span className="font-mono">{c.audienceSize.toLocaleString()}</span>} />
                   <Row k="CTA" v={<span className="font-mono truncate inline-block max-w-[220px]">{c.ctaUrl}</span>} />
                   <Row k="Window" v={<span>{new Date(c.startAt).toLocaleDateString()}{c.endAt ? ` → ${new Date(c.endAt).toLocaleDateString()}` : " → ongoing"}</span>} />
+                  {(linkedProgram || c.linkedPromoCode) && (
+                    <Row k="Linked" v={
+                      <div className="flex flex-wrap gap-1 justify-end">
+                        {linkedProgram && (
+                          <Badge variant="outline" className="text-[10px] gap-1 bg-primary/10 text-primary border-primary/30">
+                            <Gift className="h-2.5 w-2.5" />{linkedProgram.name}
+                          </Badge>
+                        )}
+                        {c.linkedPromoCode && (
+                          <Badge variant="outline" className="text-[10px] gap-1 bg-success/10 text-success border-success/30 font-mono">
+                            <Ticket className="h-2.5 w-2.5" />{c.linkedPromoCode}
+                          </Badge>
+                        )}
+                      </div>
+                    } />
+                  )}
                 </div>
 
                 <div className="grid grid-cols-4 gap-2 text-center">
@@ -157,6 +277,81 @@ function CampaignsPage() {
       {rows.length === 0 && (
         <Card><CardContent className="p-10 text-center text-sm text-muted-foreground"><Megaphone className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />No campaigns match.</CardContent></Card>
       )}
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{draft.id ? "Edit campaign" : "New campaign"}</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="col-span-2">
+              <Label className="text-xs">Campaign name</Label>
+              <Input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="e.g. June refer-a-friend push" className="h-9 mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">Channel</Label>
+              <Select value={draft.channel} onValueChange={(v) => setDraft({ ...draft, channel: v as CampaignChannel })}>
+                <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(campaignChannelLabel) as CampaignChannel[]).map((k) => (
+                    <SelectItem key={k} value={k}>{campaignChannelLabel[k]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs">Reach (audience size)</Label>
+              <Input type="number" value={draft.audienceSize} onChange={(e) => setDraft({ ...draft, audienceSize: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+            </div>
+            <div className="col-span-2">
+              <Label className="text-xs">Audience description</Label>
+              <Input value={draft.audience} onChange={(e) => setDraft({ ...draft, audience: e.target.value })} placeholder="e.g. Wallet >₦50k · no card" className="h-9 mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">Start date</Label>
+              <Input type="date" value={draft.startAt} onChange={(e) => setDraft({ ...draft, startAt: e.target.value })} className="h-9 mt-1" />
+            </div>
+            <div>
+              <Label className="text-xs">End date (optional)</Label>
+              <Input type="date" value={draft.endAt} onChange={(e) => setDraft({ ...draft, endAt: e.target.value })} className="h-9 mt-1" />
+            </div>
+            <div className="col-span-2">
+              <Label className="text-xs">CTA URL</Label>
+              <Input value={draft.ctaUrl} onChange={(e) => setDraft({ ...draft, ctaUrl: e.target.value })} placeholder="/pay/airtime?promo=PAYDAY5" className="h-9 mt-1 font-mono" />
+            </div>
+            <div>
+              <Label className="text-xs">Budget cap (₦)</Label>
+              <Input type="number" value={draft.budgetNgn} onChange={(e) => setDraft({ ...draft, budgetNgn: Number(e.target.value) })} className="h-9 mt-1 font-mono" />
+            </div>
+            <div className="col-span-2 grid grid-cols-2 gap-3 pt-2 border-t border-border">
+              <div>
+                <Label className="text-xs flex items-center gap-1"><Gift className="h-3 w-3" /> Linked referral program</Label>
+                <Select value={draft.linkedProgramId} onValueChange={(v) => setDraft({ ...draft, linkedProgramId: v })}>
+                  <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">— none —</SelectItem>
+                    {referralPrograms.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs flex items-center gap-1"><Ticket className="h-3 w-3" /> Linked promo code</Label>
+                <Select value={draft.linkedPromoCode} onValueChange={(v) => setDraft({ ...draft, linkedPromoCode: v })}>
+                  <SelectTrigger className="h-9 mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">— none —</SelectItem>
+                    {promoCodes.map((p) => <SelectItem key={p.id} value={p.code} className="font-mono">{p.code}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={saveDraft}>{draft.id ? "Save changes" : "Create draft"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }
