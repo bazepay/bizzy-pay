@@ -61,6 +61,7 @@ import { Route as AdminPayIdRouteImport } from './routes/_admin.pay.$id'
 import { Route as AdminNumbersPoolRouteImport } from './routes/_admin.numbers.pool'
 import { Route as AdminNumbersLeasesRouteImport } from './routes/_admin.numbers.leases'
 import { Route as AdminNumbersIdRouteImport } from './routes/_admin.numbers.$id'
+import { Route as AdminNotificationsTemplatesRouteImport } from './routes/_admin.notifications.templates'
 import { Route as AdminKycIdRouteImport } from './routes/_admin.kyc.$id'
 import { Route as AdminEsimPlansRouteImport } from './routes/_admin.esim.plans'
 import { Route as AdminEsimOrdersRouteImport } from './routes/_admin.esim.orders'
@@ -351,6 +352,12 @@ const AdminNumbersIdRoute = AdminNumbersIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminNumbersRoute,
 } as any)
+const AdminNotificationsTemplatesRoute =
+  AdminNotificationsTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => AdminNotificationsRoute,
+  } as any)
 const AdminKycIdRoute = AdminKycIdRouteImport.update({
   id: '/kyc/$id',
   path: '/kyc/$id',
@@ -524,6 +531,7 @@ export interface FileRoutesByFullPath {
   '/esim/orders': typeof AdminEsimOrdersRoute
   '/esim/plans': typeof AdminEsimPlansRoute
   '/kyc/$id': typeof AdminKycIdRoute
+  '/notifications/templates': typeof AdminNotificationsTemplatesRoute
   '/numbers/$id': typeof AdminNumbersIdRoute
   '/numbers/leases': typeof AdminNumbersLeasesRoute
   '/numbers/pool': typeof AdminNumbersPoolRoute
@@ -594,6 +602,7 @@ export interface FileRoutesByTo {
   '/esim/orders': typeof AdminEsimOrdersRoute
   '/esim/plans': typeof AdminEsimPlansRoute
   '/kyc/$id': typeof AdminKycIdRoute
+  '/notifications/templates': typeof AdminNotificationsTemplatesRoute
   '/numbers/$id': typeof AdminNumbersIdRoute
   '/numbers/leases': typeof AdminNumbersLeasesRoute
   '/numbers/pool': typeof AdminNumbersPoolRoute
@@ -676,6 +685,7 @@ export interface FileRoutesById {
   '/_admin/esim/orders': typeof AdminEsimOrdersRoute
   '/_admin/esim/plans': typeof AdminEsimPlansRoute
   '/_admin/kyc/$id': typeof AdminKycIdRoute
+  '/_admin/notifications/templates': typeof AdminNotificationsTemplatesRoute
   '/_admin/numbers/$id': typeof AdminNumbersIdRoute
   '/_admin/numbers/leases': typeof AdminNumbersLeasesRoute
   '/_admin/numbers/pool': typeof AdminNumbersPoolRoute
@@ -759,6 +769,7 @@ export interface FileRouteTypes {
     | '/esim/orders'
     | '/esim/plans'
     | '/kyc/$id'
+    | '/notifications/templates'
     | '/numbers/$id'
     | '/numbers/leases'
     | '/numbers/pool'
@@ -829,6 +840,7 @@ export interface FileRouteTypes {
     | '/esim/orders'
     | '/esim/plans'
     | '/kyc/$id'
+    | '/notifications/templates'
     | '/numbers/$id'
     | '/numbers/leases'
     | '/numbers/pool'
@@ -910,6 +922,7 @@ export interface FileRouteTypes {
     | '/_admin/esim/orders'
     | '/_admin/esim/plans'
     | '/_admin/kyc/$id'
+    | '/_admin/notifications/templates'
     | '/_admin/numbers/$id'
     | '/_admin/numbers/leases'
     | '/_admin/numbers/pool'
@@ -1336,6 +1349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminNumbersIdRouteImport
       parentRoute: typeof AdminNumbersRoute
     }
+    '/_admin/notifications/templates': {
+      id: '/_admin/notifications/templates'
+      path: '/templates'
+      fullPath: '/notifications/templates'
+      preLoaderRoute: typeof AdminNotificationsTemplatesRouteImport
+      parentRoute: typeof AdminNotificationsRoute
+    }
     '/_admin/kyc/$id': {
       id: '/_admin/kyc/$id'
       path: '/kyc/$id'
@@ -1612,10 +1632,12 @@ const AdminEsimRouteWithChildren = AdminEsimRoute._addFileChildren(
 )
 
 interface AdminNotificationsRouteChildren {
+  AdminNotificationsTemplatesRoute: typeof AdminNotificationsTemplatesRoute
   AdminNotificationsIndexRoute: typeof AdminNotificationsIndexRoute
 }
 
 const AdminNotificationsRouteChildren: AdminNotificationsRouteChildren = {
+  AdminNotificationsTemplatesRoute: AdminNotificationsTemplatesRoute,
   AdminNotificationsIndexRoute: AdminNotificationsIndexRoute,
 }
 
