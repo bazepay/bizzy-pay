@@ -18,6 +18,7 @@ import { Route as AdminReferralsRouteImport } from './routes/_admin.referrals'
 import { Route as AdminPaymentsRouteImport } from './routes/_admin.payments'
 import { Route as AdminPayRouteImport } from './routes/_admin.pay'
 import { Route as AdminNumbersRouteImport } from './routes/_admin.numbers'
+import { Route as AdminNotificationsRouteImport } from './routes/_admin.notifications'
 import { Route as AdminEsimRouteImport } from './routes/_admin.esim'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
 import { Route as AdminContentRouteImport } from './routes/_admin.content'
@@ -130,6 +131,11 @@ const AdminPayRoute = AdminPayRouteImport.update({
 const AdminNumbersRoute = AdminNumbersRouteImport.update({
   id: '/numbers',
   path: '/numbers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminEsimRoute = AdminEsimRouteImport.update({
@@ -492,6 +498,7 @@ export interface FileRoutesByFullPath {
   '/content': typeof AdminContentRouteWithChildren
   '/dashboard': typeof AdminDashboardRoute
   '/esim': typeof AdminEsimRouteWithChildren
+  '/notifications': typeof AdminNotificationsRoute
   '/numbers': typeof AdminNumbersRouteWithChildren
   '/pay': typeof AdminPayRouteWithChildren
   '/payments': typeof AdminPaymentsRouteWithChildren
@@ -567,6 +574,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/notifications': typeof AdminNotificationsRoute
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
@@ -641,6 +649,7 @@ export interface FileRoutesById {
   '/_admin/content': typeof AdminContentRouteWithChildren
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/esim': typeof AdminEsimRouteWithChildren
+  '/_admin/notifications': typeof AdminNotificationsRoute
   '/_admin/numbers': typeof AdminNumbersRouteWithChildren
   '/_admin/pay': typeof AdminPayRouteWithChildren
   '/_admin/payments': typeof AdminPaymentsRouteWithChildren
@@ -722,6 +731,7 @@ export interface FileRouteTypes {
     | '/content'
     | '/dashboard'
     | '/esim'
+    | '/notifications'
     | '/numbers'
     | '/pay'
     | '/payments'
@@ -797,6 +807,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/notifications'
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
@@ -870,6 +881,7 @@ export interface FileRouteTypes {
     | '/_admin/content'
     | '/_admin/dashboard'
     | '/_admin/esim'
+    | '/_admin/notifications'
     | '/_admin/numbers'
     | '/_admin/pay'
     | '/_admin/payments'
@@ -1011,6 +1023,13 @@ declare module '@tanstack/react-router' {
       path: '/numbers'
       fullPath: '/numbers'
       preLoaderRoute: typeof AdminNumbersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/notifications': {
+      id: '/_admin/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/esim': {
@@ -1731,6 +1750,7 @@ interface AdminRouteChildren {
   AdminContentRoute: typeof AdminContentRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEsimRoute: typeof AdminEsimRouteWithChildren
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminNumbersRoute: typeof AdminNumbersRouteWithChildren
   AdminPayRoute: typeof AdminPayRouteWithChildren
   AdminPaymentsRoute: typeof AdminPaymentsRouteWithChildren
@@ -1751,6 +1771,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminContentRoute: AdminContentRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEsimRoute: AdminEsimRouteWithChildren,
+  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminNumbersRoute: AdminNumbersRouteWithChildren,
   AdminPayRoute: AdminPayRouteWithChildren,
   AdminPaymentsRoute: AdminPaymentsRouteWithChildren,
