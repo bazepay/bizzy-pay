@@ -23,6 +23,7 @@ import {
   fmtRelative,
   type Template,
   type Channel,
+  type EventKey,
 } from "@/lib/notifications-data";
 
 export const Route = createFileRoute("/_admin/notifications/templates")({
