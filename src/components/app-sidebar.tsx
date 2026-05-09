@@ -15,6 +15,7 @@ import {
   Scale,
   FileText,
   Bell,
+  BarChart3,
   Settings,
 } from "lucide-react";
 import {
@@ -62,6 +63,7 @@ const business: Item[] = [
 ];
 
 const settings: Item[] = [
+  { title: "Reports", url: "/reports", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
