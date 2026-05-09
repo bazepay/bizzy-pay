@@ -34,6 +34,7 @@ import { Route as AdminWalletsPayoutsRouteImport } from './routes/_admin.wallets
 import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
+import { Route as AdminPaymentsRoutingRouteImport } from './routes/_admin.payments.routing'
 import { Route as AdminPaymentsProvidersRouteImport } from './routes/_admin.payments.providers'
 import { Route as AdminPayPlansRouteImport } from './routes/_admin.pay.plans'
 import { Route as AdminPayOrdersRouteImport } from './routes/_admin.pay.orders'
@@ -184,6 +185,11 @@ const AdminTransactionsIdRoute = AdminTransactionsIdRouteImport.update({
   id: '/transactions/$id',
   path: '/transactions/$id',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminPaymentsRoutingRoute = AdminPaymentsRoutingRouteImport.update({
+  id: '/routing',
+  path: '/routing',
+  getParentRoute: () => AdminPaymentsRoute,
 } as any)
 const AdminPaymentsProvidersRoute = AdminPaymentsProvidersRouteImport.update({
   id: '/providers',
@@ -344,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/pay/orders': typeof AdminPayOrdersRoute
   '/pay/plans': typeof AdminPayPlansRoute
   '/payments/providers': typeof AdminPaymentsProvidersRoute
+  '/payments/routing': typeof AdminPaymentsRoutingRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -390,6 +397,7 @@ export interface FileRoutesByTo {
   '/pay/orders': typeof AdminPayOrdersRoute
   '/pay/plans': typeof AdminPayPlansRoute
   '/payments/providers': typeof AdminPaymentsProvidersRoute
+  '/payments/routing': typeof AdminPaymentsRoutingRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
   '/wallets/payouts': typeof AdminWalletsPayoutsRoute
@@ -443,6 +451,7 @@ export interface FileRoutesById {
   '/_admin/pay/orders': typeof AdminPayOrdersRoute
   '/_admin/pay/plans': typeof AdminPayPlansRoute
   '/_admin/payments/providers': typeof AdminPaymentsProvidersRoute
+  '/_admin/payments/routing': typeof AdminPaymentsRoutingRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
   '/_admin/wallets/fx': typeof AdminWalletsFxRoute
@@ -497,6 +506,7 @@ export interface FileRouteTypes {
     | '/pay/orders'
     | '/pay/plans'
     | '/payments/providers'
+    | '/payments/routing'
     | '/transactions/$id'
     | '/users/$id'
     | '/wallets/fx'
@@ -543,6 +553,7 @@ export interface FileRouteTypes {
     | '/pay/orders'
     | '/pay/plans'
     | '/payments/providers'
+    | '/payments/routing'
     | '/transactions/$id'
     | '/wallets/fx'
     | '/wallets/payouts'
@@ -595,6 +606,7 @@ export interface FileRouteTypes {
     | '/_admin/pay/orders'
     | '/_admin/pay/plans'
     | '/_admin/payments/providers'
+    | '/_admin/payments/routing'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
     | '/_admin/wallets/fx'
@@ -803,6 +815,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/transactions/$id'
       preLoaderRoute: typeof AdminTransactionsIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_admin/payments/routing': {
+      id: '/_admin/payments/routing'
+      path: '/routing'
+      fullPath: '/payments/routing'
+      preLoaderRoute: typeof AdminPaymentsRoutingRouteImport
+      parentRoute: typeof AdminPaymentsRoute
     }
     '/_admin/payments/providers': {
       id: '/_admin/payments/providers'
@@ -1069,11 +1088,13 @@ const AdminPayRouteWithChildren = AdminPayRoute._addFileChildren(
 
 interface AdminPaymentsRouteChildren {
   AdminPaymentsProvidersRoute: typeof AdminPaymentsProvidersRoute
+  AdminPaymentsRoutingRoute: typeof AdminPaymentsRoutingRoute
   AdminPaymentsIndexRoute: typeof AdminPaymentsIndexRoute
 }
 
 const AdminPaymentsRouteChildren: AdminPaymentsRouteChildren = {
   AdminPaymentsProvidersRoute: AdminPaymentsProvidersRoute,
+  AdminPaymentsRoutingRoute: AdminPaymentsRoutingRoute,
   AdminPaymentsIndexRoute: AdminPaymentsIndexRoute,
 }
 
