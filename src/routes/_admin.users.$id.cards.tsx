@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/_admin/users/$id/cards")({
 
 function CardsTab() {
   const { id } = Route.useParams();
-  const cards = getCards(id);
+  const [cards, setCards] = useState(() => getCards(id));
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -44,11 +45,20 @@ function CardsTab() {
               </div>
             </div>
             <div className="flex items-center gap-2 pt-1">
-              <Button size="sm" variant="outline" className="flex-1" onClick={() => toast.success(`Card ${c.last4} ${c.status === "frozen" ? "unfrozen" : "frozen"}.`)}>
+              <Button size="sm" variant="outline" className="flex-1" disabled={c.status === "closed"}
+                onClick={() => {
+                  const next = c.status === "frozen" ? "active" : "frozen";
+                  setCards((prev) => prev.map((x) => x.id === c.id ? { ...x, status: next } : x));
+                  toast.success(`Card ${c.last4} ${next === "frozen" ? "frozen" : "unfrozen"}.`);
+                }}>
                 <Snowflake className="h-3.5 w-3.5 mr-1.5" />
                 {c.status === "frozen" ? "Unfreeze" : "Freeze"}
               </Button>
-              <Button size="sm" variant="outline" className="flex-1 text-destructive" onClick={() => toast.success(`Card ${c.last4} terminated.`)}>
+              <Button size="sm" variant="outline" className="flex-1 text-destructive" disabled={c.status === "closed"}
+                onClick={() => {
+                  setCards((prev) => prev.map((x) => x.id === c.id ? { ...x, status: "closed" } : x));
+                  toast.success(`Card ${c.last4} terminated.`);
+                }}>
                 <XCircle className="h-3.5 w-3.5 mr-1.5" />
                 Terminate
               </Button>

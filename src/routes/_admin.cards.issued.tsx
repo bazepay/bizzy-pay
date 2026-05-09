@@ -24,6 +24,7 @@ function IssuedCardsPage() {
   const [statusF, setStatusF] = useState<"all" | CardStatus>("all");
   const [programF, setProgramF] = useState<string>("all");
   const [riskF, setRiskF] = useState<"all" | "low" | "med" | "high">("all");
+  const [visible, setVisible] = useState(50);
 
   const rows = useMemo(() => {
     return issuedCards.filter((c) => {
@@ -115,7 +116,7 @@ function IssuedCardsPage() {
               <TableBody>
                 {rows.length === 0 ? (
                   <TableRow><TableCell colSpan={8} className="text-center py-10 text-muted-foreground text-sm">No cards match your filters.</TableCell></TableRow>
-                ) : rows.slice(0, 50).map((c) => (
+                ) : rows.slice(0, visible).map((c) => (
                   <TableRow key={c.id} className="hover:bg-muted/40">
                     <TableCell>
                       <Link to="/cards/$id" params={{ id: c.id }} className="block">
@@ -144,8 +145,11 @@ function IssuedCardsPage() {
               </TableBody>
             </Table>
           </div>
-          {rows.length > 50 && (
-            <div className="text-xs text-muted-foreground text-center">Showing 50 of {rows.length} · refine filters to narrow further.</div>
+          {rows.length > visible && (
+            <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
+              <span>Showing {visible} of {rows.length}</span>
+              <Button variant="outline" size="sm" onClick={() => setVisible((v) => v + 50)}>Load more</Button>
+            </div>
           )}
         </CardContent>
       </Card>
