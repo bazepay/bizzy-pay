@@ -13,6 +13,7 @@ import {
   campaigns as initial,
   referralPrograms,
   promoCodes,
+  campaignDestinations,
   fmtNgn,
   campaignStatusTone,
   campaignChannelLabel,
@@ -21,6 +22,17 @@ import {
   type CampaignChannel,
 } from "@/lib/growth-data";
 import { toast } from "sonner";
+
+// Build a CTA URL from a chosen destination + optional promo code + optional UTM source.
+function buildCtaUrl(path: string, opts: { promoCode?: string | null; utmSource?: string }) {
+  if (!path) return "";
+  const dest = campaignDestinations.find((d) => d.path === path);
+  const params = new URLSearchParams();
+  if (opts.promoCode && dest?.acceptsPromo) params.set("promo", opts.promoCode);
+  if (opts.utmSource?.trim()) params.set("utm_source", opts.utmSource.trim());
+  const qs = params.toString();
+  return qs ? `${path}?${qs}` : path;
+}
 
 export const Route = createFileRoute("/_admin/referrals/campaigns")({
   component: CampaignsPage,
