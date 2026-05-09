@@ -47,6 +47,7 @@ import { Route as AdminWalletsFxRouteImport } from './routes/_admin.wallets.fx'
 import { Route as AdminUsersIdRouteImport } from './routes/_admin.users.$id'
 import { Route as AdminTransactionsIdRouteImport } from './routes/_admin.transactions.$id'
 import { Route as AdminSettingsFeatureFlagsRouteImport } from './routes/_admin.settings.feature-flags'
+import { Route as AdminSettingsBrandingRouteImport } from './routes/_admin.settings.branding'
 import { Route as AdminSettingsAuditLogRouteImport } from './routes/_admin.settings.audit-log'
 import { Route as AdminSettingsApiKeysRouteImport } from './routes/_admin.settings.api-keys'
 import { Route as AdminReferralsPromosRouteImport } from './routes/_admin.referrals.promos'
@@ -289,6 +290,11 @@ const AdminSettingsFeatureFlagsRoute =
     path: '/feature-flags',
     getParentRoute: () => AdminSettingsRoute,
   } as any)
+const AdminSettingsBrandingRoute = AdminSettingsBrandingRouteImport.update({
+  id: '/branding',
+  path: '/branding',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
 const AdminSettingsAuditLogRoute = AdminSettingsAuditLogRouteImport.update({
   id: '/audit-log',
   path: '/audit-log',
@@ -607,6 +613,7 @@ export interface FileRoutesByFullPath {
   '/referrals/promos': typeof AdminReferralsPromosRoute
   '/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/settings/audit-log': typeof AdminSettingsAuditLogRoute
+  '/settings/branding': typeof AdminSettingsBrandingRoute
   '/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -685,6 +692,7 @@ export interface FileRoutesByTo {
   '/referrals/promos': typeof AdminReferralsPromosRoute
   '/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/settings/audit-log': typeof AdminSettingsAuditLogRoute
+  '/settings/branding': typeof AdminSettingsBrandingRoute
   '/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/transactions/$id': typeof AdminTransactionsIdRoute
   '/wallets/fx': typeof AdminWalletsFxRoute
@@ -776,6 +784,7 @@ export interface FileRoutesById {
   '/_admin/referrals/promos': typeof AdminReferralsPromosRoute
   '/_admin/settings/api-keys': typeof AdminSettingsApiKeysRoute
   '/_admin/settings/audit-log': typeof AdminSettingsAuditLogRoute
+  '/_admin/settings/branding': typeof AdminSettingsBrandingRoute
   '/_admin/settings/feature-flags': typeof AdminSettingsFeatureFlagsRoute
   '/_admin/transactions/$id': typeof AdminTransactionsIdRoute
   '/_admin/users/$id': typeof AdminUsersIdRouteWithChildren
@@ -868,6 +877,7 @@ export interface FileRouteTypes {
     | '/referrals/promos'
     | '/settings/api-keys'
     | '/settings/audit-log'
+    | '/settings/branding'
     | '/settings/feature-flags'
     | '/transactions/$id'
     | '/users/$id'
@@ -946,6 +956,7 @@ export interface FileRouteTypes {
     | '/referrals/promos'
     | '/settings/api-keys'
     | '/settings/audit-log'
+    | '/settings/branding'
     | '/settings/feature-flags'
     | '/transactions/$id'
     | '/wallets/fx'
@@ -1036,6 +1047,7 @@ export interface FileRouteTypes {
     | '/_admin/referrals/promos'
     | '/_admin/settings/api-keys'
     | '/_admin/settings/audit-log'
+    | '/_admin/settings/branding'
     | '/_admin/settings/feature-flags'
     | '/_admin/transactions/$id'
     | '/_admin/users/$id'
@@ -1347,6 +1359,13 @@ declare module '@tanstack/react-router' {
       path: '/feature-flags'
       fullPath: '/settings/feature-flags'
       preLoaderRoute: typeof AdminSettingsFeatureFlagsRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/_admin/settings/branding': {
+      id: '/_admin/settings/branding'
+      path: '/branding'
+      fullPath: '/settings/branding'
+      preLoaderRoute: typeof AdminSettingsBrandingRouteImport
       parentRoute: typeof AdminSettingsRoute
     }
     '/_admin/settings/audit-log': {
@@ -1889,6 +1908,7 @@ const AdminReferralsRouteWithChildren = AdminReferralsRoute._addFileChildren(
 interface AdminSettingsRouteChildren {
   AdminSettingsApiKeysRoute: typeof AdminSettingsApiKeysRoute
   AdminSettingsAuditLogRoute: typeof AdminSettingsAuditLogRoute
+  AdminSettingsBrandingRoute: typeof AdminSettingsBrandingRoute
   AdminSettingsFeatureFlagsRoute: typeof AdminSettingsFeatureFlagsRoute
   AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
 }
@@ -1896,6 +1916,7 @@ interface AdminSettingsRouteChildren {
 const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
   AdminSettingsApiKeysRoute: AdminSettingsApiKeysRoute,
   AdminSettingsAuditLogRoute: AdminSettingsAuditLogRoute,
+  AdminSettingsBrandingRoute: AdminSettingsBrandingRoute,
   AdminSettingsFeatureFlagsRoute: AdminSettingsFeatureFlagsRoute,
   AdminSettingsIndexRoute: AdminSettingsIndexRoute,
 }
