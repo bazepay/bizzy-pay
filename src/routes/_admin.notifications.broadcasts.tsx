@@ -51,12 +51,29 @@ function BroadcastsPage() {
   }, [items, q, statusFilter]);
 
   const cancel = (id: string) => {
-    setItems((prev) => prev.map((b) => (b.id === id ? { ...b, status: "draft" } : b)));
+    setItems((prev) =>
+      prev.map((b) => {
+        if (b.id !== id) return b;
+        if (b.status === "scheduled") return { ...b, status: "draft", scheduledAt: null };
+        if (b.status === "sending") return { ...b, status: "sent", sentAt: new Date().toISOString() };
+        return b;
+      })
+    );
     toast.success("Broadcast paused");
   };
   const remove = (id: string) => {
     setItems((prev) => prev.filter((b) => b.id !== id));
     toast.success("Broadcast deleted");
+  };
+  const sendNow = (id: string) => {
+    setItems((prev) =>
+      prev.map((b) =>
+        b.id === id
+          ? { ...b, status: "sending", scheduledAt: b.scheduledAt ?? new Date().toISOString(), sentAt: new Date().toISOString() }
+          : b
+      )
+    );
+    toast.success("Broadcast started");
   };
   const create = () => {
     if (!draft.name.trim()) { toast.error("Name required"); return; }
