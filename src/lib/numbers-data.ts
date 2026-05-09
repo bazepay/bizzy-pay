@@ -77,11 +77,13 @@ function formatNumber(dial: string, area: string, sub: string) {
 
 export const numberPool: PoolNumber[] = Array.from({ length: 64 }, (_, i) => {
   const c = numberCountries[i % numberCountries.length];
-  const supplier = suppliers[i % suppliers.length];
   const service = services[i % services.length];
+  const billingPeriod = billingPeriods[i % billingPeriods.length];
   const area = ["415", "212", "646", "718", "207", "330", "808"][i % 7];
   const sub = pad(1000 + i * 7);
-  const cost = 1500 + (i % 8) * 250;
+  const baseMonthly = 1500 + (i % 8) * 250;
+  const periodMult = billingPeriod === "daily" ? 0.08 : billingPeriod === "weekly" ? 0.3 : billingPeriod === "annual" ? 10 : 1;
+  const cost = Math.round(baseMonthly * periodMult);
   const price = Math.round(cost * 1.6);
   return {
     id: `vn_${1000 + i}`,
@@ -89,8 +91,9 @@ export const numberPool: PoolNumber[] = Array.from({ length: 64 }, (_, i) => {
     countryCode: c.code,
     country: c.name,
     areaCode: area,
-    supplier,
+    supplier: "TouristeSim" as const,
     service,
+    billingPeriod,
     costNgn: cost,
     priceNgn: price,
     status: statuses[i % statuses.length],
