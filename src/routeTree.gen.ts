@@ -91,6 +91,7 @@ import { Route as AdminContentFaqRouteImport } from './routes/_admin.content.faq
 import { Route as AdminComplianceSanctionsRouteImport } from './routes/_admin.compliance.sanctions'
 import { Route as AdminCompliancePoliciesRouteImport } from './routes/_admin.compliance.policies'
 import { Route as AdminComplianceAuditRouteImport } from './routes/_admin.compliance.audit'
+import { Route as AdminCardsRequestsRouteImport } from './routes/_admin.cards.requests'
 import { Route as AdminCardsProgramsRouteImport } from './routes/_admin.cards.programs'
 import { Route as AdminCardsIssuedRouteImport } from './routes/_admin.cards.issued'
 import { Route as AdminCardsIdRouteImport } from './routes/_admin.cards.$id'
@@ -527,6 +528,11 @@ const AdminComplianceAuditRoute = AdminComplianceAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AdminComplianceRoute,
 } as any)
+const AdminCardsRequestsRoute = AdminCardsRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => AdminCardsRoute,
+} as any)
 const AdminCardsProgramsRoute = AdminCardsProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
@@ -642,6 +648,7 @@ export interface FileRoutesByFullPath {
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
+  '/cards/requests': typeof AdminCardsRequestsRoute
   '/compliance/audit': typeof AdminComplianceAuditRoute
   '/compliance/policies': typeof AdminCompliancePoliciesRoute
   '/compliance/sanctions': typeof AdminComplianceSanctionsRoute
@@ -729,6 +736,7 @@ export interface FileRoutesByTo {
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
+  '/cards/requests': typeof AdminCardsRequestsRoute
   '/compliance/audit': typeof AdminComplianceAuditRoute
   '/compliance/policies': typeof AdminCompliancePoliciesRoute
   '/compliance/sanctions': typeof AdminComplianceSanctionsRoute
@@ -831,6 +839,7 @@ export interface FileRoutesById {
   '/_admin/cards/$id': typeof AdminCardsIdRoute
   '/_admin/cards/issued': typeof AdminCardsIssuedRoute
   '/_admin/cards/programs': typeof AdminCardsProgramsRoute
+  '/_admin/cards/requests': typeof AdminCardsRequestsRoute
   '/_admin/compliance/audit': typeof AdminComplianceAuditRoute
   '/_admin/compliance/policies': typeof AdminCompliancePoliciesRoute
   '/_admin/compliance/sanctions': typeof AdminComplianceSanctionsRoute
@@ -934,6 +943,7 @@ export interface FileRouteTypes {
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
+    | '/cards/requests'
     | '/compliance/audit'
     | '/compliance/policies'
     | '/compliance/sanctions'
@@ -1021,6 +1031,7 @@ export interface FileRouteTypes {
     | '/cards/$id'
     | '/cards/issued'
     | '/cards/programs'
+    | '/cards/requests'
     | '/compliance/audit'
     | '/compliance/policies'
     | '/compliance/sanctions'
@@ -1122,6 +1133,7 @@ export interface FileRouteTypes {
     | '/_admin/cards/$id'
     | '/_admin/cards/issued'
     | '/_admin/cards/programs'
+    | '/_admin/cards/requests'
     | '/_admin/compliance/audit'
     | '/_admin/compliance/policies'
     | '/_admin/compliance/sanctions'
@@ -1785,6 +1797,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminComplianceAuditRouteImport
       parentRoute: typeof AdminComplianceRoute
     }
+    '/_admin/cards/requests': {
+      id: '/_admin/cards/requests'
+      path: '/requests'
+      fullPath: '/cards/requests'
+      preLoaderRoute: typeof AdminCardsRequestsRouteImport
+      parentRoute: typeof AdminCardsRoute
+    }
     '/_admin/cards/programs': {
       id: '/_admin/cards/programs'
       path: '/programs'
@@ -1918,6 +1937,7 @@ interface AdminCardsRouteChildren {
   AdminCardsIdRoute: typeof AdminCardsIdRoute
   AdminCardsIssuedRoute: typeof AdminCardsIssuedRoute
   AdminCardsProgramsRoute: typeof AdminCardsProgramsRoute
+  AdminCardsRequestsRoute: typeof AdminCardsRequestsRoute
   AdminCardsIndexRoute: typeof AdminCardsIndexRoute
 }
 
@@ -1925,6 +1945,7 @@ const AdminCardsRouteChildren: AdminCardsRouteChildren = {
   AdminCardsIdRoute: AdminCardsIdRoute,
   AdminCardsIssuedRoute: AdminCardsIssuedRoute,
   AdminCardsProgramsRoute: AdminCardsProgramsRoute,
+  AdminCardsRequestsRoute: AdminCardsRequestsRoute,
   AdminCardsIndexRoute: AdminCardsIndexRoute,
 }
 
