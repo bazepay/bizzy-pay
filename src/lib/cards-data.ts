@@ -208,3 +208,150 @@ export function getCardTransactions(cardId: string, count = 14): CardTxn[] {
     };
   });
 }
+
+// ============= Physical card lifecycle =============
+
+export type PhysicalRequestStatus =
+  | "requested"    // user submitted from mobile app
+  | "approved"     // admin approved for production
+  | "printing"     // sent to issuer for personalisation
+  | "shipped"      // handed to courier
+  | "delivered"    // courier confirmed delivery
+  | "activated"    // user activated via app
+  | "rejected"     // admin declined
+  | "lost"         // reported lost in transit
+  | "cancelled";   // user or admin cancelled
+
+export type CardDesign = "classic-black" | "brand-blue" | "gold-tier";
+
+export type ShippingAddress = {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string; // NG state
+  postcode?: string;
+  phone: string;
+};
+
+export type PhysicalCardRequest = {
+  id: string;
+  user: { id: string; name: string; email: string };
+  programId: string;
+  design: CardDesign;
+  status: PhysicalRequestStatus;
+  address: ShippingAddress;
+  courier: "GIG" | "DHL" | "Redstar" | "Kwik";
+  tracking?: string;
+  feeNgn: number;
+  requestedAt: string;
+  updatedAt: string;
+  eta?: string; // ISO
+  notes?: string;
+  linkedCardId?: string; // set after activation
+};
+
+const NG_STATES = ["Lagos", "Abuja", "Rivers", "Kano", "Oyo", "Kaduna", "Enugu", "Delta"];
+const COURIERS: PhysicalCardRequest["courier"][] = ["GIG", "DHL", "Redstar", "Kwik"];
+const DESIGNS: CardDesign[] = ["classic-black", "brand-blue", "gold-tier"];
+const STATUS_FLOW: PhysicalRequestStatus[] = [
+  "requested", "approved", "printing", "shipped", "delivered", "activated",
+];
+
+function makeRequest(i: number): PhysicalCardRequest {
+  const r = seed(i + 1000);
+  const first = FIRST[i % FIRST.length];
+  const last = LAST[(i * 3) % LAST.length];
+  const stageIdx = i % 8;
+  const status: PhysicalRequestStatus =
+    stageIdx === 6 ? "rejected" : stageIdx === 7 ? "cancelled" : STATUS_FLOW[stageIdx];
+  const requested = new Date(Date.now() - (5 + Math.floor(r * 40)) * 86_400_000);
+  return {
+    id: `pcr_${(60000 + i).toString()}`,
+    user: {
+      id: `u_${(8000 + (i % 64) + 1).toString().padStart(4, "0")}`,
+      name: `${first} ${last}`,
+      email: `${first}.${last}`.toLowerCase() + "@mail.com",
+    },
+    programId: cardPrograms[i % cardPrograms.length].id,
+    design: DESIGNS[i % DESIGNS.length],
+    status,
+    address: {
+      line1: `${10 + i} ${["Allen", "Awolowo", "Herbert Macaulay", "Ademola", "Bode Thomas"][i % 5]} Ave`,
+      city: ["Ikeja", "Victoria Island", "Wuse", "GRA", "Lekki"][i % 5],
+      state: NG_STATES[i % NG_STATES.length],
+      phone: `+2348${String(10000000 + Math.floor(r * 89999999))}`,
+    },
+    courier: COURIERS[i % COURIERS.length],
+    tracking: status === "shipped" || status === "delivered" || status === "activated"
+      ? `TRK${(100000 + i * 37).toString()}` : undefined,
+    feeNgn: 2500,
+    requestedAt: requested.toISOString(),
+    updatedAt: new Date(requested.getTime() + stageIdx * 86_400_000).toISOString(),
+    eta: status === "shipped" ? new Date(Date.now() + 3 * 86_400_000).toISOString() : undefined,
+    linkedCardId: status === "activated" ? `vc_${(80000 + i).toString()}` : undefined,
+  };
+}
+
+export const physicalRequests: PhysicalCardRequest[] = Array.from({ length: 32 }, (_, i) => makeRequest(i + 1));
+
+export const requestStatusTone: Record<PhysicalRequestStatus, string> = {
+  requested: "bg-primary/15 text-primary border-primary/30",
+  approved: "bg-primary/15 text-primary border-primary/30",
+  printing: "bg-warning/15 text-warning border-warning/30",
+  shipped: "bg-warning/15 text-warning border-warning/30",
+  delivered: "bg-success/15 text-success border-success/30",
+  activated: "bg-success/15 text-success border-success/30",
+  rejected: "bg-destructive/15 text-destructive border-destructive/30",
+  lost: "bg-destructive/15 text-destructive border-destructive/30",
+  cancelled: "bg-muted text-muted-foreground border-border",
+};
+
+export const nextStatus: Partial<Record<PhysicalRequestStatus, PhysicalRequestStatus>> = {
+  requested: "approved",
+  approved: "printing",
+  printing: "shipped",
+  shipped: "delivered",
+  delivered: "activated",
+};
+
+// ---- Physical card program settings (lifecycle config) ----
+export type PhysicalSettings = {
+  issuanceFeeNgn: number;
+  replacementFeeNgn: number;
+  expressShippingFeeNgn: number;
+  autoApproveKycTier: "tier1" | "tier2" | "tier3"; // min tier to skip manual approval
+  maxRequestsPerUser: number;
+  productionSlaDays: number;
+  shippingSlaDays: number;
+  activationWindowDays: number;
+  couriers: { name: PhysicalCardRequest["courier"]; enabled: boolean; zones: string[] }[];
+  designs: { id: CardDesign; name: string; enabled: boolean; tierRequired: "any" | "gold" }[];
+  requireAddressVerification: boolean;
+  requireIdOnDelivery: boolean;
+  allowPoBox: boolean;
+};
+
+export const physicalSettings: PhysicalSettings = {
+  issuanceFeeNgn: 2500,
+  replacementFeeNgn: 1500,
+  expressShippingFeeNgn: 3500,
+  autoApproveKycTier: "tier2",
+  maxRequestsPerUser: 2,
+  productionSlaDays: 3,
+  shippingSlaDays: 5,
+  activationWindowDays: 14,
+  couriers: [
+    { name: "GIG", enabled: true, zones: ["Lagos", "Abuja", "Rivers", "Oyo"] },
+    { name: "Redstar", enabled: true, zones: ["Kano", "Kaduna", "Enugu", "Delta"] },
+    { name: "Kwik", enabled: true, zones: ["Lagos"] },
+    { name: "DHL", enabled: false, zones: ["All"] },
+  ],
+  designs: [
+    { id: "classic-black", name: "Classic Black", enabled: true, tierRequired: "any" },
+    { id: "brand-blue", name: "BazePay Blue", enabled: true, tierRequired: "any" },
+    { id: "gold-tier", name: "Gold Tier", enabled: true, tierRequired: "gold" },
+  ],
+  requireAddressVerification: true,
+  requireIdOnDelivery: true,
+  allowPoBox: false,
+};
