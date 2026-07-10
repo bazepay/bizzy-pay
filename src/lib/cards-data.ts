@@ -83,6 +83,8 @@ export const cardPrograms: CardProgram[] = [
   },
 ];
 
+export type CardType = "virtual" | "physical";
+
 export type IssuedCard = {
   id: string;
   programId: string;
@@ -90,6 +92,7 @@ export type IssuedCard = {
   last4: string;
   currency: CardCurrency;
   status: CardStatus;
+  type: CardType;
   user: { id: string; name: string; email: string };
   balanceNgn: number;
   spend30dNgn: number;
