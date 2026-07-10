@@ -93,6 +93,7 @@ import { Route as AdminCompliancePoliciesRouteImport } from './routes/_admin.com
 import { Route as AdminComplianceAuditRouteImport } from './routes/_admin.compliance.audit'
 import { Route as AdminCardsRequestsRouteImport } from './routes/_admin.cards.requests'
 import { Route as AdminCardsProgramsRouteImport } from './routes/_admin.cards.programs'
+import { Route as AdminCardsPhysicalSettingsRouteImport } from './routes/_admin.cards.physical-settings'
 import { Route as AdminCardsIssuedRouteImport } from './routes/_admin.cards.issued'
 import { Route as AdminCardsIdRouteImport } from './routes/_admin.cards.$id'
 import { Route as AdminUsersIdIndexRouteImport } from './routes/_admin.users.$id.index'
@@ -538,6 +539,12 @@ const AdminCardsProgramsRoute = AdminCardsProgramsRouteImport.update({
   path: '/programs',
   getParentRoute: () => AdminCardsRoute,
 } as any)
+const AdminCardsPhysicalSettingsRoute =
+  AdminCardsPhysicalSettingsRouteImport.update({
+    id: '/physical-settings',
+    path: '/physical-settings',
+    getParentRoute: () => AdminCardsRoute,
+  } as any)
 const AdminCardsIssuedRoute = AdminCardsIssuedRouteImport.update({
   id: '/issued',
   path: '/issued',
@@ -647,6 +654,7 @@ export interface FileRoutesByFullPath {
   '/wallets': typeof AdminWalletsRouteWithChildren
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
+  '/cards/physical-settings': typeof AdminCardsPhysicalSettingsRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
   '/cards/requests': typeof AdminCardsRequestsRoute
   '/compliance/audit': typeof AdminComplianceAuditRoute
@@ -735,6 +743,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AdminDashboardRoute
   '/cards/$id': typeof AdminCardsIdRoute
   '/cards/issued': typeof AdminCardsIssuedRoute
+  '/cards/physical-settings': typeof AdminCardsPhysicalSettingsRoute
   '/cards/programs': typeof AdminCardsProgramsRoute
   '/cards/requests': typeof AdminCardsRequestsRoute
   '/compliance/audit': typeof AdminComplianceAuditRoute
@@ -838,6 +847,7 @@ export interface FileRoutesById {
   '/_admin/wallets': typeof AdminWalletsRouteWithChildren
   '/_admin/cards/$id': typeof AdminCardsIdRoute
   '/_admin/cards/issued': typeof AdminCardsIssuedRoute
+  '/_admin/cards/physical-settings': typeof AdminCardsPhysicalSettingsRoute
   '/_admin/cards/programs': typeof AdminCardsProgramsRoute
   '/_admin/cards/requests': typeof AdminCardsRequestsRoute
   '/_admin/compliance/audit': typeof AdminComplianceAuditRoute
@@ -942,6 +952,7 @@ export interface FileRouteTypes {
     | '/wallets'
     | '/cards/$id'
     | '/cards/issued'
+    | '/cards/physical-settings'
     | '/cards/programs'
     | '/cards/requests'
     | '/compliance/audit'
@@ -1030,6 +1041,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/cards/$id'
     | '/cards/issued'
+    | '/cards/physical-settings'
     | '/cards/programs'
     | '/cards/requests'
     | '/compliance/audit'
@@ -1132,6 +1144,7 @@ export interface FileRouteTypes {
     | '/_admin/wallets'
     | '/_admin/cards/$id'
     | '/_admin/cards/issued'
+    | '/_admin/cards/physical-settings'
     | '/_admin/cards/programs'
     | '/_admin/cards/requests'
     | '/_admin/compliance/audit'
@@ -1811,6 +1824,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCardsProgramsRouteImport
       parentRoute: typeof AdminCardsRoute
     }
+    '/_admin/cards/physical-settings': {
+      id: '/_admin/cards/physical-settings'
+      path: '/physical-settings'
+      fullPath: '/cards/physical-settings'
+      preLoaderRoute: typeof AdminCardsPhysicalSettingsRouteImport
+      parentRoute: typeof AdminCardsRoute
+    }
     '/_admin/cards/issued': {
       id: '/_admin/cards/issued'
       path: '/issued'
@@ -1936,6 +1956,7 @@ declare module '@tanstack/react-router' {
 interface AdminCardsRouteChildren {
   AdminCardsIdRoute: typeof AdminCardsIdRoute
   AdminCardsIssuedRoute: typeof AdminCardsIssuedRoute
+  AdminCardsPhysicalSettingsRoute: typeof AdminCardsPhysicalSettingsRoute
   AdminCardsProgramsRoute: typeof AdminCardsProgramsRoute
   AdminCardsRequestsRoute: typeof AdminCardsRequestsRoute
   AdminCardsIndexRoute: typeof AdminCardsIndexRoute
@@ -1944,6 +1965,7 @@ interface AdminCardsRouteChildren {
 const AdminCardsRouteChildren: AdminCardsRouteChildren = {
   AdminCardsIdRoute: AdminCardsIdRoute,
   AdminCardsIssuedRoute: AdminCardsIssuedRoute,
+  AdminCardsPhysicalSettingsRoute: AdminCardsPhysicalSettingsRoute,
   AdminCardsProgramsRoute: AdminCardsProgramsRoute,
   AdminCardsRequestsRoute: AdminCardsRequestsRoute,
   AdminCardsIndexRoute: AdminCardsIndexRoute,
