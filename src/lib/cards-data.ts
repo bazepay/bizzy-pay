@@ -134,6 +134,7 @@ function makeCard(i: number): IssuedCard {
     last4,
     currency: program.currency,
     status,
+    type: i % 5 === 0 ? "physical" : "virtual",
     user: {
       id: `u_${(8000 + (i % 64) + 1).toString().padStart(4, "0")}`,
       name: `${first} ${last}`,
