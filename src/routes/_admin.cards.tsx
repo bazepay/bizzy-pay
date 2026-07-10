@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutGrid, Layers, CreditCard } from "lucide-react";
+import { LayoutGrid, Layers, CreditCard, Package, Settings2 } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/cards")({
   head: () => ({
@@ -16,12 +16,14 @@ const tabs = [
   { to: "/cards", label: "Overview", icon: LayoutGrid, exact: true },
   { to: "/cards/programs", label: "Programs", icon: Layers },
   { to: "/cards/issued", label: "Issued cards", icon: CreditCard },
+  { to: "/cards/requests", label: "Physical requests", icon: Package },
+  { to: "/cards/physical-settings", label: "Physical settings", icon: Settings2 },
 ];
 
 function CardsLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  // Hide tabs on detail pages (/cards/vc_xxxx)
-  const onDetail = /^\/cards\/(?!programs$|issued$)/.test(pathname);
+  // Hide tabs only on individual card detail pages (/cards/vc_xxxx)
+  const onDetail = /^\/cards\/(?!programs$|issued$|requests$|physical-settings$)/.test(pathname);
 
   return (
     <div className="p-6 max-w-[1400px] mx-auto space-y-5">
